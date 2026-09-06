@@ -7,6 +7,7 @@
 <title>ZIVOZONE</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
@@ -24,7 +25,7 @@ body {
 
 .container {
     width: 92%;
-    max-width: 520px;
+    max-width: 540px;
     text-align: center;
 }
 
@@ -38,7 +39,7 @@ body {
 .subtitle {
     color: #aaa;
     font-size: 14px;
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
 .card {
@@ -87,6 +88,10 @@ button:hover {
     opacity: 0.9;
 }
 
+.secondary {
+    background: rgba(255,255,255,0.1);
+}
+
 .hidden {
     display: none;
 }
@@ -100,7 +105,7 @@ button:hover {
 }
 
 .player {
-    color: #fff;
+    color: white;
     font-weight: bold;
 }
 
@@ -151,13 +156,8 @@ button:hover {
     background: #b83232 !important;
 }
 
-.score {
-    font-size: 20px;
-    margin-top: 20px;
-}
-
 .final-score {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: bold;
     margin: 25px 0;
 }
@@ -166,6 +166,41 @@ button:hover {
     color: #aaa;
     font-size: 14px;
 }
+
+.leaderboard {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.leaderboard h2 {
+    text-align: center;
+    font-size: 22px;
+}
+
+.rank {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.07);
+    padding: 13px;
+    margin: 8px 0;
+    border-radius: 12px;
+}
+
+.rank-number {
+    font-weight: bold;
+    min-width: 40px;
+}
+
+.rank-name {
+    flex: 1;
+    text-align: center;
+}
+
+.rank-score {
+    font-weight: bold;
+}
+
 </style>
 </head>
 
@@ -173,7 +208,8 @@ button:hover {
 
 <div class="container">
 
-    <!-- البداية -->
+    <!-- شاشة البداية -->
+
     <div id="startScreen" class="card">
 
         <div class="logo">ZIVOZONE</div>
@@ -199,10 +235,15 @@ button:hover {
             🚀 ابدأ التحدي
         </button>
 
+        <button class="secondary" onclick="showLeaderboard()">
+            🏆 لوحة المتصدرين
+        </button>
+
     </div>
 
 
-    <!-- اللعبة -->
+    <!-- شاشة اللعبة -->
+
     <div id="gameScreen" class="card hidden">
 
         <div class="top">
@@ -234,7 +275,8 @@ button:hover {
     </div>
 
 
-    <!-- النتيجة -->
+    <!-- شاشة النتيجة -->
+
     <div id="resultScreen" class="card hidden">
 
         <div class="logo">ZIVOZONE</div>
@@ -252,11 +294,36 @@ button:hover {
         </div>
 
         <p class="small">
-            هل تستطيع تحقيق نتيجة أفضل؟
+            نتيجتك تم حفظها في لوحة المتصدرين.
         </p>
 
         <button onclick="restartGame()">
             🔄 العب مرة أخرى
+        </button>
+
+        <button class="secondary" onclick="showLeaderboard()">
+            🏆 شاهد الترتيب
+        </button>
+
+        <button class="secondary" onclick="goHome()">
+            🏠 الرئيسية
+        </button>
+
+    </div>
+
+
+    <!-- لوحة المتصدرين -->
+
+    <div id="leaderboardScreen" class="card hidden">
+
+        <div class="logo">ZIVOZONE</div>
+
+        <h1>🏆 المتصدرون</h1>
+
+        <div id="leaderboard" class="leaderboard"></div>
+
+        <button onclick="goHome()">
+            🏠 العودة للرئيسية
         </button>
 
     </div>
@@ -307,6 +374,8 @@ let score = 0;
 let answered = false;
 
 
+/* بدء اللعبة */
+
 function startGame() {
 
     const input = document.getElementById("playerName");
@@ -326,18 +395,22 @@ function startGame() {
     score = 0;
 
     document.getElementById("startScreen").classList.add("hidden");
-
     document.getElementById("resultScreen").classList.add("hidden");
+    document.getElementById("leaderboardScreen").classList.add("hidden");
 
     document.getElementById("gameScreen").classList.remove("hidden");
 
-    document.getElementById("playerDisplay").textContent = playerName;
+    document.getElementById("playerDisplay").textContent =
+        playerName;
 
-    document.getElementById("scoreDisplay").textContent = score;
+    document.getElementById("scoreDisplay").textContent =
+        score;
 
     showQuestion();
 }
 
+
+/* عرض السؤال */
 
 function showQuestion() {
 
@@ -346,7 +419,10 @@ function showQuestion() {
     const q = questions[currentQuestion];
 
     document.getElementById("questionNumber").textContent =
-        "السؤال " + (currentQuestion + 1) + "/" + questions.length;
+        "السؤال " +
+        (currentQuestion + 1) +
+        "/" +
+        questions.length;
 
     document.getElementById("question").textContent =
         q.question;
@@ -382,6 +458,8 @@ function showQuestion() {
 }
 
 
+/* اختيار الإجابة */
+
 function selectAnswer(button, selectedIndex) {
 
     if (answered) {
@@ -411,7 +489,8 @@ function selectAnswer(button, selectedIndex) {
     }
 
 
-    document.getElementById("scoreDisplay").textContent = score;
+    document.getElementById("scoreDisplay").textContent =
+        score;
 
 
     setTimeout(function() {
@@ -433,7 +512,11 @@ function selectAnswer(button, selectedIndex) {
 }
 
 
+/* إنهاء اللعبة */
+
 function finishGame() {
+
+    saveResult();
 
     document.getElementById("gameScreen").classList.add("hidden");
 
@@ -448,6 +531,134 @@ function finishGame() {
 }
 
 
+/* حفظ النتيجة */
+
+function saveResult() {
+
+    let results =
+        JSON.parse(localStorage.getItem("zivozoneResults")) || [];
+
+
+    results.push({
+
+        name: playerName,
+
+        score: score,
+
+        date: new Date().toISOString()
+
+    });
+
+
+    results.sort(function(a, b) {
+
+        return b.score - a.score;
+
+    });
+
+
+    results =
+        results.slice(0, 20);
+
+
+    localStorage.setItem(
+        "zivozoneResults",
+        JSON.stringify(results)
+    );
+
+}
+
+
+/* عرض لوحة المتصدرين */
+
+function showLeaderboard() {
+
+    document.getElementById("startScreen").classList.add("hidden");
+
+    document.getElementById("gameScreen").classList.add("hidden");
+
+    document.getElementById("resultScreen").classList.add("hidden");
+
+    document.getElementById("leaderboardScreen").classList.remove("hidden");
+
+
+    const leaderboard =
+        document.getElementById("leaderboard");
+
+
+    let results =
+        JSON.parse(localStorage.getItem("zivozoneResults")) || [];
+
+
+    if (results.length === 0) {
+
+        leaderboard.innerHTML =
+            "<p class='small' style='text-align:center'>لا توجد نتائج حتى الآن. كن أول المتصدرين! 🚀</p>";
+
+        return;
+
+    }
+
+
+    leaderboard.innerHTML = "";
+
+
+    results.forEach(function(player, index) {
+
+        const row =
+            document.createElement("div");
+
+        row.className = "rank";
+
+
+        let medal = "";
+
+        if (index === 0) medal = "🥇";
+        else if (index === 1) medal = "🥈";
+        else if (index === 2) medal = "🥉";
+        else medal = "#" + (index + 1);
+
+
+        row.innerHTML = `
+
+            <span class="rank-number">
+                ${medal}
+            </span>
+
+            <span class="rank-name">
+                ${escapeHTML(player.name)}
+            </span>
+
+            <span class="rank-score">
+                ${player.score} نقطة
+            </span>
+
+        `;
+
+
+        leaderboard.appendChild(row);
+
+    });
+
+}
+
+
+/* حماية اسم اللاعب */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* إعادة اللعب */
+
 function restartGame() {
 
     document.getElementById("resultScreen").classList.add("hidden");
@@ -458,6 +669,20 @@ function restartGame() {
 
 }
 
+
+/* العودة للرئيسية */
+
+function goHome() {
+
+    document.getElementById("gameScreen").classList.add("hidden");
+
+    document.getElementById("resultScreen").classList.add("hidden");
+
+    document.getElementById("leaderboardScreen").classList.add("hidden");
+
+    document.getElementById("startScreen").classList.remove("hidden");
+
+}
 
 </script>
 
