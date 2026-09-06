@@ -48,7 +48,7 @@ body {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 h1 {
@@ -131,6 +131,12 @@ button:hover {
     margin-top: 7px;
 }
 
+.selected-mode {
+    color: #8f9aff;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
 .top {
     display: flex;
     justify-content: space-between;
@@ -198,6 +204,46 @@ button:hover {
     margin: 10px 0;
 }
 
+/* FOCUS */
+
+.focus-area {
+    position: relative;
+    width: 100%;
+    height: 330px;
+    margin-top: 20px;
+    border-radius: 18px;
+    background: rgba(0,0,0,.22);
+    border: 1px solid rgba(255,255,255,.08);
+    overflow: hidden;
+}
+
+.focus-message {
+    position: absolute;
+    width: 100%;
+    top: 45%;
+    left: 0;
+    font-size: 20px;
+    color: #aaa;
+}
+
+.target {
+    position: absolute;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #5865f2;
+    cursor: pointer;
+    display: none;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 25px rgba(88,101,242,.6);
+}
+
+.focus-time {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 10px;
+}
+
 .final-score {
     font-size: 38px;
     font-weight: bold;
@@ -237,12 +283,6 @@ button:hover {
 .rank-score {
     font-weight: bold;
 }
-
-.selected-mode {
-    color: #8f9aff;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
 </style>
 </head>
 
@@ -250,7 +290,7 @@ button:hover {
 
 <div class="container">
 
-<!-- ================= البداية ================= -->
+<!-- البداية -->
 
 <div id="startScreen" class="card">
 
@@ -285,7 +325,7 @@ button:hover {
 </div>
 
 
-<!-- ================= اختيار التحدي ================= -->
+<!-- اختيار التحدي -->
 
 <div id="challengeScreen" class="card hidden">
 
@@ -300,32 +340,21 @@ button:hover {
     <div class="challenge-grid">
 
         <div class="challenge" onclick="selectChallenge('speed')">
-
             <span class="challenge-icon">⚡</span>
-
-            <div class="challenge-name">
-                SPEED
-            </div>
-
-            <div class="challenge-info">
-                سرعة وإجابة
-            </div>
-
+            <div class="challenge-name">SPEED</div>
+            <div class="challenge-info">سرعة وإجابة</div>
         </div>
 
-
         <div class="challenge" onclick="selectChallenge('iq')">
-
             <span class="challenge-icon">🧠</span>
+            <div class="challenge-name">IQ</div>
+            <div class="challenge-info">ذكاء ومنطق</div>
+        </div>
 
-            <div class="challenge-name">
-                IQ
-            </div>
-
-            <div class="challenge-info">
-                ذكاء ومنطق
-            </div>
-
+        <div class="challenge" onclick="selectChallenge('focus')">
+            <span class="challenge-icon">👀</span>
+            <div class="challenge-name">FOCUS</div>
+            <div class="challenge-info">سرعة رد الفعل</div>
         </div>
 
     </div>
@@ -337,7 +366,7 @@ button:hover {
 </div>
 
 
-<!-- ================= اللعبة ================= -->
+<!-- لعبة الأسئلة -->
 
 <div id="gameScreen" class="card hidden">
 
@@ -378,7 +407,52 @@ button:hover {
 </div>
 
 
-<!-- ================= النتيجة ================= -->
+<!-- لعبة FOCUS -->
+
+<div id="focusScreen" class="card hidden">
+
+    <div class="top">
+
+        <div>
+            اللاعب:
+            <span id="focusPlayer" class="player"></span>
+        </div>
+
+        <div>
+            النقاط:
+            <span id="focusScore">0</span>
+        </div>
+
+    </div>
+
+    <div class="selected-mode">
+        👀 FOCUS
+    </div>
+
+    <div>
+        الجولة
+        <span id="focusRound">1</span>/5
+    </div>
+
+    <div class="focus-time">
+        استجابتك:
+        <span id="reactionTime">--</span>
+    </div>
+
+    <div id="focusArea" class="focus-area">
+
+        <div id="focusMessage" class="focus-message">
+            استعد...
+        </div>
+
+        <div id="target" class="target"></div>
+
+    </div>
+
+</div>
+
+
+<!-- النتيجة -->
 
 <div id="resultScreen" class="card hidden">
 
@@ -396,11 +470,8 @@ button:hover {
     </p>
 
     <div class="final-score">
-
         <span id="finalScore"></span>
-
         نقطة
-
     </div>
 
     <p class="small">
@@ -422,7 +493,7 @@ button:hover {
 </div>
 
 
-<!-- ================= لوحة المتصدرين ================= -->
+<!-- لوحة المتصدرين -->
 
 <div id="leaderboardScreen" class="card hidden">
 
@@ -481,7 +552,6 @@ const challenges = {
 
     ],
 
-
     iq: [
 
         {
@@ -536,7 +606,18 @@ let timer;
 let timeLeft = 10;
 
 
-/* ================= الانتقال لاختيار التحدي ================= */
+/* FOCUS */
+
+let focusRound = 0;
+
+let focusScore = 0;
+
+let focusStartTime = 0;
+
+let focusTimeout;
+
+
+/* ================= دخول ================= */
 
 function goToChallenges() {
 
@@ -556,7 +637,6 @@ function goToChallenges() {
 
     }
 
-
     document
         .getElementById("startScreen")
         .classList.add("hidden");
@@ -567,8 +647,8 @@ function goToChallenges() {
 
     document
         .getElementById("challengePlayer")
-        .textContent = playerName;
-
+        .textContent =
+        playerName;
 }
 
 
@@ -577,6 +657,14 @@ function goToChallenges() {
 function selectChallenge(mode) {
 
     currentMode = mode;
+
+    if (mode === "focus") {
+
+        startFocus();
+
+        return;
+
+    }
 
     currentQuestion = 0;
 
@@ -592,34 +680,28 @@ function selectChallenge(mode) {
 
     document
         .getElementById("playerDisplay")
-        .textContent = playerName;
+        .textContent =
+        playerName;
 
     document
         .getElementById("scoreDisplay")
-        .textContent = score;
+        .textContent =
+        score;
 
 
-    if (mode === "speed") {
-
-        document
-            .getElementById("modeDisplay")
-            .textContent = "⚡ SPEED";
-
-    } else {
-
-        document
-            .getElementById("modeDisplay")
-            .textContent = "🧠 IQ";
-
-    }
+    document
+        .getElementById("modeDisplay")
+        .textContent =
+        mode === "speed"
+        ? "⚡ SPEED"
+        : "🧠 IQ";
 
 
     showQuestion();
-
 }
 
 
-/* ================= عرض السؤال ================= */
+/* ================= الأسئلة ================= */
 
 function showQuestion() {
 
@@ -628,7 +710,6 @@ function showQuestion() {
     timeLeft = 10;
 
     clearInterval(timer);
-
 
     const list =
         challenges[currentMode];
@@ -662,7 +743,8 @@ function showQuestion() {
         .getElementById("progressBar")
         .style.width =
         ((currentQuestion + 1) /
-        list.length * 100) + "%";
+        list.length * 100) +
+        "%";
 
 
     const container =
@@ -682,13 +764,11 @@ function showQuestion() {
         button.textContent =
             answer;
 
-
         button.onclick = function() {
 
             selectAnswer(button, index);
 
         };
-
 
         container.appendChild(button);
 
@@ -722,9 +802,7 @@ function showQuestion() {
 
                     });
 
-
                 setTimeout(nextQuestion, 700);
-
             }
 
         }
@@ -744,10 +822,8 @@ function selectAnswer(button, selectedIndex) {
 
     clearInterval(timer);
 
-
     const q =
         challenges[currentMode][currentQuestion];
-
 
     const allAnswers =
         document.querySelectorAll(".answer");
@@ -784,11 +860,10 @@ function selectAnswer(button, selectedIndex) {
 
 
     setTimeout(nextQuestion, 800);
-
 }
 
 
-/* ================= السؤال التالي ================= */
+/* ================= التالي ================= */
 
 function nextQuestion() {
 
@@ -811,13 +886,302 @@ function nextQuestion() {
 }
 
 
+/* ================= FOCUS ================= */
+
+function startFocus() {
+
+    clearInterval(timer);
+
+    clearTimeout(focusTimeout);
+
+    focusRound = 0;
+
+    focusScore = 0;
+
+
+    document
+        .getElementById("challengeScreen")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("gameScreen")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("focusScreen")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("focusPlayer")
+        .textContent =
+        playerName;
+
+
+    document
+        .getElementById("focusScore")
+        .textContent =
+        "0";
+
+
+    document
+        .getElementById("reactionTime")
+        .textContent =
+        "--";
+
+
+    nextFocusRound();
+
+}
+
+
+/* الجولة التالية */
+
+function nextFocusRound() {
+
+    focusRound++;
+
+    if (focusRound > 5) {
+
+        finishFocus();
+
+        return;
+
+    }
+
+
+    document
+        .getElementById("focusRound")
+        .textContent =
+        focusRound;
+
+
+    const target =
+        document.getElementById("target");
+
+    const message =
+        document.getElementById("focusMessage");
+
+
+    target.style.display =
+        "none";
+
+
+    message.textContent =
+        "استعد...";
+
+
+    /*
+       تأخير عشوائي بين
+       800 و 2500 ملي ثانية
+    */
+
+    const delay =
+        800 +
+        Math.random() * 1700;
+
+
+    focusTimeout =
+        setTimeout(function() {
+
+            showTarget();
+
+        }, delay);
+
+}
+
+
+/* ظهور الهدف */
+
+function showTarget() {
+
+    const area =
+        document.getElementById("focusArea");
+
+    const target =
+        document.getElementById("target");
+
+    const message =
+        document.getElementById("focusMessage");
+
+
+    message.textContent =
+        "اضغط الآن! 👀";
+
+
+    const maxX =
+        area.clientWidth - 30;
+
+    const maxY =
+        area.clientHeight - 30;
+
+
+    const x =
+        30 +
+        Math.random() *
+        (maxX - 30);
+
+
+    const y =
+        30 +
+        Math.random() *
+        (maxY - 30);
+
+
+    target.style.left =
+        x + "px";
+
+    target.style.top =
+        y + "px";
+
+
+    target.style.display =
+        "block";
+
+
+    focusStartTime =
+        performance.now();
+
+}
+
+
+/* الضغط على الهدف */
+
+document
+    .getElementById("target")
+    .addEventListener("click", function() {
+
+        if (this.style.display === "none") {
+            return;
+        }
+
+
+        const endTime =
+            performance.now();
+
+
+        const reaction =
+            Math.round(
+                endTime -
+                focusStartTime
+            );
+
+
+        document
+            .getElementById("reactionTime")
+            .textContent =
+            reaction + " ms";
+
+
+        /*
+           كلما كان اللاعب أسرع
+           يحصل على نقاط أكثر.
+        */
+
+        let points = 0;
+
+
+        if (reaction < 250) {
+
+            points = 30;
+
+        } else if (reaction < 400) {
+
+            points = 25;
+
+        } else if (reaction < 600) {
+
+            points = 20;
+
+        } else if (reaction < 900) {
+
+            points = 15;
+
+        } else {
+
+            points = 10;
+
+        }
+
+
+        focusScore += points;
+
+
+        document
+            .getElementById("focusScore")
+            .textContent =
+            focusScore;
+
+
+        this.style.display =
+            "none";
+
+
+        setTimeout(
+            nextFocusRound,
+            700
+        );
+
+});
+
+
+/* نهاية FOCUS */
+
+function finishFocus() {
+
+    clearTimeout(focusTimeout);
+
+
+    saveCustomResult(
+        playerName,
+        focusScore,
+        "focus"
+    );
+
+
+    document
+        .getElementById("focusScreen")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("resultScreen")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("finalPlayer")
+        .textContent =
+        playerName;
+
+
+    document
+        .getElementById("finalScore")
+        .textContent =
+        focusScore;
+
+
+    document
+        .getElementById("finalMode")
+        .textContent =
+        "👀 FOCUS";
+
+}
+
+
 /* ================= النهاية ================= */
 
 function finishGame() {
 
     clearInterval(timer);
 
-    saveResult();
+    saveCustomResult(
+        playerName,
+        score,
+        currentMode
+    );
 
 
     document
@@ -852,9 +1216,9 @@ function finishGame() {
 }
 
 
-/* ================= حفظ النتيجة ================= */
+/* ================= حفظ النتائج ================= */
 
-function saveResult() {
+function saveCustomResult(name, points, mode) {
 
     let results =
         JSON.parse(
@@ -866,18 +1230,19 @@ function saveResult() {
 
     results.push({
 
-        name: playerName,
+        name: name,
 
-        score: score,
+        score: points,
 
-        mode: currentMode,
+        mode: mode,
 
-        date: new Date().toISOString()
+        date:
+            new Date().toISOString()
 
     });
 
 
-    results.sort(function(a, b) {
+    results.sort(function(a,b) {
 
         return b.score - a.score;
 
@@ -885,7 +1250,7 @@ function saveResult() {
 
 
     results =
-        results.slice(0, 20);
+        results.slice(0,20);
 
 
     localStorage.setItem(
@@ -902,6 +1267,8 @@ function showLeaderboard() {
 
     clearInterval(timer);
 
+    clearTimeout(focusTimeout);
+
 
     document
         .getElementById("startScreen")
@@ -913,6 +1280,10 @@ function showLeaderboard() {
 
     document
         .getElementById("gameScreen")
+        .classList.add("hidden");
+
+    document
+        .getElementById("focusScreen")
         .classList.add("hidden");
 
     document
@@ -960,6 +1331,7 @@ function showLeaderboard() {
 
         let medal;
 
+
         if (index === 0)
             medal = "🥇";
 
@@ -970,13 +1342,19 @@ function showLeaderboard() {
             medal = "🥉";
 
         else
-            medal = "#" + (index + 1);
+            medal =
+                "#" + (index + 1);
 
 
-        const mode =
-            player.mode === "speed"
-            ? "⚡"
-            : "🧠";
+        let modeIcon =
+            "⚡";
+
+
+        if (player.mode === "iq")
+            modeIcon = "🧠";
+
+        if (player.mode === "focus")
+            modeIcon = "👀";
 
 
         row.innerHTML = `
@@ -987,7 +1365,7 @@ function showLeaderboard() {
 
             <span class="rank-name">
                 ${escapeHTML(player.name)}
-                ${mode}
+                ${modeIcon}
             </span>
 
             <span class="rank-score">
@@ -1019,13 +1397,19 @@ function escapeHTML(text) {
 }
 
 
-/* ================= إعادة اللعب ================= */
+/* ================= إعادة ================= */
 
 function restartGame() {
+
+    clearInterval(timer);
+
+    clearTimeout(focusTimeout);
+
 
     document
         .getElementById("resultScreen")
         .classList.add("hidden");
+
 
     document
         .getElementById("challengeScreen")
@@ -1040,6 +1424,8 @@ function goHome() {
 
     clearInterval(timer);
 
+    clearTimeout(focusTimeout);
+
 
     document
         .getElementById("challengeScreen")
@@ -1047,6 +1433,10 @@ function goHome() {
 
     document
         .getElementById("gameScreen")
+        .classList.add("hidden");
+
+    document
+        .getElementById("focusScreen")
         .classList.add("hidden");
 
     document
