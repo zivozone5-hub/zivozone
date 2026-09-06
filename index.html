@@ -1,1769 +1,3765 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
+<title>ZIVOZONE | Global Challenge Platform</title>
 
-  <meta
-    name="theme-color"
-    content="#070b16">
+<meta name="description"
+content="ZIVOZONE - Global challenges, intelligence, football, personality, psychology and competitive games.">
 
-  <meta
-    name="description"
-    content="Global Challenge — منصة عالمية للتحديات الذكية والسرعة والذاكرة وكرة القدم وتحليل الشخصية.">
+<style>
 
-  <meta
-    name="keywords"
-    content="Global Challenge, intelligence games, football challenges, brain games, personality">
+/* =========================================================
+   ZIVOZONE GLOBAL PLATFORM
+   ONE FILE VERSION
+   HTML + CSS + JAVASCRIPT
+   ========================================================= */
 
-  <title>Global Challenge</title>
+:root{
+    --bg:#050812;
+    --bg2:#0b1120;
+    --panel:#10182a;
+    --panel2:#151f35;
 
-  <link rel="stylesheet" href="style.css">
+    --primary:#00d9ff;
+    --secondary:#087cff;
+
+    --gold:#ffd166;
+    --green:#00e676;
+    --red:#ff4965;
+    --purple:#a855f7;
+
+    --text:#ffffff;
+    --muted:#9aa8bd;
+
+    --border:rgba(255,255,255,.09);
+
+    --shadow:0 20px 60px rgba(0,0,0,.45);
+
+    --radius:22px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+
+    font-family:
+    "Segoe UI",
+    Tahoma,
+    Arial,
+    sans-serif;
+
+    color:var(--text);
+
+    background:
+    radial-gradient(circle at 10% 10%,rgba(0,217,255,.13),transparent 25%),
+    radial-gradient(circle at 90% 10%,rgba(8,124,255,.12),transparent 25%),
+    radial-gradient(circle at 50% 100%,rgba(168,85,247,.08),transparent 30%),
+    var(--bg);
+
+    overflow-x:hidden;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.container{
+    width:min(1450px,calc(100% - 32px));
+    margin:auto;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:1000;
+
+    background:rgba(5,8,18,.88);
+
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border-bottom:1px solid var(--border);
+}
+
+.nav{
+    min-height:90px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:20px;
+}
+
+/* LOGO */
+
+.logo{
+    font-size:42px;
+    font-weight:1000;
+
+    letter-spacing:3px;
+
+    background:
+    linear-gradient(
+        100deg,
+        #fff,
+        var(--primary),
+        var(--secondary),
+        #fff
+    );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+
+    white-space:nowrap;
+
+    text-shadow:0 0 30px rgba(0,217,255,.15);
+}
+
+.logo small{
+    display:block;
+
+    font-size:10px;
+
+    letter-spacing:6px;
+
+    text-align:center;
+
+    margin-top:4px;
+
+    color:var(--primary);
+}
+
+/* NAV */
+
+nav{
+    display:flex;
+    gap:5px;
+    align-items:center;
+}
+
+nav button{
+    border:1px solid transparent;
+
+    background:transparent;
+
+    color:#cbd5e1;
+
+    padding:11px 13px;
+
+    border-radius:12px;
+
+    transition:.25s;
+}
+
+nav button:hover{
+    background:rgba(255,255,255,.06);
+
+    color:white;
+
+    border-color:rgba(0,217,255,.2);
+
+    transform:translateY(-2px);
+}
+
+.language-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+#language{
+    background:#10192b;
+
+    color:#fff;
+
+    border:1px solid var(--border);
+
+    border-radius:12px;
+
+    padding:11px 12px;
+}
+
+/* =========================================================
+   PAGES
+   ========================================================= */
+
+.page{
+    display:none;
+
+    padding:35px 0 80px;
+
+    min-height:calc(100vh - 90px);
+
+    animation:pageIn .35s ease;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes pageIn{
+    from{
+        opacity:0;
+        transform:translateY(12px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero{
+    position:relative;
+
+    min-height:470px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-align:center;
+
+    padding:60px 25px;
+
+    border-radius:32px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(0,217,255,.13);
+
+    background:
+    radial-gradient(
+        circle at center top,
+        rgba(0,217,255,.16),
+        transparent 45%
+    ),
+    linear-gradient(
+        145deg,
+        rgba(17,29,51,.96),
+        rgba(5,10,20,.96)
+    );
+
+    box-shadow:var(--shadow);
+}
+
+.hero::before{
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(0,217,255,.08);
+
+    box-shadow:
+    0 0 0 70px rgba(0,217,255,.025),
+    0 0 0 140px rgba(0,217,255,.015);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.badge{
+    display:inline-flex;
+
+    padding:8px 18px;
+
+    border-radius:50px;
+
+    color:#8befff;
+
+    background:rgba(0,217,255,.07);
+
+    border:1px solid rgba(0,217,255,.2);
+
+    font-size:12px;
+
+    font-weight:900;
+
+    letter-spacing:2px;
+
+    margin-bottom:22px;
+}
+
+.hero h1{
+    font-size:clamp(42px,6vw,76px);
+
+    line-height:1.05;
+
+    font-weight:1000;
+
+    margin-bottom:22px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #fff,
+        #b8f5ff,
+        var(--primary),
+        #fff
+    );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+}
+
+.hero p{
+    max-width:800px;
+
+    margin:auto;
+
+    color:var(--muted);
+
+    font-size:18px;
+
+    line-height:1.9;
+}
+
+/* =========================================================
+   PLAYER BAR
+   ========================================================= */
+
+.player-bar{
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:14px;
+
+    margin-top:20px;
+}
+
+.player-box{
+    padding:20px;
+
+    min-height:100px;
+
+    border-radius:18px;
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(20,31,52,.95),
+        rgba(10,16,29,.95)
+    );
+
+    border:1px solid var(--border);
+
+    text-align:center;
+}
+
+.player-box small{
+    color:var(--muted);
+
+    display:block;
+
+    font-size:12px;
+}
+
+.player-box strong{
+    display:block;
+
+    margin-top:5px;
+
+    font-size:25px;
+}
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.section-title{
+    margin:48px 0 20px;
+
+    font-size:30px;
+
+    font-weight:1000;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+}
+
+.section-title::before{
+    content:"";
+
+    width:5px;
+
+    height:32px;
+
+    border-radius:10px;
+
+    background:
+    linear-gradient(
+        var(--primary),
+        var(--secondary)
+    );
+
+    box-shadow:0 0 20px rgba(0,217,255,.5);
+}
+
+/* =========================================================
+   GAME GRID
+   ========================================================= */
+
+.games{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(270px,1fr));
+
+    gap:20px;
+}
+
+.game-card{
+    position:relative;
+
+    min-height:270px;
+
+    padding:27px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    overflow:hidden;
+
+    border-radius:var(--radius);
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(23,35,58,.97),
+        rgba(9,15,27,.97)
+    );
+
+    border:1px solid var(--border);
+
+    box-shadow:
+    0 15px 40px rgba(0,0,0,.28);
+
+    transition:.3s;
+}
+
+.game-card:hover{
+    transform:translateY(-8px);
+
+    border-color:rgba(0,217,255,.3);
+
+    box-shadow:
+    0 25px 60px rgba(0,0,0,.4),
+    0 0 30px rgba(0,217,255,.06);
+}
+
+.game-icon{
+    font-size:48px;
+
+    margin-bottom:10px;
+}
+
+.game-card h3{
+    font-size:22px;
+
+    margin-bottom:8px;
+
+    font-weight:1000;
+}
+
+.game-card p{
+    color:var(--muted);
+
+    line-height:1.7;
+
+    font-size:14px;
+}
+
+.game-meta{
+    display:flex;
+
+    gap:8px;
+
+    flex-wrap:wrap;
+
+    margin-top:14px;
+}
+
+.tag{
+    padding:5px 9px;
+
+    border-radius:20px;
+
+    font-size:10px;
+
+    color:#bdefff;
+
+    background:rgba(0,217,255,.07);
+
+    border:1px solid rgba(0,217,255,.12);
+}
+
+.game-button{
+    margin-top:18px;
+
+    width:100%;
+
+    padding:14px;
+
+    border:0;
+
+    border-radius:13px;
+
+    font-weight:1000;
+
+    color:#00131a;
+
+    background:
+    linear-gradient(
+        90deg,
+        var(--primary),
+        #70edff
+    );
+
+    transition:.25s;
+}
+
+.game-button:hover{
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 10px 30px rgba(0,217,255,.2);
+}
+
+/* =========================================================
+   PANELS
+   ========================================================= */
+
+.panel{
+    padding:35px;
+
+    border-radius:26px;
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(18,28,48,.96),
+        rgba(8,14,25,.96)
+    );
+
+    border:1px solid var(--border);
+
+    box-shadow:var(--shadow);
+}
+
+.heading{
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:25px;
+}
+
+.heading span{
+    font-size:35px;
+}
+
+.heading h2{
+    font-size:30px;
+
+    font-weight:1000;
+}
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.form-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:18px;
+}
+
+.field{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+}
+
+.field label{
+    font-weight:800;
+
+    font-size:14px;
+
+    color:#cbd5e1;
+}
+
+.field input{
+    padding:15px;
+
+    border-radius:13px;
+
+    border:1px solid var(--border);
+
+    background:rgba(0,0,0,.25);
+
+    color:#fff;
+}
+
+.field input:focus{
+    border-color:var(--primary);
+
+    box-shadow:
+    0 0 0 3px rgba(0,217,255,.08);
+
+    outline:none;
+}
+
+.main-button{
+    border:0;
+
+    padding:14px 25px;
+
+    margin-top:20px;
+
+    border-radius:13px;
+
+    font-weight:1000;
+
+    color:#00131a;
+
+    background:
+    linear-gradient(
+        90deg,
+        var(--primary),
+        #72efff
+    );
+}
+
+/* =========================================================
+   STATS
+   ========================================================= */
+
+.stats{
+    display:grid;
+
+    grid-template-columns:
+    repeat(4,1fr);
+
+    gap:14px;
+
+    margin-top:28px;
+}
+
+.stat{
+    text-align:center;
+
+    padding:20px;
+
+    border-radius:17px;
+
+    background:rgba(255,255,255,.035);
+
+    border:1px solid var(--border);
+}
+
+.stat-icon{
+    font-size:25px;
+}
+
+.stat small{
+    display:block;
+
+    color:var(--muted);
+}
+
+.stat strong{
+    font-size:25px;
+}
+
+/* =========================================================
+   QUIZ
+   ========================================================= */
+
+.quiz{
+    max-width:1000px;
+
+    margin:auto;
+}
+
+.quiz-header{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:15px;
+}
+
+.quiz-title{
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+}
+
+.quiz-title-icon{
+    font-size:40px;
+}
+
+.quiz-title h2{
+    font-size:28px;
+
+    font-weight:1000;
+}
+
+.timer{
+    width:78px;
+    height:78px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    border:3px solid var(--primary);
+
+    background:rgba(0,217,255,.05);
+
+    box-shadow:
+    0 0 25px rgba(0,217,255,.12);
+
+    font-size:25px;
+
+    font-weight:1000;
+}
+
+.progress{
+    height:8px;
+
+    margin:25px 0;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    background:rgba(255,255,255,.06);
+}
+
+.progress-bar{
+    height:100%;
+
+    width:0%;
+
+    background:
+    linear-gradient(
+        90deg,
+        var(--secondary),
+        var(--primary)
+    );
+
+    transition:.3s;
+}
+
+.question{
+    min-height:180px;
+
+    padding:30px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.035);
+
+    border:1px solid var(--border);
+
+    font-size:27px;
+
+    font-weight:900;
+
+    line-height:1.6;
+}
+
+.answers{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:14px;
+
+    margin-top:20px;
+}
+
+.answer{
+    min-height:70px;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    border:1px solid var(--border);
+
+    background:rgba(255,255,255,.04);
+
+    color:#fff;
+
+    font-weight:800;
+
+    transition:.2s;
+}
+
+.answer:hover{
+    background:rgba(0,217,255,.08);
+
+    border-color:rgba(0,217,255,.35);
+
+    transform:translateY(-2px);
+}
+
+.answer.correct{
+    background:rgba(0,230,118,.18);
+
+    border-color:var(--green);
+
+    color:#75ffb0;
+}
+
+.answer.wrong{
+    background:rgba(255,73,101,.18);
+
+    border-color:var(--red);
+
+    color:#ff8fa0;
+}
+
+.answer:disabled{
+    cursor:default;
+}
+
+.feedback{
+    min-height:50px;
+
+    text-align:center;
+
+    padding-top:15px;
+
+    font-weight:1000;
+
+    font-size:18px;
+}
+
+/* =========================================================
+   RESULT
+   ========================================================= */
+
+.result{
+    max-width:850px;
+
+    margin:auto;
+
+    text-align:center;
+}
+
+.result-icon{
+    font-size:70px;
+}
+
+.result-score{
+    font-size:100px;
+
+    font-weight:1000;
+
+    margin:10px;
+
+    background:
+    linear-gradient(
+        90deg,
+        var(--gold),
+        #fff,
+        var(--gold)
+    );
+
+    -webkit-background-clip:text;
+
+    color:transparent;
+}
+
+/* =========================================================
+   LEADERBOARD
+   ========================================================= */
+
+.table-wrapper{
+    overflow:auto;
+
+    margin-top:25px;
+}
+
+table{
+    width:100%;
+
+    min-width:650px;
+
+    border-collapse:collapse;
+}
+
+th,
+td{
+    padding:17px;
+
+    text-align:center;
+
+    border-bottom:1px solid var(--border);
+}
+
+th{
+    color:#8ceeff;
+
+    background:rgba(0,217,255,.05);
+}
+
+tr:hover td{
+    background:rgba(255,255,255,.025);
+}
+
+.rank-1{
+    color:var(--gold);
+
+    font-weight:1000;
+}
+
+/* =========================================================
+   PERSONALITY
+   ========================================================= */
+
+.personality-intro{
+    padding:25px;
+
+    border-radius:18px;
+
+    background:
+    linear-gradient(
+        145deg,
+        rgba(168,85,247,.12),
+        rgba(0,217,255,.04)
+    );
+
+    border:1px solid rgba(168,85,247,.15);
+
+    line-height:1.9;
+}
+
+.personality-question{
+    margin-top:20px;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.035);
+
+    border:1px solid var(--border);
+}
+
+.personality-options{
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:12px;
+
+    margin-top:15px;
+}
+
+.personality-options button{
+    padding:14px;
+
+    border-radius:13px;
+
+    border:1px solid var(--border);
+
+    background:rgba(255,255,255,.04);
+
+    color:white;
+
+    transition:.2s;
+}
+
+.personality-options button:hover{
+    border-color:var(--purple);
+
+    background:rgba(168,85,247,.1);
+}
+
+/* =========================================================
+   FOOTBALL DEVELOPMENT
+   ========================================================= */
+
+.development-grid{
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(240px,1fr));
+
+    gap:18px;
+}
+
+.dev-card{
+    padding:24px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.035);
+
+    border:1px solid var(--border);
+}
+
+.dev-card h3{
+    margin-bottom:10px;
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:50%;
+    bottom:25px;
+
+    transform:translate(-50%,100px);
+
+    opacity:0;
+
+    z-index:9999;
+
+    min-width:260px;
+
+    padding:14px 20px;
+
+    text-align:center;
+
+    border-radius:14px;
+
+    background:#121c30;
+
+    border:1px solid rgba(0,217,255,.3);
+
+    box-shadow:var(--shadow);
+
+    transition:.3s;
+}
+
+.toast.show{
+    transform:translate(-50%,0);
+
+    opacity:1;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer{
+    padding:35px 20px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+    border-top:1px solid var(--border);
+
+    margin-top:30px;
+}
+
+footer strong{
+    color:var(--primary);
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media(max-width:1000px){
+
+    .nav{
+        flex-wrap:wrap;
+
+        justify-content:center;
+
+        padding:15px 0;
+    }
+
+    .logo{
+        width:100%;
+
+        text-align:center;
+    }
+
+    nav{
+        width:100%;
+
+        overflow-x:auto;
+
+        justify-content:flex-start;
+    }
+
+    .player-bar,
+    .stats{
+        grid-template-columns:
+        repeat(2,1fr);
+    }
+}
+
+@media(max-width:650px){
+
+    .container{
+        width:calc(100% - 20px);
+    }
+
+    .logo{
+        font-size:32px;
+    }
+
+    .hero{
+        min-height:420px;
+
+        padding:40px 18px;
+
+        border-radius:23px;
+    }
+
+    .hero h1{
+        font-size:38px;
+    }
+
+    .hero p{
+        font-size:15px;
+    }
+
+    .player-bar,
+    .stats,
+    .form-grid,
+    .answers,
+    .personality-options{
+        grid-template-columns:1fr;
+    }
+
+    .panel{
+        padding:22px;
+    }
+
+    .question{
+        font-size:21px;
+
+        min-height:190px;
+    }
+
+    .timer{
+        width:64px;
+        height:64px;
+
+        font-size:20px;
+    }
+}
+
+</style>
 </head>
-
 
 <body>
 
-<div id="app">
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
 
-  <!-- =====================================================
-       TOP BAR
-  ====================================================== -->
+<header>
 
-  <header class="topbar">
+<div class="container nav">
 
-    <div class="container nav">
+<div class="logo">
+    ZIVOZONE
+    <small>GLOBAL CHALLENGE UNIVERSE</small>
+</div>
 
-      <!-- MOBILE MENU -->
+<nav>
 
-      <button
-        id="mobileMenuButton"
-        class="mobile-menu"
-        type="button"
-        onclick="toggleMobileMenu()"
-        aria-label="Menu">
-        ☰
-      </button>
+<button onclick="showPage('home')">
+🏠 <span data-i18n="home">الرئيسية</span>
+</button>
 
+<button onclick="showPage('profile')">
+👤 <span data-i18n="profile">ملفي</span>
+</button>
 
-      <!-- LOGO -->
+<button onclick="showPage('leaderboard')">
+🏆 <span data-i18n="ranking">الترتيب</span>
+</button>
 
-      <div
-        class="logo"
-        onclick="showPage('home')"
-        role="button"
-        tabindex="0">
+<button onclick="showPage('personality')">
+🧠 <span data-i18n="who">من أنا؟</span>
+</button>
 
-        <strong>GLOBAL</strong>
-        <span>CHALLENGE</span>
+<button onclick="showPage('football')">
+⚽ <span data-i18n="football">كرة القدم</span>
+</button>
 
-      </div>
+</nav>
 
+<div class="language-box">
 
-      <!-- MAIN NAVIGATION -->
+<select id="language" onchange="changeLanguage(this.value)">
 
-      <nav id="mainNavigation">
+<option value="ar">🇯🇴 العربية</option>
+<option value="en">🇺🇸 English</option>
+<option value="fr">🇫🇷 Français</option>
+<option value="es">🇪🇸 Español</option>
+<option value="pt">🇧🇷 Português</option>
 
-        <button
-          type="button"
-          onclick="showPage('home')">
-
-          🏠
-
-          <span data-i18n="home">
-            الرئيسية
-          </span>
-
-        </button>
-
-
-        <button
-          type="button"
-          onclick="showPage('challenges')">
-
-          🎮
-
-          <span data-i18n="challenges">
-            التحديات
-          </span>
-
-        </button>
-
-
-        <button
-          type="button"
-          onclick="showPage('football')">
-
-          ⚽
-
-          <span data-i18n="football">
-            كرة القدم
-          </span>
-
-        </button>
-
-
-        <button
-          type="button"
-          onclick="showPage('profile')">
-
-          👤
-
-          <span data-i18n="profile">
-            ملفي
-          </span>
-
-        </button>
-
-
-        <button
-          type="button"
-          onclick="showPage('leaderboard')">
-
-          🏆
-
-          <span data-i18n="ranking">
-            الترتيب
-          </span>
-
-        </button>
-
-
-        <button
-          type="button"
-          onclick="showPage('personality')">
-
-          🧠
-
-          <span data-i18n="who">
-            من أنا؟
-          </span>
-
-        </button>
-
-      </nav>
-
-
-      <!-- LANGUAGE -->
-
-      <div class="language-box">
-
-        <span
-          id="languageIcon"
-          aria-hidden="true">
-          🇯🇴
-        </span>
-
-
-        <select
-          id="language"
-          onchange="changeLanguage(this.value)"
-          aria-label="Language">
-
-          <option value="ar">
-            🇯🇴 العربية
-          </option>
-
-          <option value="en">
-            🇺🇸 English
-          </option>
-
-          <option value="fr">
-            🇫🇷 Français
-          </option>
-
-          <option value="es">
-            🇪🇸 Español
-          </option>
-
-          <option value="pt">
-            🇧🇷 Português
-          </option>
-
-        </select>
-
-      </div>
-
-    </div>
-
-  </header>
-
-
-
-  <!-- =====================================================
-       MAIN
-  ====================================================== -->
-
-  <main class="container">
-
-
-    <!-- ===================================================
-         HOME
-    ==================================================== -->
-
-    <section
-      id="home"
-      class="page active">
-
-
-      <!-- HERO -->
-
-      <div class="hero">
-
-        <div class="hero-badge">
-
-          🌍
-
-          <span data-i18n="globalPlayer">
-            GLOBAL PLAYER
-          </span>
-
-        </div>
-
-
-        <h1 data-i18n="heroTitle">
-          هل أنت مستعد لتثبت أنك الأفضل؟
-        </h1>
-
-
-        <p data-i18n="heroText">
-          تحديات ذكاء وسرعة وذاكرة وتركيز وكرة قدم
-          وتحليل شخصية. كل مرة تلعب فيها تتغير التجربة.
-        </p>
-
-
-        <div class="hero-actions">
-
-          <button
-            class="main-button"
-            type="button"
-            onclick="showPage('challenges')">
-
-            ⚡
-
-            <span data-i18n="startChallenge">
-              ابدأ التحدي
-            </span>
-
-          </button>
-
-
-          <button
-            class="secondary-button"
-            type="button"
-            onclick="showPage('personality')">
-
-            🧠
-
-            <span data-i18n="discoverYourself">
-              اكتشف نفسك
-            </span>
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- PLAYER MINI CARD -->
-
-      <div class="player-mini">
-
-        <div>
-
-          <small data-i18n="currentPlayer">
-            اللاعب الحالي
-          </small>
-
-          <strong id="miniName">
-            زائر
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <small data-i18n="points">
-            النقاط
-          </small>
-
-          <strong id="miniPoints">
-            0
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <small data-i18n="level">
-            المستوى
-          </small>
-
-          <strong id="miniLevel">
-            1
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <small data-i18n="globalRank">
-            الترتيب
-          </small>
-
-          <strong id="miniRank">
-            —
-          </strong>
-
-        </div>
-
-      </div>
-
-
-
-      <!-- QUICK ACCESS -->
-
-      <div class="quick-grid">
-
-
-        <button
-          type="button"
-          onclick="showPage('challenges')">
-
-          <span>🧠</span>
-
-          <strong data-i18n="smartChallenges">
-            التحديات الذكية
-          </strong>
-
-          <small data-i18n="smartChallengesText">
-            اختبر عقلك
-          </small>
-
-        </button>
-
-
-        <button
-          type="button"
-          onclick="showPage('football')">
-
-          <span>⚽</span>
-
-          <strong data-i18n="football">
-            كرة القدم
-          </strong>
-
-          <small data-i18n="footballQuickText">
-            تحديات كروية
-          </small>
-
-        </button>
-
-
-        <button
-          type="button"
-          onclick="showPage('personality')">
-
-          <span>🧬</span>
-
-          <strong data-i18n="who">
-            من أنا؟
-          </strong>
-
-          <small data-i18n="personalityQuickText">
-            اكتشف طريقة تفكيرك
-          </small>
-
-        </button>
-
-
-        <button
-          type="button"
-          onclick="showPage('leaderboard')">
-
-          <span>🏆</span>
-
-          <strong data-i18n="ranking">
-            الترتيب
-          </strong>
-
-          <small data-i18n="rankingQuickText">
-            نافس اللاعبين
-          </small>
-
-        </button>
-
-      </div>
-
-
-
-      <!-- FEATURED CHALLENGES -->
-
-      <h2
-        class="section-title"
-        data-i18n="featuredChallenges">
-
-        تحديات مميزة
-
-      </h2>
-
-
-      <div
-        id="games"
-        class="games-grid">
-      </div>
-
-
-
-      <!-- FEATURES -->
-
-      <div class="features-grid">
-
-
-        <article class="feature-card">
-
-          <span>🔥</span>
-
-          <h3 data-i18n="adaptiveDifficulty">
-            صعوبة ذكية
-          </h3>
-
-          <p data-i18n="adaptiveDifficultyText">
-            مستوى التحدي يتطور بناءً على العمر والأداء
-            والسرعة والدقة.
-          </p>
-
-        </article>
-
-
-        <article class="feature-card">
-
-          <span>🔄</span>
-
-          <h3 data-i18n="dynamicQuestions">
-            تجربة متغيرة
-          </h3>
-
-          <p data-i18n="dynamicQuestionsText">
-            أسئلة مختلفة وتجربة تتغير مع كل محاولة.
-          </p>
-
-        </article>
-
-
-        <article class="feature-card">
-
-          <span>🌍</span>
-
-          <h3 data-i18n="global">
-            عالمية
-          </h3>
-
-          <p data-i18n="globalText">
-            العب بلغتك واستعد للمنافسة مع لاعبين من العالم.
-          </p>
-
-        </article>
-
-
-        <article class="feature-card">
-
-          <span>🤖</span>
-
-          <h3 data-i18n="ai">
-            ذكاء اصطناعي
-          </h3>
-
-          <p data-i18n="aiText">
-            بنية قابلة للتطور نحو تجارب تعتمد على الذكاء
-            الاصطناعي.
-          </p>
-
-        </article>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         CHALLENGES
-    ==================================================== -->
-
-    <section
-      id="challenges"
-      class="page">
-
-      <div class="panel">
-
-
-        <div class="section-heading">
-
-          <span>🎮</span>
-
-          <div>
-
-            <h2 data-i18n="challenges">
-              التحديات
-            </h2>
-
-            <small data-i18n="challengeSubtitle">
-              اختر اللعبة التي تريد اختبار نفسك فيها
-            </small>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- FILTERS -->
-
-        <div
-          id="challengeFilters"
-          class="challenge-filters">
-
-
-          <button
-            type="button"
-            class="filter active"
-            data-category="all"
-            onclick="filterGames('all')"
-            data-i18n="all">
-
-            الكل
-
-          </button>
-
-
-          <button
-            type="button"
-            class="filter"
-            data-category="intelligence"
-            onclick="filterGames('intelligence')"
-            data-i18n="intelligence">
-
-            🧠 ذكاء
-
-          </button>
-
-
-          <button
-            type="button"
-            class="filter"
-            data-category="speed"
-            onclick="filterGames('speed')"
-            data-i18n="speed">
-
-            ⚡ سرعة
-
-          </button>
-
-
-          <button
-            type="button"
-            class="filter"
-            data-category="memory"
-            onclick="filterGames('memory')"
-            data-i18n="memory">
-
-            🧩 ذاكرة
-
-          </button>
-
-
-          <button
-            type="button"
-            class="filter"
-            data-category="football"
-            onclick="filterGames('football')"
-            data-i18n="football">
-
-            ⚽ كرة القدم
-
-          </button>
-
-
-          <button
-            type="button"
-            class="filter"
-            data-category="psychology"
-            onclick="filterGames('psychology')"
-            data-i18n="psychology">
-
-            🧠 نفسي
-
-          </button>
-
-        </div>
-
-
-
-        <div
-          id="allGames"
-          class="games-grid">
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         PROFILE
-    ==================================================== -->
-
-    <section
-      id="profile"
-      class="page">
-
-      <div class="panel">
-
-
-        <div class="section-heading">
-
-          <span>👤</span>
-
-          <div>
-
-            <h2 data-i18n="playerProfile">
-              ملف اللاعب
-            </h2>
-
-            <small data-i18n="profileSubtitle">
-              هويتك وتطورك داخل Global Challenge
-            </small>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- PROFILE FORM -->
-
-        <div class="form-grid">
-
-
-          <div class="field">
-
-            <label
-              for="playerName"
-              data-i18n="name">
-
-              الاسم
-
-            </label>
-
-
-            <input
-              id="playerName"
-              type="text"
-              maxlength="30"
-              autocomplete="nickname"
-              placeholder="اكتب اسمك"
-              data-i18n-placeholder="namePlaceholder">
-
-          </div>
-
-
-
-          <div class="field">
-
-            <label
-              for="playerAge"
-              data-i18n="age">
-
-              العمر
-
-            </label>
-
-
-            <input
-              id="playerAge"
-              type="number"
-              min="5"
-              max="100"
-              inputmode="numeric"
-              placeholder="العمر">
-
-          </div>
-
-
-
-          <div class="field">
-
-            <label
-              for="playerCountry"
-              data-i18n="country">
-
-              الدولة
-
-            </label>
-
-
-            <select id="playerCountry">
-
-              <option value="">
-                🌍
-              </option>
-
-              <option value="JO">
-                🇯🇴 Jordan
-              </option>
-
-              <option value="SA">
-                🇸🇦 Saudi Arabia
-              </option>
-
-              <option value="AE">
-                🇦🇪 United Arab Emirates
-              </option>
-
-              <option value="EG">
-                🇪🇬 Egypt
-              </option>
-
-              <option value="MA">
-                🇲🇦 Morocco
-              </option>
-
-              <option value="FR">
-                🇫🇷 France
-              </option>
-
-              <option value="ES">
-                🇪🇸 Spain
-              </option>
-
-              <option value="US">
-                🇺🇸 United States
-              </option>
-
-              <option value="BR">
-                🇧🇷 Brazil
-              </option>
-
-              <option value="CN">
-                🇨🇳 China
-              </option>
-
-              <option value="GB">
-                🇬🇧 United Kingdom
-              </option>
-
-              <option value="DE">
-                🇩🇪 Germany
-              </option>
-
-              <option value="IT">
-                🇮🇹 Italy
-              </option>
-
-              <option value="TR">
-                🇹🇷 Türkiye
-              </option>
-
-              <option value="OTHER">
-                🌍 Other
-              </option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-
-
-        <button
-          class="main-button"
-          type="button"
-          onclick="saveProfile()">
-
-          💾
-
-          <span data-i18n="save">
-            حفظ الملف
-          </span>
-
-        </button>
-
-
-
-        <!-- PLAYER STATISTICS -->
-
-        <div class="stats-grid">
-
-
-          <div class="stat">
-
-            <span>⭐</span>
-
-            <small data-i18n="points">
-              النقاط
-            </small>
-
-            <strong id="profilePoints">
-              0
-            </strong>
-
-          </div>
-
-
-          <div class="stat">
-
-            <span>🔥</span>
-
-            <small data-i18n="level">
-              المستوى
-            </small>
-
-            <strong id="profileLevel">
-              1
-            </strong>
-
-          </div>
-
-
-          <div class="stat">
-
-            <span>🎮</span>
-
-            <small data-i18n="games">
-              التحديات
-            </small>
-
-            <strong id="profileGames">
-              0
-            </strong>
-
-          </div>
-
-
-          <div class="stat">
-
-            <span>🎯</span>
-
-            <small data-i18n="accuracy">
-              الدقة
-            </small>
-
-            <strong id="profileAccuracy">
-              0%
-            </strong>
-
-          </div>
-
-
-          <div class="stat">
-
-            <span>⚡</span>
-
-            <small data-i18n="speed">
-              السرعة
-            </small>
-
-            <strong id="profileSpeed">
-              —
-            </strong>
-
-          </div>
-
-
-          <div class="stat">
-
-            <span>🏆</span>
-
-            <small data-i18n="globalRank">
-              الترتيب
-            </small>
-
-            <strong id="profileRank">
-              —
-            </strong>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- LEVEL PROGRESS -->
-
-        <div class="progress-profile">
-
-          <div class="profile-level-header">
-
-            <span data-i18n="nextLevel">
-              المستوى القادم
-            </span>
-
-            <strong id="nextLevelText">
-              0 / 100
-            </strong>
-
-          </div>
-
-
-          <div class="progress">
-
-            <span id="profileProgress"></span>
-
-          </div>
-
-        </div>
-
-
-
-        <div class="info-box">
-
-          🧠
-
-          <span data-i18n="adaptiveInfo">
-            العمر والأداء والنقاط والسرعة تدخل في تحديد
-            مستوى التحديات القادمة.
-          </span>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         FOOTBALL
-    ==================================================== -->
-
-    <section
-      id="football"
-      class="page">
-
-      <div class="panel">
-
-
-        <div class="section-heading">
-
-          <span>⚽</span>
-
-          <div>
-
-            <h2 data-i18n="football">
-              كرة القدم
-            </h2>
-
-            <small data-i18n="footballSubtitle">
-              اختبر معرفتك وذكاءك الكروي وطوّر مستواك
-            </small>
-
-          </div>
-
-        </div>
-
-
-
-        <div
-          id="footballGames"
-          class="games-grid">
-        </div>
-
-
-
-        <div class="football-development">
-
-          <div class="info-box">
-
-            ⚽
-
-            <strong data-i18n="youthDevelopment">
-              تطوير لاعبي الناشئين
-            </strong>
-
-
-            <p data-i18n="youthDevelopmentText">
-              محتوى واختبارات تساعد اللاعب الصغير على فهم
-              اللعبة وتطوير التفكير والقرار والمهارات.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         QUIZ
-    ==================================================== -->
-
-    <section
-      id="quiz"
-      class="page">
-
-      <div class="quiz-panel">
-
-
-        <!-- QUIZ HEADER -->
-
-        <div class="quiz-header">
-
-
-          <div class="quiz-game-info">
-
-            <span id="gameIcon">
-              🧠
-            </span>
-
-
-            <div>
-
-              <h2 id="quizTitle">
-                التحدي
-              </h2>
-
-
-              <small id="quizCategory">
-                —
-              </small>
-
-            </div>
-
-          </div>
-
-
-
-          <div class="quiz-meta">
-
-
-            <div class="difficulty-badge">
-
-              🔥
-
-              <span
-                id="difficultyLabel">
-                1
-              </span>
-
-            </div>
-
-
-            <div
-              id="timer"
-              class="timer">
-
-              30
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- QUIZ META -->
-
-        <div class="quiz-progress-info">
-
-
-          <span id="questionCounter">
-            1 / 10
-          </span>
-
-
-          <span id="questionDifficulty">
-            —
-          </span>
-
-        </div>
-
-
-
-        <!-- PROGRESS -->
-
-        <div class="progress">
-
-          <span id="progressBar"></span>
-
-        </div>
-
-
-
-        <!-- QUESTION -->
-
-        <div
-          id="question"
-          class="question">
-
-          السؤال
-
-        </div>
-
-
-
-        <!-- ANSWERS -->
-
-        <div
-          id="answers"
-          class="answers">
-        </div>
-
-
-
-        <!-- FEEDBACK -->
-
-        <div
-          id="feedback"
-          class="feedback"
-          aria-live="polite">
-        </div>
-
-
-
-        <!-- QUIZ FOOTER -->
-
-        <div class="quiz-footer">
-
-
-          <span>
-
-            ⚡
-
-            <span data-i18n="speedBonus">
-              مكافأة السرعة
-            </span>
-
-          </span>
-
-
-          <span>
-
-            🎯
-
-            <span data-i18n="accuracyBonus">
-              مكافأة الدقة
-            </span>
-
-          </span>
-
-
-          <span>
-
-            🔥
-
-            <span data-i18n="streak">
-              سلسلة
-            </span>
-
-            <strong id="quizStreak">
-              0
-            </strong>
-
-          </span>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         RESULT
-    ==================================================== -->
-
-    <section
-      id="result"
-      class="page">
-
-      <div class="panel result">
-
-
-        <div class="result-icon">
-          🏆
-        </div>
-
-
-        <h2 data-i18n="result">
-          نتيجة التحدي
-        </h2>
-
-
-        <div
-          class="big-score"
-          id="resultScore">
-
-          0
-
-        </div>
-
-
-        <p data-i18n="pointsEarned">
-          نقاط مكتسبة
-        </p>
-
-
-
-        <div class="stats-grid">
-
-
-          <div class="stat">
-
-            <span>🎯</span>
-
-            <small data-i18n="correct">
-              الإجابات الصحيحة
-            </small>
-
-            <strong id="resultCorrect">
-              0
-            </strong>
-
-          </div>
-
-
-          <div class="stat">
-
-            <span>⚡</span>
-
-            <small data-i18n="averageTime">
-              متوسط الوقت
-            </small>
-
-            <strong id="resultTime">
-              0s
-            </strong>
-
-          </div>
-
-
-          <div class="stat">
-
-            <span>🔥</span>
-
-            <small data-i18n="level">
-              المستوى
-            </small>
-
-            <strong id="resultLevel">
-              1
-            </strong>
-
-          </div>
-
-
-          <div class="stat">
-
-            <span>🏆</span>
-
-            <small data-i18n="globalRank">
-              الترتيب
-            </small>
-
-            <strong id="resultRank">
-              —
-            </strong>
-
-          </div>
-
-        </div>
-
-
-
-        <div
-          id="resultMessage"
-          class="result-message">
-        </div>
-
-
-
-        <div class="hero-actions">
-
-
-          <button
-            class="main-button"
-            type="button"
-            onclick="showPage('challenges')">
-
-            🎮
-
-            <span data-i18n="playAgain">
-              تحدٍ جديد
-            </span>
-
-          </button>
-
-
-          <button
-            class="secondary-button"
-            type="button"
-            onclick="showPage('profile')">
-
-            👤
-
-            <span data-i18n="viewProfile">
-              ملفي
-            </span>
-
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         LEADERBOARD
-    ==================================================== -->
-
-    <section
-      id="leaderboard"
-      class="page">
-
-      <div class="panel">
-
-
-        <div class="section-heading">
-
-          <span>🏆</span>
-
-          <div>
-
-            <h2 data-i18n="globalRanking">
-              الترتيب العالمي
-            </h2>
-
-            <small data-i18n="rankingSubtitle">
-              أسرع وأقوى اللاعبين
-            </small>
-
-          </div>
-
-        </div>
-
-
-
-        <!-- RANKING TABS -->
-
-        <div class="ranking-tabs">
-
-
-          <button
-            type="button"
-            class="ranking-tab active"
-            onclick="changeRanking('global')"
-            data-i18n="global">
-
-            عالمي
-
-          </button>
-
-
-          <button
-            type="button"
-            class="ranking-tab"
-            onclick="changeRanking('country')"
-            data-i18n="countryRanking">
-
-            الدولة
-
-          </button>
-
-
-          <button
-            type="button"
-            class="ranking-tab"
-            onclick="changeRanking('game')"
-            data-i18n="gameRanking">
-
-            اللعبة
-
-          </button>
-
-        </div>
-
-
-
-        <div
-          id="rankingStatus"
-          class="info-box">
-
-          🌍
-
-          <span data-i18n="localRankingInfo">
-            الترتيب الحالي محفوظ محليًا. عند ربط قاعدة
-            البيانات سيصبح الترتيب عالميًا حقيقيًا.
-          </span>
-
-        </div>
-
-
-
-        <!-- LEADERBOARD -->
-
-        <div class="table-wrapper">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>
-                  #
-                </th>
-
-
-                <th data-i18n="player">
-                  اللاعب
-                </th>
-
-
-                <th data-i18n="country">
-                  الدولة
-                </th>
-
-
-                <th data-i18n="points">
-                  النقاط
-                </th>
-
-
-                <th data-i18n="level">
-                  المستوى
-                </th>
-
-
-                <th data-i18n="speed">
-                  السرعة
-                </th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody
-              id="leaderboardBody">
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         PERSONALITY
-    ==================================================== -->
-
-    <section
-      id="personality"
-      class="page">
-
-      <div class="panel">
-
-
-        <div class="section-heading">
-
-          <span>🧠</span>
-
-          <div>
-
-            <h2 data-i18n="who">
-              من أنا؟
-            </h2>
-
-            <small data-i18n="personalitySubtitle">
-              رحلة لاكتشاف طريقة تفكيرك
-            </small>
-
-          </div>
-
-        </div>
-
-
-
-        <div class="personality-intro">
-
-          <div class="info-box">
-
-            🧬
-
-            <strong data-i18n="personalityIntroTitle">
-              هل تعرف نفسك فعلًا؟
-            </strong>
-
-
-            <p data-i18n="personalityIntroText">
-              أجب عن مواقف وأسئلة متنوعة. سنحلل أنماط
-              إجاباتك وسلوكك داخل التجربة لإعطائك قراءة
-              ترفيهية عن طريقة تفكيرك.
-            </p>
-
-          </div>
-
-        </div>
-
-
-
-        <div
-          id="personalityContent">
-        </div>
-
-
-
-        <div
-          id="personalityResult"
-          class="personality-result">
-        </div>
-
-
-
-        <div class="info-box">
-
-          ⚠️
-
-          <span data-i18n="personalityDisclaimer">
-            هذا تحليل ترفيهي واحتمالي يعتمد على إجاباتك،
-            وليس تشخيصًا نفسيًا أو طبيًا.
-          </span>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         NEWS
-    ==================================================== -->
-
-    <section
-      id="news"
-      class="page">
-
-      <div class="panel">
-
-
-        <div class="section-heading">
-
-          <span>📰</span>
-
-          <div>
-
-            <h2 data-i18n="globalNews">
-              الأخبار العالمية
-            </h2>
-
-            <small data-i18n="newsSubtitle">
-              أخبار ومحتوى عالمي
-            </small>
-
-          </div>
-
-        </div>
-
-
-
-        <div
-          id="newsContainer"
-          class="news-grid">
-
-          <div class="info-box">
-
-            🌍
-
-            <span data-i18n="newsComing">
-              سيتم ربط الأخبار العالمية بمصادر موثوقة
-              في مرحلة لاحقة.
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         AI
-    ==================================================== -->
-
-    <section
-      id="ai"
-      class="page">
-
-      <div class="panel">
-
-
-        <div class="section-heading">
-
-          <span>🤖</span>
-
-          <div>
-
-            <h2 data-i18n="ai">
-              الذكاء الاصطناعي
-            </h2>
-
-            <small data-i18n="aiSubtitle">
-              تحديات وتجارب تتطور مع اللاعب
-            </small>
-
-          </div>
-
-        </div>
-
-
-
-        <div
-          id="aiContent"
-          class="ai-content">
-
-          <div class="info-box">
-
-            🤖
-
-            <strong data-i18n="aiComing">
-              نظام الذكاء الاصطناعي
-            </strong>
-
-
-            <p data-i18n="aiComingText">
-              هذه المنطقة مجهزة لإضافة تجارب الذكاء
-              الاصطناعي والتحليل المتقدم.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ===================================================
-         MIND GAMES
-    ==================================================== -->
-
-    <section
-      id="mindgames"
-      class="page">
-
-      <div class="panel">
-
-
-        <div class="section-heading">
-
-          <span>🎭</span>
-
-          <div>
-
-            <h2 data-i18n="mindGames">
-              ألعاب العقل
-            </h2>
-
-            <small data-i18n="mindGamesSubtitle">
-              تحديات مختلفة عن المعتاد
-            </small>
-
-          </div>
-
-        </div>
-
-
-
-        <div
-          id="mindGamesContainer"
-          class="games-grid">
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-  </main>
-
-
-
-  <!-- =====================================================
-       TOAST
-  ====================================================== -->
-
-  <div
-    id="toast"
-    class="toast"
-    role="status"
-    aria-live="polite">
-  </div>
-
-
-
-  <!-- =====================================================
-       LOADING
-  ====================================================== -->
-
-  <div
-    id="loadingOverlay"
-    class="loading-overlay"
-    hidden>
-
-    <div class="loading-card">
-
-      <div class="loading-spinner"></div>
-
-      <span data-i18n="loading">
-        جاري التحميل...
-      </span>
-
-    </div>
-
-  </div>
-
-
-
-  <!-- =====================================================
-       APP JAVASCRIPT
-  ====================================================== -->
-
-  <script src="app.js"></script>
+</select>
 
 </div>
 
-</body>
+</div>
 
+</header>
+
+
+<main class="container">
+
+<!-- =========================================================
+     HOME
+     ========================================================= -->
+
+<section id="home" class="page active">
+
+<div class="hero">
+
+<div class="hero-content">
+
+<div class="badge">
+🌍 ZIVOZONE GLOBAL PLAYER
+</div>
+
+<h1 data-i18n="heroTitle">
+هل أنت مستعد لتثبت أنك الأفضل؟
+</h1>
+
+<p data-i18n="heroText">
+عالم واحد. تحديات لا تنتهي.
+اختبر ذكاءك وسرعتك وتركيزك وشخصيتك ومهاراتك.
+كل مرة تعود فيها إلى ZIVOZONE تنتظرك تجربة مختلفة.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="player-bar">
+
+<div class="player-box">
+
+<small data-i18n="player">
+اللاعب
+</small>
+
+<strong id="miniName">
+زائر
+</strong>
+
+</div>
+
+
+<div class="player-box">
+
+<small data-i18n="points">
+النقاط
+</small>
+
+<strong id="miniPoints">
+0
+</strong>
+
+</div>
+
+
+<div class="player-box">
+
+<small data-i18n="level">
+المستوى
+</small>
+
+<strong id="miniLevel">
+1
+</strong>
+
+</div>
+
+
+<div class="player-box">
+
+<small data-i18n="rank">
+الترتيب
+</small>
+
+<strong id="miniRank">
+-
+</strong>
+
+</div>
+
+</div>
+
+
+<h2 class="section-title" data-i18n="challenges">
+التحديات
+</h2>
+
+<div id="games" class="games"></div>
+
+
+<h2 class="section-title">
+🚀 ZIVOZONE UNIVERSE
+</h2>
+
+<div class="development-grid">
+
+<div class="dev-card">
+
+<h3>🧠 الذكاء</h3>
+
+<p>
+أسئلة منطقية واستنتاجية تتدرج حسب أداء اللاعب.
+</p>
+
+</div>
+
+
+<div class="dev-card">
+
+<h3>⚡ السرعة</h3>
+
+<p>
+كل ثانية لها قيمة. الأسرع والأدق يحصل على نقاط أكبر.
+</p>
+
+</div>
+
+
+<div class="dev-card">
+
+<h3>⚽ كرة القدم</h3>
+
+<p>
+اختبارات كرة القدم العالمية والتحليل التكتيكي وتطوير اللاعبين.
+</p>
+
+</div>
+
+
+<div class="dev-card">
+
+<h3>👁️ التلاعب الذهني</h3>
+
+<p>
+تحديات مصممة لإرباك اللاعب واختبار الانتباه والقرار.
+</p>
+
+</div>
+
+
+<div class="dev-card">
+
+<h3>🧠 من أنا؟</h3>
+
+<p>
+تجربة تحليلية تعتمد على اختيارات اللاعب وطريقة اتخاذ القرار.
+</p>
+
+</div>
+
+
+<div class="dev-card">
+
+<h3>🏆 التنافس</h3>
+
+<p>
+النظام يحسب النقاط والمستوى والدقة والسرعة لبناء ترتيب تنافسي.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     PROFILE
+     ========================================================= -->
+
+<section id="profile" class="page">
+
+<div class="panel">
+
+<div class="heading">
+
+<span>👤</span>
+
+<h2 data-i18n="profileTitle">
+ملف اللاعب
+</h2>
+
+</div>
+
+
+<div class="form-grid">
+
+<div class="field">
+
+<label>
+الاسم
+</label>
+
+<input
+id="playerName"
+type="text"
+maxlength="30"
+placeholder="اكتب اسمك">
+
+</div>
+
+
+<div class="field">
+
+<label>
+العمر
+</label>
+
+<input
+id="playerAge"
+type="number"
+min="5"
+max="100"
+placeholder="العمر">
+
+</div>
+
+</div>
+
+
+<button class="main-button"
+onclick="saveProfile()">
+
+💾 حفظ الملف
+
+</button>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="stat-icon">⭐</div>
+
+<small>النقاط</small>
+
+<strong id="profilePoints">0</strong>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-icon">🔥</div>
+
+<small>المستوى</small>
+
+<strong id="profileLevel">1</strong>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-icon">🎮</div>
+
+<small>التحديات</small>
+
+<strong id="profileGames">0</strong>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-icon">🎯</div>
+
+<small>الدقة</small>
+
+<strong id="profileAccuracy">0%</strong>
+
+</div>
+
+</div>
+
+
+<div class="personality-intro">
+
+🧠
+كلما ارتفع مستواك وتحسن أداؤك، تصبح التحديات أصعب.
+العمر يدخل ضمن نظام تحديد مستوى التحدي، لكن الأداء الحقيقي يبقى العامل الأساسي.
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     QUIZ
+     ========================================================= -->
+
+<section id="quiz" class="page">
+
+<div class="panel quiz">
+
+<div class="quiz-header">
+
+<div class="quiz-title">
+
+<div id="quizIcon" class="quiz-title-icon">
+🧠
+</div>
+
+<div>
+
+<h2 id="quizTitle">
+التحدي
+</h2>
+
+<small id="questionCounter">
+1 / 10
+</small>
+
+</div>
+
+</div>
+
+
+<div id="timer" class="timer">
+30
+</div>
+
+</div>
+
+
+<div class="progress">
+
+<div id="progressBar"
+class="progress-bar">
+</div>
+
+</div>
+
+
+<div id="question"
+class="question">
+السؤال
+</div>
+
+
+<div id="answers"
+class="answers">
+</div>
+
+
+<div id="feedback"
+class="feedback">
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     RESULT
+     ========================================================= -->
+
+<section id="result" class="page">
+
+<div class="panel result">
+
+<div class="result-icon">
+🏆
+</div>
+
+<h2>
+نتيجة التحدي
+</h2>
+
+<div
+id="resultScore"
+class="result-score">
+0
+</div>
+
+<p>
+نقاط مكتسبة
+</p>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<small>
+الصحيح
+</small>
+
+<strong id="resultCorrect">
+0
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+متوسط الوقت
+</small>
+
+<strong id="resultTime">
+0s
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+المستوى
+</small>
+
+<strong id="resultLevel">
+1
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+الدقة
+</small>
+
+<strong id="resultAccuracy">
+0%
+</strong>
+
+</div>
+
+</div>
+
+
+<button
+class="main-button"
+onclick="showPage('home')">
+
+🏠 العودة للتحديات
+
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     LEADERBOARD
+     ========================================================= -->
+
+<section id="leaderboard" class="page">
+
+<div class="panel">
+
+<div class="heading">
+
+<span>🏆</span>
+
+<h2>
+الترتيب العام
+</h2>
+
+</div>
+
+
+<div class="personality-intro">
+
+🔥
+الترتيب يعتمد على النقاط والمستوى والأداء.
+في هذه النسخة يتم حفظ البيانات محليًا على جهاز اللاعب.
+سيتم تحويله لاحقًا إلى ترتيب عالمي حقيقي عند ربط قاعدة البيانات.
+
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>#</th>
+
+<th>اللاعب</th>
+
+<th>النقاط</th>
+
+<th>المستوى</th>
+
+<th>التحديات</th>
+
+<th>الدقة</th>
+
+</tr>
+
+</thead>
+
+<tbody id="leaderboardBody">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     PERSONALITY
+     ========================================================= -->
+
+<section id="personality" class="page">
+
+<div class="panel">
+
+<div class="heading">
+
+<span>🧠</span>
+
+<h2>
+من أنا؟
+</h2>
+
+</div>
+
+
+<div class="personality-intro">
+
+<strong>
+تجربة ZIVOZONE النفسية
+</strong>
+
+<br><br>
+
+لن نطلب منك أن تقول لنا من أنت.
+
+سنحاول معرفة ذلك من طريقة تفكيرك،
+اختياراتك،
+سرعة قرارك،
+طريقة تعاملك مع المخاطرة،
+الضغط،
+المنافسة،
+والأسئلة غير المتوقعة.
+
+<br><br>
+
+⚠️
+النتيجة ترفيهية وتحليلية وليست تشخيصًا نفسيًا طبيًا.
+
+</div>
+
+
+<div id="personalityContent"></div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     FOOTBALL
+     ========================================================= -->
+
+<section id="football" class="page">
+
+<div class="panel">
+
+<div class="heading">
+
+<span>⚽</span>
+
+<h2>
+ZIVOZONE Football
+</h2>
+
+</div>
+
+
+<div class="development-grid">
+
+<div class="dev-card">
+
+<h3>
+⚽ تطوير اللاعب
+</h3>
+
+<p>
+برامج وتحديات للناشئين تساعد اللاعب على فهم مهاراته وتطوير نقاط القوة والضعف.
+</p>
+
+</div>
+
+
+<div class="dev-card">
+
+<h3>
+🧠 الذكاء الكروي
+</h3>
+
+<p>
+اختبارات في قراءة اللعب واتخاذ القرار والتحرك بدون كرة.
+</p>
+
+</div>
+
+
+<div class="dev-card">
+
+<h3>
+📊 تحليل الأداء
+</h3>
+
+<p>
+قياس السرعة والدقة واتخاذ القرار والتطور عبر الزمن.
+</p>
+
+</div>
+
+
+<div class="dev-card">
+
+<h3>
+🌍 التحدي العالمي
+</h3>
+
+<p>
+منافسات وأسئلة كرة قدم عالمية بمستويات مختلفة.
+</p>
+
+</div>
+
+</div>
+
+
+<button
+class="main-button"
+onclick="startGame('football')">
+
+ابدأ تحدي كرة القدم ⚽
+
+</button>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer>
+
+<strong>ZIVOZONE</strong>
+
+<br>
+
+Global Challenge Universe
+
+<br><br>
+
+© 2026 ZIVOZONE
+
+</footer>
+
+
+<div id="toast" class="toast"></div>
+
+
+<script>
+
+/* =========================================================
+   ZIVOZONE ENGINE
+   ========================================================= */
+
+
+/* =========================================================
+   TRANSLATIONS
+   ========================================================= */
+
+const translations={
+
+ar:{
+    home:"الرئيسية",
+    profile:"ملفي",
+    ranking:"الترتيب",
+    who:"من أنا؟",
+    football:"كرة القدم",
+
+    heroTitle:"هل أنت مستعد لتثبت أنك الأفضل؟",
+
+    heroText:
+    "عالم واحد. تحديات لا تنتهي. اختبر ذكاءك وسرعتك وتركيزك وشخصيتك ومهاراتك. كل مرة تعود فيها إلى ZIVOZONE تنتظرك تجربة مختلفة.",
+
+    challenges:"التحديات"
+},
+
+en:{
+    home:"Home",
+    profile:"Profile",
+    ranking:"Leaderboard",
+    who:"Who Am I?",
+    football:"Football",
+
+    heroTitle:"Are You Ready To Prove You're The Best?",
+
+    heroText:
+    "One world. Endless challenges. Test your intelligence, speed, focus, personality and skills.",
+
+    challenges:"Challenges"
+},
+
+fr:{
+    home:"Accueil",
+    profile:"Profil",
+    ranking:"Classement",
+    who:"Qui suis-je ?",
+    football:"Football",
+
+    heroTitle:"Es-tu prêt à prouver que tu es le meilleur ?",
+
+    heroText:
+    "Un monde. Des défis sans fin. Teste ton intelligence, ta vitesse, ta concentration et ta personnalité.",
+
+    challenges:"Défis"
+},
+
+es:{
+    home:"Inicio",
+    profile:"Perfil",
+    ranking:"Clasificación",
+    who:"¿Quién soy?",
+    football:"Fútbol",
+
+    heroTitle:"¿Estás listo para demostrar que eres el mejor?",
+
+    heroText:
+    "Un mundo. Desafíos infinitos. Pon a prueba tu inteligencia, velocidad, concentración y personalidad.",
+
+    challenges:"Desafíos"
+},
+
+pt:{
+    home:"Início",
+    profile:"Perfil",
+    ranking:"Ranking",
+    who:"Quem sou eu?",
+    football:"Futebol",
+
+    heroTitle:"Você está pronto para provar que é o melhor?",
+
+    heroText:
+    "Um mundo. Desafios infinitos. Teste sua inteligência, velocidade, concentração e personalidade.",
+
+    challenges:"Desafios"
+}
+
+};
+
+
+/* =========================================================
+   PLAYER
+   ========================================================= */
+
+let player=JSON.parse(
+    localStorage.getItem("zivozone_player")
+)||{
+
+    name:"Guest",
+
+    age:18,
+
+    points:0,
+
+    level:1,
+
+    games:0,
+
+    correct:0,
+
+    totalAnswers:0,
+
+    totalTime:0
+
+};
+
+
+/* =========================================================
+   GAMES
+   ========================================================= */
+
+const games=[
+
+{
+    id:"logic",
+
+    icon:"🧠",
+
+    name:{
+        ar:"ذكاء ومنطق",
+        en:"Logic & Intelligence",
+        fr:"Logique & Intelligence",
+        es:"Lógica e Inteligencia",
+        pt:"Lógica e Inteligência"
+    },
+
+    description:{
+        ar:"ألغاز منطقية وأسئلة تحتاج تفكيرًا وتحليلًا.",
+        en:"Logic puzzles and analytical challenges.",
+        fr:"Énigmes logiques et défis analytiques.",
+        es:"Acertijos lógicos y desafíos analíticos.",
+        pt:"Desafios lógicos e analíticos."
+    }
+},
+
+
+{
+    id:"speed",
+
+    icon:"⚡",
+
+    name:{
+        ar:"السرعة والتركيز",
+        en:"Speed & Focus",
+        fr:"Vitesse & Concentration",
+        es:"Velocidad y Concentración",
+        pt:"Velocidade e Concentração"
+    },
+
+    description:{
+        ar:"اختبر سرعة عقلك ودقة قرارك تحت ضغط الوقت.",
+        en:"Test your decision speed under pressure.",
+        fr:"Teste ta vitesse de décision sous pression.",
+        es:"Pon a prueba tu velocidad de decisión.",
+        pt:"Teste sua velocidade de decisão."
+    }
+},
+
+
+{
+    id:"football",
+
+    icon:"⚽",
+
+    name:{
+        ar:"ذكاء كرة القدم",
+        en:"Football IQ",
+        fr:"Intelligence Football",
+        es:"Inteligencia Futbolística",
+        pt:"Inteligência no Futebol"
+    },
+
+    description:{
+        ar:"تحديات متخصصة في كرة القدم والتكتيك واللاعبين.",
+        en:"Football, tactical and player challenges.",
+        fr:"Défis footballistiques et tactiques.",
+        es:"Desafíos de fútbol y táctica.",
+        pt:"Desafios de futebol e tática."
+    }
+},
+
+
+{
+    id:"trick",
+    icon:"👁️",
+
+    name:{
+        ar:"التلاعب الذهني",
+        en:"Mind Trap",
+        fr:"Piège Mental",
+        es:"Trampa Mental",
+        pt:"Armadilha Mental"
+    },
+
+    description:{
+        ar:"أسئلة مصممة لإرباكك واختبار انتباهك.",
+        en:"Questions designed to challenge your attention.",
+        fr:"Questions conçues pour perturber ton attention.",
+        es:"Preguntas diseñadas para confundir tu atención.",
+        pt:"Perguntas feitas para testar sua atenção."
+    }
+},
+
+
+{
+    id:"general",
+    icon:"🌍",
+
+    name:{
+        ar:"التحدي العالمي",
+        en:"Global Challenge",
+        fr:"Défi Mondial",
+        es:"Desafío Global",
+        pt:"Desafio Global"
+    },
+
+    description:{
+        ar:"مزيج متغير من المعرفة والذكاء والسرعة.",
+        en:"A changing mix of knowledge, intelligence and speed.",
+        fr:"Un mélange de connaissances, intelligence et vitesse.",
+        es:"Una mezcla de conocimiento, inteligencia y velocidad.",
+        pt:"Uma mistura de conhecimento, inteligência e velocidade."
+    }
+},
+
+
+{
+    id:"psychology",
+    icon:"🎭",
+
+    name:{
+        ar:"القرار الغامض",
+        en:"Psychological Challenge",
+        fr:"Défi Psychologique",
+        es:"Desafío Psicológico",
+        pt:"Desafio Psicológico"
+    },
+
+    description:{
+        ar:"اختيارات شخصية عشوائية تكشف أسلوب قرارك.",
+        en:"Personal choices designed to reveal your decision style.",
+        fr:"Choix personnels révélant ton style de décision.",
+        es:"Elecciones personales que revelan tu estilo.",
+        pt:"Escolhas pessoais que revelam seu estilo."
+    }
+
+}
+
+];
+
+
+/* =========================================================
+   QUESTION DATABASE
+   ========================================================= */
+
+const questionBank={
+
+
+logic:[
+
+{
+q:"إذا كان 2 + 3 = 10 و 3 + 4 = 21 فما نتيجة 4 + 5؟",
+a:["36","40","45","50"],
+correct:2
+},
+
+{
+q:"ما الرقم التالي: 2، 6، 12، 20، 30، ؟",
+a:["36","40","42","44"],
+correct:2
+},
+
+{
+q:"رجل لديه 3 أبناء، وكل ابن لديه أخت واحدة. كم عدد الأطفال؟",
+a:["3","4","6","7"],
+correct:1
+},
+
+{
+q:"إذا تجاوزت الشخص الذي يحتل المركز الثاني في سباق، ما مركزك؟",
+a:["الأول","الثاني","الثالث","الرابع"],
+correct:1
+},
+
+{
+q:"ما الرقم المختلف؟ 16، 25، 36، 49، 63",
+a:["16","36","49","63"],
+correct:3
+}
+
+],
+
+
+speed:[
+
+{
+q:"أي كلمة تظهر أولًا أبجديًا؟",
+a:["تفاح","برتقال","موز","عنب"],
+correct:0
+},
+
+{
+q:"كم ثانية في دقيقة ونصف؟",
+a:["60","90","100","120"],
+correct:1
+},
+
+{
+q:"أي رقم أكبر؟",
+a:["0.09","0.9","0.19","0.099"],
+correct:1
+},
+
+{
+q:"ما عكس كلمة سريع؟",
+a:["قوي","بطيء","خفيف","ذكي"],
+correct:1
+},
+
+{
+q:"كم ضلعًا للمثلث؟",
+a:["2","3","4","5"],
+correct:1
+}
+
+],
+
+
+football:[
+
+{
+q:"كم لاعبًا يبدأ به فريق كرة القدم المباراة داخل الملعب؟",
+a:["9","10","11","12"],
+correct:2
+},
+
+{
+q:"ما المركز الذي يرتدي عادة القميص رقم 1؟",
+a:["المهاجم","حارس المرمى","الجناح","الظهير"],
+correct:1
+},
+
+{
+q:"ماذا يسمى تسجيل ثلاثة أهداف في مباراة واحدة؟",
+a:["Double","Hat-trick","Assist","Clean Sheet"],
+correct:1
+},
+
+{
+q:"ما الهدف الأساسي من الضغط العالي؟",
+a:["إضاعة الوقت","استعادة الكرة مبكرًا","الدفاع داخل المنطقة فقط","زيادة عدد الحراس"],
+correct:1
+},
+
+{
+q:"أي مركز يكون غالبًا على طرف الملعب؟",
+a:["الجناح","حارس المرمى","قلب الدفاع","المهاجم الصريح"],
+correct:0
+}
+
+],
+
+
+trick:[
+
+{
+q:"إذا كان لديك 5 تفاحات وأخذت 2، كم تفاحة أصبحت معك؟",
+a:["2","3","5","7"],
+correct:0
+},
+
+{
+q:"أي شيء تستطيع كسره دون أن تلمسه؟",
+a:["زجاج","وعد","كرسي","حائط"],
+correct:1
+},
+
+{
+q:"ما الشيء الذي كلما أخذت منه زاد؟",
+a:["المال","الحفرة","الطعام","الوقت"],
+correct:1
+},
+
+{
+q:"قبل أمس كان يوم الأحد. ما اليوم؟",
+a:["الإثنين","الثلاثاء","الأربعاء","الخميس"],
+correct:1
+},
+
+{
+q:"ما الذي له أسنان ولا يعض؟",
+a:["كلب","مشط","سمكة","حصان"],
+correct:1
+}
+
+],
+
+
+general:[
+
+{
+q:"ما أكبر محيط في العالم؟",
+a:["الأطلسي","الهندي","الهادئ","المتجمد"],
+correct:2
+},
+
+{
+q:"ما عاصمة فرنسا؟",
+a:["مدريد","باريس","روما","برلين"],
+correct:1
+},
+
+{
+q:"كم عدد قارات العالم؟",
+a:["5","6","7","8"],
+correct:2
+},
+
+{
+q:"أي كوكب يعرف بالكوكب الأحمر؟",
+a:["المريخ","الزهرة","المشتري","عطارد"],
+correct:0
+},
+
+{
+q:"ما اللغة الأكثر تحدثًا من حيث عدد المتحدثين الأصليين؟",
+a:["الإنجليزية","الإسبانية","الصينية المندرينية","الفرنسية"],
+correct:2
+}
+
+],
+
+
+psychology:[
+
+{
+q:"أمامك قرار مهم ووقت قليل. ماذا تفعل غالبًا؟",
+a:[
+"أقرر بسرعة",
+"أبحث عن أكبر قدر من المعلومات",
+"أسأل شخصًا أثق به",
+"أؤجل القرار"
+],
+correct:null
+},
+
+{
+q:"في منافسة، إذا كنت متقدمًا بفارق بسيط:",
+a:[
+"أهاجم أكثر",
+"أحافظ على التقدم",
+"أغير أسلوبي",
+"أراقب المنافس"
+],
+correct:null
+},
+
+{
+q:"عندما تفشل في تحدٍ صعب:",
+a:[
+"أعيد المحاولة فورًا",
+"أحلل الخطأ",
+"أنتقل لشيء آخر",
+"أشعر بالغضب ثم أعود"
+],
+correct:null
+},
+
+{
+q:"أي شيء يجذبك أكثر؟",
+a:[
+"المخاطرة",
+"الاستقرار",
+"الفضول",
+"المنافسة"
+],
+correct:null
+},
+
+{
+q:"إذا أعطاك شخص خيارين ولم تعرف أيهما أفضل:",
+a:[
+"أختار فورًا",
+"أقارن النتائج",
+"أختار عشوائيًا",
+"أبحث عن خيار ثالث"
+],
+correct:null
+}
+
+]
+
+};
+
+
+/* =========================================================
+   CURRENT QUIZ
+   ========================================================= */
+
+let currentGame=null;
+
+let currentQuestions=[];
+
+let questionIndex=0;
+
+let quizScore=0;
+
+let quizCorrect=0;
+
+let quizStartTime=0;
+
+let totalQuestionTime=0;
+
+let timerInterval=null;
+
+let questionStartTime=0;
+
+let answering=false;
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+function showPage(id){
+
+    document
+    .querySelectorAll(".page")
+    .forEach(page=>{
+        page.classList.remove("active");
+    });
+
+    const target=document.getElementById(id);
+
+    if(target){
+        target.classList.add("active");
+    }
+
+    if(id==="leaderboard"){
+        renderLeaderboard();
+    }
+
+    if(id==="personality"){
+        renderPersonality();
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+/* =========================================================
+   LANGUAGE
+   ========================================================= */
+
+function changeLanguage(lang){
+
+    localStorage.setItem(
+        "zivozone_language",
+        lang
+    );
+
+    document.documentElement.lang=lang;
+
+    document.documentElement.dir=
+        lang==="ar" ? "rtl":"ltr";
+
+    document
+    .querySelectorAll("[data-i18n]")
+    .forEach(el=>{
+
+        const key=el.dataset.i18n;
+
+        if(
+            translations[lang] &&
+            translations[lang][key]
+        ){
+
+            el.textContent=
+            translations[lang][key];
+
+        }
+
+    });
+
+    renderGames();
+
+    showToast(
+        lang==="ar"
+        ?"تم تغيير اللغة"
+        :"Language changed"
+    );
+}
+
+
+/* =========================================================
+   RENDER GAMES
+   ========================================================= */
+
+function renderGames(){
+
+    const container=
+    document.getElementById("games");
+
+    if(!container) return;
+
+    const lang=
+    localStorage.getItem("zivozone_language")
+    ||"ar";
+
+    container.innerHTML="";
+
+    games.forEach(game=>{
+
+        const card=document.createElement("div");
+
+        card.className="game-card";
+
+        card.innerHTML=`
+
+        <div>
+
+            <div class="game-icon">
+                ${game.icon}
+            </div>
+
+            <h3>
+                ${game.name[lang]}
+            </h3>
+
+            <p>
+                ${game.description[lang]}
+            </p>
+
+            <div class="game-meta">
+
+                <span class="tag">
+                    10 Questions
+                </span>
+
+                <span class="tag">
+                    ⏱ Time
+                </span>
+
+                <span class="tag">
+                    🔥 Adaptive
+                </span>
+
+            </div>
+
+        </div>
+
+        <button
+        class="game-button"
+        onclick="startGame('${game.id}')">
+
+        ${lang==="ar"
+        ?"ابدأ التحدي"
+        :"START CHALLENGE"}
+
+        </button>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   DIFFICULTY
+   ========================================================= */
+
+function calculateDifficulty(){
+
+    const age=
+    Number(player.age)||18;
+
+    const points=
+    Number(player.points)||0;
+
+    const level=
+    Number(player.level)||1;
+
+    let difficulty=1;
+
+    if(age>=13)
+        difficulty++;
+
+    if(age>=18)
+        difficulty++;
+
+    if(age>=30)
+        difficulty++;
+
+    difficulty+=Math.floor(points/500);
+
+    difficulty+=Math.floor(level/3);
+
+    return Math.min(
+        10,
+        difficulty
+    );
+}
+
+
+/* =========================================================
+   BUILD QUESTIONS
+   ========================================================= */
+
+function buildQuestions(gameId){
+
+    let source=
+    questionBank[gameId]
+    ||questionBank.general;
+
+    let questions=[...source];
+
+    /* shuffle */
+
+    questions.sort(
+        ()=>Math.random()-.5
+    );
+
+    /*
+      Minimum test = 10 questions.
+      We reuse intelligently when bank
+      is temporarily smaller.
+    */
+
+    while(questions.length<10){
+
+        questions=[
+            ...questions,
+            ...source
+        ];
+
+        questions.sort(
+            ()=>Math.random()-.5
+        );
+
+    }
+
+    questions=
+    questions.slice(0,10);
+
+    return questions;
+}
+
+
+/* =========================================================
+   START GAME
+   ========================================================= */
+
+function startGame(gameId){
+
+    if(
+        !player.name ||
+        player.name==="Guest"
+    ){
+
+        showPage("profile");
+
+        showToast(
+            "اكتب اسمك وعمرك أولًا"
+        );
+
+        return;
+    }
+
+    currentGame=
+    games.find(
+        g=>g.id===gameId
+    );
+
+    if(!currentGame)
+        return;
+
+    currentQuestions=
+    buildQuestions(gameId);
+
+    questionIndex=0;
+
+    quizScore=0;
+
+    quizCorrect=0;
+
+    totalQuestionTime=0;
+
+    quizStartTime=
+    Date.now();
+
+    showPage("quiz");
+
+    document.getElementById(
+        "quizIcon"
+    ).textContent=
+    currentGame.icon;
+
+    const lang=
+    localStorage.getItem(
+        "zivozone_language"
+    )||"ar";
+
+    document.getElementById(
+        "quizTitle"
+    ).textContent=
+    currentGame.name[lang];
+
+    renderQuestion();
+
+}
+
+
+/* =========================================================
+   QUESTION
+   ========================================================= */
+
+function renderQuestion(){
+
+    if(questionIndex>=10){
+
+        finishQuiz();
+
+        return;
+    }
+
+    answering=false;
+
+    clearInterval(timerInterval);
+
+    const q=
+    currentQuestions[questionIndex];
+
+    const questionElement=
+    document.getElementById(
+        "question"
+    );
+
+    questionElement.textContent=
+    q.q;
+
+    document.getElementById(
+        "questionCounter"
+    ).textContent=
+    `${questionIndex+1} / 10`;
+
+    document.getElementById(
+        "progressBar"
+    ).style.width=
+    `${(questionIndex/10)*100}%`;
+
+    const answers=
+    document.getElementById(
+        "answers"
+    );
+
+    answers.innerHTML="";
+
+    q.a.forEach(
+        (answer,index)=>{
+
+            const button=
+            document.createElement(
+                "button"
+            );
+
+            button.className="answer";
+
+            button.textContent=
+            answer;
+
+            button.onclick=()=>{
+
+                handleAnswer(
+                    index,
+                    button
+                );
+
+            };
+
+            answers.appendChild(
+                button
+            );
+
+        }
+    );
+
+    document.getElementById(
+        "feedback"
+    ).textContent="";
+
+    startTimer();
+
+}
+
+
+/* =========================================================
+   TIMER
+   ========================================================= */
+
+function startTimer(){
+
+    let seconds=30;
+
+    document.getElementById(
+        "timer"
+    ).textContent=seconds;
+
+    questionStartTime=
+    Date.now();
+
+    timerInterval=
+    setInterval(()=>{
+
+        seconds--;
+
+        document.getElementById(
+            "timer"
+        ).textContent=
+        seconds;
+
+        if(seconds<=0){
+
+            clearInterval(
+                timerInterval
+            );
+
+            handleAnswer(
+                -1,
+                null,
+                true
+            );
+
+        }
+
+    },1000);
+
+}
+
+
+/* =========================================================
+   ANSWER
+   ========================================================= */
+
+function handleAnswer(
+    selected,
+    button,
+    timeout=false
+){
+
+    if(answering)
+        return;
+
+    answering=true;
+
+    clearInterval(
+        timerInterval
+    );
+
+    const q=
+    currentQuestions[
+        questionIndex
+    ];
+
+    const elapsed=
+    (Date.now()-questionStartTime)
+    /1000;
+
+    totalQuestionTime+=
+    elapsed;
+
+    player.totalTime+=
+    elapsed;
+
+    const buttons=
+    document.querySelectorAll(
+        ".answer"
+    );
+
+    buttons.forEach(
+        b=>b.disabled=true
+    );
+
+
+    /* psychological questions */
+
+    if(
+        q.correct===null
+    ){
+
+        if(button){
+
+            button.classList.add(
+                "correct"
+            );
+
+        }
+
+        quizCorrect++;
+
+        quizScore+=
+        10+
+        Math.max(
+            0,
+            Math.round(
+                (30-elapsed)
+            )
+        );
+
+        document.getElementById(
+            "feedback"
+        ).textContent=
+        "🧠 إجابة مسجلة — نحلل أسلوبك...";
+
+    }
+
+
+    /* normal question */
+
+    else{
+
+        if(button){
+
+            if(
+                selected===q.correct
+            ){
+
+                button.classList.add(
+                    "correct"
+                );
+
+                quizCorrect++;
+
+                let speedBonus=
+                Math.max(
+                    0,
+                    Math.round(
+                        (30-elapsed)*2
+                    )
+                );
+
+                let difficulty=
+                calculateDifficulty();
+
+                quizScore+=
+                10+
+                speedBonus+
+                difficulty*2;
+
+                document.getElementById(
+                    "feedback"
+                ).textContent=
+                "✅ صحيح!";
+
+            }
+
+            else{
+
+                button.classList.add(
+                    "wrong"
+                );
+
+                buttons[
+                    q.correct
+                ].classList.add(
+                    "correct"
+                );
+
+                document.getElementById(
+                    "feedback"
+                ).textContent=
+                timeout
+                ?"⏱ انتهى الوقت!"
+                :"❌ إجابة خاطئة";
+
+            }
+
+        }
+
+    }
+
+
+    /*
+      Keep correct answer visible
+      for 2 seconds as requested.
+    */
+
+    setTimeout(()=>{
+
+        questionIndex++;
+
+        renderQuestion();
+
+    },2000);
+
+}
+
+
+/* =========================================================
+   FINISH
+   ========================================================= */
+
+function finishQuiz(){
+
+    clearInterval(
+        timerInterval
+    );
+
+    player.games++;
+
+    player.correct+=
+    quizCorrect;
+
+    player.totalAnswers+=10;
+
+    player.points+=
+    quizScore;
+
+    player.level=
+    Math.max(
+        1,
+        Math.floor(
+            player.points/500
+        )+1
+    );
+
+    savePlayer();
+
+    document.getElementById(
+        "resultScore"
+    ).textContent=
+    quizScore;
+
+    document.getElementById(
+        "resultCorrect"
+    ).textContent=
+    `${quizCorrect}/10`;
+
+    document.getElementById(
+        "resultTime"
+    ).textContent=
+    `${Math.round(
+        totalQuestionTime/10
+    )}s`;
+
+    document.getElementById(
+        "resultLevel"
+    ).textContent=
+    player.level;
+
+    document.getElementById(
+        "resultAccuracy"
+    ).textContent=
+    `${Math.round(
+        quizCorrect/10*100
+    )}%`;
+
+    updateUI();
+
+    showPage("result");
+
+}
+
+
+/* =========================================================
+   SAVE PROFILE
+   ========================================================= */
+
+function saveProfile(){
+
+    const name=
+    document.getElementById(
+        "playerName"
+    ).value.trim();
+
+    const age=
+    Number(
+        document.getElementById(
+            "playerAge"
+        ).value
+    );
+
+    if(!name){
+
+        showToast(
+            "اكتب اسم اللاعب"
+        );
+
+        return;
+    }
+
+    if(
+        !age ||
+        age<5 ||
+        age>100
+    ){
+
+        showToast(
+            "أدخل عمرًا صحيحًا"
+        );
+
+        return;
+    }
+
+    player.name=name;
+
+    player.age=age;
+
+    savePlayer();
+
+    updateUI();
+
+    showToast(
+        "تم حفظ ملف اللاعب بنجاح"
+    );
+
+    showPage("home");
+
+}
+
+
+/* =========================================================
+   SAVE
+   ========================================================= */
+
+function savePlayer(){
+
+    localStorage.setItem(
+        "zivozone_player",
+        JSON.stringify(player)
+    );
+
+}
+
+
+/* =========================================================
+   UI
+   ========================================================= */
+
+function updateUI(){
+
+    document.getElementById(
+        "miniName"
+    ).textContent=
+    player.name;
+
+    document.getElementById(
+        "miniPoints"
+    ).textContent=
+    player.points;
+
+    document.getElementById(
+        "miniLevel"
+    ).textContent=
+    player.level;
+
+    document.getElementById(
+        "profilePoints"
+    ).textContent=
+    player.points;
+
+    document.getElementById(
+        "profileLevel"
+    ).textContent=
+    player.level;
+
+    document.getElementById(
+        "profileGames"
+    ).textContent=
+    player.games;
+
+    const accuracy=
+    player.totalAnswers
+    ?
+    Math.round(
+        player.correct/
+        player.totalAnswers*
+        100
+    )
+    :0;
+
+    document.getElementById(
+        "profileAccuracy"
+    ).textContent=
+    accuracy+"%";
+
+    document.getElementById(
+        "playerName"
+    ).value=
+    player.name==="Guest"
+    ?""
+    :player.name;
+
+    document.getElementById(
+        "playerAge"
+    ).value=
+    player.age||"";
+
+}
+
+
+/* =========================================================
+   LOCAL LEADERBOARD
+   ========================================================= */
+
+function getLeaderboard(){
+
+    const saved=
+    JSON.parse(
+        localStorage.getItem(
+            "zivozone_leaderboard"
+        )
+    )||[];
+
+    const index=
+    saved.findIndex(
+        x=>x.name===player.name
+    );
+
+    const current={
+
+        name:player.name,
+
+        points:player.points,
+
+        level:player.level,
+
+        games:player.games,
+
+        accuracy:
+        player.totalAnswers
+        ?
+        Math.round(
+            player.correct/
+            player.totalAnswers*
+            100
+        )
+        :0
+
+    };
+
+    if(index>=0){
+
+        saved[index]=current;
+
+    }else{
+
+        saved.push(current);
+
+    }
+
+    saved.sort(
+        (a,b)=>
+        b.points-a.points
+    );
+
+    localStorage.setItem(
+        "zivozone_leaderboard",
+        JSON.stringify(saved)
+    );
+
+    return saved;
+
+}
+
+
+/* =========================================================
+   RENDER LEADERBOARD
+   ========================================================= */
+
+function renderLeaderboard(){
+
+    const body=
+    document.getElementById(
+        "leaderboardBody"
+    );
+
+    if(!body)
+        return;
+
+    const list=
+    getLeaderboard();
+
+    body.innerHTML="";
+
+    list.forEach(
+        (p,index)=>{
+
+            const row=
+            document.createElement(
+                "tr"
+            );
+
+            if(
+                p.name===player.name
+            ){
+
+                row.style.background=
+                "rgba(0,217,255,.07)";
+
+            }
+
+            row.innerHTML=`
+
+            <td class="${index===0?"rank-1":""}">
+                ${index+1}
+            </td>
+
+            <td>
+                ${escapeHTML(p.name)}
+            </td>
+
+            <td>
+                ${p.points}
+            </td>
+
+            <td>
+                ${p.level}
+            </td>
+
+            <td>
+                ${p.games}
+            </td>
+
+            <td>
+                ${p.accuracy}%
+            </td>
+
+            `;
+
+            body.appendChild(row);
+
+        }
+    );
+
+    const myIndex=
+    list.findIndex(
+        x=>x.name===player.name
+    );
+
+    document.getElementById(
+        "miniRank"
+    ).textContent=
+    myIndex>=0
+    ?"#"+(myIndex+1)
+    :"-";
+
+}
+
+
+/* =========================================================
+   PERSONALITY ENGINE
+   ========================================================= */
+
+const personalityState={
+
+    answers:[],
+
+    current:0
+
+};
+
+
+function renderPersonality(){
+
+    const container=
+    document.getElementById(
+        "personalityContent"
+    );
+
+    if(!container)
+        return;
+
+    const questions=
+    questionBank.psychology;
+
+    if(
+        personalityState.current
+        >=questions.length
+    ){
+
+        showPersonalityResult();
+
+        return;
+
+    }
+
+    const q=
+    questions[
+        personalityState.current
+    ];
+
+    container.innerHTML=`
+
+    <div class="personality-question">
+
+        <h3>
+            السؤال
+            ${personalityState.current+1}
+            /
+            ${questions.length}
+        </h3>
+
+        <br>
+
+        <h2>
+            ${q.q}
+        </h2>
+
+        <div class="personality-options">
+
+            ${q.a.map(
+                (answer,index)=>`
+
+                <button
+                onclick="personalityAnswer(${index})">
+
+                    ${answer}
+
+                </button>
+
+                `
+            ).join("")}
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function personalityAnswer(index){
+
+    personalityState.answers.push(
+        index
+    );
+
+    personalityState.current++;
+
+    renderPersonality();
+
+}
+
+
+/* =========================================================
+   PERSONALITY RESULT
+   ========================================================= */
+
+function showPersonalityResult(){
+
+    const answers=
+    personalityState.answers;
+
+    let analytical=0;
+
+    let risk=0;
+
+    let competitive=0;
+
+    let spontaneous=0;
+
+
+    answers.forEach(
+        (a,index)=>{
+
+            if(a===1)
+                analytical++;
+
+            if(a===0)
+                spontaneous++;
+
+            if(a===3)
+                competitive++;
+
+            if(a===2)
+                risk++;
+
+        }
+    );
+
+
+    let title=
+    "الشخصية المتوازنة";
+
+    let text=
+    "تجمع بين أكثر من أسلوب في اتخاذ القرار.";
+
+    if(
+        analytical>=3
+    ){
+
+        title=
+        "العقل الاستراتيجي";
+
+        text=
+        "تميل إلى التحليل وجمع المعلومات قبل اتخاذ القرارات.";
+
+    }
+    else if(
+        competitive>=3
+    ){
+
+        title=
+        "المنافس الشرس";
+
+        text=
+        "المنافسة تشكل جزءًا واضحًا من طريقة تفكيرك.";
+
+    }
+    else if(
+        spontaneous>=3
+    ){
+
+        title=
+        "صاحب القرار السريع";
+
+        text=
+        "تميل إلى اتخاذ القرارات بسرعة والثقة بحدسك.";
+
+    }
+    else if(
+        risk>=3
+    ){
+
+        title=
+        "المستكشف";
+
+        text=
+        "الفضول وتجربة الخيارات الجديدة من السمات الواضحة لديك.";
+
+    }
+
+
+    document.getElementById(
+        "personalityContent"
+    ).innerHTML=`
+
+    <div class="personality-question">
+
+        <div style="font-size:60px">
+            🧠
+        </div>
+
+        <h2>
+            ${title}
+        </h2>
+
+        <br>
+
+        <p>
+            ${text}
+        </p>
+
+        <br>
+
+        <p style="color:#9aa8bd">
+
+            هذا التحليل ترفيهي يعتمد على
+            إجاباتك في هذه الجلسة وليس
+            تشخيصًا نفسيًا طبيًا.
+
+        </p>
+
+        <br>
+
+        <button
+        class="main-button"
+        onclick="resetPersonality()">
+
+            إعادة التحليل
+
+        </button>
+
+    </div>
+
+    `;
+
+}
+
+
+function resetPersonality(){
+
+    personalityState.answers=[];
+
+    personalityState.current=0;
+
+    renderPersonality();
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+function showToast(message){
+
+    const toast=
+    document.getElementById(
+        "toast"
+    );
+
+    toast.textContent=message;
+
+    toast.classList.add(
+        "show"
+    );
+
+    setTimeout(()=>{
+
+        toast.classList.remove(
+            "show"
+        );
+
+    },2500);
+
+}
+
+
+/* =========================================================
+   SECURITY
+   ========================================================= */
+
+function escapeHTML(text){
+
+    const div=
+    document.createElement(
+        "div"
+    );
+
+    div.textContent=text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    ()=>{
+
+        const savedLanguage=
+        localStorage.getItem(
+            "zivozone_language"
+        )||"ar";
+
+        document.getElementById(
+            "language"
+        ).value=
+        savedLanguage;
+
+        changeLanguage(
+            savedLanguage
+        );
+
+        updateUI();
+
+        getLeaderboard();
+
+        renderLeaderboard();
+
+    }
+);
+
+</script>
+
+</body>
 </html>
