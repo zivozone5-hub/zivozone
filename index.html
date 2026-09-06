@@ -2,867 +2,2492 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ZIVOZONE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ZIVOZONE — Global Challenge Platform</title>
 
 <style>
+:root{
+--bg:#060914;
+--panel:#0d1424;
+--panel2:#121c30;
+--border:#253451;
+--text:#f7f9ff;
+--muted:#98a6bd;
+--accent:#36d9ff;
+--accent2:#7c5cff;
+--success:#42e6a4;
+--danger:#ff5577;
+--gold:#ffd166;
+}
+
 *{box-sizing:border-box}
+
+html{
+scroll-behavior:smooth;
+}
+
 body{
-    margin:0;
-    font-family:Arial,Tahoma,sans-serif;
-    background:#070b14;
-    color:#fff;
+margin:0;
+font-family:Arial,Tahoma,sans-serif;
+background:
+radial-gradient(circle at top,#101d38 0,#060914 45%);
+color:var(--text);
+min-height:100vh;
 }
-header{
-    position:sticky;
-    top:0;
-    z-index:100;
-    background:#0b1020ee;
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid #202a40;
+
+button,
+input,
+select{
+font:inherit;
 }
-.nav{
-    max-width:1200px;
-    margin:auto;
-    padding:15px 20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-}
-.logo{
-    font-size:25px;
-    font-weight:900;
-    letter-spacing:1px;
-}
-.logo span{color:#35d9ff}
-.controls{
-    display:flex;
-    gap:8px;
-    align-items:center;
-}
-button,select,input{
-    font:inherit;
-}
+
 button{
-    border:0;
-    border-radius:12px;
-    padding:11px 16px;
-    cursor:pointer;
+cursor:pointer;
 }
-.lang{
-    background:#182238;
-    color:white;
-    border:1px solid #34415d;
+
+header{
+position:sticky;
+top:0;
+z-index:1000;
+background:rgba(6,9,20,.92);
+backdrop-filter:blur(15px);
+border-bottom:1px solid var(--border);
 }
+
+.nav{
+max-width:1350px;
+margin:auto;
+padding:14px 20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+}
+
+.logo{
+font-size:26px;
+font-weight:900;
+letter-spacing:1px;
+}
+
+.logo span{
+color:var(--accent);
+}
+
+.navRight{
+display:flex;
+gap:8px;
+align-items:center;
+}
+
+.langBtn{
+background:var(--panel2);
+border:1px solid var(--border);
+color:white;
+padding:10px 13px;
+border-radius:10px;
+}
+
 main{
-    max-width:1200px;
-    margin:auto;
-    padding:30px 18px 70px;
+max-width:1350px;
+margin:auto;
+padding:20px;
 }
+
 .hero{
-    text-align:center;
-    padding:50px 15px;
+text-align:center;
+padding:45px 10px 30px;
 }
+
 .hero h1{
-    font-size:clamp(42px,8vw,82px);
-    margin:0;
+font-size:clamp(48px,8vw,90px);
+margin:0;
+font-weight:1000;
 }
-.hero h1 span{color:#35d9ff}
+
+.hero h1 span{
+color:var(--accent);
+}
+
 .hero p{
-    color:#aab5ca;
-    font-size:18px;
+color:var(--muted);
+font-size:19px;
 }
-.profile{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:10px;
-    margin:20px auto;
+
+.profileBox{
+max-width:750px;
+margin:25px auto;
+background:rgba(13,20,36,.8);
+border:1px solid var(--border);
+padding:18px;
+border-radius:18px;
+display:grid;
+grid-template-columns:1fr 180px 150px;
+gap:10px;
 }
-.profile input,.profile select{
-    background:#11192b;
-    color:#fff;
-    border:1px solid #34415d;
-    padding:12px;
-    border-radius:10px;
+
+input,
+select{
+background:#0a1120;
+border:1px solid var(--border);
+color:white;
+padding:13px;
+border-radius:11px;
+outline:none;
 }
-.section-title{
-    margin-top:40px;
-    margin-bottom:15px;
-    font-size:27px;
+
+.primary{
+background:var(--accent);
+color:#001018;
+font-weight:900;
+border:0;
+border-radius:11px;
+padding:13px 18px;
 }
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-    gap:15px;
+
+.sectionTitle{
+margin:35px 0 15px;
+font-size:28px;
 }
-.card{
-    background:linear-gradient(145deg,#11192b,#0b1020);
-    border:1px solid #26334d;
-    border-radius:18px;
-    padding:22px;
-    transition:.2s;
-}
-.card:hover{
-    transform:translateY(-4px);
-    border-color:#35d9ff;
-}
-.icon{font-size:38px}
-.card h3{margin:10px 0 5px}
-.card p{color:#9ca9bf;font-size:14px}
-.play{
-    width:100%;
-    background:#35d9ff;
-    color:#031019;
-    font-weight:bold;
-}
+
 .stats{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:12px;
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
 }
+
 .stat{
-    background:#11192b;
-    border-radius:15px;
-    padding:18px;
-    text-align:center;
-    border:1px solid #26334d;
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:16px;
+padding:17px;
+text-align:center;
 }
-.stat b{
-    display:block;
-    font-size:28px;
-    margin-top:5px;
+
+.statIcon{
+font-size:25px;
 }
+
+.statLabel{
+color:var(--muted);
+font-size:13px;
+}
+
+.statValue{
+display:block;
+font-size:28px;
+font-weight:900;
+margin-top:6px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+}
+
+.card{
+background:linear-gradient(145deg,var(--panel),#09101e);
+border:1px solid var(--border);
+border-radius:19px;
+padding:21px;
+transition:.2s;
+}
+
+.card:hover{
+transform:translateY(-4px);
+border-color:var(--accent);
+}
+
+.icon{
+font-size:42px;
+}
+
+.card h3{
+margin:10px 0 6px;
+}
+
+.card p{
+color:var(--muted);
+line-height:1.6;
+font-size:14px;
+}
+
+.card .primary{
+width:100%;
+margin-top:10px;
+}
+
+.dashboard{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:15px;
+}
+
+.ranking{
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:19px;
+padding:20px;
+}
+
+.rankRow{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+border-bottom:1px solid #1b2940;
+}
+
+.rankRow:last-child{
+border-bottom:0;
+}
+
+.rankName{
+font-weight:bold;
+}
+
+.rankScore{
+color:var(--gold);
+font-weight:900;
+}
+
 .challenge{
-    display:none;
-    background:#11192b;
-    border:1px solid #34415d;
-    border-radius:20px;
-    padding:25px;
-    margin-top:25px;
+display:none;
+position:fixed;
+inset:0;
+z-index:2000;
+background:rgba(3,6,14,.94);
+overflow:auto;
+padding:20px;
 }
+
+.challengeBox{
+max-width:850px;
+margin:30px auto;
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:22px;
+padding:25px;
+}
+
+.challengeTop{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+}
+
+.timer{
+font-size:25px;
+font-weight:900;
+color:var(--accent);
+}
+
+.progress{
+height:9px;
+background:#1a263b;
+border-radius:20px;
+overflow:hidden;
+margin:18px 0;
+}
+
+.progressBar{
+height:100%;
+background:var(--accent);
+width:0%;
+transition:.2s;
+}
+
 .question{
-    font-size:22px;
-    line-height:1.6;
-    margin-bottom:20px;
+font-size:25px;
+font-weight:800;
+line-height:1.5;
+margin:30px 0;
 }
+
 .answers{
-    display:grid;
-    gap:10px;
+display:grid;
+gap:12px;
 }
+
 .answer{
-    background:#182238;
-    color:white;
-    text-align:right;
-    border:1px solid #34415d;
+background:var(--panel2);
+border:1px solid var(--border);
+color:white;
+padding:15px;
+border-radius:13px;
+text-align:right;
 }
-.answer:hover{background:#243451}
-.result{
-    margin-top:18px;
-    font-size:20px;
-    font-weight:bold;
+
+.answer:hover{
+border-color:var(--accent);
 }
+
+.answer.correct{
+background:rgba(66,230,164,.15);
+border-color:var(--success);
+}
+
+.answer.wrong{
+background:rgba(255,85,119,.15);
+border-color:var(--danger);
+}
+
+.resultBox{
+text-align:center;
+padding:30px 10px;
+}
+
+.bigScore{
+font-size:60px;
+font-weight:1000;
+color:var(--accent);
+}
+
+.closeBtn{
+margin-top:20px;
+background:#24324b;
+color:white;
+border:0;
+padding:12px 20px;
+border-radius:12px;
+}
+
+.badges{
+display:flex;
+flex-wrap:wrap;
+gap:7px;
+}
+
 .badge{
-    display:inline-block;
-    padding:7px 12px;
-    border-radius:30px;
-    background:#182238;
-    margin:3px;
+padding:8px 12px;
+border-radius:30px;
+background:var(--panel2);
+border:1px solid var(--border);
+font-size:13px;
 }
+
 footer{
-    text-align:center;
-    color:#69758c;
-    padding:30px;
-    border-top:1px solid #202a40;
+text-align:center;
+color:#65738b;
+padding:40px 20px;
+margin-top:40px;
+border-top:1px solid var(--border);
 }
-.hidden{display:none!important}
+
+.hidden{
+display:none!important;
+}
+
+@media(max-width:900px){
+
+.profileBox{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+
+.dashboard{
+grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:500px){
+
+.nav{
+padding:12px;
+}
+
+.logo{
+font-size:21px;
+}
+
+main{
+padding:12px;
+}
+
+.hero{
+padding-top:30px;
+}
+
+.hero h1{
+font-size:48px;
+}
+
+.question{
+font-size:20px;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="nav">
-    <div class="logo">ZIVO<span>ZONE</span></div>
 
-    <div class="controls">
-        <button class="lang" onclick="toggleLanguage()">🌍 <span id="langButton">English</span></button>
-    </div>
+<div class="nav">
+
+<div class="logo">
+ZIVO<span>ZONE</span>
 </div>
+
+<div class="navRight">
+
+<select id="languageSelect"
+class="langBtn"
+onchange="changeLanguage(this.value)">
+<option value="ar">🇦🇪 العربية</option>
+<option value="en">🇬🇧 English</option>
+<option value="zh">🇨🇳 中文</option>
+<option value="es">🇪🇸 Español</option>
+<option value="fr">🇫🇷 Français</option>
+</select>
+
+</div>
+
+</div>
+
 </header>
+
 
 <main>
 
 <section class="hero">
-    <h1>ZIVO<span>ZONE</span></h1>
-    <p id="subtitle">عالم التحديات الذكية والمنافسة العالمية</p>
 
-    <div class="profile">
-        <input id="playerName" placeholder="اسم اللاعب">
-        <select id="age">
-            <option value="">العمر</option>
-            <option value="7">6–8</option>
-            <option value="10">9–12</option>
-            <option value="14">13–15</option>
-            <option value="17">16–18</option>
-            <option value="22">19–25</option>
-            <option value="30">26–35</option>
-            <option value="40">36–50</option>
-            <option value="55">51+</option>
-        </select>
-        <button onclick="saveProfile()" class="play" style="width:auto">
-            <span id="saveText">حفظ الملف</span>
-        </button>
-    </div>
+<h1>ZIVO<span>ZONE</span></h1>
 
-    <div id="profileMessage"></div>
+<p id="heroSubtitle">
+عالم التحديات الذكية والمنافسة العالمية
+</p>
+
+<div class="profileBox">
+
+<input
+id="playerName"
+placeholder="اسم اللاعب">
+
+<select id="playerAge">
+
+<option value="">العمر</option>
+<option value="7">6–8</option>
+<option value="10">9–12</option>
+<option value="14">13–15</option>
+<option value="17">16–18</option>
+<option value="22">19–25</option>
+<option value="30">26–35</option>
+<option value="40">36–50</option>
+<option value="55">51+</option>
+
+</select>
+
+<button class="primary"
+onclick="saveProfile()"
+id="saveProfileButton">
+
+حفظ الملف
+
+</button>
+
+</div>
+
+<div id="profileMessage"></div>
+
 </section>
 
+
 <section>
-<h2 class="section-title" id="statsTitle">ملفك</h2>
+
+<h2 class="sectionTitle" id="profileTitle">
+ملف اللاعب
+</h2>
 
 <div class="stats">
-    <div class="stat">
-        🏆 <span id="pointsLabel">النقاط</span>
-        <b id="points">0</b>
-    </div>
 
-    <div class="stat">
-        ⭐ <span id="levelLabel">المستوى</span>
-        <b id="level">1</b>
-    </div>
-
-    <div class="stat">
-        🔥 <span id="streakLabel">السلسلة</span>
-        <b id="streak">0</b>
-    </div>
-
-    <div class="stat">
-        🪙 <span id="coinsLabel">ZIVO Coins</span>
-        <b id="coins">0</b>
-    </div>
+<div class="stat">
+<div class="statIcon">🏆</div>
+<div class="statLabel" id="pointsLabel">النقاط</div>
+<span class="statValue" id="points">0</span>
 </div>
+
+<div class="stat">
+<div class="statIcon">⭐</div>
+<div class="statLabel" id="levelLabel">المستوى</div>
+<span class="statValue" id="level">1</span>
+</div>
+
+<div class="stat">
+<div class="statIcon">🔥</div>
+<div class="statLabel" id="streakLabel">Streak</div>
+<span class="statValue" id="streak">0</span>
+</div>
+
+<div class="stat">
+<div class="statIcon">🪙</div>
+<div class="statLabel">ZIVO Coins</div>
+<span class="statValue" id="coins">0</span>
+</div>
+
+<div class="stat">
+<div class="statIcon">🎯</div>
+<div class="statLabel" id="accuracyLabel">الدقة</div>
+<span class="statValue" id="accuracy">0%</span>
+</div>
+
+</div>
+
 </section>
 
 
 <section>
-<h2 class="section-title" id="dailyTitle">🌎 التحدي العالمي اليومي</h2>
+
+<h2 class="sectionTitle">
+🌎 <span id="dailyTitle">التحدي العالمي اليومي</span>
+</h2>
 
 <div class="card">
-    <div class="icon">🏆</div>
-    <h3 id="dailyName">ZIVOZONE DAILY</h3>
-    <p id="dailyText">
-        تحدٍ جديد يوميًا لجميع اللاعبين حول العالم.
-    </p>
-    <button class="play" onclick="startGame('daily')">
-        <span id="dailyButton">ابدأ التحدي</span>
-    </button>
+
+<div class="icon">🏆</div>
+
+<h3>ZIVOZONE DAILY</h3>
+
+<p id="dailyDescription">
+تحدٍ جديد كل يوم لجميع اللاعبين حول العالم.
+</p>
+
+<button class="primary"
+onclick="startChallenge('daily')"
+id="dailyButton">
+
+ابدأ الآن
+
+</button>
+
 </div>
+
 </section>
 
 
 <section>
-<h2 class="section-title" id="gamesTitle">🎮 التحديات</h2>
+
+<h2 class="sectionTitle" id="challengesTitle">
+🎮 التحديات
+</h2>
 
 <div class="grid">
+
 
 <div class="card">
 <div class="icon">⚡</div>
 <h3>SPEED</h3>
-<p id="speedText">اختبر سرعتك في الإجابة.</p>
-<button class="play" onclick="startGame('speed')">PLAY</button>
+<p id="speedDescription">اختبر سرعتك ودقة قرارك.</p>
+<button class="primary" onclick="startChallenge('speed')">PLAY</button>
 </div>
+
 
 <div class="card">
 <div class="icon">🧠</div>
 <h3>IQ</h3>
-<p id="iqText">اختبر المنطق والذكاء.</p>
-<button class="play" onclick="startGame('iq')">PLAY</button>
+<p id="iqDescription">اختبر المنطق والتحليل.</p>
+<button class="primary" onclick="startChallenge('iq')">PLAY</button>
 </div>
+
 
 <div class="card">
 <div class="icon">👀</div>
 <h3>FOCUS</h3>
-<p id="focusText">اختبر قدرتك على ملاحظة التفاصيل.</p>
-<button class="play" onclick="startGame('focus')">PLAY</button>
+<p id="focusDescription">اختبر قوة الملاحظة والتركيز.</p>
+<button class="primary" onclick="startChallenge('focus')">PLAY</button>
 </div>
+
 
 <div class="card">
 <div class="icon">🧩</div>
 <h3>MEMORY</h3>
-<p id="memoryText">اختبر ذاكرتك.</p>
-<button class="play" onclick="startGame('memory')">PLAY</button>
+<p id="memoryDescription">اختبر ذاكرتك.</p>
+<button class="primary" onclick="startChallenge('memory')">PLAY</button>
 </div>
+
 
 <div class="card">
 <div class="icon">🎯</div>
 <h3>REACTION</h3>
-<p id="reactionText">كم تبلغ سرعة رد فعلك؟</p>
-<button class="play" onclick="startGame('reaction')">PLAY</button>
+<p id="reactionDescription">اختبر سرعة الاستجابة.</p>
+<button class="primary" onclick="startChallenge('reaction')">PLAY</button>
 </div>
+
 
 <div class="card">
 <div class="icon">👁️</div>
 <h3>MIND</h3>
-<p id="mindText">ألغاز نفسية وذهنية غامضة.</p>
-<button class="play" onclick="startGame('mind')">PLAY</button>
+<p id="mindDescription">ألغاز ذهنية ونفسية ذكية.</p>
+<button class="primary" onclick="startChallenge('mind')">PLAY</button>
 </div>
+
 
 <div class="card">
 <div class="icon">🤖</div>
-<h3>AI CHALLENGES</h3>
-<p id="aiText">تحديات تتكيف مع مستواك.</p>
-<button class="play" onclick="startGame('ai')">PLAY</button>
+<h3>AI</h3>
+<p id="aiDescription">تحديات تتكيف مع مستوى اللاعب.</p>
+<button class="primary" onclick="startChallenge('ai')">PLAY</button>
 </div>
+
 
 <div class="card">
 <div class="icon">⚽</div>
 <h3>SPORTS</h3>
-<p id="sportsText">تحديات رياضية عالمية.</p>
-<button class="play" onclick="startGame('sports')">PLAY</button>
+<p id="sportsDescription">تحديات رياضية عالمية.</p>
+<button class="primary" onclick="startChallenge('sports')">PLAY</button>
 </div>
 
 </div>
+
 </section>
 
 
 <section>
-<h2 class="section-title">🧬 ZIVOZONE DNA</h2>
+
+<h2 class="sectionTitle">
+🧬 ZIVOZONE DNA
+</h2>
 
 <div class="card">
-    <p id="dnaText">
-        مع استمرارك في اللعب، يتعلم ZIVOZONE أسلوب لعبك
-        ويكوّن ملفًا ترفيهيًا لطريقة تفكيرك واتخاذك للقرار.
-    </p>
 
-    <div>
-        <span class="badge">🧠 IQ <b id="dnaIQ">0</b></span>
-        <span class="badge">⚡ Speed <b id="dnaSpeed">0</b></span>
-        <span class="badge">👀 Focus <b id="dnaFocus">0</b></span>
-        <span class="badge">🧩 Memory <b id="dnaMemory">0</b></span>
-    </div>
+<p id="dnaDescription">
+يتطور ملفك حسب طريقة لعبك وأدائك في التحديات.
+</p>
+
+<div class="badges">
+
+<div class="badge">
+🧠 IQ:
+<b id="dnaIQ">0</b>
 </div>
+
+<div class="badge">
+⚡ SPEED:
+<b id="dnaSpeed">0</b>
+</div>
+
+<div class="badge">
+👀 FOCUS:
+<b id="dnaFocus">0</b>
+</div>
+
+<div class="badge">
+🧩 MEMORY:
+<b id="dnaMemory">0</b>
+</div>
+
+<div class="badge">
+🎯 REACTION:
+<b id="dnaReaction">0</b>
+</div>
+
+</div>
+
+</div>
+
 </section>
 
 
 <section>
-<h2 class="section-title">🌍 Global Ranking</h2>
 
-<div class="card">
-    <p id="rankingText">
-        هنا سيكون الترتيب العالمي، ترتيب الدولة، الفئة العمرية والأصدقاء.
-    </p>
+<h2 class="sectionTitle">
+🏆 <span id="rankingTitle">الترتيب العام</span>
+</h2>
 
-    <div class="stats">
-        <div class="stat">🌍 Global<b>#—</b></div>
-        <div class="stat">🇯🇴 Country<b>#—</b></div>
-        <div class="stat">🎂 Age<b>#—</b></div>
-        <div class="stat">👥 Friends<b>#—</b></div>
-    </div>
+<div class="dashboard">
+
+<div class="ranking">
+
+<h3 id="strongestTitle">
+🧠 الأقوى
+</h3>
+
+<div id="strongestList"></div>
+
 </div>
+
+
+<div class="ranking">
+
+<h3 id="fastestTitle">
+⚡ الأسرع
+</h3>
+
+<div id="fastestList"></div>
+
+</div>
+
+</div>
+
 </section>
 
 
 <section>
-<h2 class="section-title">📰 ZIVOZONE WORLD</h2>
+
+<h2 class="sectionTitle">
+🌍 ZIVOZONE WORLD
+</h2>
 
 <div class="grid">
 
 <div class="card">
-    <div class="icon">📰</div>
-    <h3 id="newsTitle">الأخبار العالمية</h3>
-    <p id="newsText">
-        قسم الأخبار الرياضية والأحداث العالمية.
-        سيتم ربطه لاحقًا بمصادر وواجهات أخبار مرخصة.
-    </p>
+<div class="icon">📰</div>
+<h3 id="newsTitle">الأخبار العالمية</h3>
+<p id="newsDescription">
+أخبار وأحداث عالمية مرتبطة بالتحديات.
+</p>
 </div>
+
 
 <div class="card">
-    <div class="icon">⚽</div>
-    <h3 id="academyTitle">ZIVOZONE ACADEMY</h3>
-    <p id="academyText">
-        تطوير لاعبي كرة القدم الناشئين: مهارات، ذكاء كروي،
-        لياقة، تكتيك وتطور اللاعب.
-    </p>
+<div class="icon">⚽</div>
+<h3>ZIVOZONE ACADEMY</h3>
+<p id="academyDescription">
+تطوير لاعبي كرة القدم الناشئين.
+</p>
 </div>
+
 
 <div class="card">
-    <div class="icon">🪙</div>
-    <h3 id="economyTitle">ZIVOZONE ECONOMY</h3>
-    <p id="economyText">
-        نظام المكافآت والعملات الرقمية داخل المنصة.
-    </p>
+<div class="icon">🪙</div>
+<h3>ZIVOZONE ECONOMY</h3>
+<p id="economyDescription">
+نظام المكافآت والاقتصاد الرقمي.
+</p>
 </div>
 
 </div>
+
 </section>
-
-
-<div id="challenge" class="challenge">
-    <h2 id="gameTitle">Challenge</h2>
-
-    <div id="question" class="question"></div>
-
-    <div id="answers" class="answers"></div>
-
-    <div id="result" class="result"></div>
-
-    <button onclick="closeGame()" style="margin-top:20px;background:#26334d;color:white">
-        <span id="closeText">إغلاق</span>
-    </button>
-</div>
 
 </main>
 
+
 <footer>
-    © 2026 ZIVOZONE — Global Challenge Platform
+ZIVOZONE © 2026 — Global Challenge Platform
 </footer>
+
+
+<!-- CHALLENGE WINDOW -->
+
+<div id="challengeWindow" class="challenge">
+
+<div class="challengeBox">
+
+<div class="challengeTop">
+
+<h2 id="challengeTitle">
+CHALLENGE
+</h2>
+
+<div class="timer">
+⏱️ <span id="timer">60</span>s
+</div>
+
+</div>
+
+
+<div class="progress">
+
+<div
+id="progressBar"
+class="progressBar">
+</div>
+
+</div>
+
+
+<div id="question" class="question"></div>
+
+<div id="answers" class="answers"></div>
+
+<div id="result"></div>
+
+</div>
+
+</div>
 
 
 <script>
 
-const translations = {
+
+/* ================================
+   ZIVOZONE CORE DATA
+================================ */
+
+let language =
+localStorage.getItem("zivo_language") || "ar";
+
+
+let player =
+JSON.parse(
+localStorage.getItem("zivo_player")
+) || {
+
+name:"",
+age:"",
+points:0,
+level:1,
+coins:0,
+streak:0,
+played:0,
+correct:0,
+totalTime:0,
+
+dna:{
+iq:0,
+speed:0,
+focus:0,
+memory:0,
+reaction:0
+},
+
+seen:[]
+
+};
+
+
+let challengeState = {
+
+type:"",
+questions:[],
+index:0,
+score:0,
+correct:0,
+timeLeft:60,
+startTime:0,
+timer:null
+
+};
+
+
+/* ================================
+   TRANSLATIONS
+================================ */
+
+const T={
 
 ar:{
-lang:"English",
-subtitle:"عالم التحديات الذكية والمنافسة العالمية",
+hero:"عالم التحديات الذكية والمنافسة العالمية",
 save:"حفظ الملف",
-stats:"ملفك",
+profile:"ملف اللاعب",
 points:"النقاط",
 level:"المستوى",
-streak:"السلسلة",
+streak:"Streak",
+accuracy:"الدقة",
 daily:"التحدي العالمي اليومي",
-dailyText:"تحدٍ جديد يوميًا لجميع اللاعبين حول العالم.",
-start:"ابدأ التحدي",
-games:"التحديات",
-speed:"اختبر سرعتك في الإجابة.",
-iq:"اختبر المنطق والذكاء.",
-focus:"اختبر قدرتك على ملاحظة التفاصيل.",
+dailyDesc:"تحدٍ جديد كل يوم لجميع اللاعبين حول العالم.",
+start:"ابدأ الآن",
+challenges:"التحديات",
+speed:"اختبر سرعتك ودقة قرارك.",
+iq:"اختبر المنطق والتحليل.",
+focus:"اختبر قوة الملاحظة والتركيز.",
 memory:"اختبر ذاكرتك.",
-reaction:"كم تبلغ سرعة رد فعلك؟",
-mind:"ألغاز نفسية وذهنية غامضة.",
-ai:"تحديات تتكيف مع مستواك.",
+reaction:"اختبر سرعة الاستجابة.",
+mind:"ألغاز ذهنية ونفسية ذكية.",
+ai:"تحديات تتكيف مع مستوى اللاعب.",
 sports:"تحديات رياضية عالمية.",
-dna:"مع استمرارك في اللعب، يتعلم ZIVOZONE أسلوب لعبك ويكوّن ملفًا ترفيهيًا لطريقة تفكيرك واتخاذك للقرار.",
-ranking:"هنا سيكون الترتيب العالمي، ترتيب الدولة، الفئة العمرية والأصدقاء.",
+dna:"يتطور ملفك حسب طريقة لعبك وأدائك في التحديات.",
+ranking:"الترتيب العام",
+strongest:"🧠 الأقوى",
+fastest:"⚡ الأسرع",
 news:"الأخبار العالمية",
-newsText:"قسم الأخبار الرياضية والأحداث العالمية. سيتم ربطه لاحقًا بمصادر وواجهات أخبار مرخصة.",
-academy:"ZIVOZONE ACADEMY",
-academyText:"تطوير لاعبي كرة القدم الناشئين: مهارات، ذكاء كروي، لياقة، تكتيك وتطور اللاعب.",
-economy:"ZIVOZONE ECONOMY",
-economyText:"نظام المكافآت والعملات الرقمية داخل المنصة.",
-close:"إغلاق",
-correct:"✅ إجابة صحيحة!",
-wrong:"❌ إجابة خاطئة.",
-enter:"أدخل اسمك وعمرك أولًا."
+newsDesc:"أخبار وأحداث عالمية مرتبطة بالتحديات.",
+academyDesc:"تطوير لاعبي كرة القدم الناشئين.",
+economyDesc:"نظام المكافآت والاقتصاد الرقمي.",
+enter:"أدخل اسمك وعمرك أولًا.",
+correct:"✅ إجابة صحيحة",
+wrong:"❌ إجابة خاطئة",
+next:"التالي",
+finish:"انتهى الاختبار",
+finalScore:"نتيجتك النهائية",
+time:"الوقت",
+question:"السؤال"
 },
 
 en:{
-lang:"العربية",
-subtitle:"The world of smart challenges and global competition",
+hero:"The world of smart challenges and global competition",
 save:"Save Profile",
-stats:"Your Profile",
+profile:"Player Profile",
 points:"Points",
 level:"Level",
 streak:"Streak",
+accuracy:"Accuracy",
 daily:"Daily Global Challenge",
-dailyText:"A new challenge every day for players around the world.",
-start:"Start Challenge",
-games:"Challenges",
-speed:"Test your answer speed.",
-iq:"Test logic and intelligence.",
-focus:"Test your attention to detail.",
+dailyDesc:"A new challenge every day for players around the world.",
+start:"Start Now",
+challenges:"Challenges",
+speed:"Test your speed and decision accuracy.",
+iq:"Test logic and analysis.",
+focus:"Test observation and focus.",
 memory:"Test your memory.",
-reaction:"How fast are your reactions?",
-mind:"Psychological and mysterious mind puzzles.",
+reaction:"Test your reaction speed.",
+mind:"Smart psychological and mind puzzles.",
 ai:"Challenges that adapt to your level.",
 sports:"Global sports challenges.",
-dna:"As you play, ZIVOZONE learns your play style and builds an entertainment-based profile of your thinking and decision-making.",
-ranking:"Global, country, age-group and friends rankings will appear here.",
+dna:"Your profile evolves based on your playing style and performance.",
+ranking:"Overall Ranking",
+strongest:"🧠 Strongest",
+fastest:"⚡ Fastest",
 news:"Global News",
-newsText:"Sports news and global events. Later connected to licensed news APIs and sources.",
-academy:"ZIVOZONE ACADEMY",
-academyText:"Youth football development: skills, football IQ, fitness, tactics and player development.",
-economy:"ZIVOZONE ECONOMY",
-economyText:"Rewards and digital currency system inside the platform.",
-close:"Close",
-correct:"✅ Correct answer!",
-wrong:"❌ Wrong answer.",
-enter:"Enter your name and age first."
+newsDesc:"Global news and events connected to challenges.",
+academyDesc:"Youth football player development.",
+economyDesc:"Rewards and digital economy system.",
+enter:"Enter your name and age first.",
+correct:"✅ Correct",
+wrong:"❌ Wrong",
+next:"Next",
+finish:"Challenge Complete",
+finalScore:"Your Final Score",
+time:"Time",
+question:"Question"
+},
+
+zh:{
+hero:"智能挑战与全球竞技的世界",
+save:"保存资料",
+profile:"玩家资料",
+points:"积分",
+level:"等级",
+streak:"连续挑战",
+accuracy:"准确率",
+daily:"每日全球挑战",
+dailyDesc:"每天为全球玩家提供全新挑战。",
+start:"开始",
+challenges:"挑战",
+speed:"测试你的速度和决策能力。",
+iq:"测试逻辑与分析能力。",
+focus:"测试观察力和专注力。",
+memory:"测试你的记忆力。",
+reaction:"测试反应速度。",
+mind:"智能心理与思维谜题。",
+ai:"根据你的水平调整挑战。",
+sports:"全球体育挑战。",
+dna:"你的资料会根据游戏方式和表现不断发展。",
+ranking:"总排行榜",
+strongest:"🧠 最强",
+fastest:"⚡ 最快",
+news:"全球新闻",
+newsDesc:"与挑战相关的全球新闻和事件。",
+academyDesc:"青少年足球运动员发展。",
+economyDesc:"奖励与数字经济系统。",
+enter:"请先输入姓名和年龄。",
+correct:"✅ 正确",
+wrong:"❌ 错误",
+next:"下一题",
+finish:"挑战完成",
+finalScore:"最终成绩",
+time:"时间",
+question:"问题"
+},
+
+es:{
+hero:"El mundo de los desafíos inteligentes y la competencia global",
+save:"Guardar perfil",
+profile:"Perfil del jugador",
+points:"Puntos",
+level:"Nivel",
+streak:"Racha",
+accuracy:"Precisión",
+daily:"Desafío Global Diario",
+dailyDesc:"Un nuevo desafío cada día para jugadores de todo el mundo.",
+start:"Comenzar",
+challenges:"Desafíos",
+speed:"Pon a prueba tu velocidad y precisión.",
+iq:"Pon a prueba tu lógica y análisis.",
+focus:"Pon a prueba tu atención.",
+memory:"Pon a prueba tu memoria.",
+reaction:"Pon a prueba tus reflejos.",
+mind:"Acertijos mentales inteligentes.",
+ai:"Desafíos que se adaptan a tu nivel.",
+sports:"Desafíos deportivos globales.",
+dna:"Tu perfil evoluciona según tu estilo y rendimiento.",
+ranking:"Clasificación General",
+strongest:"🧠 Más fuertes",
+fastest:"⚡ Más rápidos",
+news:"Noticias Globales",
+newsDesc:"Noticias y eventos globales relacionados con desafíos.",
+academyDesc:"Desarrollo de jóvenes futbolistas.",
+economyDesc:"Sistema de recompensas y economía digital.",
+enter:"Introduce primero tu nombre y edad.",
+correct:"✅ Correcto",
+wrong:"❌ Incorrecto",
+next:"Siguiente",
+finish:"Desafío completado",
+finalScore:"Puntuación final",
+time:"Tiempo",
+question:"Pregunta"
+},
+
+fr:{
+hero:"Le monde des défis intelligents et de la compétition mondiale",
+save:"Enregistrer le profil",
+profile:"Profil du joueur",
+points:"Points",
+level:"Niveau",
+streak:"Série",
+accuracy:"Précision",
+daily:"Défi Mondial Quotidien",
+dailyDesc:"Un nouveau défi chaque jour pour les joueurs du monde entier.",
+start:"Commencer",
+challenges:"Défis",
+speed:"Teste ta vitesse et ta précision.",
+iq:"Teste ta logique et ton analyse.",
+focus:"Teste ton attention.",
+memory:"Teste ta mémoire.",
+reaction:"Teste ta vitesse de réaction.",
+mind:"Énigmes mentales intelligentes.",
+ai:"Défis adaptés à ton niveau.",
+sports:"Défis sportifs mondiaux.",
+dna:"Ton profil évolue selon ton style et tes performances.",
+ranking:"Classement Général",
+strongest:"🧠 Les plus forts",
+fastest:"⚡ Les plus rapides",
+news:"Actualités Mondiales",
+newsDesc:"Actualités et événements mondiaux liés aux défis.",
+academyDesc:"Développement des jeunes footballeurs.",
+economyDesc:"Système de récompenses et économie numérique.",
+enter:"Entre d'abord ton nom et ton âge.",
+correct:"✅ Correct",
+wrong:"❌ Incorrect",
+next:"Suivant",
+finish:"Défi terminé",
+finalScore:"Score final",
+time:"Temps",
+question:"Question"
 }
 
 };
 
 
-let lang = localStorage.getItem("zivo_lang") || "ar";
+/* ================================
+   QUESTION BANK
+================================ */
 
-let data = JSON.parse(localStorage.getItem("zivo_data")) || {
-    name:"",
-    age:"",
-    points:0,
-    level:1,
-    streak:0,
-    coins:0,
-    dna:{
-        iq:0,
-        speed:0,
-        focus:0,
-        memory:0
-    },
-    seen:[]
-};
-
-const questions = {
+const BANK={
 
 iq:[
+
 {
-q:"ما الرقم التالي؟ 2, 4, 8, 16, ?",
+q:"ما الرقم التالي: 2, 4, 8, 16, ؟",
 a:["20","24","32","30"],
-correct:2
+c:2
 },
+
 {
-q:"إذا كان كل A هو B، وبعض B هو C، هل يجب أن يكون بعض A هو C؟",
-a:["نعم دائمًا","لا ليس بالضرورة","نعم فقط في الرياضيات","مستحيل"],
-correct:1
+q:"إذا كان 5 × 5 = 25، فما 6 × 6؟",
+a:["30","36","42","40"],
+c:1
+},
+
+{
+q:"أي رقم لا ينتمي للمجموعة؟ 2, 4, 8, 10, 16",
+a:["2","8","10","16"],
+c:2
+},
+
+{
+q:"ما الرقم التالي: 1, 1, 2, 3, 5, ؟",
+a:["6","7","8","9"],
+c:2
+},
+
+{
+q:"إذا كان A أكبر من B وB أكبر من C، فمن الأكبر؟",
+a:["A","B","C","لا يمكن معرفة"],
+c:0
+},
+
+{
+q:"ما نصف 100 + 20؟",
+a:["60","70","80","90"],
+c:2
+},
+
+{
+q:"3 أشخاص يحتاجون 3 دقائق لصنع 3 أشياء. كم يحتاج شخص واحد لصنع شيء واحد؟",
+a:["1 دقيقة","3 دقائق","6 دقائق","9 دقائق"],
+c:1
+},
+
+{
+q:"أي كلمة مختلفة؟",
+a:["مثلث","مربع","دائرة","أزرق"],
+c:3
+},
+
+{
+q:"إذا كان اليوم الاثنين، فما اليوم بعد 10 أيام؟",
+a:["الأربعاء","الخميس","الجمعة","السبت"],
+c:1
+},
+
+{
+q:"ما العدد الذي يكمل النمط: 5,10,20,40, ؟",
+a:["60","70","80","100"],
+c:2
 }
+
 ],
 
 speed:[
+
 {
-q:"أي كلمة مختلفة؟",
-a:["كرة","كرة","كتاب","كرة"],
-correct:2
-},
-{
-q:"أي رقم أكبر؟",
+q:"أي رقم هو الأكبر؟",
 a:["17","71","27","37"],
-correct:1
+c:1
+},
+
+{
+q:"اختر الكلمة التي تحتوي حرف Z",
+a:["ZIVO","GAME","ZONE","PLAY"],
+c:0
+},
+
+{
+q:"أي رمز مختلف؟",
+a:["●","●","▲","●"],
+c:2
+},
+
+{
+q:"ما الرقم الأصغر؟",
+a:["91","19","29","39"],
+c:1
+},
+
+{
+q:"اختر الكلمة الصحيحة",
+a:["ZIVOZONE","ZIVZONE","ZIVOOZONE","ZIVOZON"],
+c:0
+},
+
+{
+q:"أي رقم زوجي؟",
+a:["13","17","22","31"],
+c:2
+},
+
+{
+q:"أي حرف يأتي أولًا أبجديًا؟",
+a:["D","A","C","B"],
+c:1
+},
+
+{
+q:"ما العدد الأكبر؟",
+a:["99","89","98","79"],
+c:0
+},
+
+{
+q:"أي خيار مختلف؟",
+a:["A","A","B","A"],
+c:2
+},
+
+{
+q:"ما الرقم الذي يأتي بعد 49؟",
+a:["48","50","51","59"],
+c:1
 }
+
 ],
 
 focus:[
+
 {
 q:"كم مرة يظهر الرقم 7؟ 7 3 7 1 4 7 9 7",
 a:["3","4","5","6"],
-correct:1
+c:1
 },
+
 {
-q:"اختر الكلمة التي تحتوي حرف Z",
-a:["ZIVO","ZIVA","ZONA","كل ما سبق"],
-correct:3
+q:"كم مثلثًا في الصورة الذهنية؟ مثلث واحد فقط.",
+a:["1","2","3","4"],
+c:0
+},
+
+{
+q:"أي كلمة مختلفة؟",
+a:["FOCUS","FOCUS","FOCUS","FOKUS"],
+c:3
+},
+
+{
+q:"أي رقم يتكرر مرتين؟ 4 8 2 9 8 6",
+a:["4","8","2","9"],
+c:1
+},
+
+{
+q:"اختر الحرف الموجود في بداية الكلمة: ZIVO",
+a:["Z","I","V","O"],
+c:0
+},
+
+{
+q:"ما اللون المذكور؟ الكلمة: BLUE",
+a:["Red","Blue","Green","Black"],
+c:1
+},
+
+{
+q:"أي رقم مفقود: 1 2 3 5 6",
+a:["4","7","8","9"],
+c:0
+},
+
+{
+q:"أي رمز في المنتصف: ★ ● ▲",
+a:["★","●","▲","لا شيء"],
+c:1
+},
+
+{
+q:"ما آخر حرف في ZONE؟",
+a:["Z","O","N","E"],
+c:3
+},
+
+{
+q:"أي كلمة مختلفة؟",
+a:["PLAY","PLAY","PLAy","PLAY"],
+c:2
 }
+
 ],
 
 memory:[
+
 {
-q:"احفظ هذه السلسلة: 4 - 8 - 2 - 9. ما الرقم الثاني؟",
+q:"احفظ: 4 - 8 - 2 - 9. ما الرقم الثاني؟",
 a:["4","8","2","9"],
-correct:1
+c:1
 },
+
 {
 q:"احفظ: 7 - 1 - 5 - 3. ما الرقم الثالث؟",
 a:["7","1","5","3"],
-correct:2
+c:2
+},
+
+{
+q:"احفظ: 9 - 2 - 6 - 4. ما الرقم الأخير؟",
+a:["9","2","6","4"],
+c:3
+},
+
+{
+q:"احفظ: A - C - B - D. ما الحرف الثاني؟",
+a:["A","C","B","D"],
+c:1
+},
+
+{
+q:"احفظ: 3 - 8 - 1 - 6 - 5. ما الرقم الرابع؟",
+a:["3","8","1","6"],
+c:3
+},
+
+{
+q:"احفظ: RED - BLUE - GREEN. ما الكلمة الثانية؟",
+a:["RED","BLUE","GREEN","YELLOW"],
+c:1
+},
+
+{
+q:"احفظ: 2 - 5 - 9 - 1. ما الرقم الأول؟",
+a:["2","5","9","1"],
+c:0
+},
+
+{
+q:"احفظ: B - D - A - C. ما الحرف الثالث؟",
+a:["B","D","A","C"],
+c:2
+},
+
+{
+q:"احفظ: 6 - 4 - 7 - 2. ما الرقم الثالث؟",
+a:["6","4","7","2"],
+c:2
+},
+
+{
+q:"احفظ: ONE - TWO - THREE. ما الكلمة الأخيرة؟",
+a:["ONE","TWO","THREE","FOUR"],
+c:2
 }
+
 ],
 
 reaction:[
+
 {
-q:"أي خيار يمثل أسرع استجابة؟",
+q:"ما أسرع استجابة؟",
 a:["A","B","C","D"],
-correct:0
+c:0
+},
+
+{
+q:"اضغط الخيار الصحيح بسرعة: 2 + 2",
+a:["3","4","5","6"],
+c:1
+},
+
+{
+q:"أي خيار يساوي 10؟",
+a:["7+2","5+5","8+1","6+3"],
+c:1
+},
+
+{
+q:"أي رقم أكبر من 50؟",
+a:["41","49","51","39"],
+c:2
+},
+
+{
+q:"اختر 3 × 3",
+a:["6","7","8","9"],
+c:3
+},
+
+{
+q:"أي حرف يأتي بعد A؟",
+a:["B","C","D","E"],
+c:0
+},
+
+{
+q:"أي رقم فردي؟",
+a:["12","18","21","30"],
+c:2
+},
+
+{
+q:"كم يساوي 10 - 3؟",
+a:["5","6","7","8"],
+c:2
+},
+
+{
+q:"أي خيار أصغر؟",
+a:["5","9","7","8"],
+c:0
+},
+
+{
+q:"كم يساوي 4 + 4؟",
+a:["6","7","8","9"],
+c:2
 }
+
 ],
 
 mind:[
+
 {
 q:"شيء كلما أخذت منه كبر، ما هو؟",
-a:["الحفرة","الكتاب","الكرة","الوقت"],
-correct:0
+a:["الحفرة","الكتاب","الوقت","الكرة"],
+c:0
+},
+
+{
+q:"ما الشيء الذي يمشي بلا أرجل؟",
+a:["الوقت","الكرسي","الحائط","الحذاء"],
+c:0
+},
+
+{
+q:"شيء له أسنان ولا يعض، ما هو؟",
+a:["المشط","الكتاب","الباب","القلم"],
+c:0
+},
+
+{
+q:"ما الذي تستطيع كسره دون لمسه؟",
+a:["الوعد","الحجر","الزجاج","القلم"],
+c:0
+},
+
+{
+q:"ما الذي كلما زاد نقص؟",
+a:["العمر","المال","الطعام","الماء"],
+c:0
+},
+
+{
+q:"له عين ولا يرى، ما هو؟",
+a:["الإبرة","الطائر","الإنسان","الكتاب"],
+c:0
+},
+
+{
+q:"ما الذي يجري ولا يمشي؟",
+a:["الماء","الكرسي","الكتاب","الجدار"],
+c:0
+},
+
+{
+q:"ما الشيء الذي تسمعه ولا تراه؟",
+a:["الصوت","الطاولة","الباب","الكتاب"],
+c:0
+},
+
+{
+q:"بيت بلا أبواب ولا نوافذ، ما هو؟",
+a:["البيضة","البيت","السيارة","المدرسة"],
+c:0
+},
+
+{
+q:"ما الذي له أوراق وليس نباتًا؟",
+a:["الكتاب","الشجرة","العشب","الزهرة"],
+c:0
 }
+
 ],
 
 sports:[
+
 {
 q:"كم لاعبًا يبدأ به فريق كرة القدم داخل الملعب؟",
 a:["9","10","11","12"],
-correct:2
-}
-],
+c:2
+},
 
-daily:[
 {
-q:"ZIVOZONE DAILY: ما العدد التالي؟ 3, 6, 12, 24, ?",
-a:["36","40","48","50"],
-correct:2
+q:"كم شوطًا في مباراة كرة القدم؟",
+a:["1","2","3","4"],
+c:1
+},
+
+{
+q:"كم دقيقة مدة المباراة الأساسية؟",
+a:["60","75","90","120"],
+c:2
+},
+
+{
+q:"أي رياضة تستخدم مضربًا وكرة صغيرة؟",
+a:["التنس","السباحة","الجري","الملاكمة"],
+c:0
+},
+
+{
+q:"كم لاعبًا في فريق كرة السلة داخل الملعب؟",
+a:["4","5","6","7"],
+c:1
+},
+
+{
+q:"أي رياضة تستخدم شبكة وملعبًا مقسمًا؟",
+a:["الكرة الطائرة","الجري","الملاكمة","رفع الأثقال"],
+c:0
+},
+
+{
+q:"ما الرياضة التي تستخدم حلبة؟",
+a:["الملاكمة","السباحة","كرة القدم","التنس"],
+c:0
+},
+
+{
+q:"كم حلقة في شعار الألعاب الأولمبية؟",
+a:["4","5","6","7"],
+c:1
+},
+
+{
+q:"أي رياضة تعتمد على السباحة؟",
+a:["ألعاب القوى","السباحة","التنس","كرة القدم"],
+c:1
+},
+
+{
+q:"أي رياضة تشتهر بسباق 100 متر؟",
+a:["ألعاب القوى","كرة القدم","التنس","الغولف"],
+c:0
 }
+
 ],
 
 ai:[
+
 {
-q:"أنت أمام خيارين: حل سريع بنسبة نجاح 60% أو حل أبطأ بنسبة نجاح 90%. ماذا تختار؟",
+q:"لديك خيار سريع بنسبة نجاح 60% وخيار أبطأ بنسبة 90%. ماذا تختار؟",
 a:["السريع","الأبطأ","عشوائي","لا أختار"],
-correct:1
+c:1
+},
+
+{
+q:"إذا تغيرت القواعد أثناء اللعبة، ما أفضل استراتيجية؟",
+a:["التجاهل","التكيف","الانسحاب","التخمين دائمًا"],
+c:1
+},
+
+{
+q:"أنت متأخر بالنقاط والوقت قليل. ماذا تفعل؟",
+a:["أستسلم","أحلل المخاطر","أغلق اللعبة","أجيب عشوائيًا"],
+c:1
+},
+
+{
+q:"معلومة واحدة غير مؤكدة. ماذا تفعل؟",
+a:["أعتبرها حقيقة","أتحقق منها","أتجاهل كل شيء","أكررها"],
+c:1
+},
+
+{
+q:"أفضل قرار تحت الضغط هو:",
+a:["الأسرع دائمًا","الأكثر منطقية","العشوائي","عدم القرار"],
+c:1
+},
+
+{
+q:"عندما تفشل استراتيجية، الأفضل:",
+a:["تكرارها","تحليلها وتغييرها","الاستسلام","لوم الآخرين"],
+c:1
+},
+
+{
+q:"ماذا تفعل عندما تحصل على معلومات جديدة؟",
+a:["أتجاهلها","أعيد تقييم القرار","أغضب","أغلق اللعبة"],
+c:1
+},
+
+{
+q:"إذا كان احتمال الفوز منخفضًا جدًا، ماذا تفعل؟",
+a:["تحلل المخاطر","تضغط عشوائيًا","تستسلم فورًا","تتجاهل النتيجة"],
+c:0
+},
+
+{
+q:"القرار الأفضل عادة يجمع بين:",
+a:["السرعة فقط","الدقة فقط","المعلومات والمخاطر والوقت","الحظ"],
+c:2
+},
+
+{
+q:"إذا اكتشفت أن افتراضك خاطئ:",
+a:["تتمسك به","تغير استراتيجيتك","تخفي الخطأ","تتوقف"],
+c:1
 }
+
+],
+
+daily:[
+
+{
+q:"ما الرقم التالي: 3, 6, 12, 24, ؟",
+a:["36","40","48","50"],
+c:2
+},
+
+{
+q:"ما الرقم التالي: 5, 10, 20, 40, ؟",
+a:["60","70","80","90"],
+c:2
+},
+
+{
+q:"ما الرقم التالي: 1, 2, 4, 8, ؟",
+a:["10","12","16","18"],
+c:2
+},
+
+{
+q:"أي رقم مختلف؟",
+a:["2","4","6","9"],
+c:3
+},
+
+{
+q:"ما نصف 80؟",
+a:["20","30","40","50"],
+c:2
+},
+
+{
+q:"كم يساوي 7 × 7؟",
+a:["42","49","56","63"],
+c:1
+},
+
+{
+q:"ما عكس كلمة سريع؟",
+a:["قوي","بطيء","كبير","صغير"],
+c:1
+},
+
+{
+q:"أي شكل له ثلاثة أضلاع؟",
+a:["الدائرة","المربع","المثلث","المستطيل"],
+c:2
+},
+
+{
+q:"كم شهرًا في السنة؟",
+a:["10","11","12","13"],
+c:2
+},
+
+{
+q:"أي رقم أكبر؟",
+a:["101","99","100","98"],
+c:0
+}
+
 ]
 
 };
 
 
-function applyLanguage(){
-
-    const t=translations[lang];
-
-    document.documentElement.lang=lang;
-    document.documentElement.dir=lang==="ar"?"rtl":"ltr";
-
-    document.getElementById("langButton").textContent=t.lang;
-    document.getElementById("subtitle").textContent=t.subtitle;
-    document.getElementById("saveText").textContent=t.save;
-    document.getElementById("statsTitle").textContent=t.stats;
-    document.getElementById("pointsLabel").textContent=t.points;
-    document.getElementById("levelLabel").textContent=t.level;
-    document.getElementById("streakLabel").textContent=t.streak;
-    document.getElementById("dailyTitle").textContent="🌎 "+t.daily;
-    document.getElementById("dailyText").textContent=t.dailyText;
-    document.getElementById("dailyButton").textContent=t.start;
-    document.getElementById("gamesTitle").textContent="🎮 "+t.games;
-
-    document.getElementById("speedText").textContent=t.speed;
-    document.getElementById("iqText").textContent=t.iq;
-    document.getElementById("focusText").textContent=t.focus;
-    document.getElementById("memoryText").textContent=t.memory;
-    document.getElementById("reactionText").textContent=t.reaction;
-    document.getElementById("mindText").textContent=t.mind;
-    document.getElementById("aiText").textContent=t.ai;
-    document.getElementById("sportsText").textContent=t.sports;
-
-    document.getElementById("dnaText").textContent=t.dna;
-    document.getElementById("rankingText").textContent=t.ranking;
-
-    document.getElementById("newsTitle").textContent=t.news;
-    document.getElementById("newsText").textContent=t.newsText;
-    document.getElementById("academyTitle").textContent=t.academy;
-    document.getElementById("academyText").textContent=t.academyText;
-    document.getElementById("economyTitle").textContent=t.economy;
-    document.getElementById("economyText").textContent=t.economyText;
-    document.getElementById("closeText").textContent=t.close;
-
-    if(data.name) document.getElementById("playerName").value=data.name;
-    if(data.age) document.getElementById("age").value=data.age;
-
-    updateUI();
-}
-
-
-function toggleLanguage(){
-
-    lang = lang==="ar" ? "en" : "ar";
-
-    localStorage.setItem("zivo_lang",lang);
-
-    applyLanguage();
-}
-
+/* ================================
+   PROFILE
+================================ */
 
 function saveProfile(){
 
-    const name=document.getElementById("playerName").value.trim();
-    const age=document.getElementById("age").value;
+const name=
+document.getElementById("playerName")
+.value.trim();
 
-    if(!name || !age){
-        document.getElementById("profileMessage").textContent=
-        translations[lang].enter;
-        return;
-    }
+const age=
+document.getElementById("playerAge")
+.value;
 
-    data.name=name;
-    data.age=age;
+if(!name || !age){
 
-    localStorage.setItem("zivo_data",JSON.stringify(data));
+document.getElementById("profileMessage")
+.textContent=T[language].enter;
 
-    document.getElementById("profileMessage").textContent=
-    lang==="ar"?"✅ تم حفظ ملفك":"✅ Profile saved";
+return;
+}
+
+player.name=name;
+player.age=parseInt(age);
+
+localStorage.setItem(
+"zivo_player",
+JSON.stringify(player)
+);
+
+document.getElementById("profileMessage")
+.textContent=
+language==="ar"
+?"✅ تم حفظ ملفك"
+:"✅ Profile saved";
+
+updateUI();
 }
 
 
-function updateUI(){
-
-    document.getElementById("points").textContent=data.points;
-    document.getElementById("level").textContent=data.level;
-    document.getElementById("streak").textContent=data.streak;
-    document.getElementById("coins").textContent=data.coins;
-
-    document.getElementById("dnaIQ").textContent=data.dna.iq;
-    document.getElementById("dnaSpeed").textContent=data.dna.speed;
-    document.getElementById("dnaFocus").textContent=data.dna.focus;
-    document.getElementById("dnaMemory").textContent=data.dna.memory;
-}
-
-
-let currentGame="";
-let currentQuestion=null;
-
+/* ================================
+   DIFFICULTY ENGINE
+================================ */
 
 function getDifficulty(){
 
-    const age=parseInt(data.age)||18;
+const age=player.age || 18;
 
-    /*
-       العمر يحدد نقطة البداية.
-       الأداء يحدد التطور لاحقًا.
-    */
+let ageLevel;
 
-    if(age<=8) return 1;
-    if(age<=12) return 2;
-    if(age<=15) return 3;
-    if(age<=18) return 4;
-    if(age<=25) return 5;
-    if(age<=35) return 6;
-    return 7;
-}
+if(age<=8) ageLevel=1;
+else if(age<=12) ageLevel=2;
+else if(age<=15) ageLevel=3;
+else if(age<=18) ageLevel=4;
+else if(age<=25) ageLevel=5;
+else if(age<=35) ageLevel=6;
+else ageLevel=7;
 
+const performanceLevel=
+Math.floor(player.points/500);
 
-function startGame(type){
-
-    if(!data.name || !data.age){
-        alert(translations[lang].enter);
-        return;
-    }
-
-    currentGame=type;
-
-    let list=questions[type];
-
-    /*
-      منع تكرار السؤال قدر الإمكان.
-    */
-
-    let available=list.filter((q,index)=>
-        !data.seen.includes(type+"_"+index)
-    );
-
-    if(available.length===0){
-
-        data.seen=data.seen.filter(x=>!x.startsWith(type+"_"));
-
-        available=list;
-    }
-
-    currentQuestion=
-        available[Math.floor(Math.random()*available.length)];
-
-    const index=list.indexOf(currentQuestion);
-
-    data.seen.push(type+"_"+index);
-
-    localStorage.setItem("zivo_data",JSON.stringify(data));
-
-    document.getElementById("challenge").style.display="block";
-
-    document.getElementById("gameTitle").textContent=
-        type.toUpperCase()+" • LEVEL "+getDifficulty();
-
-    document.getElementById("question").textContent=
-        currentQuestion.q;
-
-    const answers=document.getElementById("answers");
-
-    answers.innerHTML="";
-
-    currentQuestion.a.forEach((answer,i)=>{
-
-        const btn=document.createElement("button");
-
-        btn.className="answer";
-
-        btn.textContent=answer;
-
-        btn.onclick=()=>checkAnswer(i);
-
-        answers.appendChild(btn);
-
-    });
-
-    document.getElementById("result").textContent="";
-
-    document.getElementById("challenge")
-        .scrollIntoView({behavior:"smooth"});
+return Math.max(
+1,
+Math.min(
+10,
+ageLevel+
+performanceLevel
+)
+);
 
 }
 
 
-function checkAnswer(index){
+/* ================================
+   CREATE 10 QUESTION TEST
+================================ */
 
-    const t=translations[lang];
+function buildTest(type){
 
-    const buttons=document.querySelectorAll(".answer");
+let source=[...(BANK[type]||BANK.iq)];
 
-    buttons.forEach(b=>b.disabled=true);
+let seen=player.seen||[];
 
-    if(index===currentQuestion.correct){
+let available=
+source.filter((q,i)=>
+!seen.includes(type+"_"+i)
+);
 
-        let base=10;
+if(available.length<10){
 
-        /*
-          الصعوبة الأعلى = نقاط أكثر.
-        */
+player.seen=
+seen.filter(
+x=>!x.startsWith(type+"_")
+);
 
-        const difficulty=getDifficulty();
+available=[...source];
+}
 
-        const earned=base+difficulty*2;
+available.sort(
+()=>Math.random()-.5
+);
 
-        data.points+=earned;
-        data.coins+=Math.max(1,Math.floor(earned/5));
-        data.streak++;
+let selected=
+available.slice(0,10);
 
-        /*
-          المستوى يتطور مع النقاط.
-        */
+selected.forEach(q=>{
+q._difficulty=
+Math.floor(Math.random()*10)+1;
+});
 
-        data.level=Math.floor(data.points/100)+1;
-
-        /*
-          تحديث ZIVOZONE DNA حسب اللعبة.
-        */
-
-        if(currentGame==="iq")
-            data.dna.iq=Math.min(100,data.dna.iq+5);
-
-        if(currentGame==="speed")
-            data.dna.speed=Math.min(100,data.dna.speed+5);
-
-        if(currentGame==="focus")
-            data.dna.focus=Math.min(100,data.dna.focus+5);
-
-        if(currentGame==="memory")
-            data.dna.memory=Math.min(100,data.dna.memory+5);
-
-        document.getElementById("result").textContent=
-            t.correct+" +"+earned;
-
-    }else{
-
-        data.streak=0;
-
-        document.getElementById("result").textContent=
-            t.wrong;
-    }
-
-    localStorage.setItem("zivo_data",JSON.stringify(data));
-
-    updateUI();
+return selected;
 }
 
 
-function closeGame(){
+/* ================================
+   START CHALLENGE
+================================ */
 
-    document.getElementById("challenge").style.display="none";
+function startChallenge(type){
+
+if(!player.name || !player.age){
+
+alert(T[language].enter);
+
+return;
 }
 
+challengeState.type=type;
+
+challengeState.questions=
+buildTest(type);
+
+challengeState.index=0;
+challengeState.score=0;
+challengeState.correct=0;
+challengeState.timeLeft=60;
+
+document.getElementById(
+"challengeWindow"
+).style.display="block";
+
+challengeState.startTime=
+Date.now();
+
+startTimer();
+
+showQuestion();
+
+}
+
+
+/* ================================
+   TIMER
+================================ */
+
+function startTimer(){
+
+clearInterval(
+challengeState.timer
+);
+
+challengeState.timer=
+setInterval(()=>{
+
+challengeState.timeLeft--;
+
+document.getElementById("timer")
+.textContent=
+challengeState.timeLeft;
+
+if(challengeState.timeLeft<=0){
+
+clearInterval(
+challengeState.timer
+);
+
+finishChallenge();
+
+}
+
+},1000);
+
+}
+
+
+/* ================================
+   SHOW QUESTION
+================================ */
+
+function showQuestion(){
+
+const q=
+challengeState.questions[
+challengeState.index
+];
+
+const total=
+challengeState.questions.length;
+
+document.getElementById("challengeTitle")
+.textContent=
+challengeState.type.toUpperCase()
++
+" • LEVEL "
++
+getDifficulty();
+
+document.getElementById("question")
+.textContent=
+q.q;
+
+document.getElementById("progressBar")
+.style.width=
+(
+challengeState.index/
+total*100
+)+"%";
+
+const answers=
+document.getElementById("answers");
+
+answers.innerHTML="";
+
+q.a.forEach((answer,index)=>{
+
+const btn=
+document.createElement("button");
+
+btn.className="answer";
+
+btn.textContent=answer;
+
+btn.onclick=()=>
+answerQuestion(index);
+
+answers.appendChild(btn);
+
+});
+
+document.getElementById("result")
+.innerHTML="";
+
+}
+
+
+/* ================================
+   ANSWER
+================================ */
+
+function answerQuestion(index){
+
+const q=
+challengeState.questions[
+challengeState.index
+];
+
+const buttons=
+document.querySelectorAll(
+".answer"
+);
+
+buttons.forEach(b=>
+b.disabled=true
+);
+
+if(index===q.c){
+
+buttons[index]
+.classList.add("correct");
+
+challengeState.correct++;
+
+let difficulty=
+getDifficulty();
+
+let timeBonus=
+Math.max(
+0,
+Math.floor(
+challengeState.timeLeft/5
+)
+);
+
+let earned=
+10+
+difficulty*3+
+timeBonus;
+
+challengeState.score+=
+earned;
+
+}else{
+
+buttons[index]
+.classList.add("wrong");
+
+buttons[q.c]
+.classList.add("correct");
+
+}
+
+setTimeout(()=>{
+
+challengeState.index++;
+
+if(
+challengeState.index>=
+challengeState.questions.length
+){
+
+finishChallenge();
+
+}else{
+
+showQuestion();
+
+}
+
+},500);
+
+}
+
+
+/* ================================
+   FINISH
+================================ */
+
+function finishChallenge(){
+
+clearInterval(
+challengeState.timer
+);
+
+const elapsed=
+Math.floor(
+(Date.now()-challengeState.startTime)/1000
+);
+
+player.played++;
+
+player.correct+=
+challengeState.correct;
+
+player.totalTime+=
+elapsed;
+
+player.points+=
+challengeState.score;
+
+player.coins+=
+Math.floor(
+challengeState.score/10
+);
+
+if(challengeState.correct>=7){
+
+player.streak++;
+
+}else{
+
+player.streak=0;
+
+}
+
+player.level=
+Math.floor(
+player.points/500
+)+1;
+
+updateDNA();
+
+localStorage.setItem(
+"zivo_player",
+JSON.stringify(player)
+);
+
+showFinalResult();
+
+}
+
+
+/* ================================
+   FINAL RESULT
+================================ */
+
+function showFinalResult(){
+
+const accuracy=
+Math.round(
+challengeState.correct/
+challengeState.questions.length*
+100
+);
+
+document.getElementById("question")
+.innerHTML=`
+
+<div class="resultBox">
+
+<div class="bigScore">
+${challengeState.score}
+</div>
+
+<h2>
+${T[language].finalScore}
+</h2>
+
+<p>
+${challengeState.correct}/10
+</p>
+
+<p>
+🎯 ${accuracy}%
+</p>
+
+<p>
+🏆 +${challengeState.score} points
+</p>
+
+<p>
+🪙 +${Math.floor(
+challengeState.score/10
+)} ZIVO Coins
+</p>
+
+<button
+class="primary"
+onclick="closeChallenge()">
+
+${T[language].finish}
+
+</button>
+
+</div>
+`;
+
+document.getElementById(
+"answers"
+).innerHTML="";
+
+document.getElementById(
+"progressBar"
+).style.width="100%";
+
+}
+
+
+/* ================================
+   CLOSE
+================================ */
+
+function closeChallenge(){
+
+document.getElementById(
+"challengeWindow"
+).style.display="none";
+
+updateUI();
+
+}
+
+
+/* ================================
+   DNA
+================================ */
+
+function updateDNA(){
+
+const type=
+challengeState.type;
+
+if(!player.dna)
+player.dna={
+iq:0,
+speed:0,
+focus:0,
+memory:0,
+reaction:0
+};
+
+if(
+player.dna[type]!==undefined
+){
+
+player.dna[type]=
+Math.min(
+100,
+player.dna[type]+
+challengeState.correct*2
+);
+
+}
+
+}
+
+
+/* ================================
+   UI
+================================ */
+
+function updateUI(){
+
+document.getElementById(
+"points"
+).textContent=
+player.points;
+
+document.getElementById(
+"level"
+).textContent=
+player.level;
+
+document.getElementById(
+"streak"
+).textContent=
+player.streak;
+
+document.getElementById(
+"coins"
+).textContent=
+player.coins;
+
+let accuracy=
+player.played
+?
+Math.round(
+player.correct/
+(player.played*10)*
+100
+)
+:0;
+
+document.getElementById(
+"accuracy"
+).textContent=
+accuracy+"%";
+
+if(player.name)
+document.getElementById(
+"playerName"
+).value=
+player.name;
+
+if(player.age)
+document.getElementById(
+"playerAge"
+).value=
+player.age;
+
+document.getElementById(
+"dnaIQ"
+).textContent=
+player.dna.iq;
+
+document.getElementById(
+"dnaSpeed"
+).textContent=
+player.dna.speed;
+
+document.getElementById(
+"dnaFocus"
+).textContent=
+player.dna.focus;
+
+document.getElementById(
+"dnaMemory"
+).textContent=
+player.dna.memory;
+
+document.getElementById(
+"dnaReaction"
+).textContent=
+player.dna.reaction;
+
+renderRanking();
+
+}
+
+
+/* ================================
+   LANGUAGE
+================================ */
+
+function changeLanguage(newLang){
+
+language=newLang;
+
+localStorage.setItem(
+"zivo_language",
+language
+);
 
 applyLanguage();
+
+}
+
+
+function applyLanguage(){
+
+const t=T[language];
+
+document.documentElement.lang=
+language;
+
+document.documentElement.dir=
+language==="ar"
+?"rtl"
+:"ltr";
+
+document.getElementById(
+"languageSelect"
+).value=
+language;
+
+document.getElementById(
+"heroSubtitle"
+).textContent=t.hero;
+
+document.getElementById(
+"saveProfileButton"
+).textContent=t.save;
+
+document.getElementById(
+"profileTitle"
+).textContent=t.profile;
+
+document.getElementById(
+"pointsLabel"
+).textContent=t.points;
+
+document.getElementById(
+"levelLabel"
+).textContent=t.level;
+
+document.getElementById(
+"streakLabel"
+).textContent=t.streak;
+
+document.getElementById(
+"accuracyLabel"
+).textContent=t.accuracy;
+
+document.getElementById(
+"dailyTitle"
+).textContent=t.daily;
+
+document.getElementById(
+"dailyDescription"
+).textContent=t.dailyDesc;
+
+document.getElementById(
+"dailyButton"
+).textContent=t.start;
+
+document.getElementById(
+"challengesTitle"
+).textContent=
+"🎮 "+t.challenges;
+
+document.getElementById(
+"speedDescription"
+).textContent=t.speed;
+
+document.getElementById(
+"iqDescription"
+).textContent=t.iq;
+
+document.getElementById(
+"focusDescription"
+).textContent=t.focus;
+
+document.getElementById(
+"memoryDescription"
+).textContent=t.memory;
+
+document.getElementById(
+"reactionDescription"
+).textContent=t.reaction;
+
+document.getElementById(
+"mindDescription"
+).textContent=t.mind;
+
+document.getElementById(
+"aiDescription"
+).textContent=t.ai;
+
+document.getElementById(
+"sportsDescription"
+).textContent=t.sports;
+
+document.getElementById(
+"dnaDescription"
+).textContent=t.dna;
+
+document.getElementById(
+"rankingTitle"
+).textContent=t.ranking;
+
+document.getElementById(
+"strongestTitle"
+).textContent=t.strongest;
+
+document.getElementById(
+"fastestTitle"
+).textContent=t.fastest;
+
+document.getElementById(
+"newsTitle"
+).textContent=t.news;
+
+document.getElementById(
+"newsDescription"
+).textContent=t.newsDesc;
+
+document.getElementById(
+"academyDescription"
+).textContent=t.academyDesc;
+
+document.getElementById(
+"economyDescription"
+).textContent=t.economyDesc;
+
+updateUI();
+
+}
+
+
+/* ================================
+   DEMO GLOBAL RANKING
+================================ */
+
+function renderRanking(){
+
+const players=[
+
+{
+name:player.name||"You",
+score:player.points,
+time:player.totalTime||99999
+},
+
+{
+name:"ZIVO Champion",
+score:9850,
+time:420
+},
+
+{
+name:"Global Master",
+score:9320,
+time:390
+},
+
+{
+name:"Speed King",
+score:8870,
+time:280
+},
+
+{
+name:"Mind Explorer",
+score:8210,
+time:510
+}
+
+];
+
+players.sort(
+(a,b)=>b.score-a.score
+);
+
+document.getElementById(
+"strongestList"
+).innerHTML=
+players
+.slice(0,5)
+.map((p,i)=>`
+
+<div class="rankRow">
+
+<div class="rankName">
+${i+1}. ${p.name}
+</div>
+
+<div class="rankScore">
+${p.score}
+</div>
+
+</div>
+
+`)
+.join("");
+
+
+players.sort(
+(a,b)=>a.time-b.time
+);
+
+document.getElementById(
+"fastestList"
+).innerHTML=
+players
+.slice(0,5)
+.map((p,i)=>`
+
+<div class="rankRow">
+
+<div class="rankName">
+${i+1}. ${p.name}
+</div>
+
+<div class="rankScore">
+${p.time}s
+</div>
+
+</div>
+
+`)
+.join("");
+
+}
+
+
+/* ================================
+   INITIALIZE
+================================ */
+
+applyLanguage();
+
+updateUI();
 
 </script>
 
