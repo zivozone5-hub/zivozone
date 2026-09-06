@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <meta name="theme-color" content="#070b16">
+  <meta name="description"
+        content="Global Challenge — منصة عالمية للتحديات الذكية والسرعة والتركيز وكرة القدم وتحليل الشخصية.">
+
   <title>Global Challenge</title>
 
   <link rel="stylesheet" href="style.css">
@@ -11,335 +15,1425 @@
 
 <body>
 
-<header class="topbar">
-  <div class="container nav">
+<!-- =========================================================
+     APP
+========================================================= -->
 
-    <div class="logo">
-      GLOBAL <span>CHALLENGE</span>
-    </div>
+<div id="app">
 
-    <nav>
-      <button onclick="showPage('home')">🏠 <span data-i18n="home">الرئيسية</span></button>
-      <button onclick="showPage('profile')">👤 <span data-i18n="profile">ملفي</span></button>
-      <button onclick="showPage('leaderboard')">🏆 <span data-i18n="ranking">الترتيب</span></button>
-      <button onclick="showPage('personality')">🧠 <span data-i18n="who">من أنا؟</span></button>
-    </nav>
+  <!-- ================= TOP BAR ================= -->
 
-    <select id="language" onchange="changeLanguage(this.value)">
-      <option value="ar">🇯🇴 العربية</option>
-      <option value="en">🇺🇸 English</option>
-      <option value="fr">🇫🇷 Français</option>
-      <option value="es">🇪🇸 Español</option>
-      <option value="pt">🇧🇷 Português</option>
-    </select>
+  <header class="topbar">
 
-  </div>
-</header>
+    <div class="container nav">
 
+      <button
+        class="mobile-menu"
+        onclick="toggleMobileMenu()"
+        aria-label="Menu">
+        ☰
+      </button>
 
-<main class="container">
+      <div
+        class="logo"
+        onclick="showPage('home')"
+        role="button"
+        tabindex="0">
 
-<!-- ================= HOME ================= -->
+        GLOBAL
+        <span>CHALLENGE</span>
 
-<section id="home" class="page active">
-
-  <div class="hero">
-
-    <div class="hero-badge">
-      🌍 GLOBAL PLAYER
-    </div>
-
-    <h1 data-i18n="heroTitle">
-      هل أنت مستعد لتثبت أنك الأفضل؟
-    </h1>
-
-    <p data-i18n="heroText">
-      تحديات ذكاء وسرعة وتركيز وكرة قدم وتحليل شخصية.
-      كل مرة تلعب فيها تتغير التجربة.
-    </p>
-
-  </div>
-
-
-  <div class="player-mini">
-
-    <div>
-      <small data-i18n="currentPlayer">اللاعب الحالي</small>
-      <strong id="miniName">زائر</strong>
-    </div>
-
-    <div>
-      <small data-i18n="points">النقاط</small>
-      <strong id="miniPoints">0</strong>
-    </div>
-
-    <div>
-      <small data-i18n="level">المستوى</small>
-      <strong id="miniLevel">1</strong>
-    </div>
-
-  </div>
-
-
-  <h2 class="section-title" data-i18n="challenges">
-    التحديات
-  </h2>
-
-  <div id="games" class="games-grid"></div>
-
-</section>
-
-
-
-<!-- ================= PROFILE ================= -->
-
-<section id="profile" class="page">
-
-  <div class="panel">
-
-    <div class="section-heading">
-      <span>👤</span>
-      <h2 data-i18n="playerProfile">ملف اللاعب</h2>
-    </div>
-
-    <div class="form-grid">
-
-      <div class="field">
-        <label data-i18n="name">الاسم</label>
-        <input
-          id="playerName"
-          type="text"
-          maxlength="30"
-          placeholder="اكتب اسمك">
       </div>
 
-      <div class="field">
-        <label data-i18n="age">العمر</label>
-        <input
-          id="playerAge"
-          type="number"
-          min="5"
-          max="100"
-          placeholder="العمر">
+
+      <nav id="mainNavigation">
+
+        <button onclick="showPage('home')">
+          🏠
+          <span data-i18n="home">الرئيسية</span>
+        </button>
+
+        <button onclick="showPage('challenges')">
+          🎮
+          <span data-i18n="challenges">التحديات</span>
+        </button>
+
+        <button onclick="showPage('football')">
+          ⚽
+          <span data-i18n="football">كرة القدم</span>
+        </button>
+
+        <button onclick="showPage('profile')">
+          👤
+          <span data-i18n="profile">ملفي</span>
+        </button>
+
+        <button onclick="showPage('leaderboard')">
+          🏆
+          <span data-i18n="ranking">الترتيب</span>
+        </button>
+
+        <button onclick="showPage('personality')">
+          🧠
+          <span data-i18n="who">من أنا؟</span>
+        </button>
+
+      </nav>
+
+
+      <div class="language-box">
+
+        <span id="languageIcon">🇯🇴</span>
+
+        <select
+          id="language"
+          onchange="changeLanguage(this.value)"
+          aria-label="Language">
+
+          <option value="ar">🇯🇴 العربية</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="fr">🇫🇷 Français</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="pt">🇧🇷 Português</option>
+
+        </select>
+
       </div>
 
     </div>
 
-    <button class="main-button" onclick="saveProfile()" data-i18n="save">
-      حفظ الملف
-    </button>
+  </header>
 
 
-    <div class="stats-grid">
+  <!-- ================= MAIN ================= -->
 
-      <div class="stat">
-        <span>⭐</span>
-        <small data-i18n="points">النقاط</small>
-        <strong id="profilePoints">0</strong>
+  <main class="container">
+
+
+    <!-- =====================================================
+         HOME
+    ====================================================== -->
+
+    <section
+      id="home"
+      class="page active">
+
+      <div class="hero">
+
+        <div class="hero-badge">
+          🌍
+          <span data-i18n="globalPlayer">
+            GLOBAL PLAYER
+          </span>
+        </div>
+
+
+        <h1 data-i18n="heroTitle">
+          هل أنت مستعد لتثبت أنك الأفضل؟
+        </h1>
+
+
+        <p data-i18n="heroText">
+          تحديات ذكاء وسرعة وتركيز وكرة قدم وتحليل شخصية.
+          كل مرة تلعب فيها تتغير التجربة.
+        </p>
+
+
+        <div class="hero-actions">
+
+          <button
+            class="main-button"
+            onclick="showPage('challenges')">
+
+            ⚡
+            <span data-i18n="startChallenge">
+              ابدأ التحدي
+            </span>
+
+          </button>
+
+          <button
+            class="secondary-button"
+            onclick="showPage('personality')">
+
+            🧠
+            <span data-i18n="discoverYourself">
+              اكتشف نفسك
+            </span>
+
+          </button>
+
+        </div>
+
       </div>
 
-      <div class="stat">
-        <span>🔥</span>
-        <small data-i18n="level">المستوى</small>
-        <strong id="profileLevel">1</strong>
+
+      <!-- PLAYER MINI -->
+
+      <div class="player-mini">
+
+        <div>
+
+          <small data-i18n="currentPlayer">
+            اللاعب الحالي
+          </small>
+
+          <strong id="miniName">
+            زائر
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <small data-i18n="points">
+            النقاط
+          </small>
+
+          <strong id="miniPoints">
+            0
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <small data-i18n="level">
+            المستوى
+          </small>
+
+          <strong id="miniLevel">
+            1
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <small data-i18n="globalRank">
+            الترتيب
+          </small>
+
+          <strong id="miniRank">
+            —
+          </strong>
+
+        </div>
+
       </div>
 
-      <div class="stat">
-        <span>🎮</span>
-        <small data-i18n="games">التحديات</small>
-        <strong id="profileGames">0</strong>
+
+      <!-- QUICK ACCESS -->
+
+      <div class="quick-grid">
+
+        <button onclick="showPage('challenges')">
+          🧠
+          <span data-i18n="smartChallenges">
+            التحديات الذكية
+          </span>
+        </button>
+
+        <button onclick="showPage('football')">
+          ⚽
+          <span data-i18n="football">
+            كرة القدم
+          </span>
+        </button>
+
+        <button onclick="showPage('personality')">
+          🧬
+          <span data-i18n="who">
+            من أنا؟
+          </span>
+        </button>
+
+        <button onclick="showPage('leaderboard')">
+          🏆
+          <span data-i18n="ranking">
+            الترتيب العالمي
+          </span>
+        </button>
+
       </div>
 
-      <div class="stat">
-        <span>🎯</span>
-        <small data-i18n="accuracy">الدقة</small>
-        <strong id="profileAccuracy">0%</strong>
-      </div>
 
-    </div>
+      <!-- CHALLENGES PREVIEW -->
 
-    <div class="info-box">
-      🧠 كلما تحسن أداؤك، ترتفع صعوبة التحديات تدريجيًا.
-      العمر والأداء والنقاط تدخل في تحديد مستوى التحدي.
-    </div>
+      <h2
+        class="section-title"
+        data-i18n="featuredChallenges">
 
-  </div>
+        تحديات مميزة
 
-</section>
-
-
-
-<!-- ================= QUIZ ================= -->
-
-<section id="quiz" class="page">
-
-  <div class="quiz-panel">
-
-    <div class="quiz-header">
-
-      <div>
-        <span id="gameIcon">🧠</span>
-        <h2 id="quizTitle">التحدي</h2>
-        <small id="questionCounter">1 / 10</small>
-      </div>
-
-      <div id="timer" class="timer">
-        30
-      </div>
-
-    </div>
-
-
-    <div class="progress">
-      <span id="progressBar"></span>
-    </div>
-
-
-    <div id="question" class="question">
-      السؤال
-    </div>
-
-
-    <div id="answers" class="answers"></div>
-
-
-    <div id="feedback" class="feedback"></div>
-
-  </div>
-
-</section>
-
-
-
-<!-- ================= RESULT ================= -->
-
-<section id="result" class="page">
-
-  <div class="panel result">
-
-    <div class="result-icon">
-      🏆
-    </div>
-
-    <h2 data-i18n="result">
-      نتيجة التحدي
-    </h2>
-
-    <div class="big-score" id="resultScore">
-      0
-    </div>
-
-    <p data-i18n="pointsEarned">
-      نقاط مكتسبة
-    </p>
-
-
-    <div class="stats-grid">
-
-      <div class="stat">
-        <small data-i18n="correct">الإجابات الصحيحة</small>
-        <strong id="resultCorrect">0</strong>
-      </div>
-
-      <div class="stat">
-        <small data-i18n="averageTime">متوسط الوقت</small>
-        <strong id="resultTime">0s</strong>
-      </div>
-
-      <div class="stat">
-        <small data-i18n="level">المستوى</small>
-        <strong id="resultLevel">1</strong>
-      </div>
-
-    </div>
-
-
-    <button class="main-button" onclick="showPage('home')" data-i18n="backGames">
-      العودة للتحديات
-    </button>
-
-  </div>
-
-</section>
-
-
-
-<!-- ================= LEADERBOARD ================= -->
-
-<section id="leaderboard" class="page">
-
-  <div class="panel">
-
-    <div class="section-heading">
-      <span>🏆</span>
-      <h2 data-i18n="globalRanking">
-        الترتيب
       </h2>
-    </div>
 
-    <div class="info-box">
-      النسخة الحالية تحفظ النتائج على الجهاز.
-      لاحقًا سنربط الموقع بقاعدة بيانات ليصبح الترتيب عالميًا بين جميع اللاعبين.
-    </div>
 
-    <div class="table-wrapper">
+      <div
+        id="games"
+        class="games-grid">
+      </div>
 
-      <table>
 
-        <thead>
+      <!-- GLOBAL FEATURES -->
 
-          <tr>
-            <th>#</th>
-            <th data-i18n="player">اللاعب</th>
-            <th data-i18n="points">النقاط</th>
-            <th data-i18n="level">المستوى</th>
-          </tr>
+      <div class="features-grid">
 
-        </thead>
+        <article class="feature-card">
 
-        <tbody id="leaderboardBody"></tbody>
+          <span>🔥</span>
 
-      </table>
+          <h3 data-i18n="adaptiveDifficulty">
+            صعوبة ذكية
+          </h3>
+
+          <p data-i18n="adaptiveDifficultyText">
+            التحديات تتكيف مع مستواك وسرعتك وأدائك.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <span>🔄</span>
+
+          <h3 data-i18n="dynamicQuestions">
+            تجربة متغيرة
+          </h3>
+
+          <p data-i18n="dynamicQuestionsText">
+            الأسئلة تتغير باستمرار حتى لا تصبح التجربة مملة.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <span>🌍</span>
+
+          <h3 data-i18n="global">
+            عالمية
+          </h3>
+
+          <p data-i18n="globalText">
+            العب بلغتك وتنافس مع لاعبين من مختلف أنحاء العالم.
+          </p>
+
+        </article>
+
+
+        <article class="feature-card">
+
+          <span>🤖</span>
+
+          <h3 data-i18n="ai">
+            ذكاء اصطناعي
+          </h3>
+
+          <p data-i18n="aiText">
+            تجارب ذكية قابلة للتطور مع مرور الوقت.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CHALLENGES HUB
+    ====================================================== -->
+
+    <section
+      id="challenges"
+      class="page">
+
+      <div class="panel">
+
+        <div class="section-heading">
+
+          <span>🎮</span>
+
+          <div>
+
+            <h2 data-i18n="challenges">
+              التحديات
+            </h2>
+
+            <small data-i18n="challengeSubtitle">
+              اختر اللعبة التي تريد اختبار نفسك فيها
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="challengeFilters"
+          class="challenge-filters">
+
+          <button
+            class="filter active"
+            data-category="all"
+            onclick="filterGames('all')"
+            data-i18n="all">
+            الكل
+          </button>
+
+          <button
+            class="filter"
+            data-category="intelligence"
+            onclick="filterGames('intelligence')"
+            data-i18n="intelligence">
+            ذكاء
+          </button>
+
+          <button
+            class="filter"
+            data-category="speed"
+            onclick="filterGames('speed')"
+            data-i18n="speed">
+            سرعة
+          </button>
+
+          <button
+            class="filter"
+            data-category="memory"
+            onclick="filterGames('memory')"
+            data-i18n="memory">
+            ذاكرة
+          </button>
+
+          <button
+            class="filter"
+            data-category="football"
+            onclick="filterGames('football')"
+            data-i18n="football">
+            كرة القدم
+          </button>
+
+          <button
+            class="filter"
+            data-category="psychology"
+            onclick="filterGames('psychology')"
+            data-i18n="psychology">
+            نفسي
+          </button>
+
+        </div>
+
+
+        <div
+          id="allGames"
+          class="games-grid">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PROFILE
+    ====================================================== -->
+
+    <section
+      id="profile"
+      class="page">
+
+      <div class="panel">
+
+        <div class="section-heading">
+
+          <span>👤</span>
+
+          <div>
+
+            <h2 data-i18n="playerProfile">
+              ملف اللاعب
+            </h2>
+
+            <small data-i18n="profileSubtitle">
+              هويتك وتطورك داخل Global Challenge
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+          <div class="field">
+
+            <label data-i18n="name">
+              الاسم
+            </label>
+
+            <input
+              id="playerName"
+              type="text"
+              maxlength="30"
+              autocomplete="nickname"
+              placeholder="اكتب اسمك">
+
+          </div>
+
+
+          <div class="field">
+
+            <label data-i18n="age">
+              العمر
+            </label>
+
+            <input
+              id="playerAge"
+              type="number"
+              min="5"
+              max="100"
+              placeholder="العمر">
+
+          </div>
+
+
+          <div class="field">
+
+            <label data-i18n="country">
+              الدولة
+            </label>
+
+            <select id="playerCountry">
+
+              <option value="">
+                🌍
+              </option>
+
+              <option value="JO">
+                🇯🇴 Jordan
+              </option>
+
+              <option value="SA">
+                🇸🇦 Saudi Arabia
+              </option>
+
+              <option value="AE">
+                🇦🇪 UAE
+              </option>
+
+              <option value="EG">
+                🇪🇬 Egypt
+              </option>
+
+              <option value="MA">
+                🇲🇦 Morocco
+              </option>
+
+              <option value="FR">
+                🇫🇷 France
+              </option>
+
+              <option value="ES">
+                🇪🇸 Spain
+              </option>
+
+              <option value="US">
+                🇺🇸 USA
+              </option>
+
+              <option value="BR">
+                🇧🇷 Brazil
+              </option>
+
+              <option value="CN">
+                🇨🇳 China
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="main-button"
+          onclick="saveProfile()">
+
+          💾
+          <span data-i18n="save">
+            حفظ الملف
+          </span>
+
+        </button>
+
+
+        <!-- PLAYER STATS -->
+
+        <div class="stats-grid">
+
+          <div class="stat">
+
+            <span>⭐</span>
+
+            <small data-i18n="points">
+              النقاط
+            </small>
+
+            <strong id="profilePoints">
+              0
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>🔥</span>
+
+            <small data-i18n="level">
+              المستوى
+            </small>
+
+            <strong id="profileLevel">
+              1
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>🎮</span>
+
+            <small data-i18n="games">
+              التحديات
+            </small>
+
+            <strong id="profileGames">
+              0
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>🎯</span>
+
+            <small data-i18n="accuracy">
+              الدقة
+            </small>
+
+            <strong id="profileAccuracy">
+              0%
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>⚡</span>
+
+            <small data-i18n="speed">
+              السرعة
+            </small>
+
+            <strong id="profileSpeed">
+              —
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>🏆</span>
+
+            <small data-i18n="globalRank">
+              الترتيب
+            </small>
+
+            <strong id="profileRank">
+              —
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="progress-profile">
+
+          <div class="profile-level-header">
+
+            <span data-i18n="nextLevel">
+              المستوى القادم
+            </span>
+
+            <strong id="nextLevelText">
+              0 / 100
+            </strong>
+
+          </div>
+
+          <div class="progress">
+
+            <span id="profileProgress"></span>
+
+          </div>
+
+        </div>
+
+
+        <div class="info-box">
+
+          🧠
+          <span data-i18n="adaptiveInfo">
+            العمر والأداء والنقاط والسرعة تدخل في تحديد مستوى
+            التحديات القادمة.
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTBALL
+    ====================================================== -->
+
+    <section
+      id="football"
+      class="page">
+
+      <div class="panel">
+
+        <div class="section-heading">
+
+          <span>⚽</span>
+
+          <div>
+
+            <h2 data-i18n="football">
+              كرة القدم
+            </h2>
+
+            <small data-i18n="footballSubtitle">
+              اختبر معرفتك وذكاءك الكروي وطوّر مستواك
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="footballGames"
+          class="games-grid">
+        </div>
+
+
+        <div class="football-development">
+
+          <div class="info-box">
+
+            ⚽
+            <strong data-i18n="youthDevelopment">
+              تطوير لاعبي الناشئين
+            </strong>
+
+            <p data-i18n="youthDevelopmentText">
+              محتوى واختبارات تساعد اللاعب الصغير على فهم
+              اللعبة وتطوير التفكير والقرار والمهارات.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUIZ
+    ====================================================== -->
+
+    <section
+      id="quiz"
+      class="page">
+
+      <div class="quiz-panel">
+
+
+        <!-- QUIZ HEADER -->
+
+        <div class="quiz-header">
+
+          <div class="quiz-game-info">
+
+            <span id="gameIcon">
+              🧠
+            </span>
+
+            <div>
+
+              <h2 id="quizTitle">
+                التحدي
+              </h2>
+
+              <small id="quizCategory">
+                —
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="quiz-meta">
+
+            <div class="difficulty-badge">
+
+              🔥
+              <span id="difficultyLabel">
+                1
+              </span>
+
+            </div>
+
+
+            <div
+              id="timer"
+              class="timer">
+
+              30
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- QUESTION PROGRESS -->
+
+        <div class="quiz-progress-info">
+
+          <span
+            id="questionCounter">
+            1 / 10
+          </span>
+
+          <span
+            id="questionDifficulty">
+            —
+          </span>
+
+        </div>
+
+
+        <div class="progress">
+
+          <span id="progressBar"></span>
+
+        </div>
+
+
+        <!-- QUESTION -->
+
+        <div
+          id="question"
+          class="question">
+
+          السؤال
+
+        </div>
+
+
+        <!-- ANSWERS -->
+
+        <div
+          id="answers"
+          class="answers">
+        </div>
+
+
+        <!-- FEEDBACK -->
+
+        <div
+          id="feedback"
+          class="feedback">
+        </div>
+
+
+        <!-- QUIZ FOOTER -->
+
+        <div class="quiz-footer">
+
+          <span>
+
+            ⚡
+            <span data-i18n="speedBonus">
+              مكافأة السرعة
+            </span>
+
+          </span>
+
+          <span>
+
+            🎯
+            <span data-i18n="accuracyBonus">
+              مكافأة الدقة
+            </span>
+
+          </span>
+
+          <span>
+
+            🔥
+            <span data-i18n="streak">
+              سلسلة
+            </span>
+
+            <strong id="quizStreak">
+              0
+            </strong>
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RESULT
+    ====================================================== -->
+
+    <section
+      id="result"
+      class="page">
+
+      <div class="panel result">
+
+        <div class="result-icon">
+          🏆
+        </div>
+
+
+        <h2 data-i18n="result">
+          نتيجة التحدي
+        </h2>
+
+
+        <div
+          class="big-score"
+          id="resultScore">
+          0
+        </div>
+
+
+        <p data-i18n="pointsEarned">
+          نقاط مكتسبة
+        </p>
+
+
+        <div class="stats-grid">
+
+          <div class="stat">
+
+            <span>🎯</span>
+
+            <small data-i18n="correct">
+              الإجابات الصحيحة
+            </small>
+
+            <strong id="resultCorrect">
+              0
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>⚡</span>
+
+            <small data-i18n="averageTime">
+              متوسط الوقت
+            </small>
+
+            <strong id="resultTime">
+              0s
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>🔥</span>
+
+            <small data-i18n="level">
+              المستوى
+            </small>
+
+            <strong id="resultLevel">
+              1
+            </strong>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span>🏆</span>
+
+            <small data-i18n="globalRank">
+              الترتيب
+            </small>
+
+            <strong id="resultRank">
+              —
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="resultMessage"
+          class="result-message">
+        </div>
+
+
+        <div class="hero-actions">
+
+          <button
+            class="main-button"
+            onclick="showPage('challenges')">
+
+            🎮
+            <span data-i18n="playAgain">
+              تحدٍ جديد
+            </span>
+
+          </button>
+
+
+          <button
+            class="secondary-button"
+            onclick="showPage('profile')">
+
+            👤
+            <span data-i18n="viewProfile">
+              ملفي
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         LEADERBOARD
+    ====================================================== -->
+
+    <section
+      id="leaderboard"
+      class="page">
+
+      <div class="panel">
+
+        <div class="section-heading">
+
+          <span>🏆</span>
+
+          <div>
+
+            <h2 data-i18n="globalRanking">
+              الترتيب العالمي
+            </h2>
+
+            <small data-i18n="rankingSubtitle">
+              أسرع وأقوى اللاعبين
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="ranking-tabs">
+
+          <button
+            class="ranking-tab active"
+            onclick="changeRanking('global')"
+            data-i18n="global">
+            عالمي
+          </button>
+
+          <button
+            class="ranking-tab"
+            onclick="changeRanking('country')"
+            data-i18n="countryRanking">
+            الدولة
+          </button>
+
+          <button
+            class="ranking-tab"
+            onclick="changeRanking('game')"
+            data-i18n="gameRanking">
+            اللعبة
+          </button>
+
+        </div>
+
+
+        <div
+          id="rankingStatus"
+          class="info-box">
+
+          🌍
+          <span data-i18n="localRankingInfo">
+            الترتيب المحلي محفوظ على هذا الجهاز حاليًا.
+            عند ربط قاعدة البيانات سيصبح الترتيب عالميًا حقيقيًا.
+          </span>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>#</th>
+
+                <th data-i18n="player">
+                  اللاعب
+                </th>
+
+                <th data-i18n="country">
+                  الدولة
+                </th>
+
+                <th data-i18n="points">
+                  النقاط
+                </th>
+
+                <th data-i18n="level">
+                  المستوى
+                </th>
+
+                <th data-i18n="speed">
+                  السرعة
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody id="leaderboardBody">
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PERSONALITY
+    ====================================================== -->
+
+    <section
+      id="personality"
+      class="page">
+
+      <div class="panel">
+
+        <div class="section-heading">
+
+          <span>🧠</span>
+
+          <div>
+
+            <h2 data-i18n="who">
+              من أنا؟
+            </h2>
+
+            <small data-i18n="personalitySubtitle">
+              رحلة لاكتشاف طريقة تفكيرك
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="personality-intro">
+
+          <div class="info-box">
+
+            🧬
+
+            <strong data-i18n="personalityIntroTitle">
+              هل تعرف نفسك فعلًا؟
+            </strong>
+
+            <p data-i18n="personalityIntroText">
+              أجب عن مواقف وأسئلة متنوعة. سنحاول بناء
+              صورة عن أسلوب تفكيرك وقراراتك من خلال إجاباتك
+              وسلوكك داخل التجربة.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="personalityContent">
+
+        </div>
+
+
+        <div
+          id="personalityResult"
+          class="personality-result">
+
+        </div>
+
+
+        <div class="info-box">
+
+          ⚠️
+          <span data-i18n="personalityDisclaimer">
+            هذا تحليل ترفيهي واحتمالي يعتمد على إجاباتك،
+            وليس تشخيصًا نفسيًا أو طبيًا.
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         NEWS / GLOBAL CONTENT
+    ====================================================== -->
+
+    <section
+      id="news"
+      class="page">
+
+      <div class="panel">
+
+        <div class="section-heading">
+
+          <span>📰</span>
+
+          <div>
+
+            <h2 data-i18n="globalNews">
+              الأخبار العالمية
+            </h2>
+
+            <small data-i18n="newsSubtitle">
+              مساحة مستقبلية للمحتوى العالمي
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="newsContainer"
+          class="news-grid">
+
+          <div class="info-box">
+
+            🌍
+            <span data-i18n="newsComing">
+              سيتم ربط الأخبار العالمية بمصادر موثوقة
+              في مرحلة لاحقة.
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         AI
+    ====================================================== -->
+
+    <section
+      id="ai"
+      class="page">
+
+      <div class="panel">
+
+        <div class="section-heading">
+
+          <span>🤖</span>
+
+          <div>
+
+            <h2 data-i18n="ai">
+              الذكاء الاصطناعي
+            </h2>
+
+            <small data-i18n="aiSubtitle">
+              تحديات وتجارب تتطور مع اللاعب
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="aiContent"
+          class="ai-content">
+
+          <div class="info-box">
+
+            🤖
+            <strong data-i18n="aiComing">
+              نظام الذكاء الاصطناعي
+            </strong>
+
+            <p data-i18n="aiComingText">
+              البنية جاهزة لإضافة تحديات AI وتحليل
+              متقدم في المرحلة القادمة.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PSYCHO / HORROR
+    ====================================================== -->
+
+    <section
+      id="mindgames"
+      class="page">
+
+      <div class="panel">
+
+        <div class="section-heading">
+
+          <span>🎭</span>
+
+          <div>
+
+            <h2 data-i18n="mindGames">
+              ألعاب العقل
+            </h2>
+
+            <small data-i18n="mindGamesSubtitle">
+              تحديات مختلفة عن المعتاد
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="mindGamesContainer"
+          class="games-grid">
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- =====================================================
+       TOAST
+  ====================================================== -->
+
+  <div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite">
+  </div>
+
+
+  <!-- =====================================================
+       GLOBAL LOADING
+  ====================================================== -->
+
+  <div
+    id="loadingOverlay"
+    class="loading-overlay"
+    hidden>
+
+    <div class="loading-card">
+
+      <div class="loading-spinner"></div>
+
+      <span data-i18n="loading">
+        جاري التحميل...
+      </span>
 
     </div>
 
   </div>
 
-</section>
 
+  <!-- =====================================================
+       JAVASCRIPT
+  ====================================================== -->
 
+  <script src="app.js"></script>
 
-<!-- ================= PERSONALITY ================= -->
-
-<section id="personality" class="page">
-
-  <div class="panel">
-
-    <div class="section-heading">
-      <span>🧠</span>
-      <h2 data-i18n="who">
-        من أنا؟
-      </h2>
-    </div>
-
-    <div class="info-box">
-      هذه التجربة تحلل طريقة اتخاذ القرار والتنافس والحدس والتحليل.
-      النتيجة ترفيهية وليست تشخيصًا نفسيًا طبيًا.
-    </div>
-
-    <div id="personalityContent"></div>
-
-  </div>
-
-</section>
-
-</main>
-
-
-<div id="toast" class="toast"></div>
-
-
-<script src="app.js"></script>
+</div>
 
 </body>
 </html>
