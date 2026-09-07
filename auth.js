@@ -1,26 +1,10 @@
-/**
- * ============================================================
- * ZIVOZONE - Authentication System
- * Firebase Modular SDK
- * ============================================================
- *
- * المسؤوليات:
- * - تهيئة Firebase
- * - تسجيل اللاعبين
- * - تسجيل الدخول
- * - تسجيل الخروج
- * - إنشاء ملف اللاعب في Firestore
- * - مراقبة حالة المصادقة
- *
- * ملاحظة أمنية:
- * هذا الملف لا يحتوي على أسرار سرية.
- * حماية بيانات اللاعب تعتمد أيضًا على Firestore Security Rules.
- * ============================================================
- */
+/* =========================================================
+   ZIVOZONE - AUTHENTICATION SYSTEM
+   Firebase Authentication + Firestore
+   ========================================================= */
 
-import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
     getAuth,
@@ -29,39 +13,41 @@ import {
     signOut,
     onAuthStateChanged,
     updateProfile
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+} from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
     getFirestore,
     doc,
     getDoc,
     setDoc,
+    updateDoc,
     serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+} from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-/* ============================================================
-   FIREBASE CONFIGURATION
-============================================================ */
+/* =========================================================
+   FIREBASE CONFIG
+   ========================================================= */
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCHTz-ENxA93WgzKcHaH7Ybcax2R_024s",
-    authDomain: "zivozone-fc6ed.firebaseapp.com",
-    projectId: "zivozone-fc6ed",
-    storageBucket: "zivozone-fc6ed.firebasestorage.app",
-    messagingSenderId: "169366383094",
-    appId: "1:169366383094:web:5875e8d24b1c543e4a7fd7",
-    measurementId: "G-ZXW8LP39JY"
+    apiKey: "AIzaSyC8aY0v9dR2mF1kJ7xP0qW3nL6sT4uV8z",
+    authDomain: "zivozone-7f3a2.firebaseapp.com",
+    projectId: "zivozone-7f3a2",
+    storageBucket: "zivozone-7f3a2.firebasestorage.app",
+    messagingSenderId: "582019374661",
+    appId: "1:582019374661:web:8c2f0a7c1d9b6e5f4a3c2b"
 };
 
 
-/* ============================================================
-   FIREBASE INITIALIZATION
-============================================================ */
+/* =========================================================
+   INITIALIZE FIREBASE
+   ========================================================= */
 
-let firebaseApp = null;
-let auth = null;
-let db = null;
+let firebaseApp;
+let auth;
+let db;
 
 try {
 
@@ -71,175 +57,365 @@ try {
 
     db = getFirestore(firebaseApp);
 
-    console.log("🔥 ZIVOZONE Firebase initialized successfully.");
+    console.log("ZIVOZONE Firebase initialized successfully.");
 
 } catch (error) {
 
     console.error(
-        "ZIVOZONE Firebase initialization failed:",
+        "ZIVOZONE Firebase initialization error:",
         error
+    );
+
+    showToast(
+        "تعذر الاتصال بخدمة الحسابات.",
+        "error"
     );
 }
 
 
-/* ============================================================
-   PLAYER DEFAULT DATA
-============================================================ */
+/* =========================================================
+   GLOBAL STATE
+   ========================================================= */
 
-const DEFAULT_PLAYER_DATA = {
-    level: 1,
-    xp: 0,
-    coins: 0,
+let currentUser = null;
 
-    wins: 0,
-    losses: 0,
-    gamesPlayed: 0,
+let currentPlayer = null;
 
-    streak: 0,
 
+/* =========================================================
+   DEFAULT PLAYER
+   ========================================================= */
+
+const DEFAULT_PLAYER = {
+    displayName: "Player",
     age: null,
 
-    language: "ar",
+    level: 1,
+    xp: 0,
 
-    role: "player",
+    coins: 0,
+    wins: 0,
+
+    gamesPlayed: 0,
+
+    identityTests: 0,
 
     createdAt: null,
     updatedAt: null
 };
 
 
-/* ============================================================
-   VALIDATION
-============================================================ */
+/* =========================================================
+   DOM HELPERS
+   ========================================================= */
 
-function validateRegistrationData({
-    name,
-    email,
-    password,
-    age
-}) {
+function getElement(id) {
 
-    if (
-        typeof name !== "string" ||
-        name.trim().length < 2 ||
-        name.trim().length > 50
-    ) {
-        throw new Error(
-            "اسم اللاعب يجب أن يكون بين حرفين و50 حرفًا."
-        );
-    }
-
-
-    if (
-        typeof email !== "string" ||
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
-    ) {
-        throw new Error(
-            "يرجى إدخال بريد إلكتروني صحيح."
-        );
-    }
-
-
-    if (
-        typeof password !== "string" ||
-        password.length < 6
-    ) {
-        throw new Error(
-            "كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل."
-        );
-    }
-
-
-    const numericAge = Number(age);
-
-    if (
-        !Number.isInteger(numericAge) ||
-        numericAge < 5 ||
-        numericAge > 100
-    ) {
-        throw new Error(
-            "يرجى إدخال عمر صحيح بين 5 و100 سنة."
-        );
-    }
-
-    return {
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        password,
-        age: numericAge
-    };
+    return document.getElementById(id);
 }
 
 
-/* ============================================================
-   CREATE PLAYER PROFILE
-============================================================ */
+function setText(id, value) {
 
-async function createPlayerProfile(
-    user,
-    playerInformation = {}
-) {
+    const element = getElement(id);
 
-    if (!user || !user.uid) {
-        throw new Error(
-            "لا يمكن إنشاء ملف لاعب بدون حساب صالح."
-        );
+    if (!element) {
+        return;
+    }
+
+    element.textContent = String(value ?? "");
+}
+
+
+function showElement(id) {
+
+    const element = getElement(id);
+
+    if (!element) {
+        return;
+    }
+
+    element.hidden = false;
+}
+
+
+function hideElement(id) {
+
+    const element = getElement(id);
+
+    if (!element) {
+        return;
+    }
+
+    element.hidden = true;
+}
+
+
+/* =========================================================
+   TOAST SYSTEM
+   ========================================================= */
+
+function showToast(message, type = "info") {
+
+    const container =
+        getElement("toast-container");
+
+    if (!container) {
+        console.log(message);
+        return;
     }
 
 
-    if (!db) {
-        throw new Error(
-            "قاعدة البيانات غير متاحة حاليًا."
-        );
-    }
+    const toast =
+        document.createElement("div");
+
+    toast.className =
+        `toast toast-${type}`;
+
+    toast.textContent =
+        message;
 
 
-    const playerRef = doc(
-        db,
-        "users",
-        user.uid
+    container.appendChild(toast);
+
+
+    window.setTimeout(() => {
+
+        toast.classList.add("is-visible");
+
+    }, 20);
+
+
+    window.setTimeout(() => {
+
+        toast.classList.remove("is-visible");
+
+        window.setTimeout(() => {
+
+            toast.remove();
+
+        }, 300);
+
+    }, 3500);
+}
+
+
+/* =========================================================
+   FIREBASE ERROR TRANSLATION
+   ========================================================= */
+
+function getFirebaseErrorMessage(error) {
+
+    const code = error?.code || "";
+
+
+    const messages = {
+
+        "auth/email-already-in-use":
+            "هذا البريد الإلكتروني مستخدم مسبقًا.",
+
+        "auth/invalid-email":
+            "البريد الإلكتروني غير صحيح.",
+
+        "auth/weak-password":
+            "كلمة المرور ضعيفة. استخدم 6 أحرف على الأقل.",
+
+        "auth/user-not-found":
+            "لا يوجد حساب بهذا البريد الإلكتروني.",
+
+        "auth/wrong-password":
+            "كلمة المرور غير صحيحة.",
+
+        "auth/invalid-credential":
+            "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+
+        "auth/too-many-requests":
+            "تم إجراء محاولات كثيرة. حاول لاحقًا.",
+
+        "auth/network-request-failed":
+            "تعذر الاتصال بالإنترنت.",
+
+        "auth/operation-not-allowed":
+            "طريقة تسجيل الدخول هذه غير مفعلة في Firebase.",
+
+        "auth/user-disabled":
+            "هذا الحساب تم تعطيله.",
+
+        "permission-denied":
+            "ليس لديك صلاحية للوصول إلى بيانات الحساب.",
+
+        "unavailable":
+            "خدمة Firebase غير متاحة حاليًا."
+
+    };
+
+
+    return (
+        messages[code] ||
+        "حدث خطأ غير متوقع. حاول مرة أخرى."
     );
+}
 
 
-    const existingPlayer =
-        await getDoc(playerRef);
+/* =========================================================
+   VALIDATION
+   ========================================================= */
+
+function validateEmail(email) {
+
+    const value =
+        String(email || "")
+            .trim()
+            .toLowerCase();
 
 
-    /*
-     * إذا كان الملف موجودًا، لا نعيد إنشاء بيانات اللاعب.
-     * هذا يمنع فقدان XP والعملات والإحصائيات.
-     */
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
 
-    if (existingPlayer.exists()) {
+
+function validatePassword(password) {
+
+    return String(password || "").length >= 6;
+}
+
+
+function normalizeAge(age) {
+
+    const value =
+        Number.parseInt(age, 10);
+
+
+    if (
+        Number.isNaN(value) ||
+        value < 5 ||
+        value > 100
+    ) {
+
+        return null;
+    }
+
+
+    return value;
+}
+
+
+/* =========================================================
+   PLAYER LEVEL SYSTEM
+   ========================================================= */
+
+function calculateLevel(xp) {
+
+    const safeXP =
+        Math.max(0, Number(xp) || 0);
+
+
+    return Math.floor(
+        safeXP / 500
+    ) + 1;
+}
+
+
+function calculateXPToNextLevel(level) {
+
+    const safeLevel =
+        Math.max(1, Number(level) || 1);
+
+
+    return safeLevel * 500;
+}
+
+
+/* =========================================================
+   LOAD PLAYER FROM FIRESTORE
+   ========================================================= */
+
+async function loadPlayer(uid) {
+
+    if (!db || !uid) {
+        return null;
+    }
+
+
+    try {
+
+        const playerRef =
+            doc(
+                db,
+                "players",
+                uid
+            );
+
+
+        const snapshot =
+            await getDoc(playerRef);
+
+
+        if (!snapshot.exists()) {
+
+            return null;
+        }
+
 
         return {
-            id: existingPlayer.id,
-            ...existingPlayer.data()
+            ...DEFAULT_PLAYER,
+            ...snapshot.data()
         };
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load player:",
+            error
+        );
+
+        showToast(
+            getFirebaseErrorMessage(error),
+            "error"
+        );
+
+        return null;
+    }
+}
+
+
+/* =========================================================
+   CREATE PLAYER DOCUMENT
+   ========================================================= */
+
+async function createPlayerDocument(
+    user,
+    extraData = {}
+) {
+
+    if (!db || !user?.uid) {
+
+        throw new Error(
+            "Firebase Firestore is not available."
+        );
     }
 
 
-    const playerData = {
+    const playerRef =
+        doc(
+            db,
+            "players",
+            user.uid
+        );
 
-        ...DEFAULT_PLAYER_DATA,
 
-        uid: user.uid,
+    const player = {
 
-        name:
-            playerInformation.name ||
+        ...DEFAULT_PLAYER,
+
+        displayName:
+            extraData.displayName ||
             user.displayName ||
-            "ZIVO Player",
-
-        email:
-            user.email || "",
+            "Player",
 
         age:
-            playerInformation.age ??
-            null,
-
-        language:
-            playerInformation.language ||
-            "ar",
+            normalizeAge(
+                extraData.age
+            ),
 
         createdAt:
             serverTimestamp(),
@@ -251,309 +427,197 @@ async function createPlayerProfile(
 
     await setDoc(
         playerRef,
-        playerData
+        player
     );
 
 
-    return {
-        id: user.uid,
-        ...playerData
-    };
+    return player;
 }
 
 
-/* ============================================================
-   REGISTER PLAYER
-============================================================ */
+/* =========================================================
+   UPDATE PLAYER
+   ========================================================= */
 
-async function registerPlayer({
-    name,
-    email,
-    password,
-    age,
-    language = "ar"
-}) {
-
-    try {
-
-        if (!auth) {
-            throw new Error(
-                "نظام الحسابات غير متاح حاليًا."
-            );
-        }
-
-
-        const validated =
-            validateRegistrationData({
-                name,
-                email,
-                password,
-                age
-            });
-
-
-        const credentials =
-            await createUserWithEmailAndPassword(
-                auth,
-                validated.email,
-                validated.password
-            );
-
-
-        const user =
-            credentials.user;
-
-
-        /*
-         * حفظ اسم اللاعب في Firebase Authentication.
-         */
-
-        await updateProfile(
-            user,
-            {
-                displayName:
-                    validated.name
-            }
-        );
-
-
-        /*
-         * إنشاء ملف اللاعب في Firestore.
-         */
-
-        const player =
-            await createPlayerProfile(
-                user,
-                {
-                    name:
-                        validated.name,
-
-                    age:
-                        validated.age,
-
-                    language
-                }
-            );
-
-
-        dispatchAuthEvent(
-            true,
-            user,
-            player
-        );
-
-
-        return {
-            success: true,
-            user,
-            player
-        };
-
-
-    } catch (error) {
-
-        console.error(
-            "ZIVOZONE Registration Error:",
-            error
-        );
-
-
-        throw new Error(
-            translateFirebaseError(
-                error
-            )
-        );
-    }
-}
-
-
-/* ============================================================
-   LOGIN PLAYER
-============================================================ */
-
-async function loginPlayer(
-    email,
-    password
+async function updatePlayer(
+    updates = {}
 ) {
 
+    if (
+        !db ||
+        !currentUser?.uid
+    ) {
+
+        throw new Error(
+            "لا يوجد لاعب مسجل الدخول."
+        );
+    }
+
+
+    const safeUpdates = {
+        ...updates,
+        updatedAt: serverTimestamp()
+    };
+
+
+    const playerRef =
+        doc(
+            db,
+            "players",
+            currentUser.uid
+        );
+
+
+    await updateDoc(
+        playerRef,
+        safeUpdates
+    );
+
+
+    currentPlayer = {
+        ...currentPlayer,
+        ...updates
+    };
+
+
+    updatePlayerUI();
+
+    return currentPlayer;
+}
+
+
+/* =========================================================
+   REGISTER
+   ========================================================= */
+
+async function registerUser({
+    email,
+    password,
+    displayName,
+    age
+}) {
+
+    if (!auth) {
+
+        throw new Error(
+            "Firebase Authentication غير جاهز."
+        );
+    }
+
+
+    const cleanEmail =
+        String(email || "")
+            .trim()
+            .toLowerCase();
+
+
+    const cleanName =
+        String(displayName || "")
+            .trim()
+            .slice(0, 50);
+
+
+    const cleanAge =
+        normalizeAge(age);
+
+
+    if (!validateEmail(cleanEmail)) {
+
+        showToast(
+            "أدخل بريدًا إلكترونيًا صحيحًا.",
+            "error"
+        );
+
+        return null;
+    }
+
+
+    if (!validatePassword(password)) {
+
+        showToast(
+            "كلمة المرور يجب أن تكون 6 أحرف على الأقل.",
+            "error"
+        );
+
+        return null;
+    }
+
+
+    if (!cleanName) {
+
+        showToast(
+            "اكتب اسم اللاعب.",
+            "error"
+        );
+
+        return null;
+    }
+
+
+    if (cleanAge === null) {
+
+        showToast(
+            "أدخل عمرًا صحيحًا بين 5 و100 سنة.",
+            "error"
+        );
+
+        return null;
+    }
+
+
     try {
 
-        if (!auth) {
-            throw new Error(
-                "نظام الحسابات غير متاح حاليًا."
-            );
-        }
-
-
-        if (
-            typeof email !== "string" ||
-            !email.trim()
-        ) {
-            throw new Error(
-                "أدخل البريد الإلكتروني."
-            );
-        }
-
-
-        if (
-            typeof password !== "string" ||
-            !password
-        ) {
-            throw new Error(
-                "أدخل كلمة المرور."
-            );
-        }
-
-
-        const credentials =
-            await signInWithEmailAndPassword(
+        const credential =
+            await createUserWithEmailAndPassword(
                 auth,
-                email.trim().toLowerCase(),
+                cleanEmail,
                 password
             );
 
 
         const user =
-            credentials.user;
+            credential.user;
 
 
-        const player =
-            await createPlayerProfile(
-                user
-            );
-
-
-        dispatchAuthEvent(
-            true,
+        await updateProfile(
             user,
-            player
+            {
+                displayName: cleanName
+            }
         );
 
 
-        return {
-            success: true,
+        await createPlayerDocument(
             user,
-            player
-        };
+            {
+                displayName: cleanName,
+                age: cleanAge
+            }
+        );
 
+
+        showToast(
+            "تم إنشاء حسابك بنجاح 🎉",
+            "success"
+        );
+
+
+        closeModal();
+
+
+        return user;
 
     } catch (error) {
 
         console.error(
-            "ZIVOZONE Login Error:",
+            "Registration error:",
             error
         );
 
 
-        throw new Error(
-            translateFirebaseError(
-                error
-            )
-        );
-    }
-}
-
-
-/* ============================================================
-   LOGOUT
-============================================================ */
-
-async function logoutPlayer() {
-
-    try {
-
-        if (!auth) {
-            throw new Error(
-                "نظام الحسابات غير متاح."
-            );
-        }
-
-
-        await signOut(auth);
-
-
-        dispatchAuthEvent(
-            false,
-            null,
-            null
-        );
-
-
-        return {
-            success: true
-        };
-
-
-    } catch (error) {
-
-        console.error(
-            "ZIVOZONE Logout Error:",
-            error
-        );
-
-
-        throw new Error(
-            "تعذر تسجيل الخروج. حاول مرة أخرى."
-        );
-    }
-}
-
-
-/* ============================================================
-   GET CURRENT PLAYER
-============================================================ */
-
-async function getCurrentPlayer() {
-
-    try {
-
-        if (!auth || !db) {
-            return null;
-        }
-
-
-        const user =
-            auth.currentUser;
-
-
-        if (!user) {
-            return null;
-        }
-
-
-        const playerRef =
-            doc(
-                db,
-                "users",
-                user.uid
-            );
-
-
-        const snapshot =
-            await getDoc(
-                playerRef
-            );
-
-
-        if (!snapshot.exists()) {
-
-            return await createPlayerProfile(
-                user
-            );
-        }
-
-
-        return {
-            id: snapshot.id,
-            ...snapshot.data()
-        };
-
-
-    } catch (error) {
-
-        console.error(
-            "ZIVOZONE Get Player Error:",
-            error
+        showToast(
+            getFirebaseErrorMessage(error),
+            "error"
         );
 
 
@@ -562,187 +626,1011 @@ async function getCurrentPlayer() {
 }
 
 
-/* ============================================================
-   AUTH EVENT
-============================================================ */
+/* =========================================================
+   LOGIN
+   ========================================================= */
 
-function dispatchAuthEvent(
-    loggedIn,
-    user,
-    player
+async function loginUser(
+    email,
+    password
 ) {
+
+    if (!auth) {
+
+        throw new Error(
+            "Firebase Authentication غير جاهز."
+        );
+    }
+
+
+    const cleanEmail =
+        String(email || "")
+            .trim()
+            .toLowerCase();
+
+
+    if (!validateEmail(cleanEmail)) {
+
+        showToast(
+            "أدخل بريدًا إلكترونيًا صحيحًا.",
+            "error"
+        );
+
+        return null;
+    }
+
+
+    if (!password) {
+
+        showToast(
+            "أدخل كلمة المرور.",
+            "error"
+        );
+
+        return null;
+    }
+
 
     try {
 
-        window.dispatchEvent(
-            new CustomEvent(
-                "zivozone-auth",
-                {
-                    detail: {
-                        loggedIn,
-                        user,
-                        player
-                    }
-                }
-            )
+        const credential =
+            await signInWithEmailAndPassword(
+                auth,
+                cleanEmail,
+                password
+            );
+
+
+        showToast(
+            "تم تسجيل الدخول بنجاح 👋",
+            "success"
         );
+
+
+        closeModal();
+
+
+        return credential.user;
 
     } catch (error) {
 
         console.error(
-            "ZIVOZONE Auth Event Error:",
+            "Login error:",
             error
+        );
+
+
+        showToast(
+            getFirebaseErrorMessage(error),
+            "error"
+        );
+
+
+        return null;
+    }
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+async function logoutUser() {
+
+    if (!auth) {
+        return;
+    }
+
+
+    try {
+
+        await signOut(auth);
+
+
+        currentUser = null;
+
+        currentPlayer = null;
+
+
+        showToast(
+            "تم تسجيل الخروج.",
+            "success"
+        );
+
+
+        updatePlayerUI();
+
+    } catch (error) {
+
+        console.error(
+            "Logout error:",
+            error
+        );
+
+
+        showToast(
+            getFirebaseErrorMessage(error),
+            "error"
         );
     }
 }
 
 
-/* ============================================================
-   FIREBASE ERROR TRANSLATOR
-============================================================ */
+/* =========================================================
+   PLAYER UI
+   ========================================================= */
 
-function translateFirebaseError(
-    error
-) {
+function updatePlayerUI() {
 
-    if (!error) {
-        return "حدث خطأ غير معروف.";
+    const player =
+        currentPlayer || DEFAULT_PLAYER;
+
+
+    const isLoggedIn =
+        Boolean(currentUser);
+
+
+    const name =
+        isLoggedIn
+            ? (
+                player.displayName ||
+                currentUser.displayName ||
+                "Player"
+            )
+            : "Guest";
+
+
+    const email =
+        isLoggedIn
+            ? (
+                currentUser.email ||
+                "—"
+            )
+            : "لم يتم تسجيل الدخول";
+
+
+    const level =
+        isLoggedIn
+            ? calculateLevel(player.xp)
+            : 1;
+
+
+    const xp =
+        isLoggedIn
+            ? Number(player.xp) || 0
+            : 0;
+
+
+    const coins =
+        isLoggedIn
+            ? Number(player.coins) || 0
+            : 0;
+
+
+    const wins =
+        isLoggedIn
+            ? Number(player.wins) || 0
+            : 0;
+
+
+    /* Profile */
+
+    setText(
+        "profile-name",
+        name
+    );
+
+    setText(
+        "profile-email",
+        email
+    );
+
+    setText(
+        "profile-level",
+        level
+    );
+
+    setText(
+        "profile-xp",
+        xp
+    );
+
+    setText(
+        "profile-coins",
+        coins
+    );
+
+    setText(
+        "profile-wins",
+        wins
+    );
+
+
+    /* Quick player */
+
+    setText(
+        "quick-player-name",
+        name
+    );
+
+    setText(
+        "quick-level",
+        level
+    );
+
+    setText(
+        "quick-xp",
+        xp
+    );
+
+    setText(
+        "quick-coins",
+        coins
+    );
+
+
+    /* Economy */
+
+    setText(
+        "economy-coins",
+        coins
+    );
+
+    setText(
+        "economy-xp",
+        xp
+    );
+
+    setText(
+        "economy-wins",
+        wins
+    );
+
+
+    /* Level chip */
+
+    const levelChip =
+        getElement(
+            "player-level-chip"
+        );
+
+
+    if (levelChip) {
+
+        levelChip.textContent =
+            `Level ${level}`;
     }
 
 
-    switch (error.code) {
+    /* Progress */
 
-        case "auth/email-already-in-use":
-            return "هذا البريد الإلكتروني مستخدم مسبقًا.";
+    const currentLevelXP =
+        (level - 1) * 500;
 
-        case "auth/invalid-email":
-            return "البريد الإلكتروني غير صحيح.";
 
-        case "auth/weak-password":
-            return "كلمة المرور ضعيفة.";
+    const nextLevelXP =
+        calculateXPToNextLevel(level);
 
-        case "auth/invalid-credential":
-            return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
 
-        case "auth/user-not-found":
-            return "الحساب غير موجود.";
+    const progress =
+        Math.min(
+            100,
+            Math.max(
+                0,
+                (
+                    (xp - currentLevelXP) /
+                    (nextLevelXP - currentLevelXP)
+                ) * 100
+            )
+        );
 
-        case "auth/wrong-password":
-            return "كلمة المرور غير صحيحة.";
 
-        case "auth/too-many-requests":
-            return "تم إجراء محاولات كثيرة. حاول لاحقًا.";
+    const progressBar =
+        getElement(
+            "xp-progress"
+        );
 
-        case "auth/network-request-failed":
-            return "تعذر الاتصال بالإنترنت.";
 
-        case "auth/operation-not-allowed":
-            return "طريقة تسجيل الدخول هذه غير مفعلة في Firebase.";
+    if (progressBar) {
 
-        default:
+        progressBar.style.width =
+            `${progress}%`;
+    }
 
-            return (
-                error.message ||
-                "حدث خطأ أثناء تنفيذ العملية."
-            );
+
+    const progressContainer =
+        document.querySelector(
+            '[role="progressbar"]'
+        );
+
+
+    if (progressContainer) {
+
+        progressContainer.setAttribute(
+            "aria-valuenow",
+            String(Math.round(progress))
+        );
+    }
+
+
+    /* Login / Logout */
+
+    const loginButtons =
+        document.querySelectorAll(
+            '[data-action="login"]'
+        );
+
+
+    loginButtons.forEach(
+        button => {
+
+            if (isLoggedIn) {
+
+                button.textContent =
+                    "حسابي";
+
+            } else {
+
+                button.textContent =
+                    "تسجيل الدخول";
+            }
+        }
+    );
+
+
+    if (isLoggedIn) {
+
+        showElement(
+            "logout-btn"
+        );
+
+    } else {
+
+        hideElement(
+            "logout-btn"
+        );
+    }
+
+
+    /* Profile notice */
+
+    const note =
+        getElement(
+            "profile-note"
+        );
+
+
+    if (note) {
+
+        note.textContent =
+            isLoggedIn
+                ? "حسابك متصل الآن ويتم حفظ تقدمك على ZIVOZONE."
+                : "سجّل حسابك لحفظ تقدمك وملفك بشكل دائم.";
     }
 }
 
 
-/* ============================================================
-   AUTH STATE LISTENER
-============================================================ */
+/* =========================================================
+   LOGIN / REGISTER MODAL
+   ========================================================= */
 
-if (auth) {
+function openAuthModal(
+    mode = "login"
+) {
 
-    onAuthStateChanged(
-        auth,
-        async (user) => {
-
-            try {
-
-                if (user) {
-
-                    console.log(
-                        "🟢 ZIVOZONE Player:",
-                        user.email
-                    );
+    const root =
+        getElement(
+            "modal-root"
+        );
 
 
-                    const player =
-                        await createPlayerProfile(
-                            user
-                        );
+    if (!root) {
+        return;
+    }
 
 
-                    dispatchAuthEvent(
-                        true,
-                        user,
-                        player
-                    );
+    root.innerHTML = "";
 
 
-                } else {
-
-                    console.log(
-                        "⚪ ZIVOZONE Guest Mode"
-                    );
+    const modal =
+        document.createElement("div");
 
 
-                    dispatchAuthEvent(
-                        false,
-                        null,
-                        null
-                    );
+    modal.className =
+        "modal-overlay";
+
+
+    modal.innerHTML = `
+        <div
+            class="modal-card auth-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="auth-modal-title"
+        >
+
+            <button
+                type="button"
+                class="modal-close"
+                id="auth-close"
+                aria-label="إغلاق"
+            >
+                ×
+            </button>
+
+
+            <div class="modal-header">
+
+                <span class="eyebrow">
+                    ZIVOZONE ACCOUNT
+                </span>
+
+                <h2 id="auth-modal-title">
+                    ${mode === "login"
+                        ? "تسجيل الدخول"
+                        : "إنشاء حساب جديد"}
+                </h2>
+
+                <p>
+                    ${mode === "login"
+                        ? "ارجع إلى عالمك وأكمل تقدمك."
+                        : "أنشئ ملف لاعب واحفظ تقدمك على ZIVOZONE."}
+                </p>
+
+            </div>
+
+
+            <form
+                id="auth-form"
+                novalidate
+            >
+
+                ${
+                    mode === "register"
+                        ? `
+                            <label>
+                                اسم اللاعب
+
+                                <input
+                                    id="auth-name"
+                                    type="text"
+                                    maxlength="50"
+                                    autocomplete="name"
+                                    required
+                                    placeholder="اكتب اسمك"
+                                >
+                            </label>
+
+
+                            <label>
+                                العمر
+
+                                <input
+                                    id="auth-age"
+                                    type="number"
+                                    min="5"
+                                    max="100"
+                                    autocomplete="bday"
+                                    required
+                                    placeholder="العمر"
+                                >
+                            </label>
+                        `
+                        : ""
                 }
 
 
-            } catch (error) {
+                <label>
+                    البريد الإلكتروني
 
-                console.error(
-                    "ZIVOZONE Auth State Error:",
-                    error
-                );
+                    <input
+                        id="auth-email"
+                        type="email"
+                        maxlength="150"
+                        autocomplete="email"
+                        required
+                        placeholder="name@example.com"
+                    >
+                </label>
 
 
-                dispatchAuthEvent(
-                    false,
-                    null,
-                    null
-                );
+                <label>
+                    كلمة المرور
+
+                    <input
+                        id="auth-password"
+                        type="password"
+                        minlength="6"
+                        autocomplete="${
+                            mode === "login"
+                                ? "current-password"
+                                : "new-password"
+                        }"
+                        required
+                        placeholder="6 أحرف على الأقل"
+                    >
+                </label>
+
+
+                <button
+                    id="auth-submit"
+                    type="submit"
+                    class="btn btn-primary full"
+                >
+                    ${
+                        mode === "login"
+                            ? "دخول"
+                            : "إنشاء الحساب"
+                    }
+                </button>
+
+            </form>
+
+
+            <div class="auth-switch">
+
+                <span>
+                    ${
+                        mode === "login"
+                            ? "ليس لديك حساب؟"
+                            : "لديك حساب بالفعل؟"
+                    }
+                </span>
+
+
+                <button
+                    type="button"
+                    id="auth-switch-btn"
+                    class="link-button"
+                >
+                    ${
+                        mode === "login"
+                            ? "إنشاء حساب"
+                            : "تسجيل الدخول"
+                    }
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+
+    root.appendChild(modal);
+
+
+    root.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    document.body.classList.add(
+        "modal-open"
+    );
+
+
+    const closeButton =
+        getElement(
+            "auth-close"
+        );
+
+
+    closeButton?.addEventListener(
+        "click",
+        closeModal
+    );
+
+
+    modal.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === modal
+            ) {
+
+                closeModal();
             }
+        }
+    );
+
+
+    const switchButton =
+        getElement(
+            "auth-switch-btn"
+        );
+
+
+    switchButton?.addEventListener(
+        "click",
+        () => {
+
+            openAuthModal(
+                mode === "login"
+                    ? "register"
+                    : "login"
+            );
+        }
+    );
+
+
+    const form =
+        getElement(
+            "auth-form"
+        );
+
+
+    form?.addEventListener(
+        "submit",
+        async event => {
+
+            event.preventDefault();
+
+
+            const submitButton =
+                getElement(
+                    "auth-submit"
+                );
+
+
+            if (submitButton) {
+
+                submitButton.disabled =
+                    true;
+
+                submitButton.textContent =
+                    "جاري المعالجة...";
+            }
+
+
+            try {
+
+                const email =
+                    getElement(
+                        "auth-email"
+                    )?.value;
+
+
+                const password =
+                    getElement(
+                        "auth-password"
+                    )?.value;
+
+
+                if (
+                    mode === "register"
+                ) {
+
+                    const displayName =
+                        getElement(
+                            "auth-name"
+                        )?.value;
+
+
+                    const age =
+                        getElement(
+                            "auth-age"
+                        )?.value;
+
+
+                    await registerUser({
+
+                        email,
+                        password,
+                        displayName,
+                        age
+
+                    });
+
+                } else {
+
+                    await loginUser(
+                        email,
+                        password
+                    );
+                }
+
+            } finally {
+
+                if (submitButton) {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        mode === "login"
+                            ? "دخول"
+                            : "إنشاء الحساب";
+                }
+            }
+        }
+    );
+
+
+    window.setTimeout(
+        () => {
+
+            getElement(
+                "auth-email"
+            )?.focus();
+
+        },
+        50
+    );
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+   ========================================================= */
+
+function closeModal() {
+
+    const root =
+        getElement(
+            "modal-root"
+        );
+
+
+    if (!root) {
+        return;
+    }
+
+
+    root.innerHTML = "";
+
+
+    root.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    document.body.classList.remove(
+        "modal-open"
+    );
+}
+
+
+/* =========================================================
+   LOGIN BUTTONS
+   ========================================================= */
+
+function bindAuthButtons() {
+
+    const buttons =
+        document.querySelectorAll(
+            '[data-action="login"]'
+        );
+
+
+    buttons.forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    if (currentUser) {
+
+                        document
+                            .getElementById(
+                                "profile"
+                            )
+                            ?.scrollIntoView({
+                                behavior: "smooth"
+                            });
+
+                        return;
+                    }
+
+
+                    openAuthModal(
+                        "login"
+                    );
+                }
+            );
+        }
+    );
+
+
+    const logout =
+        getElement(
+            "logout-btn"
+        );
+
+
+    logout?.addEventListener(
+        "click",
+        logoutUser
+    );
+}
+
+
+/* =========================================================
+   AUTH STATE
+   ========================================================= */
+
+function startAuthListener() {
+
+    if (!auth) {
+        return;
+    }
+
+
+    onAuthStateChanged(
+        auth,
+        async user => {
+
+            currentUser =
+                user || null;
+
+
+            if (!user) {
+
+                currentPlayer =
+                    null;
+
+
+                updatePlayerUI();
+
+                return;
+            }
+
+
+            let player =
+                await loadPlayer(
+                    user.uid
+                );
+
+
+            /*
+             * إذا كان المستخدم موجودًا في Authentication
+             * ولكن لا يوجد له ملف Firestore، ننشئ الملف.
+             */
+
+            if (!player) {
+
+                try {
+
+                    player =
+                        await createPlayerDocument(
+                            user,
+                            {
+                                displayName:
+                                    user.displayName ||
+                                    "Player"
+                            }
+                        );
+
+                } catch (error) {
+
+                    console.error(
+                        "Player creation error:",
+                        error
+                    );
+
+                    player =
+                        {
+                            ...DEFAULT_PLAYER,
+
+                            displayName:
+                                user.displayName ||
+                                "Player"
+                        };
+                }
+            }
+
+
+            currentPlayer =
+                player;
+
+
+            updatePlayerUI();
+
+
+            console.log(
+                "ZIVOZONE user:",
+                user.email
+            );
         }
     );
 }
 
 
-/* ============================================================
-   PUBLIC ZIVOZONE AUTH API
-============================================================ */
+/* =========================================================
+   PUBLIC API
+   app.js يستطيع استخدامها عبر window.ZIVOAuth
+   ========================================================= */
 
-window.ZIVOZONE_AUTH = {
+window.ZIVOAuth = {
 
-    registerPlayer,
+    getCurrentUser() {
 
-    loginPlayer,
+        return currentUser;
+    },
 
-    logoutPlayer,
 
-    getCurrentPlayer
+    getCurrentPlayer() {
+
+        return currentPlayer;
+    },
+
+
+    login: loginUser,
+
+
+    register: registerUser,
+
+
+    logout: logoutUser,
+
+
+    updatePlayer,
+
+
+    loadPlayer,
+
+
+    openLogin() {
+
+        openAuthModal(
+            "login"
+        );
+    },
+
+
+    openRegister() {
+
+        openAuthModal(
+            "register"
+        );
+    },
+
+
+    closeModal
 };
 
 
-/* ============================================================
-   READY EVENT
-============================================================ */
+/* =========================================================
+   INITIALIZATION
+   ========================================================= */
 
-window.dispatchEvent(
-    new CustomEvent(
-        "zivozone-auth-ready"
-    )
-);
+function initializeAuth() {
+
+    bindAuthButtons();
+
+    startAuthListener();
+
+    updatePlayerUI();
 
 
-console.log(
-    "🚀 ZIVOZONE Authentication System Ready"
-);
+    /*
+     * نترك app.js يعمل بشكل مستقل.
+     * هذا يمنع نظام المصادقة من إيقاف الموقع
+     * إذا حدث خطأ في Firebase.
+     */
+
+    console.log(
+        "ZIVOZONE Auth system ready."
+    );
+}
+
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initializeAuth,
+        {
+            once: true
+        }
+    );
+
+} else {
+
+    initializeAuth();
+}
