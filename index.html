@@ -1,85 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta
         name="description"
-        content="ZIVOZONE — عالم رقمي ترفيهي شامل للألعاب والتحديات والذكاء والرعب والعلوم والرياضة واكتشاف الذات."
+        content="ZIVOZONE — عالمك الرقمي للألعاب والتحديات والذكاء والرياضة واكتشاف الذات."
     >
 
     <meta
-        name="keywords"
-        content="ZIVOZONE, games, challenges, AI, IQ, horror, science, sports, entertainment"
+        name="theme-color"
+        content="#070812"
     >
-
-    <meta name="theme-color" content="#070812">
 
     <title>ZIVOZONE | عالمك يبدأ من هنا</title>
 
-
-    <!-- =====================================================
-         GOOGLE FONT
-    ====================================================== -->
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link
         href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet"
     >
 
-
-    <!-- =====================================================
-         MAIN CSS
-    ====================================================== -->
-
-    <link
-        rel="stylesheet"
-        href="styles.css"
-    >
-
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 
 <body>
 
-
     <!-- =====================================================
-         INITIAL LOADER
+         LOADING
     ====================================================== -->
 
     <div
         id="app-loader"
         class="loader"
         aria-live="polite"
-        aria-label="ZIVOZONE"
     >
 
-        <div
-            class="loader-logo"
-            aria-hidden="true"
-        >
+        <div class="loader-logo">
             Z
         </div>
 
-        <strong class="loader-brand">
+        <strong>
             ZIVOZONE
         </strong>
 
@@ -96,19 +64,13 @@
 
     <header class="topbar">
 
-
-        <!-- BRAND -->
-
         <a
-            href="#home"
             class="brand"
-            aria-label="ZIVOZONE - الصفحة الرئيسية"
+            href="#home"
+            aria-label="ZIVOZONE"
         >
 
-            <span
-                class="brand-mark"
-                aria-hidden="true"
-            >
+            <span class="brand-mark">
                 Z
             </span>
 
@@ -119,12 +81,7 @@
         </a>
 
 
-        <!-- NAVIGATION -->
-
-        <nav
-            class="main-nav"
-            aria-label="التنقل الرئيسي"
-        >
+        <nav class="main-nav">
 
             <a href="#home">
                 الرئيسية
@@ -157,16 +114,7 @@
         </nav>
 
 
-        <!-- HEADER ACTIONS -->
-
         <div class="top-actions">
-
-            <label
-                class="sr-only"
-                for="language-select"
-            >
-                Language
-            </label>
 
             <select
                 id="language-select"
@@ -200,16 +148,10 @@
             </select>
 
 
-            <!--
-                app.js يتعامل مع هذا الزر
-                ويفتح نافذة إنشاء الحساب / تسجيل الدخول
-            -->
-
             <button
                 id="login-btn"
                 class="btn btn-primary"
                 type="button"
-                data-action="login"
             >
                 🔐 إنشاء حساب / دخول
             </button>
@@ -220,20 +162,19 @@
 
 
     <!-- =====================================================
-         MAIN CONTENT
+         MAIN
     ====================================================== -->
 
-    <main id="main-content">
+    <main>
 
 
         <!-- =================================================
-             HERO
+             HOME
         ================================================== -->
 
         <section
             id="home"
             class="hero section"
-            aria-labelledby="hero-title"
         >
 
             <div class="hero-copy">
@@ -243,7 +184,7 @@
                 </span>
 
 
-                <h1 id="hero-title">
+                <h1>
 
                     <span class="hero-brand">
                         ZIVOZONE
@@ -286,47 +227,21 @@
                 </div>
 
 
-                <div
-                    class="hero-stats"
-                    aria-label="إحصائيات ZIVOZONE"
-                >
+                <div class="hero-stats">
 
                     <div>
-
-                        <b>
-                            6
-                        </b>
-
-                        <span>
-                            لغات
-                        </span>
-
+                        <b>6</b>
+                        <span>لغات</span>
                     </div>
 
-
                     <div>
-
-                        <b>
-                            4+
-                        </b>
-
-                        <span>
-                            أنماط ألعاب
-                        </span>
-
+                        <b>4+</b>
+                        <span>أنماط ألعاب</span>
                     </div>
 
-
                     <div>
-
-                        <b>
-                            ∞
-                        </b>
-
-                        <span>
-                            تحديات
-                        </span>
-
+                        <b>∞</b>
+                        <span>تحديات</span>
                     </div>
 
                 </div>
@@ -334,21 +249,11 @@
             </div>
 
 
-            <!-- HERO VISUAL -->
-
-            <div
-                class="hero-orb-wrap"
-                aria-hidden="true"
-            >
+            <div class="hero-orb-wrap">
 
                 <div class="hero-orb">
-
-                    <span>
-                        Z
-                    </span>
-
+                    <span>Z</span>
                 </div>
-
 
                 <span class="float-tag t1">
                     IQ
@@ -372,13 +277,10 @@
 
 
         <!-- =================================================
-             ADVERTISEMENT
+             AD
         ================================================== -->
 
-        <section
-            class="ad-slot section-small"
-            aria-label="Advertisement"
-        >
+        <section class="ad-slot section-small">
 
             <div class="ad-inner">
 
@@ -414,7 +316,6 @@
         <section
             id="games"
             class="section"
-            aria-labelledby="games-title"
         >
 
             <div class="section-heading">
@@ -425,7 +326,7 @@
                         ZIVO GAMES
                     </span>
 
-                    <h2 id="games-title">
+                    <h2>
                         العب وارفع مستواك
                     </h2>
 
@@ -445,14 +346,11 @@
             <div class="cards-grid">
 
 
-                <!-- IQ GAME -->
+                <!-- IQ -->
 
                 <article class="game-card">
 
-                    <div
-                        class="icon"
-                        aria-hidden="true"
-                    >
+                    <div class="icon">
                         🧠
                     </div>
 
@@ -491,14 +389,11 @@
                 </article>
 
 
-                <!-- HORROR GAME -->
+                <!-- HORROR -->
 
                 <article class="game-card">
 
-                    <div
-                        class="icon"
-                        aria-hidden="true"
-                    >
+                    <div class="icon">
                         👻
                     </div>
 
@@ -537,14 +432,11 @@
                 </article>
 
 
-                <!-- SCIENCE GAME -->
+                <!-- SCIENCE -->
 
                 <article class="game-card">
 
-                    <div
-                        class="icon"
-                        aria-hidden="true"
-                    >
+                    <div class="icon">
                         🔬
                     </div>
 
@@ -583,14 +475,11 @@
                 </article>
 
 
-                <!-- DAILY GAME -->
+                <!-- DAILY -->
 
                 <article class="game-card">
 
-                    <div
-                        class="icon"
-                        aria-hidden="true"
-                    >
+                    <div class="icon">
                         ⚡
                     </div>
 
@@ -603,7 +492,7 @@
                     </h3>
 
                     <p>
-                        مهمة يومية واحدة مع مكافأة خاصة.
+                        مهمة يومية مع مكافأة خاصة.
                     </p>
 
                     <div class="card-meta">
@@ -640,7 +529,6 @@
         <section
             id="challenges"
             class="section alt"
-            aria-labelledby="challenge-title"
         >
 
             <div class="section-heading">
@@ -651,7 +539,7 @@
                         CHALLENGE CENTER
                     </span>
 
-                    <h2 id="challenge-title">
+                    <h2>
                         مركز التحديات
                     </h2>
 
@@ -659,10 +547,6 @@
 
             </div>
 
-
-            <!--
-                app.js يقوم بإنشاء التحديات هنا
-            -->
 
             <div
                 id="challenge-list"
@@ -673,13 +557,12 @@
 
 
         <!-- =================================================
-             WHO AM I
+             IDENTITY
         ================================================== -->
 
         <section
             id="identity"
             class="section"
-            aria-labelledby="identity-title"
         >
 
             <div class="identity-panel">
@@ -690,19 +573,14 @@
                         WHO AM I?
                     </span>
 
-                    <h2 id="identity-title">
+                    <h2>
                         اكتشف شخصيتك داخل ZIVOZONE
                     </h2>
 
                     <p>
-                        اختبار ترفيهي يعتمد على اختياراتك وطريقة
-                        إجابتك وتفاعلك داخل التجربة ليعطيك
-                        قراءة عامة لنمط تفكيرك داخل المنصة.
+                        اختبار ترفيهي يحلل نمط اختياراتك داخل المنصة.
+                        ليس تشخيصًا نفسيًا أو طبيًا.
                     </p>
-
-                    <small class="muted">
-                        هذا الاختبار ترفيهي وليس تشخيصًا نفسيًا أو طبيًا.
-                    </small>
 
                 </div>
 
@@ -727,7 +605,6 @@
         <section
             id="ai"
             class="section alt"
-            aria-labelledby="ai-title"
         >
 
             <div class="section-heading">
@@ -738,7 +615,7 @@
                         ZIVO AI
                     </span>
 
-                    <h2 id="ai-title">
+                    <h2>
                         مساعد ZIVO الذكي
                     </h2>
 
@@ -749,21 +626,15 @@
 
             <div class="ai-panel">
 
-
                 <div
                     id="ai-messages"
                     class="ai-messages"
                     aria-live="polite"
-                    aria-label="محادثة ZIVO AI"
                 >
 
                     <div class="ai-message bot">
-
                         أهلاً بك في ZIVO AI 🤖
-
-                        اسألني عن مستواك أو الألعاب
-                        أو التحديات.
-
+                        اسألني عن مستواك أو الألعاب أو التحديات.
                     </div>
 
                 </div>
@@ -772,15 +643,7 @@
                 <form
                     id="ai-form"
                     class="ai-form"
-                    novalidate
                 >
-
-                    <label
-                        class="sr-only"
-                        for="ai-input"
-                    >
-                        اكتب سؤالك
-                    </label>
 
                     <input
                         id="ai-input"
@@ -791,7 +654,6 @@
                         required
                         placeholder="اكتب سؤالك..."
                     >
-
 
                     <button
                         class="btn btn-primary"
@@ -804,10 +666,8 @@
 
 
                 <small class="muted">
-
                     المساعد الحالي محلي تجريبي.
                     يمكن ربط نموذج AI حقيقي لاحقًا عبر Backend آمن.
-
                 </small>
 
             </div>
@@ -822,7 +682,6 @@
         <section
             id="sports"
             class="section"
-            aria-labelledby="sports-title"
         >
 
             <div class="section-heading">
@@ -833,7 +692,7 @@
                         GLOBAL SPORTS
                     </span>
 
-                    <h2 id="sports-title">
+                    <h2>
                         أخبار الرياضة العالمية
                     </h2>
 
@@ -851,8 +710,6 @@
             </div>
 
 
-            <!-- app.js يولد المحتوى -->
-
             <div
                 id="sports-list"
                 class="sports-grid"
@@ -862,17 +719,15 @@
 
 
         <!-- =================================================
-             PLAYER PROFILE
+             PROFILE
         ================================================== -->
 
         <section
             id="profile"
             class="section alt"
-            aria-labelledby="profile-title"
         >
 
             <div class="profile-panel">
-
 
                 <div
                     class="avatar"
@@ -901,16 +756,11 @@
                     </p>
 
 
-                    <div
-                        class="progress"
-                        role="progressbar"
-                        aria-label="XP Progress"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        aria-valuenow="0"
-                    >
+                    <div class="progress">
 
-                        <span id="xp-progress"></span>
+                        <span
+                            id="xp-progress"
+                        ></span>
 
                     </div>
 
@@ -1011,15 +861,7 @@
 
 
     <!-- =====================================================
-         MODAL ROOT
-         app.js يستخدمه للنوافذ التالية:
-
-         - إنشاء الحساب
-         - تسجيل الدخول
-         - الألعاب
-         - اختبار من أنا
-         - النتائج
-         - التنبيهات
+         MODAL
     ====================================================== -->
 
     <div
@@ -1030,7 +872,7 @@
 
 
     <!-- =====================================================
-         TOAST NOTIFICATIONS
+         TOAST
     ====================================================== -->
 
     <div
@@ -1042,33 +884,26 @@
 
     <!-- =====================================================
          FIREBASE CONFIGURATION
-         ZIVOZONE WEB
+         مهم جدًا: يجب أن يأتي قبل auth.js
     ====================================================== -->
 
     <script>
 
         window.ZIVOZONE_FIREBASE_CONFIG = {
 
-            apiKey:
-                "AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s",
+            apiKey: "AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s",
 
-            authDomain:
-                "zivozone-fc6ed.firebaseapp.com",
+            authDomain: "zivozone-fc6ed.firebaseapp.com",
 
-            projectId:
-                "zivozone-fc6ed",
+            projectId: "zivozone-fc6ed",
 
-            storageBucket:
-                "zivozone-fc6ed.firebasestorage.app",
+            storageBucket: "zivozone-fc6ed.firebasestorage.app",
 
-            messagingSenderId:
-                "169366383094",
+            messagingSenderId: "169366383094",
 
-            appId:
-                "1:169366383094:web:5875e8d24b1c543e4a7fd7",
+            appId: "1:169366383094:web:5875e8d24b1c543e4a7fd7",
 
-            measurementId:
-                "G-ZXW8LP39JY"
+            measurementId: "G-ZXW8LP39JY"
 
         };
 
@@ -1077,7 +912,7 @@
 
     <!-- =====================================================
          FIREBASE COMPAT SDK
-         يجب تحميل Firebase قبل auth.js
+         auth.js الحالي يستخدم Firebase Compat
     ====================================================== -->
 
     <script
@@ -1096,22 +931,42 @@
 
 
     <!-- =====================================================
-         ZIVOZONE AUTHENTICATION
+         ZIVOZONE AUTH
     ====================================================== -->
 
-    <script
-        src="auth.js"
-    ></script>
+    <script src="auth.js"></script>
 
 
     <!-- =====================================================
-         ZIVOZONE MAIN APPLICATION
+         MAIN APP
     ====================================================== -->
 
-    <script
-        src="app.js"
-    ></script>
+    <script src="app.js"></script>
 
+
+    <!-- =====================================================
+         LOADER SAFETY
+         إذا فشل ملف خارجي لا يبقى الموقع عالقًا
+    ====================================================== -->
+
+    <script>
+
+        window.addEventListener("load", function () {
+
+            setTimeout(function () {
+
+                const loader =
+                    document.getElementById("app-loader");
+
+                if (loader) {
+                    loader.classList.add("hidden");
+                }
+
+            }, 1200);
+
+        });
+
+    </script>
 
 </body>
 
