@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
     <meta
         name="description"
-        content="ZIVOZONE - عالم رقمي للألعاب والتحديات والذكاء والرياضة واكتشاف الذات."
+        content="ZIVOZONE — عالم رقمي يجمع الألعاب والتحديات والذكاء والرعب والرياضة."
     >
 
-    <meta name="theme-color" content="#070812">
+    <meta
+        name="keywords"
+        content="ZIVOZONE, games, challenges, IQ, horror, sports, AI"
+    >
 
-    <title>ZIVOZONE | عالمك يبدأ من هنا</title>
+    <meta name="theme-color" content="#05060b">
+
+    <title>ZIVOZONE | ادخل إذا كنت مستعدًا</title>
+
+    <!-- =====================================================
+         FONT
+    ====================================================== -->
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +34,10 @@
         rel="stylesheet"
     >
 
+    <!-- =====================================================
+         MAIN CSS
+    ====================================================== -->
+
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -33,19 +45,20 @@
 <body>
 
 <!-- =====================================================
-     LOADER
+     GLOBAL LOADER
 ====================================================== -->
 
 <div
     id="app-loader"
     class="loader"
+    aria-live="polite"
 >
 
     <div class="loader-logo">
         Z
     </div>
 
-    <strong>
+    <strong class="loader-brand">
         ZIVOZONE
     </strong>
 
@@ -68,7 +81,10 @@
         aria-label="ZIVOZONE"
     >
 
-        <span class="brand-mark">
+        <span
+            class="brand-mark"
+            aria-hidden="true"
+        >
             Z
         </span>
 
@@ -96,12 +112,12 @@
             التحديات
         </a>
 
-        <a href="#ai">
-            ZIVO AI
-        </a>
-
         <a href="#identity">
             من أنا؟
+        </a>
+
+        <a href="#ai">
+            ZIVO AI
         </a>
 
         <a href="#sports">
@@ -109,7 +125,7 @@
         </a>
 
         <a href="#profile">
-            ملفي
+            اللاعب
         </a>
 
     </nav>
@@ -155,7 +171,7 @@
             type="button"
             data-action="login"
         >
-            🔐 إنشاء حساب / دخول
+            تسجيل الدخول
         </button>
 
     </div>
@@ -186,7 +202,7 @@
         </span>
 
 
-        <h1>
+        <h1 id="hero-title">
 
             <span class="hero-brand">
                 ZIVOZONE
@@ -202,8 +218,12 @@
 
 
         <p>
-            ألعاب وتحديات وذكاء ورعب وعلوم ورياضة
-            واكتشاف للشخصية في عالم رقمي واحد.
+            ألعاب.
+            تحديات.
+            ذكاء.
+            رعب.
+            رياضة.
+            وأسرار تنتظرك.
         </p>
 
 
@@ -214,7 +234,7 @@
                 type="button"
                 data-action="scroll-games"
             >
-                🚀 ابدأ اللعب
+                ابدأ اللعب
             </button>
 
 
@@ -223,27 +243,53 @@
                 type="button"
                 data-action="open-identity"
             >
-                🧠 اكتشف نفسك
+                اكتشف نفسك
             </button>
 
         </div>
 
 
-        <div class="hero-stats">
+        <div
+            class="hero-stats"
+            aria-label="إحصائيات ZIVOZONE"
+        >
 
             <div>
-                <b>6</b>
-                <span>لغات</span>
+
+                <b>
+                    6
+                </b>
+
+                <span>
+                    لغات
+                </span>
+
             </div>
 
-            <div>
-                <b>4+</b>
-                <span>أنماط ألعاب</span>
-            </div>
 
             <div>
-                <b>∞</b>
-                <span>تحديات</span>
+
+                <b>
+                    4+
+                </b>
+
+                <span>
+                    أنماط
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <b>
+                    ∞
+                </b>
+
+                <span>
+                    تحديات
+                </span>
+
             </div>
 
         </div>
@@ -251,11 +297,23 @@
     </div>
 
 
-    <div class="hero-orb-wrap">
+    <!-- =================================================
+         ZIVO CORE
+    ================================================== -->
+
+    <div
+        class="hero-orb-wrap"
+        aria-hidden="true"
+    >
 
         <div class="hero-orb">
-            <span>Z</span>
+
+            <span>
+                Z
+            </span>
+
         </div>
+
 
         <span class="float-tag t1">
             IQ
@@ -279,10 +337,13 @@
 
 
 <!-- =====================================================
-     AD
+     ADVERTISEMENT
 ====================================================== -->
 
-<section class="ad-slot section-small">
+<section
+    class="ad-slot section-small"
+    aria-label="Advertisement"
+>
 
     <div class="ad-inner">
 
@@ -295,8 +356,16 @@
         </strong>
 
         <span>
-            مكان جاهز للإعلانات والرعاة.
+            مكان جاهز للإعلانات والرعاة عند إطلاق المنصة.
         </span>
+
+        <button
+            class="btn btn-small btn-ghost"
+            type="button"
+            data-action="ad-info"
+        >
+            التفاصيل
+        </button>
 
     </div>
 
@@ -321,7 +390,7 @@
             </span>
 
             <h2>
-                العب وارفع مستواك
+                اختبر نفسك
             </h2>
 
         </div>
@@ -340,7 +409,9 @@
     <div class="cards-grid">
 
 
-        <!-- QUIZ -->
+        <!-- =================================================
+             IQ GAME
+        ================================================== -->
 
         <article class="game-card">
 
@@ -357,7 +428,7 @@
             </h3>
 
             <p>
-                أسئلة تتدرج حسب مستوى اللاعب.
+                أسئلة سريعة تختبر سرعة التفكير والمنطق.
             </p>
 
             <div class="card-meta">
@@ -384,12 +455,14 @@
         </article>
 
 
-        <!-- HORROR -->
+        <!-- =================================================
+             HORROR GAME
+        ================================================== -->
 
-        <article class="game-card">
+        <article class="game-card horror-card">
 
             <div class="icon">
-                👻
+                👁️
             </div>
 
             <span class="card-tag danger">
@@ -401,7 +474,7 @@
             </h3>
 
             <p>
-                قصة تفاعلية واختياراتك تغيّر النهاية.
+                لا تثق بكل ما تراه... اختر طريقك وشاهد النهاية.
             </p>
 
             <div class="card-meta">
@@ -422,13 +495,15 @@
                 type="button"
                 data-game="horror"
             >
-                ابدأ
+                ادخل إذا كنت مستعدًا
             </button>
 
         </article>
 
 
-        <!-- SCIENCE -->
+        <!-- =================================================
+             SCIENCE
+        ================================================== -->
 
         <article class="game-card">
 
@@ -445,7 +520,7 @@
             </h3>
 
             <p>
-                معلومات علمية متدرجة وممتعة.
+                معلومات علمية وأسئلة متدرجة الصعوبة.
             </p>
 
             <div class="card-meta">
@@ -472,7 +547,9 @@
         </article>
 
 
-        <!-- DAILY -->
+        <!-- =================================================
+             DAILY
+        ================================================== -->
 
         <article class="game-card featured-card">
 
@@ -489,7 +566,7 @@
             </h3>
 
             <p>
-                مهمة يومية مع مكافأة خاصة.
+                تحدٍ جديد كل يوم. لا تفوّت مكافأتك.
             </p>
 
             <div class="card-meta">
@@ -510,7 +587,7 @@
                 type="button"
                 data-game="daily"
             >
-                العب الآن
+                تحداني
             </button>
 
         </article>
@@ -521,7 +598,7 @@
 
 
 <!-- =====================================================
-     CHALLENGES
+     CHALLENGE CENTER
 ====================================================== -->
 
 <section
@@ -541,6 +618,10 @@
                 مركز التحديات
             </h2>
 
+            <p>
+                هل تستطيع تجاوزها كلها؟
+            </p>
+
         </div>
 
     </div>
@@ -549,7 +630,13 @@
     <div
         id="challenge-list"
         class="challenge-list"
-    ></div>
+    >
+
+        <!--
+            app.js generates the challenges here.
+        -->
+
+    </div>
 
 </section>
 
@@ -572,12 +659,12 @@
             </span>
 
             <h2>
-                اكتشف شخصيتك داخل ZIVOZONE
+                من أنت عندما يبدأ التحدي؟
             </h2>
 
             <p>
-                اختبار ترفيهي يعتمد على اختياراتك
-                وطريقة تفاعلك داخل التجربة.
+                اختبار ترفيهي يحلل اختياراتك وطريقة تفاعلك
+                ليعطيك نمطًا عامًا لشخصيتك داخل ZIVOZONE.
             </p>
 
             <small class="muted">
@@ -592,7 +679,7 @@
             type="button"
             data-action="open-identity"
         >
-            ابدأ الاختبار
+            اكتشف شخصيتك
         </button>
 
     </div>
@@ -601,7 +688,7 @@
 
 
 <!-- =====================================================
-     AI
+     ZIVO AI
 ====================================================== -->
 
 <section
@@ -635,8 +722,14 @@
         >
 
             <div class="ai-message bot">
+
                 أهلاً بك في ZIVO AI 🤖
-                اسألني عن الألعاب والتحديات.
+
+                <br>
+
+                اسألني عن الألعاب أو مستواك
+                أو اطلب تحديًا جديدًا.
+
             </div>
 
         </div>
@@ -645,6 +738,7 @@
         <form
             id="ai-form"
             class="ai-form"
+            novalidate
         >
 
             <input
@@ -666,6 +760,14 @@
             </button>
 
         </form>
+
+
+        <small class="muted">
+
+            ZIVO AI حاليًا واجهة تجريبية.
+            سيتم ربط الذكاء الاصطناعي الحقيقي عبر Backend آمن.
+
+        </small>
 
     </div>
 
@@ -690,7 +792,7 @@
             </span>
 
             <h2>
-                أخبار الرياضة العالمية
+                عالم الرياضة
             </h2>
 
         </div>
@@ -701,7 +803,7 @@
             type="button"
             data-action="refresh-sports"
         >
-            🔄 تحديث
+            تحديث
         </button>
 
     </div>
@@ -710,13 +812,17 @@
     <div
         id="sports-list"
         class="sports-grid"
-    ></div>
+    >
+
+        <!-- app.js generates sports content -->
+
+    </div>
 
 </section>
 
 
 <!-- =====================================================
-     PROFILE
+     PLAYER PROFILE
 ====================================================== -->
 
 <section
@@ -727,7 +833,10 @@
     <div class="profile-panel">
 
 
-        <div class="avatar">
+        <div
+            class="avatar"
+            aria-hidden="true"
+        >
             Z
         </div>
 
@@ -740,23 +849,19 @@
 
 
             <h2 id="profile-name">
-                زائر
+                Guest
             </h2>
 
 
-            <p
-                id="profile-email"
-                class="muted"
+            <div
+                class="progress"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
             >
-                سجل حسابك لحفظ تقدمك.
-            </p>
 
-
-            <div class="progress">
-
-                <span
-                    id="xp-progress"
-                ></span>
+                <span id="xp-progress"></span>
 
             </div>
 
@@ -765,22 +870,25 @@
 
                 <span>
                     Level
-                    <b id="profile-level">1</b>
+                    <b id="profile-level">
+                        1
+                    </b>
                 </span>
+
 
                 <span>
                     XP
-                    <b id="profile-xp">0</b>
+                    <b id="profile-xp">
+                        0
+                    </b>
                 </span>
+
 
                 <span>
                     🪙 ZIVO
-                    <b id="profile-coins">0</b>
-                </span>
-
-                <span>
-                    🏆 Wins
-                    <b id="profile-wins">0</b>
+                    <b id="profile-coins">
+                        0
+                    </b>
                 </span>
 
             </div>
@@ -788,28 +896,13 @@
         </div>
 
 
-        <div>
-
-            <button
-                class="btn btn-primary"
-                type="button"
-                data-action="login"
-            >
-                🔐 الحساب
-            </button>
-
-
-            <button
-                id="logout-btn"
-                class="btn btn-ghost"
-                type="button"
-                data-action="logout"
-                hidden
-            >
-                تسجيل الخروج
-            </button>
-
-        </div>
+        <button
+            class="btn btn-primary"
+            type="button"
+            data-action="login"
+        >
+            إنشاء / تعديل الملف
+        </button>
 
     </div>
 
@@ -818,7 +911,9 @@
         id="profile-note"
         class="notice"
     >
-        أنشئ حسابًا مجانًا لحفظ XP وZIVO والمستوى.
+
+        سجّل دخولك لحفظ تقدمك ومتابعة مستواك.
+
     </div>
 
 </section>
@@ -849,7 +944,7 @@
 
 
 <!-- =====================================================
-     MODAL
+     MODAL ROOT
 ====================================================== -->
 
 <div
@@ -860,73 +955,39 @@
 
 
 <!-- =====================================================
-     TOAST
-====================================================== -->
-
-<div
-    id="toast-container"
-    class="toast-container"
-    aria-live="polite"
-></div>
-
-
-<!-- =====================================================
-     FIREBASE CONFIG
-====================================================== -->
-
-<script>
-
-window.ZIVOZONE_FIREBASE_CONFIG = {
-
-    apiKey:
-        "AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s",
-
-    authDomain:
-        "zivozone-fc6ed.firebaseapp.com",
-
-    projectId:
-        "zivozone-fc6ed",
-
-    storageBucket:
-        "zivozone-fc6ed.firebasestorage.app",
-
-    messagingSenderId:
-        "169366383094",
-
-    appId:
-        "1:169366383094:web:5875e8d24b1c543e4a7fd7",
-
-    measurementId:
-        "G-ZXW8LP39JY"
-
-};
-
-</script>
-
-
-<!-- =====================================================
      FIREBASE
 ====================================================== -->
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script
+    src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"
+    defer
+></script>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-
-
-<!-- =====================================================
-     ZIVOZONE AUTH
-====================================================== -->
-
-<script src="auth.js"></script>
+<script
+    src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"
+    defer
+></script>
 
 
 <!-- =====================================================
-     ZIVOZONE APP
+     AUTHENTICATION
 ====================================================== -->
 
-<script src="app.js"></script>
+<script
+    src="auth.js"
+    defer
+></script>
+
+
+<!-- =====================================================
+     MAIN APPLICATION
+====================================================== -->
+
+<script
+    src="app.js"
+    defer
+></script>
 
 
 </body>
