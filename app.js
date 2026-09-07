@@ -1,3342 +1,2824 @@
-"use strict";
+/* =========================================================
+   ZIVOZONE V3
+   Core Game Engine
+   Front-end prototype for GitHub Pages
 
-/*
- * ============================================================
- * ZIVOZONE - Application Core
- * Version: 2.0
- * ============================================================
- *
- * هذا الملف مسؤول عن:
- * - نظام اللاعب
- * - XP / Levels
- * - Z-Coin
- * - الألعاب
- * - التحدي اليومي
- * - من أنا؟
- * - ZIVO AI التجريبي
- * - اللغات
- * - حفظ البيانات
- * - التنقل والتفاعل
- *
- * ملاحظة أمنية:
- * لا يتم وضع أي API Key أو Secret داخل هذا الملف.
- * عند ربط ZIVO AI الحقيقي سيتم استخدام Backend.
- * ============================================================
- */
+   Responsibilities:
+   - Player profile
+   - XP / Levels
+   - ZIVO Coins
+   - Games
+   - Daily challenge
+   - Streak
+   - Achievements
+   - Language switching
+   - Modal handling
+   - Safe DOM rendering
+   - Local persistence
+
+   Security note:
+   This is a client-side prototype.
+   Real authentication, financial balances and AI API keys
+   MUST be handled by a secure backend in production.
+========================================================= */
 
 (() => {
     "use strict";
 
-    /* ============================================================
-       1. CONFIGURATION
-    ============================================================ */
+    /* =========================================================
+       CONFIGURATION
+    ========================================================= */
 
-    const CONFIG = {
-        storageKey: "zivozone_player_v2",
-        languageKey: "zivozone_language_v2",
-
+    const APP = {
+        name: "ZIVOZONE",
+        version: "3.0.0",
+        storageKey: "zivozone_player_v3",
+        dailyKey: "zivozone_daily_v3",
+        settingsKey: "zivozone_settings_v3",
         defaultLanguage: "ar",
-
-        maxNameLength: 40,
-        maxEmailLength: 120,
-
-        baseXPPerLevel: 100,
-
-        coinRewards: {
-            correct: 2,
-            gameComplete: 5,
-            daily: 10,
-            streak: 5,
-            profile: 3
-        },
-
-        supportedLanguages: ["ar", "en", "fr", "es", "tr"],
-
-        languages: {
-            ar: "العربية",
-            en: "English",
-            fr: "Français",
-            es: "Español",
-            tr: "Türkçe"
-        }
+        supportedLanguages: ["ar", "en", "fr", "es", "tr", "de"]
     };
 
-    /* ============================================================
-       2. TRANSLATIONS
-    ============================================================ */
+    const LEVELS = [
+        { level: 1, name: "Beginner", minXP: 0 },
+        { level: 2, name: "Explorer", minXP: 100 },
+        { level: 3, name: "Challenger", minXP: 300 },
+        { level: 4, name: "Master", minXP: 650 },
+        { level: 5, name: "Legend", minXP: 1200 },
+        { level: 6, name: "ZIVO Elite", minXP: 2000 },
+        { level: 7, name: "ZIVO Legend", minXP: 3200 }
+    ];
 
-    const TRANSLATIONS = {
+    const REWARDS = {
+        correctAnswerXP: 20,
+        correctAnswerCoins: 2,
+        gameCompletionXP: 50,
+        gameCompletionCoins: 5,
+        dailyXP: 100,
+        dailyCoins: 10
+    };
+
+    /* =========================================================
+       TRANSLATIONS
+    ========================================================= */
+
+    const I18N = {
         ar: {
-            home: "الرئيسية",
-            games: "الألعاب",
-            challenges: "التحديات",
-            ai: "الذكاء الاصطناعي",
-            whoami: "من أنا؟",
-            sports: "الرياضة",
-            profile: "ملفي",
-
-            start: "ابدأ",
-            playNow: "العب الآن",
-            discover: "اكتشف",
-            close: "إغلاق",
-            next: "التالي",
-            finish: "إنهاء",
-            save: "حفظ",
+            welcome: "أهلاً بك في ZIVOZONE",
             login: "تسجيل الدخول",
-            logout: "تسجيل الخروج",
-
-            player: "اللاعب",
+            register: "إنشاء حساب",
+            profile: "ملفي",
             level: "المستوى",
             xp: "XP",
-            coins: "Z-Coin",
-            streak: "سلسلة الأيام",
-
+            coins: "ZIVO",
+            play: "العب الآن",
+            next: "السؤال التالي",
+            finish: "إنهاء التحدي",
             correct: "إجابة صحيحة!",
             wrong: "إجابة غير صحيحة",
-            excellent: "ممتاز!",
-            gameCompleted: "أكملت اللعبة!",
-            dailyCompleted: "أكملت تحدي اليوم!",
-
-            writeQuestion: "اكتب سؤالك...",
-            aiThinking: "ZIVO AI يفكر...",
-
-            nameRequired: "يرجى إدخال اسم صحيح.",
-            emailRequired: "يرجى إدخال بريد إلكتروني صحيح.",
-            ageRequired: "يرجى إدخال عمرك.",
-
-            profileSaved: "تم حفظ ملفك بنجاح.",
-
-            whoTitle: "من أنت داخل ZIVOZONE؟",
-            whoDescription:
-                "هذا التحليل ترفيهي مبني على إجاباتك داخل الاختبار، وليس تشخيصًا نفسيًا أو طبيًا.",
-
-            dailyTitle: "تحدي اليوم",
-            dailyDone: "لقد أكملت تحدي اليوم. عد غدًا!",
-
-            intelligence: "ذكاء",
-            science: "علوم",
-            horror: "رعب",
-            psychology: "شخصية",
-
-            explorer: "مستكشف",
-            thinker: "مفكر",
-            challenger: "متحدي",
-            strategist: "استراتيجي",
-            analyst: "محلل",
-
-            noProfile:
-                "أنشئ ملفك أولًا حتى نستطيع حفظ تقدمك وXP والعملات.",
-
-            demoAI:
-                "أنا ZIVO AI التجريبي 🤖. أستطيع مساعدتك في الألعاب والأفكار والتحليل داخل النسخة الحالية."
+            score: "النتيجة",
+            daily: "التحدي اليومي",
+            completed: "تم إكمال التحدي",
+            name: "الاسم",
+            email: "البريد الإلكتروني",
+            age: "العمر",
+            save: "حفظ",
+            close: "إغلاق",
+            reset: "إعادة التقدم",
+            intelligence: "الذكاء",
+            science: "العلوم",
+            horror: "الرعب",
+            personality: "من أنا؟",
+            noProfile: "أنشئ ملف لاعب أولاً.",
+            completeProfile: "أكمل ملفك للبدء.",
+            time: "الوقت",
+            achievements: "الإنجازات",
+            streak: "أيام متتالية",
+            result: "نتيجتك",
+            start: "ابدأ",
+            language: "اللغة",
+            dailyDone: "لقد أكملت تحدي اليوم بالفعل."
         },
 
         en: {
-            home: "Home",
-            games: "Games",
-            challenges: "Challenges",
-            ai: "AI",
-            whoami: "Who Am I?",
-            sports: "Sports",
-            profile: "Profile",
-
-            start: "Start",
-            playNow: "Play Now",
-            discover: "Discover",
-            close: "Close",
-            next: "Next",
-            finish: "Finish",
-            save: "Save",
+            welcome: "Welcome to ZIVOZONE",
             login: "Login",
-            logout: "Logout",
-
-            player: "Player",
+            register: "Create Account",
+            profile: "My Profile",
             level: "Level",
             xp: "XP",
-            coins: "Z-Coin",
-            streak: "Streak",
-
+            coins: "ZIVO",
+            play: "Play Now",
+            next: "Next Question",
+            finish: "Finish Challenge",
             correct: "Correct!",
             wrong: "Incorrect",
-            excellent: "Excellent!",
-            gameCompleted: "Game completed!",
-            dailyCompleted: "Daily challenge completed!",
-
-            writeQuestion: "Write your question...",
-            aiThinking: "ZIVO AI is thinking...",
-
-            nameRequired: "Please enter a valid name.",
-            emailRequired: "Please enter a valid email.",
-            ageRequired: "Please enter your age.",
-
-            profileSaved: "Profile saved successfully.",
-
-            whoTitle: "Who are you inside ZIVOZONE?",
-            whoDescription:
-                "This is an entertainment analysis based on your answers. It is not a medical or psychological diagnosis.",
-
-            dailyTitle: "Daily Challenge",
-            dailyDone: "You completed today's challenge. Come back tomorrow!",
-
+            score: "Score",
+            daily: "Daily Challenge",
+            completed: "Challenge Completed",
+            name: "Name",
+            email: "Email",
+            age: "Age",
+            save: "Save",
+            close: "Close",
+            reset: "Reset Progress",
             intelligence: "Intelligence",
             science: "Science",
             horror: "Horror",
-            psychology: "Personality",
-
-            explorer: "Explorer",
-            thinker: "Thinker",
-            challenger: "Challenger",
-            strategist: "Strategist",
-            analyst: "Analyst",
-
-            noProfile:
-                "Create your profile first so we can save your progress, XP and coins.",
-
-            demoAI:
-                "I am ZIVO AI 🤖. I can help you with games, ideas and analysis in the current version."
+            personality: "Who Am I?",
+            noProfile: "Create a player profile first.",
+            completeProfile: "Complete your profile to start.",
+            time: "Time",
+            achievements: "Achievements",
+            streak: "Day Streak",
+            result: "Your Result",
+            start: "Start",
+            language: "Language",
+            dailyDone: "You already completed today's challenge."
         },
 
         fr: {
-            home: "Accueil",
-            games: "Jeux",
-            challenges: "Défis",
-            ai: "IA",
-            whoami: "Qui suis-je ?",
-            sports: "Sports",
-            profile: "Profil",
-
-            start: "Commencer",
-            playNow: "Jouer",
-            discover: "Découvrir",
-            close: "Fermer",
-            next: "Suivant",
-            finish: "Terminer",
-            save: "Enregistrer",
+            welcome: "Bienvenue sur ZIVOZONE",
             login: "Connexion",
-            logout: "Déconnexion",
-
-            player: "Joueur",
+            register: "Créer un compte",
+            profile: "Mon profil",
             level: "Niveau",
             xp: "XP",
-            coins: "Z-Coin",
-            streak: "Série",
-
-            correct: "Bonne réponse !",
-            wrong: "Mauvaise réponse",
-            excellent: "Excellent !",
-
-            gameCompleted: "Jeu terminé !",
-            dailyCompleted: "Défi quotidien terminé !",
-
-            writeQuestion: "Écrivez votre question...",
-            aiThinking: "ZIVO AI réfléchit...",
-
-            nameRequired: "Veuillez entrer un nom valide.",
-            emailRequired: "Veuillez entrer un e-mail valide.",
-            ageRequired: "Veuillez entrer votre âge.",
-
-            profileSaved: "Profil enregistré.",
-
-            whoTitle: "Qui êtes-vous dans ZIVOZONE ?",
-            whoDescription:
-                "Cette analyse est destinée au divertissement et ne constitue pas un diagnostic médical ou psychologique.",
-
-            dailyTitle: "Défi du jour",
-            dailyDone: "Vous avez terminé le défi du jour. Revenez demain !",
-
+            coins: "ZIVO",
+            play: "Jouer",
+            next: "Question suivante",
+            finish: "Terminer",
+            correct: "Correct !",
+            wrong: "Incorrect",
+            score: "Score",
+            daily: "Défi quotidien",
+            completed: "Défi terminé",
+            name: "Nom",
+            email: "E-mail",
+            age: "Âge",
+            save: "Enregistrer",
+            close: "Fermer",
+            reset: "Réinitialiser",
             intelligence: "Intelligence",
             science: "Sciences",
             horror: "Horreur",
-            psychology: "Personnalité",
-
-            explorer: "Explorateur",
-            thinker: "Penseur",
-            challenger: "Compétiteur",
-            strategist: "Stratège",
-            analyst: "Analyste",
-
-            noProfile:
-                "Créez d'abord votre profil pour sauvegarder votre progression.",
-
-            demoAI:
-                "Je suis ZIVO AI 🤖. Je peux vous aider avec les jeux et les idées."
+            personality: "Qui suis-je ?",
+            noProfile: "Créez d'abord votre profil.",
+            completeProfile: "Complétez votre profil pour commencer.",
+            time: "Temps",
+            achievements: "Succès",
+            streak: "Série de jours",
+            result: "Votre résultat",
+            start: "Commencer",
+            language: "Langue",
+            dailyDone: "Vous avez déjà terminé le défi du jour."
         },
 
         es: {
-            home: "Inicio",
-            games: "Juegos",
-            challenges: "Desafíos",
-            ai: "IA",
-            whoami: "¿Quién soy?",
-            sports: "Deportes",
-            profile: "Perfil",
-
-            start: "Comenzar",
-            playNow: "Jugar",
-            discover: "Descubrir",
-            close: "Cerrar",
-            next: "Siguiente",
-            finish: "Finalizar",
-            save: "Guardar",
+            welcome: "Bienvenido a ZIVOZONE",
             login: "Iniciar sesión",
-            logout: "Cerrar sesión",
-
-            player: "Jugador",
+            register: "Crear cuenta",
+            profile: "Mi perfil",
             level: "Nivel",
             xp: "XP",
-            coins: "Z-Coin",
-            streak: "Racha",
-
+            coins: "ZIVO",
+            play: "Jugar ahora",
+            next: "Siguiente pregunta",
+            finish: "Finalizar",
             correct: "¡Correcto!",
             wrong: "Incorrecto",
-            excellent: "¡Excelente!",
-
-            gameCompleted: "¡Juego completado!",
-            dailyCompleted: "¡Desafío diario completado!",
-
-            writeQuestion: "Escribe tu pregunta...",
-            aiThinking: "ZIVO AI está pensando...",
-
-            nameRequired: "Introduce un nombre válido.",
-            emailRequired: "Introduce un correo válido.",
-            ageRequired: "Introduce tu edad.",
-
-            profileSaved: "Perfil guardado correctamente.",
-
-            whoTitle: "¿Quién eres dentro de ZIVOZONE?",
-            whoDescription:
-                "Este análisis es recreativo y no representa un diagnóstico médico o psicológico.",
-
-            dailyTitle: "Desafío diario",
-            dailyDone: "Ya completaste el desafío de hoy. ¡Vuelve mañana!",
-
+            score: "Puntuación",
+            daily: "Desafío diario",
+            completed: "Desafío completado",
+            name: "Nombre",
+            email: "Correo",
+            age: "Edad",
+            save: "Guardar",
+            close: "Cerrar",
+            reset: "Reiniciar",
             intelligence: "Inteligencia",
             science: "Ciencia",
             horror: "Terror",
-            psychology: "Personalidad",
-
-            explorer: "Explorador",
-            thinker: "Pensador",
-            challenger: "Competidor",
-            strategist: "Estratega",
-            analyst: "Analista",
-
-            noProfile:
-                "Crea tu perfil primero para guardar tu progreso.",
-
-            demoAI:
-                "Soy ZIVO AI 🤖. Puedo ayudarte con juegos, ideas y análisis."
+            personality: "¿Quién soy?",
+            noProfile: "Crea primero tu perfil.",
+            completeProfile: "Completa tu perfil para comenzar.",
+            time: "Tiempo",
+            achievements: "Logros",
+            streak: "Racha",
+            result: "Tu resultado",
+            start: "Comenzar",
+            language: "Idioma",
+            dailyDone: "Ya has completado el desafío de hoy."
         },
 
         tr: {
-            home: "Ana Sayfa",
-            games: "Oyunlar",
-            challenges: "Görevler",
-            ai: "Yapay Zeka",
-            whoami: "Ben Kimim?",
-            sports: "Spor",
-            profile: "Profil",
-
-            start: "Başla",
-            playNow: "Oyna",
-            discover: "Keşfet",
-            close: "Kapat",
-            next: "Sonraki",
-            finish: "Bitir",
-            save: "Kaydet",
+            welcome: "ZIVOZONE'a Hoş Geldin",
             login: "Giriş",
-            logout: "Çıkış",
-
-            player: "Oyuncu",
+            register: "Hesap Oluştur",
+            profile: "Profilim",
             level: "Seviye",
             xp: "XP",
-            coins: "Z-Coin",
-            streak: "Seri",
-
+            coins: "ZIVO",
+            play: "Şimdi Oyna",
+            next: "Sonraki Soru",
+            finish: "Bitir",
             correct: "Doğru!",
             wrong: "Yanlış",
-            excellent: "Mükemmel!",
-
-            gameCompleted: "Oyun tamamlandı!",
-            dailyCompleted: "Günlük görev tamamlandı!",
-
-            writeQuestion: "Sorunuzu yazın...",
-            aiThinking: "ZIVO AI düşünüyor...",
-
-            nameRequired: "Geçerli bir isim girin.",
-            emailRequired: "Geçerli bir e-posta girin.",
-            ageRequired: "Yaşınızı girin.",
-
-            profileSaved: "Profil başarıyla kaydedildi.",
-
-            whoTitle: "ZIVOZONE içinde sen kimsin?",
-            whoDescription:
-                "Bu eğlence amaçlı bir analizdir ve tıbbi veya psikolojik teşhis değildir.",
-
-            dailyTitle: "Günün Görevi",
-            dailyDone: "Bugünkü görevi tamamladın. Yarın tekrar gel!",
-
+            score: "Puan",
+            daily: "Günlük Görev",
+            completed: "Görev tamamlandı",
+            name: "İsim",
+            email: "E-posta",
+            age: "Yaş",
+            save: "Kaydet",
+            close: "Kapat",
+            reset: "Sıfırla",
             intelligence: "Zeka",
             science: "Bilim",
             horror: "Korku",
-            psychology: "Kişilik",
+            personality: "Ben Kimim?",
+            noProfile: "Önce profil oluştur.",
+            completeProfile: "Başlamak için profilini tamamla.",
+            time: "Zaman",
+            achievements: "Başarımlar",
+            streak: "Seri",
+            result: "Sonucun",
+            start: "Başla",
+            language: "Dil",
+            dailyDone: "Bugünün görevini zaten tamamladın."
+        },
 
-            explorer: "Kaşif",
-            thinker: "Düşünür",
-            challenger: "Rakip",
-            strategist: "Stratejist",
-            analyst: "Analist",
-
-            noProfile:
-                "İlerlemeni kaydetmek için önce profil oluştur.",
-
-            demoAI:
-                "Ben ZIVO AI 🤖. Oyunlar, fikirler ve analiz konusunda yardımcı olabilirim."
+        de: {
+            welcome: "Willkommen bei ZIVOZONE",
+            login: "Anmelden",
+            register: "Konto erstellen",
+            profile: "Mein Profil",
+            level: "Level",
+            xp: "XP",
+            coins: "ZIVO",
+            play: "Jetzt spielen",
+            next: "Nächste Frage",
+            finish: "Beenden",
+            correct: "Richtig!",
+            wrong: "Falsch",
+            score: "Punktzahl",
+            daily: "Tägliche Herausforderung",
+            completed: "Herausforderung abgeschlossen",
+            name: "Name",
+            email: "E-Mail",
+            age: "Alter",
+            save: "Speichern",
+            close: "Schließen",
+            reset: "Fortschritt zurücksetzen",
+            intelligence: "Intelligenz",
+            science: "Wissenschaft",
+            horror: "Horror",
+            personality: "Wer bin ich?",
+            noProfile: "Erstelle zuerst ein Spielerprofil.",
+            completeProfile: "Vervollständige dein Profil.",
+            time: "Zeit",
+            achievements: "Erfolge",
+            streak: "Tages-Serie",
+            result: "Dein Ergebnis",
+            start: "Start",
+            language: "Sprache",
+            dailyDone: "Du hast die heutige Herausforderung bereits abgeschlossen."
         }
     };
 
-    /* ============================================================
-       3. QUESTION DATABASE
-    ============================================================ */
+    /* =========================================================
+       QUESTION BANK
+       ageGroup:
+       - child: under 13
+       - teen: 13-17
+       - adult: 18+
+       difficulty:
+       - 1 beginner
+       - 2 intermediate
+       - 3 advanced
+    ========================================================= */
 
     const QUESTION_BANK = {
 
         intelligence: [
             {
-                level: 1,
-                question: "إذا كان لديك 3 تفاحات وأخذت تفاحتين، كم تفاحة أصبحت تملك؟",
-                options: ["1", "2", "3", "5"],
+                id: "iq-001",
+                ageGroup: "child",
+                difficulty: 1,
+                question: {
+                    ar: "ما العدد الذي يأتي بعد 2، 4، 6، 8؟",
+                    en: "What number comes after 2, 4, 6, 8?",
+                    fr: "Quel nombre vient après 2, 4, 6, 8 ?",
+                    es: "¿Qué número viene después de 2, 4, 6, 8?",
+                    tr: "2, 4, 6, 8 dizisinden sonra hangi sayı gelir?",
+                    de: "Welche Zahl kommt nach 2, 4, 6, 8?"
+                },
+                options: {
+                    ar: ["9", "10", "11", "12"],
+                    en: ["9", "10", "11", "12"],
+                    fr: ["9", "10", "11", "12"],
+                    es: ["9", "10", "11", "12"],
+                    tr: ["9", "10", "11", "12"],
+                    de: ["9", "10", "11", "12"]
+                },
                 answer: 1
             },
+
             {
-                level: 1,
-                question: "ما الرقم التالي: 2، 4، 6، 8، ؟",
-                options: ["9", "10", "11", "12"],
-                answer: 1
-            },
-            {
-                level: 2,
-                question: "ما الرقم التالي: 3، 6، 12، 24، ؟",
-                options: ["30", "36", "48", "60"],
+                id: "iq-002",
+                ageGroup: "teen",
+                difficulty: 2,
+                question: {
+                    ar: "إذا كان كل مربع يحتوي على 4 نقاط، فكم نقطة في 5 مربعات؟",
+                    en: "If every square contains 4 dots, how many dots are in 5 squares?",
+                    fr: "Si chaque carré contient 4 points, combien de points dans 5 carrés ?",
+                    es: "Si cada cuadrado contiene 4 puntos, ¿cuántos puntos hay en 5 cuadrados?",
+                    tr: "Her karede 4 nokta varsa, 5 karede kaç nokta vardır?",
+                    de: "Wenn jedes Quadrat 4 Punkte enthält, wie viele Punkte sind in 5 Quadraten?"
+                },
+                options: {
+                    ar: ["10", "15", "20", "25"],
+                    en: ["10", "15", "20", "25"],
+                    fr: ["10", "15", "20", "25"],
+                    es: ["10", "15", "20", "25"],
+                    tr: ["10", "15", "20", "25"],
+                    de: ["10", "15", "20", "25"]
+                },
                 answer: 2
             },
+
             {
-                level: 2,
-                question: "إذا كان جميع A هم B، وبعض B هم C، فما العبارة المؤكدة؟",
-                options: [
-                    "كل A هم C",
-                    "بعض A قد يكونون C",
-                    "لا يوجد A",
-                    "كل C هم A"
-                ],
-                answer: 1
-            },
-            {
-                level: 3,
-                question: "ما الرقم الذي يكمل النمط: 1، 4، 9، 16، ؟",
-                options: ["20", "24", "25", "30"],
+                id: "iq-003",
+                ageGroup: "adult",
+                difficulty: 3,
+                question: {
+                    ar: "ما الرقم التالي؟ 1، 1، 2، 3، 5، 8، ؟",
+                    en: "What is the next number? 1, 1, 2, 3, 5, 8, ?",
+                    fr: "Quel est le nombre suivant ? 1, 1, 2, 3, 5, 8, ?",
+                    es: "¿Cuál es el siguiente número? 1, 1, 2, 3, 5, 8, ?",
+                    tr: "Sıradaki sayı nedir? 1, 1, 2, 3, 5, 8, ?",
+                    de: "Welche Zahl kommt als Nächstes? 1, 1, 2, 3, 5, 8, ?"
+                },
+                options: {
+                    ar: ["11", "12", "13", "14"],
+                    en: ["11", "12", "13", "14"],
+                    fr: ["11", "12", "13", "14"],
+                    es: ["11", "12", "13", "14"],
+                    tr: ["11", "12", "13", "14"],
+                    de: ["11", "12", "13", "14"]
+                },
                 answer: 2
             },
+
             {
-                level: 4,
-                question: "إذا كان 5 عمال ينجزون عملاً في 10 أيام، فكم يومًا يحتاج 10 عمال بنفس الكفاءة؟",
-                options: ["2", "5", "10", "20"],
-                answer: 1
+                id: "iq-004",
+                ageGroup: "adult",
+                difficulty: 3,
+                question: {
+                    ar: "رجل لديه 3 صناديق، وفي كل صندوق 4 صناديق أصغر. كم صندوقًا لديه بالمجموع إذا حسبنا الصناديق الداخلية والخارجية؟",
+                    en: "A man has 3 boxes. Each contains 4 smaller boxes. How many boxes are there in total?",
+                    fr: "Un homme possède 3 boîtes. Chacune contient 4 petites boîtes. Combien de boîtes au total ?",
+                    es: "Un hombre tiene 3 cajas. Cada una contiene 4 cajas pequeñas. ¿Cuántas cajas hay en total?",
+                    tr: "Bir adamın 3 kutusu var. Her kutuda 4 küçük kutu bulunuyor. Toplam kaç kutu vardır?",
+                    de: "Ein Mann hat 3 Kisten. Jede enthält 4 kleinere Kisten. Wie viele Kisten gibt es insgesamt?"
+                },
+                options: {
+                    ar: ["7", "12", "15", "16"],
+                    en: ["7", "12", "15", "16"],
+                    fr: ["7", "12", "15", "16"],
+                    es: ["7", "12", "15", "16"],
+                    tr: ["7", "12", "15", "16"],
+                    de: ["7", "12", "15", "16"]
+                },
+                answer: 2
             }
         ],
 
         science: [
             {
-                level: 1,
-                question: "ما الكوكب المعروف بالكوكب الأحمر؟",
-                options: ["الأرض", "المريخ", "الزهرة", "المشتري"],
+                id: "science-001",
+                ageGroup: "child",
+                difficulty: 1,
+                question: {
+                    ar: "أي كوكب نعيش عليه؟",
+                    en: "Which planet do we live on?",
+                    fr: "Sur quelle planète vivons-nous ?",
+                    es: "¿En qué planeta vivimos?",
+                    tr: "Hangi gezegende yaşıyoruz?",
+                    de: "Auf welchem Planeten leben wir?"
+                },
+                options: {
+                    ar: ["المريخ", "الأرض", "المشتري", "الزهرة"],
+                    en: ["Mars", "Earth", "Jupiter", "Venus"],
+                    fr: ["Mars", "Terre", "Jupiter", "Vénus"],
+                    es: ["Marte", "Tierra", "Júpiter", "Venus"],
+                    tr: ["Mars", "Dünya", "Jüpiter", "Venüs"],
+                    de: ["Mars", "Erde", "Jupiter", "Venus"]
+                },
                 answer: 1
             },
+
             {
-                level: 1,
-                question: "ما الغاز الذي يحتاجه الإنسان للتنفس؟",
-                options: ["الأكسجين", "الهيليوم", "الهيدروجين", "النيتروجين فقط"],
+                id: "science-002",
+                ageGroup: "teen",
+                difficulty: 2,
+                question: {
+                    ar: "ما الغاز الذي تحتاجه الخلايا لإنتاج الطاقة بكفاءة؟",
+                    en: "Which gas do cells need for efficient energy production?",
+                    fr: "De quel gaz les cellules ont-elles besoin pour produire efficacement de l'énergie ?",
+                    es: "¿Qué gas necesitan las células para producir energía eficientemente?",
+                    tr: "Hücrelerin verimli enerji üretimi için hangi gaza ihtiyacı vardır?",
+                    de: "Welches Gas benötigen Zellen für eine effiziente Energieproduktion?"
+                },
+                options: {
+                    ar: ["الأكسجين", "النيتروجين", "الهيدروجين", "الهيليوم"],
+                    en: ["Oxygen", "Nitrogen", "Hydrogen", "Helium"],
+                    fr: ["Oxygène", "Azote", "Hydrogène", "Hélium"],
+                    es: ["Oxígeno", "Nitrógeno", "Hidrógeno", "Helio"],
+                    tr: ["Oksijen", "Azot", "Hidrojen", "Helyum"],
+                    de: ["Sauerstoff", "Stickstoff", "Wasserstoff", "Helium"]
+                },
                 answer: 0
             },
+
             {
-                level: 2,
-                question: "ما العضو الذي يضخ الدم في جسم الإنسان؟",
-                options: ["الكبد", "الرئة", "القلب", "المعدة"],
-                answer: 2
-            },
-            {
-                level: 3,
-                question: "ما الوحدة الأساسية للحياة؟",
-                options: ["الذرة", "الخلية", "العضلة", "الأنسجة"],
+                id: "science-003",
+                ageGroup: "adult",
+                difficulty: 3,
+                question: {
+                    ar: "ما الوحدة الأساسية للمعلومات الوراثية؟",
+                    en: "What is the basic unit of genetic information?",
+                    fr: "Quelle est l'unité fondamentale de l'information génétique ?",
+                    es: "¿Cuál es la unidad básica de la información genética?",
+                    tr: "Genetik bilginin temel birimi nedir?",
+                    de: "Was ist die grundlegende Einheit genetischer Information?"
+                },
+                options: {
+                    ar: ["الخلية", "الجين", "العضلة", "الهرمون"],
+                    en: ["Cell", "Gene", "Muscle", "Hormone"],
+                    fr: ["Cellule", "Gène", "Muscle", "Hormone"],
+                    es: ["Célula", "Gen", "Músculo", "Hormona"],
+                    tr: ["Hücre", "Gen", "Kas", "Hormon"],
+                    de: ["Zelle", "Gen", "Muskel", "Hormon"]
+                },
                 answer: 1
-            },
-            {
-                level: 4,
-                question: "ما القوة التي تجذب الأجسام نحو الأرض؟",
-                options: ["المغناطيسية", "الاحتكاك", "الجاذبية", "الضغط"],
-                answer: 2
             }
         ],
 
         horror: [
             {
-                level: 1,
-                question: "أنت في منزل مظلم وسمعت صوتًا من الطابق العلوي. ماذا تفعل؟",
-                options: [
-                    "أصعد فورًا",
-                    "أخرج من المنزل",
-                    "أشعل الأنوار وأتحقق بحذر",
-                    "أتجاهل الصوت"
-                ]
+                id: "horror-001",
+                ageGroup: "teen",
+                difficulty: 1,
+                question: {
+                    ar: "أنت وحدك في منزل مظلم وسمعت صوتًا خلفك. ما أول شيء ستفعله؟",
+                    en: "You are alone in a dark house and hear a sound behind you. What do you do first?",
+                    fr: "Vous êtes seul dans une maison sombre et entendez un bruit derrière vous. Que faites-vous ?",
+                    es: "Estás solo en una casa oscura y escuchas un ruido detrás de ti. ¿Qué haces primero?",
+                    tr: "Karanlık bir evde yalnızsın ve arkandan bir ses duydun. İlk ne yaparsın?",
+                    de: "Du bist allein in einem dunklen Haus und hörst ein Geräusch hinter dir. Was tust du zuerst?"
+                },
+                options: {
+                    ar: ["أهرب فورًا", "أتحقق من مصدر الصوت بحذر", "أصرخ", "أطفئ كل الأضواء"],
+                    en: ["Run immediately", "Carefully check the source", "Scream", "Turn off all lights"],
+                    fr: ["Je cours", "Je vérifie prudemment la source", "Je crie", "J'éteins les lumières"],
+                    es: ["Corro", "Compruebo cuidadosamente la fuente", "Grito", "Apago todas las luces"],
+                    tr: ["Hemen kaçarım", "Kaynağı dikkatlice kontrol ederim", "Bağırırım", "Tüm ışıkları kapatırım"],
+                    de: ["Ich renne sofort", "Ich prüfe vorsichtig die Quelle", "Ich schreie", "Ich schalte alle Lichter aus"]
+                },
+                answer: 1
             },
+
             {
-                level: 2,
-                question: "وجدت بابًا عليه عبارة «لا تفتح». ماذا تختار؟",
-                options: [
-                    "أفتحه فورًا",
-                    "أبحث عن سبب التحذير",
-                    "أكسر الباب",
-                    "أترك المكان"
-                ]
-            },
-            {
-                level: 3,
-                question: "الهاتف يرن من غرفة فارغة. ماذا تفعل؟",
-                options: [
-                    "أذهب إليه",
-                    "أتصل بالطوارئ",
-                    "أتحقق من مصدر الصوت بحذر",
-                    "أهرب"
-                ]
+                id: "horror-002",
+                ageGroup: "adult",
+                difficulty: 2,
+                question: {
+                    ar: "تسمع طرقًا متكررًا على الباب في منتصف الليل. ما التصرف الأكثر عقلانية؟",
+                    en: "You hear repeated knocking at midnight. What is the most rational response?",
+                    fr: "Vous entendez frapper à la porte au milieu de la nuit. Quelle est la réaction la plus rationnelle ?",
+                    es: "Escuchas golpes repetidos en la puerta a medianoche. ¿Cuál es la reacción más racional?",
+                    tr: "Gece yarısı kapının sürekli çalındığını duyuyorsun. En mantıklı tepki nedir?",
+                    de: "Du hörst um Mitternacht wiederholt Klopfen. Was ist die vernünftigste Reaktion?"
+                },
+                options: {
+                    ar: ["فتح الباب مباشرة", "التحقق بأمان دون فتح الباب", "تجاهل أي خطر", "الخروج وحدك"],
+                    en: ["Open immediately", "Check safely without opening", "Ignore all danger", "Go outside alone"],
+                    fr: ["Ouvrir immédiatement", "Vérifier sans ouvrir", "Ignorer le danger", "Sortir seul"],
+                    es: ["Abrir inmediatamente", "Comprobar sin abrir", "Ignorar el peligro", "Salir solo"],
+                    tr: ["Hemen açmak", "Açmadan güvenli şekilde kontrol etmek", "Tehlikeyi görmezden gelmek", "Yalnız çıkmak"],
+                    de: ["Sofort öffnen", "Sicher prüfen, ohne zu öffnen", "Gefahr ignorieren", "Allein hinausgehen"]
+                },
+                answer: 1
             }
         ]
     };
 
-    /* ============================================================
-       4. WHO AM I QUESTIONS
-    ============================================================ */
-
-    const WHO_AM_I_QUESTIONS = [
+    const PERSONALITY_QUESTIONS = [
         {
-            question: "عندما تواجه مشكلة صعبة، ماذا تفعل غالبًا؟",
-            options: [
-                {
-                    text: "أحللها بهدوء",
-                    type: "analyst"
-                },
-                {
-                    text: "أجرب عدة حلول بسرعة",
-                    type: "challenger"
-                },
-                {
-                    text: "أبحث عن معلومات أولًا",
-                    type: "thinker"
-                },
-                {
-                    text: "أستكشف الاحتمالات المختلفة",
-                    type: "explorer"
-                }
-            ]
+            id: "p1",
+            text: {
+                ar: "عندما تواجه مشكلة صعبة، ماذا تفعل غالبًا؟",
+                en: "When facing a difficult problem, what do you usually do?",
+                fr: "Que faites-vous généralement face à un problème difficile ?",
+                es: "¿Qué haces normalmente ante un problema difícil?",
+                tr: "Zor bir problemle karşılaştığında genellikle ne yaparsın?",
+                de: "Was tust du normalerweise bei einem schwierigen Problem?"
+            },
+            answers: [
+                { type: "analyst" },
+                { type: "leader" },
+                { type: "creative" },
+                { type: "calm" }
+            ],
+            options: {
+                ar: ["أحلل التفاصيل", "أتخذ القرار", "أبحث عن فكرة مختلفة", "أهدأ وأنتظر"],
+                en: ["Analyze details", "Make a decision", "Find a different idea", "Stay calm and wait"],
+                fr: ["Analyser les détails", "Prendre une décision", "Chercher une idée différente", "Rester calme"],
+                es: ["Analizar detalles", "Tomar una decisión", "Buscar una idea diferente", "Mantener la calma"],
+                tr: ["Detayları analiz ederim", "Karar veririm", "Farklı fikir ararım", "Sakin kalırım"],
+                de: ["Details analysieren", "Entscheidung treffen", "Neue Idee suchen", "Ruhig bleiben"]
+            }
         },
 
         {
-            question: "في المنافسة، ما الشيء الذي يحفزك أكثر؟",
-            options: [
-                {
-                    text: "الفوز",
-                    type: "challenger"
-                },
-                {
-                    text: "اكتشاف شيء جديد",
-                    type: "explorer"
-                },
-                {
-                    text: "فهم اللعبة",
-                    type: "analyst"
-                },
-                {
-                    text: "التخطيط",
-                    type: "strategist"
-                }
-            ]
+            id: "p2",
+            text: {
+                ar: "في الفريق، ما الدور الذي تميل إليه؟",
+                en: "What role do you prefer in a team?",
+                fr: "Quel rôle préférez-vous dans une équipe ?",
+                es: "¿Qué papel prefieres en un equipo?",
+                tr: "Bir takımda hangi rolü tercih edersin?",
+                de: "Welche Rolle bevorzugst du in einem Team?"
+            },
+            answers: [
+                { type: "leader" },
+                { type: "analyst" },
+                { type: "creative" },
+                { type: "calm" }
+            ],
+            options: {
+                ar: ["القائد", "المحلل", "المبدع", "الداعم الهادئ"],
+                en: ["Leader", "Analyst", "Creative", "Calm supporter"],
+                fr: ["Leader", "Analyste", "Créatif", "Soutien calme"],
+                es: ["Líder", "Analista", "Creativo", "Apoyo tranquilo"],
+                tr: ["Lider", "Analist", "Yaratıcı", "Sakin destekçi"],
+                de: ["Anführer", "Analytiker", "Kreativer", "Ruhiger Unterstützer"]
+            }
         },
 
         {
-            question: "عندما تتعلم شيئًا جديدًا...",
-            options: [
-                {
-                    text: "أتعلم بالتجربة",
-                    type: "challenger"
-                },
-                {
-                    text: "أقرأ وأبحث",
-                    type: "thinker"
-                },
-                {
-                    text: "أحلل التفاصيل",
-                    type: "analyst"
-                },
-                {
-                    text: "أجرب أشياء مختلفة",
-                    type: "explorer"
-                }
-            ]
-        },
-
-        {
-            question: "إذا كان لديك وقت فراغ طويل...",
-            options: [
-                {
-                    text: "أتعلم شيئًا جديدًا",
-                    type: "thinker"
-                },
-                {
-                    text: "ألعب أو أتحدى شخصًا",
-                    type: "challenger"
-                },
-                {
-                    text: "أبحث وأستكشف",
-                    type: "explorer"
-                },
-                {
-                    text: "أخطط لمشروع جديد",
-                    type: "strategist"
-                }
-            ]
-        },
-
-        {
-            question: "هل تتخذ قراراتك بسرعة؟",
-            options: [
-                {
-                    text: "نعم غالبًا",
-                    type: "challenger"
-                },
-                {
-                    text: "أحتاج وقتًا للتفكير",
-                    type: "thinker"
-                },
-                {
-                    text: "أدرس الاحتمالات",
-                    type: "analyst"
-                },
-                {
-                    text: "يعتمد على الموقف",
-                    type: "strategist"
-                }
-            ]
+            id: "p3",
+            text: {
+                ar: "ما الذي يجذبك أكثر؟",
+                en: "What attracts you the most?",
+                fr: "Qu'est-ce qui vous attire le plus ?",
+                es: "¿Qué te atrae más?",
+                tr: "Seni en çok ne çeker?",
+                de: "Was zieht dich am meisten an?"
+            },
+            answers: [
+                { type: "creative" },
+                { type: "analyst" },
+                { type: "leader" },
+                { type: "calm" }
+            ],
+            options: {
+                ar: ["الأفكار الجديدة", "الأرقام والمنطق", "التحدي والمنافسة", "الاستقرار"],
+                en: ["New ideas", "Numbers and logic", "Challenge and competition", "Stability"],
+                fr: ["Nouvelles idées", "Nombres et logique", "Défi et compétition", "Stabilité"],
+                es: ["Ideas nuevas", "Números y lógica", "Desafío y competencia", "Estabilidad"],
+                tr: ["Yeni fikirler", "Sayılar ve mantık", "Meydan okuma", "Denge"],
+                de: ["Neue Ideen", "Zahlen und Logik", "Herausforderung", "Stabilität"]
+            }
         }
     ];
 
-    /* ============================================================
-       5. PLAYER STATE
-    ============================================================ */
+    /* =========================================================
+       APPLICATION STATE
+    ========================================================= */
 
-    let player = loadPlayer();
+    let player = createDefaultPlayer();
+    let settings = createDefaultSettings();
 
-    let currentGame = null;
+    const gameState = {
+        activeGame: null,
+        questions: [],
+        currentIndex: 0,
+        score: 0,
+        answered: false,
+        startedAt: null,
+        personalityAnswers: [],
+        personalityIndex: 0
+    };
 
-    let currentQuestionIndex = 0;
+    /* =========================================================
+       INITIALIZATION
+    ========================================================= */
 
-    let currentGameQuestions = [];
+    document.addEventListener("DOMContentLoaded", () => {
+        safeRun(() => {
+            loadState();
+            applyLanguage();
+            bindEvents();
+            updateAllUI();
+            showStartupMessage();
+        });
+    });
 
-    let gameScore = 0;
-
-    let whoAmIAnswers = [];
-
-    let currentWhoQuestion = 0;
-
-    /* ============================================================
-       6. SAFE HELPERS
-    ============================================================ */
-
-    function safeText(value, fallback = "") {
-        if (typeof value !== "string") {
-            return fallback;
+    function safeRun(callback) {
+        try {
+            return callback();
+        } catch (error) {
+            console.error("[ZIVOZONE ERROR]", error);
+            showToast("حدث خطأ غير متوقع. حاول مرة أخرى.", "error");
+            return null;
         }
-
-        return value
-            .replace(/[<>]/g, "")
-            .trim();
     }
 
-    function safeNumber(value, fallback = 0) {
-        const number = Number(value);
-
-        if (!Number.isFinite(number)) {
-            return fallback;
-        }
-
-        return number;
-    }
-
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function getTodayKey() {
-        const date = new Date();
-
-        return [
-            date.getFullYear(),
-            String(date.getMonth() + 1).padStart(2, "0"),
-            String(date.getDate()).padStart(2, "0")
-        ].join("-");
-    }
-
-    function getTranslation(key) {
-        const language = player.language || CONFIG.defaultLanguage;
-
-        return (
-            TRANSLATIONS[language]?.[key] ||
-            TRANSLATIONS[CONFIG.defaultLanguage]?.[key] ||
-            key
-        );
-    }
-
-    /* ============================================================
-       7. PLAYER DEFAULT
-    ============================================================ */
+    /* =========================================================
+       PLAYER STATE
+    ========================================================= */
 
     function createDefaultPlayer() {
         return {
-            id: createPlayerId(),
-
+            id: generateId(),
             name: "",
-
             email: "",
-
-            age: 18,
-
-            language: CONFIG.defaultLanguage,
-
+            age: null,
+            language: APP.defaultLanguage,
             xp: 0,
-
             coins: 0,
-
-            level: 1,
-
             streak: 0,
-
-            lastVisit: null,
-
-            dailyCompleted: null,
-
+            lastPlayedDate: null,
             gamesPlayed: 0,
-
+            questionsAnswered: 0,
             correctAnswers: 0,
-
-            totalAnswers: 0,
-
-            profileCompleted: false,
-
             achievements: [],
-
-            personality: null,
-
-            stats: {
-                intelligence: 0,
-                science: 0,
-                horror: 0,
-                psychology: 0
-            }
+            createdAt: new Date().toISOString()
         };
     }
 
-    function createPlayerId() {
-        try {
-            return (
-                "ZP-" +
-                Date.now().toString(36) +
-                "-" +
-                Math.random().toString(36).substring(2, 8)
-            ).toUpperCase();
-        } catch (error) {
-            return "ZP-" + Date.now();
-        }
+    function createDefaultSettings() {
+        return {
+            language: APP.defaultLanguage
+        };
     }
 
-    /* ============================================================
-       8. STORAGE
-    ============================================================ */
-
-    function loadPlayer() {
+    function loadState() {
         try {
-            const saved = localStorage.getItem(CONFIG.storageKey);
+            const storedPlayer = localStorage.getItem(APP.storageKey);
+            const storedSettings = localStorage.getItem(APP.settingsKey);
 
-            if (!saved) {
-                return createDefaultPlayer();
+            if (storedPlayer) {
+                const parsed = JSON.parse(storedPlayer);
+
+                if (parsed && typeof parsed === "object") {
+                    player = {
+                        ...createDefaultPlayer(),
+                        ...parsed
+                    };
+                }
             }
 
-            const parsed = JSON.parse(saved);
+            if (storedSettings) {
+                const parsedSettings = JSON.parse(storedSettings);
 
-            return {
-                ...createDefaultPlayer(),
-                ...parsed,
-                stats: {
-                    ...createDefaultPlayer().stats,
-                    ...(parsed.stats || {})
+                if (parsedSettings && typeof parsedSettings === "object") {
+                    settings = {
+                        ...createDefaultSettings(),
+                        ...parsedSettings
+                    };
                 }
-            };
-        } catch (error) {
-            console.error("ZIVOZONE: Failed to load player.", error);
+            }
 
-            return createDefaultPlayer();
+            if (!APP.supportedLanguages.includes(player.language)) {
+                player.language = APP.defaultLanguage;
+            }
+
+            settings.language = player.language;
+        } catch (error) {
+            console.error("Failed to load state:", error);
+
+            player = createDefaultPlayer();
+            settings = createDefaultSettings();
+
+            try {
+                localStorage.removeItem(APP.storageKey);
+                localStorage.removeItem(APP.settingsKey);
+            } catch (storageError) {
+                console.error("Failed to clear corrupted state:", storageError);
+            }
         }
     }
 
-    function savePlayer() {
+    function saveState() {
         try {
+            localStorage.setItem(APP.storageKey, JSON.stringify(player));
+
+            settings.language = player.language;
+
             localStorage.setItem(
-                CONFIG.storageKey,
-                JSON.stringify(player)
+                APP.settingsKey,
+                JSON.stringify(settings)
             );
 
             return true;
         } catch (error) {
-            console.error("ZIVOZONE: Failed to save player.", error);
-
-            showToast("تعذر حفظ البيانات على هذا المتصفح.");
-
+            console.error("Failed to save state:", error);
+            showToast("تعذر حفظ التقدم على هذا الجهاز.", "error");
             return false;
         }
     }
 
-    /* ============================================================
-       9. LEVEL SYSTEM
-    ============================================================ */
+    /* =========================================================
+       PLAYER LEVEL SYSTEM
+    ========================================================= */
 
-    function calculateLevel(xp) {
-        const safeXP = Math.max(0, safeNumber(xp));
+    function getPlayerLevel() {
+        let current = LEVELS[0];
 
-        return Math.floor(
-            safeXP / CONFIG.baseXPPerLevel
-        ) + 1;
+        for (const level of LEVELS) {
+            if (player.xp >= level.minXP) {
+                current = level;
+            } else {
+                break;
+            }
+        }
+
+        return current;
     }
 
-    function xpForNextLevel() {
-        return player.level * CONFIG.baseXPPerLevel;
+    function getNextLevel() {
+        const current = getPlayerLevel();
+
+        return LEVELS.find(
+            level => level.level === current.level + 1
+        ) || null;
     }
 
     function addXP(amount) {
-        try {
-            const value = Math.max(0, safeNumber(amount));
-
-            player.xp += value;
-
-            const oldLevel = player.level;
-
-            player.level = calculateLevel(player.xp);
-
-            if (player.level > oldLevel) {
-                showToast(
-                    `🎉 ارتقيت إلى المستوى ${player.level}!`
-                );
-
-                addAchievement("level_up");
-            }
-
-            savePlayer();
-
-            updatePlayerUI();
-
-            return true;
-        } catch (error) {
-            console.error("ZIVOZONE XP Error:", error);
-
-            return false;
+        if (!Number.isFinite(amount) || amount <= 0) {
+            return;
         }
-    }
 
-    /* ============================================================
-       10. Z-COIN SYSTEM
-    ============================================================ */
+        const oldLevel = getPlayerLevel().level;
+
+        player.xp += Math.floor(amount);
+
+        const newLevel = getPlayerLevel().level;
+
+        if (newLevel > oldLevel) {
+            unlockAchievement(`level_${newLevel}`);
+            showToast(
+                `🎉 وصلت إلى المستوى ${newLevel}!`,
+                "success"
+            );
+        }
+
+        saveState();
+        updateAllUI();
+    }
 
     function addCoins(amount) {
-        try {
-            const value = Math.max(0, safeNumber(amount));
-
-            player.coins += value;
-
-            savePlayer();
-
-            updatePlayerUI();
-
-            return true;
-        } catch (error) {
-            console.error("ZIVOZONE Coin Error:", error);
-
-            return false;
+        if (!Number.isFinite(amount) || amount <= 0) {
+            return;
         }
+
+        player.coins += Math.floor(amount);
+
+        saveState();
+        updateAllUI();
     }
 
-    /* ============================================================
-       11. ACHIEVEMENTS
-    ============================================================ */
+    /* =========================================================
+       EVENT BINDING
+    ========================================================= */
 
-    function addAchievement(id) {
-        try {
-            if (!player.achievements.includes(id)) {
-                player.achievements.push(id);
+    function bindEvents() {
+        document.addEventListener("click", handleGlobalClick);
 
-                savePlayer();
+        document.addEventListener("submit", event => {
+            const form = event.target;
 
-                showToast("🏆 إنجاز جديد!");
-            }
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Achievement Error:",
-                error
-            );
-        }
-    }
-
-    /* ============================================================
-       12. STREAK
-    ============================================================ */
-
-    function updateStreak() {
-        try {
-            const today = getTodayKey();
-
-            if (player.lastVisit === today) {
+            if (!(form instanceof HTMLFormElement)) {
                 return;
             }
 
-            const previous = player.lastVisit;
+            if (
+                form.id === "registerForm" ||
+                form.id === "profileForm"
+            ) {
+                event.preventDefault();
 
-            if (!previous) {
-                player.streak = 1;
-            } else {
-                const previousDate = new Date(previous);
-                const currentDate = new Date(today);
-
-                const difference =
-                    Math.floor(
-                        (currentDate - previousDate) /
-                        (1000 * 60 * 60 * 24)
-                    );
-
-                if (difference === 1) {
-                    player.streak += 1;
-                } else {
-                    player.streak = 1;
-                }
+                safeRun(() => saveProfileFromForm(form));
             }
+        });
 
-            player.lastVisit = today;
+        document.addEventListener("change", event => {
+            const target = event.target;
 
-            if (player.streak >= 3) {
-                addAchievement("streak_3");
+            if (
+                target instanceof HTMLSelectElement &&
+                (
+                    target.id === "languageSelect" ||
+                    target.name === "language"
+                )
+            ) {
+                setLanguage(target.value);
             }
-
-            if (player.streak >= 7) {
-                addAchievement("streak_7");
-            }
-
-            savePlayer();
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Streak Error:",
-                error
-            );
-        }
-    }
-
-    /* ============================================================
-       13. DOM HELPERS
-    ============================================================ */
-
-    function $(selector, parent = document) {
-        try {
-            return parent.querySelector(selector);
-        } catch (error) {
-            return null;
-        }
-    }
-
-    function $$(selector, parent = document) {
-        try {
-            return Array.from(
-                parent.querySelectorAll(selector)
-            );
-        } catch (error) {
-            return [];
-        }
-    }
-
-    function setText(selector, value) {
-        const element = $(selector);
-
-        if (element) {
-            element.textContent = value;
-        }
-    }
-
-    /* ============================================================
-       14. TOAST SYSTEM
-    ============================================================ */
-
-    function showToast(message) {
-        try {
-            let toast = document.getElementById(
-                "zivo-toast"
-            );
-
-            if (!toast) {
-                toast = document.createElement("div");
-
-                toast.id = "zivo-toast";
-
-                Object.assign(toast.style, {
-                    position: "fixed",
-                    bottom: "25px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    zIndex: "999999",
-                    background: "#111827",
-                    color: "#ffffff",
-                    padding: "14px 22px",
-                    borderRadius: "14px",
-                    boxShadow:
-                        "0 15px 40px rgba(0,0,0,.35)",
-                    fontWeight: "700",
-                    maxWidth: "90%",
-                    textAlign: "center",
-                    transition: "opacity .3s ease"
-                });
-
-                document.body.appendChild(toast);
-            }
-
-            toast.textContent = safeText(message);
-
-            toast.style.opacity = "1";
-
-            clearTimeout(toast._timer);
-
-            toast._timer = setTimeout(() => {
-                toast.style.opacity = "0";
-            }, 3000);
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Toast Error:",
-                error
-            );
-        }
-    }
-
-    /* ============================================================
-       15. MODAL SYSTEM
-    ============================================================ */
-
-    function createModal() {
-        try {
-            let modal =
-                document.getElementById("zivo-modal");
-
-            if (modal) {
-                return modal;
-            }
-
-            modal = document.createElement("div");
-
-            modal.id = "zivo-modal";
-
-            Object.assign(modal.style, {
-                position: "fixed",
-                inset: "0",
-                zIndex: "999990",
-                background: "rgba(0,0,0,.78)",
-                display: "none",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "20px"
-            });
-
-            modal.innerHTML = `
-                <div
-                    id="zivo-modal-content"
-                    style="
-                        width:min(720px,100%);
-                        max-height:90vh;
-                        overflow:auto;
-                        background:#0b1220;
-                        color:white;
-                        border:1px solid rgba(255,255,255,.1);
-                        border-radius:24px;
-                        padding:25px;
-                        position:relative;
-                        box-shadow:0 30px 80px rgba(0,0,0,.5);
-                    "
-                >
-                    <button
-                        id="zivo-modal-close"
-                        type="button"
-                        aria-label="Close"
-                        style="
-                            position:absolute;
-                            top:15px;
-                            right:15px;
-                            width:40px;
-                            height:40px;
-                            border:0;
-                            border-radius:50%;
-                            cursor:pointer;
-                            font-size:20px;
-                        "
-                    >×</button>
-
-                    <div id="zivo-modal-body"></div>
-                </div>
-            `;
-
-            document.body.appendChild(modal);
-
-            const closeButton =
-                document.getElementById(
-                    "zivo-modal-close"
-                );
-
-            closeButton?.addEventListener(
-                "click",
-                closeModal
-            );
-
-            modal.addEventListener(
-                "click",
-                (event) => {
-                    if (event.target === modal) {
-                        closeModal();
-                    }
-                }
-            );
-
-            return modal;
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Modal Error:",
-                error
-            );
-
-            return null;
-        }
-    }
-
-    function openModal(html) {
-        try {
-            const modal = createModal();
-
-            if (!modal) {
-                return;
-            }
-
-            const body =
-                document.getElementById(
-                    "zivo-modal-body"
-                );
-
-            if (!body) {
-                return;
-            }
-
-            body.innerHTML = html;
-
-            modal.style.display = "flex";
-
-            document.body.style.overflow = "hidden";
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Open Modal Error:",
-                error
-            );
-        }
-    }
-
-    function closeModal() {
-        try {
-            const modal =
-                document.getElementById(
-                    "zivo-modal"
-                );
-
-            if (modal) {
-                modal.style.display = "none";
-            }
-
-            document.body.style.overflow = "";
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Close Modal Error:",
-                error
-            );
-        }
-    }
-
-    /* ============================================================
-       16. PLAYER UI
-    ============================================================ */
-
-    function updatePlayerUI() {
-        try {
-            player.level = calculateLevel(player.xp);
-
-            const levelElements = $$(
-                "[data-player-level], .player-level"
-            );
-
-            levelElements.forEach((element) => {
-                element.textContent =
-                    `المستوى ${player.level}`;
-            });
-
-            const xpElements = $$(
-                "[data-player-xp], .player-xp"
-            );
-
-            xpElements.forEach((element) => {
-                element.textContent =
-                    `${player.xp} XP`;
-            });
-
-            const coinElements = $$(
-                "[data-player-coins], .player-coins"
-            );
-
-            coinElements.forEach((element) => {
-                element.textContent =
-                    `${player.coins} Z`;
-            });
-
-            const nameElements = $$(
-                "[data-player-name], .player-name"
-            );
-
-            nameElements.forEach((element) => {
-                element.textContent =
-                    player.name || "ZIVO Player";
-            });
-
-            const streakElements = $$(
-                "[data-player-streak], .player-streak"
-            );
-
-            streakElements.forEach((element) => {
-                element.textContent =
-                    `${player.streak}`;
-            });
-
-            updateProgressBar();
-        } catch (error) {
-            console.error(
-                "ZIVOZONE UI Error:",
-                error
-            );
-        }
-    }
-
-    function updateProgressBar() {
-        const progress =
-            player.xp % CONFIG.baseXPPerLevel;
-
-        const percentage =
-            Math.min(
-                100,
-                (progress / CONFIG.baseXPPerLevel) *
-                100
-            );
-
-        const bars = $$(
-            "[data-xp-progress], .xp-progress"
-        );
-
-        bars.forEach((bar) => {
-            bar.style.width =
-                `${percentage}%`;
         });
     }
 
-    /* ============================================================
-       17. PROFILE SYSTEM
-    ============================================================ */
+    function handleGlobalClick(event) {
+        const target = event.target.closest(
+            "button, a, [data-game], [data-open-profile], [data-scroll-to], [data-close-modal], [data-language]"
+        );
 
-    function openProfile() {
-        try {
-            openModal(`
-                <div dir="${player.language === "ar" ? "rtl" : "ltr"}">
-                    <h2>👤 ${getTranslation("profile")}</h2>
-
-                    <p>
-                        ${getTranslation("level")}:
-                        <strong>${player.level}</strong>
-                    </p>
-
-                    <p>
-                        ${getTranslation("xp")}:
-                        <strong>${player.xp}</strong>
-                    </p>
-
-                    <p>
-                        ${getTranslation("coins")}:
-                        <strong>${player.coins}</strong>
-                    </p>
-
-                    <p>
-                        ${getTranslation("streak")}:
-                        <strong>${player.streak}</strong>
-                    </p>
-
-                    <hr>
-
-                    <form id="zivo-profile-form">
-
-                        <label>
-                            الاسم
-                            <input
-                                id="zivo-profile-name"
-                                type="text"
-                                maxlength="40"
-                                value="${escapeAttribute(player.name)}"
-                                required
-                            >
-                        </label>
-
-                        <br>
-
-                        <label>
-                            البريد الإلكتروني
-                            <input
-                                id="zivo-profile-email"
-                                type="email"
-                                maxlength="120"
-                                value="${escapeAttribute(player.email)}"
-                                required
-                            >
-                        </label>
-
-                        <br>
-
-                        <label>
-                            العمر
-                            <input
-                                id="zivo-profile-age"
-                                type="number"
-                                min="6"
-                                max="100"
-                                value="${player.age}"
-                                required
-                            >
-                        </label>
-
-                        <br>
-
-                        <button
-                            type="submit"
-                            style="
-                                padding:12px 20px;
-                                border:0;
-                                border-radius:12px;
-                                cursor:pointer;
-                            "
-                        >
-                            ${getTranslation("save")}
-                        </button>
-
-                    </form>
-
-                    <br>
-
-                    <button
-                        id="zivo-logout-button"
-                        type="button"
-                        style="
-                            padding:10px 18px;
-                            border:0;
-                            border-radius:12px;
-                            cursor:pointer;
-                        "
-                    >
-                        ${getTranslation("logout")}
-                    </button>
-                </div>
-            `);
-
-            const form =
-                document.getElementById(
-                    "zivo-profile-form"
-                );
-
-            form?.addEventListener(
-                "submit",
-                handleProfileSave
-            );
-
-            document
-                .getElementById(
-                    "zivo-logout-button"
-                )
-                ?.addEventListener(
-                    "click",
-                    logout
-                );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Profile Error:",
-                error
-            );
+        if (!target) {
+            return;
         }
-    }
 
-    function handleProfileSave(event) {
+        if (
+            target instanceof HTMLAnchorElement &&
+            target.getAttribute("href") &&
+            target.getAttribute("href") !== "#" &&
+            !target.hasAttribute("data-scroll-to")
+        ) {
+            return;
+        }
+
         event.preventDefault();
 
-        try {
-            const name = safeText(
-                document.getElementById(
-                    "zivo-profile-name"
-                )?.value
-            );
-
-            const email = safeText(
-                document.getElementById(
-                    "zivo-profile-email"
-                )?.value
-            );
-
-            const age = safeNumber(
-                document.getElementById(
-                    "zivo-profile-age"
-                )?.value
-            );
-
-            if (
-                name.length < 2 ||
-                name.length > CONFIG.maxNameLength
-            ) {
-                showToast(
-                    getTranslation("nameRequired")
-                );
-
+        safeRun(() => {
+            if (target.dataset.game) {
+                startGame(target.dataset.game);
                 return;
             }
 
-            if (
-                !isValidEmail(email) ||
-                email.length > CONFIG.maxEmailLength
-            ) {
-                showToast(
-                    getTranslation("emailRequired")
-                );
-
+            if (target.dataset.openProfile !== undefined) {
+                openProfileModal();
                 return;
             }
 
-            if (
-                age < 6 ||
-                age > 100
-            ) {
-                showToast(
-                    getTranslation("ageRequired")
-                );
-
+            if (target.dataset.scrollTo) {
+                scrollToSection(target.dataset.scrollTo);
                 return;
             }
 
-            const wasCompleted =
-                player.profileCompleted;
-
-            player.name = name;
-            player.email = email;
-            player.age = age;
-
-            player.profileCompleted = true;
-
-            if (!wasCompleted) {
-                addXP(20);
-
-                addCoins(
-                    CONFIG.coinRewards.profile
-                );
-
-                addAchievement(
-                    "profile_complete"
-                );
+            if (target.dataset.closeModal !== undefined) {
+                closeModal(target.dataset.closeModal);
+                return;
             }
 
-            savePlayer();
+            if (target.dataset.language) {
+                setLanguage(target.dataset.language);
+                return;
+            }
 
-            updatePlayerUI();
-
-            showToast(
-                getTranslation("profileSaved")
-            );
-
-            closeModal();
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Profile Save Error:",
-                error
-            );
-
-            showToast(
-                "حدث خطأ أثناء حفظ الملف."
-            );
-        }
+            handleButtonById(target);
+        });
     }
 
-    function logout() {
-        try {
-            player = createDefaultPlayer();
+    function handleButtonById(button) {
+        const id = button.id;
 
-            savePlayer();
-
-            closeModal();
-
-            updatePlayerUI();
-
-            showToast("تم تسجيل الخروج.");
-
-            setTimeout(() => {
-                location.reload();
-            }, 500);
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Logout Error:",
-                error
-            );
+        if (!id) {
+            return;
         }
-    }
 
-    /* ============================================================
-       18. GAME ENGINE
-    ============================================================ */
+        switch (id) {
+            case "loginBtn":
+            case "registerBtn":
+            case "openRegister":
+                openProfileModal();
+                break;
 
-    function startGame(type) {
-        try {
-            if (!player.profileCompleted) {
-                showToast(
-                    getTranslation("noProfile")
-                );
+            case "profileBtn":
+                openProfileModal();
+                break;
 
-                openProfile();
+            case "dailyChallengeBtn":
+                startDailyChallenge();
+                break;
 
-                return;
-            }
+            case "closeGameModal":
+                closeModal("gameModal");
+                break;
 
-            currentGame = type;
+            case "closeProfileModal":
+                closeModal("profileModal");
+                break;
 
-            currentQuestionIndex = 0;
+            case "closeRegisterModal":
+                closeModal("registerModal");
+                break;
 
-            gameScore = 0;
+            case "nextQuestionBtn":
+                nextQuestion();
+                break;
 
-            const difficulty =
-                Math.min(
-                    4,
-                    Math.max(
-                        1,
-                        player.level
-                    )
-                );
-
-            let questions =
-                QUESTION_BANK[type] || [];
-
-            if (type === "horror") {
-                questions = questions.filter(
-                    (question) =>
-                        question.level <=
-                        difficulty
-                );
-            } else {
-                questions = questions.filter(
-                    (question) =>
-                        question.level <=
-                        difficulty
-                );
-            }
-
-            if (!questions.length) {
-                questions =
-                    QUESTION_BANK[type] || [];
-            }
-
-            currentGameQuestions =
-                shuffle(
-                    [...questions]
-                ).slice(
-                    0,
-                    Math.min(
-                        5,
-                        questions.length
-                    )
-                );
-
-            renderGameQuestion();
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Start Game Error:",
-                error
-            );
-
-            showToast(
-                "تعذر تشغيل اللعبة."
-            );
-        }
-    }
-
-    function renderGameQuestion() {
-        try {
-            const question =
-                currentGameQuestions[
-                    currentQuestionIndex
-                ];
-
-            if (!question) {
+            case "finishGameBtn":
                 finishGame();
+                break;
 
-                return;
-            }
-
-            const categoryName =
-                getCategoryName(
-                    currentGame
+            case "saveProfileBtn":
+                saveProfileFromForm(
+                    document.getElementById("profileForm") ||
+                    document.getElementById("registerForm")
                 );
+                break;
 
-            const optionsHTML =
-                question.options
-                    .map(
-                        (option, index) => `
-                            <button
-                                class="zivo-game-option"
-                                data-option-index="${index}"
-                                type="button"
-                                style="
-                                    display:block;
-                                    width:100%;
-                                    margin:10px 0;
-                                    padding:14px;
-                                    border:1px solid rgba(255,255,255,.12);
-                                    border-radius:14px;
-                                    cursor:pointer;
-                                    background:#111827;
-                                    color:white;
-                                    text-align:right;
-                                "
-                            >
-                                ${escapeHTML(option)}
-                            </button>
-                        `
-                    )
-                    .join("");
+            case "resetProgressBtn":
+                resetProgress();
+                break;
 
-            openModal(`
-                <div dir="rtl">
+            case "personalityBtn":
+            case "whoAmIBtn":
+                startPersonalityTest();
+                break;
 
-                    <div style="opacity:.7;">
-                        ${categoryName}
-                    </div>
+            case "aiBtn":
+            case "openAIBtn":
+                openAIModal();
+                break;
 
-                    <h2>
-                        ${escapeHTML(
-                            question.question
-                        )}
-                    </h2>
-
-                    <p>
-                        سؤال
-                        ${currentQuestionIndex + 1}
-                        /
-                        ${currentGameQuestions.length}
-                    </p>
-
-                    <div id="zivo-game-options">
-                        ${optionsHTML}
-                    </div>
-
-                    <div
-                        id="zivo-game-feedback"
-                        style="
-                            margin-top:15px;
-                            min-height:30px;
-                            font-weight:700;
-                        "
-                    ></div>
-
-                </div>
-            `);
-
-            $$(".zivo-game-option").forEach(
-                (button) => {
-                    button.addEventListener(
-                        "click",
-                        () =>
-                            handleGameAnswer(
-                                Number(
-                                    button.dataset
-                                        .optionIndex
-                                )
-                            )
-                    );
-                }
-            );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Render Game Error:",
-                error
-            );
+            default:
+                break;
         }
     }
 
-    function handleGameAnswer(selectedIndex) {
-        try {
-            const question =
-                currentGameQuestions[
-                    currentQuestionIndex
-                ];
+    /* =========================================================
+       PROFILE
+    ========================================================= */
 
-            if (!question) {
-                return;
-            }
+    function openProfileModal() {
+        const modal =
+            document.getElementById("profileModal") ||
+            document.getElementById("registerModal");
 
-            const buttons =
-                $$(".zivo-game-option");
+        if (!modal) {
+            openFallbackModal(
+                getText("profile"),
+                createProfileHTML()
+            );
+            return;
+        }
 
-            buttons.forEach(
-                (button) => {
-                    button.disabled = true;
-                    button.style.opacity = "0.65";
-                }
+        const form =
+            modal.querySelector("form") ||
+            document.getElementById("profileForm") ||
+            document.getElementById("registerForm");
+
+        if (form) {
+            fillProfileForm(form);
+        }
+
+        showModalElement(modal);
+    }
+
+    function fillProfileForm(form) {
+        const nameInput = form.querySelector(
+            '[name="name"], #playerName, #name'
+        );
+
+        const emailInput = form.querySelector(
+            '[name="email"], #playerEmail, #email'
+        );
+
+        const ageInput = form.querySelector(
+            '[name="age"], #playerAge, #age'
+        );
+
+        const languageInput = form.querySelector(
+            '[name="language"], #languageSelect'
+        );
+
+        if (nameInput) {
+            nameInput.value = player.name;
+        }
+
+        if (emailInput) {
+            emailInput.value = player.email;
+        }
+
+        if (ageInput) {
+            ageInput.value = player.age || "";
+        }
+
+        if (languageInput) {
+            languageInput.value = player.language;
+        }
+    }
+
+    function saveProfileFromForm(form) {
+        if (!form) {
+            showToast(getText("completeProfile"), "error");
+            return;
+        }
+
+        const nameInput = form.querySelector(
+            '[name="name"], #playerName, #name'
+        );
+
+        const emailInput = form.querySelector(
+            '[name="email"], #playerEmail, #email'
+        );
+
+        const ageInput = form.querySelector(
+            '[name="age"], #playerAge, #age'
+        );
+
+        const languageInput = form.querySelector(
+            '[name="language"], #languageSelect'
+        );
+
+        const name = nameInput
+            ? String(nameInput.value).trim()
+            : player.name;
+
+        const email = emailInput
+            ? String(emailInput.value).trim()
+            : player.email;
+
+        const age = ageInput
+            ? Number(ageInput.value)
+            : player.age;
+
+        const language = languageInput
+            ? String(languageInput.value)
+            : player.language;
+
+        if (name.length < 2 || name.length > 60) {
+            showToast(
+                "اكتب اسمًا صحيحًا بين حرفين و60 حرفًا.",
+                "error"
+            );
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showToast(
+                "أدخل بريدًا إلكترونيًا صحيحًا.",
+                "error"
+            );
+            return;
+        }
+
+        if (
+            !Number.isInteger(age) ||
+            age < 6 ||
+            age > 100
+        ) {
+            showToast(
+                "العمر يجب أن يكون بين 6 و100 سنة.",
+                "error"
+            );
+            return;
+        }
+
+        if (!APP.supportedLanguages.includes(language)) {
+            showToast("اللغة غير مدعومة.", "error");
+            return;
+        }
+
+        const isNewPlayer = !player.name;
+
+        player.name = name;
+        player.email = email;
+        player.age = age;
+        player.language = language;
+
+        if (isNewPlayer) {
+            unlockAchievement("first_profile");
+        }
+
+        saveState();
+        applyLanguage();
+        updateAllUI();
+
+        closeModal("profileModal");
+        closeModal("registerModal");
+
+        showToast(
+            "تم حفظ ملفك بنجاح 🎉",
+            "success"
+        );
+    }
+
+    function isValidEmail(email) {
+        if (!email || email.length > 254) {
+            return false;
+        }
+
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    /* =========================================================
+       GAME ENGINE
+    ========================================================= */
+
+    function startGame(gameType) {
+        if (!ensurePlayer()) {
+            return;
+        }
+
+        const normalizedType = normalizeGameType(gameType);
+
+        if (normalizedType === "personality") {
+            startPersonalityTest();
+            return;
+        }
+
+        if (normalizedType === "daily") {
+            startDailyChallenge();
+            return;
+        }
+
+        if (!QUESTION_BANK[normalizedType]) {
+            showToast(
+                "هذه اللعبة غير متاحة حاليًا.",
+                "error"
+            );
+            return;
+        }
+
+        const questions = getQuestionsForPlayer(
+            normalizedType
+        );
+
+        if (!questions.length) {
+            showToast(
+                "لا توجد أسئلة مناسبة لهذا المستوى.",
+                "error"
+            );
+            return;
+        }
+
+        gameState.activeGame = normalizedType;
+        gameState.questions = shuffle(
+            questions
+        ).slice(0, Math.min(5, questions.length));
+
+        gameState.currentIndex = 0;
+        gameState.score = 0;
+        gameState.answered = false;
+        gameState.startedAt = Date.now();
+
+        openGameModal();
+
+        renderCurrentQuestion();
+    }
+
+    function normalizeGameType(type) {
+        const value = String(type || "")
+            .toLowerCase()
+            .trim();
+
+        const aliases = {
+            iq: "intelligence",
+            intelligence: "intelligence",
+            smart: "intelligence",
+            ذكاء: "intelligence",
+
+            science: "science",
+            علوم: "science",
+
+            horror: "horror",
+            fear: "horror",
+            رعب: "horror",
+
+            personality: "personality",
+            "who-am-i": "personality",
+            "من-انا": "personality",
+
+            daily: "daily"
+        };
+
+        return aliases[value] || value;
+    }
+
+    function getAgeGroup(age) {
+        if (!Number.isFinite(age)) {
+            return "adult";
+        }
+
+        if (age < 13) {
+            return "child";
+        }
+
+        if (age < 18) {
+            return "teen";
+        }
+
+        return "adult";
+    }
+
+    function getDifficultyForPlayer() {
+        const level = getPlayerLevel().level;
+
+        if (level <= 2) {
+            return 1;
+        }
+
+        if (level <= 4) {
+            return 2;
+        }
+
+        return 3;
+    }
+
+    function getQuestionsForPlayer(gameType) {
+        const bank = QUESTION_BANK[gameType];
+
+        if (!Array.isArray(bank)) {
+            return [];
+        }
+
+        const ageGroup = getAgeGroup(player.age);
+        const difficulty = getDifficultyForPlayer();
+
+        let filtered = bank.filter(
+            question =>
+                question.ageGroup === ageGroup &&
+                question.difficulty <= difficulty
+        );
+
+        if (!filtered.length) {
+            filtered = bank.filter(
+                question =>
+                    question.ageGroup === ageGroup
+            );
+        }
+
+        if (!filtered.length) {
+            filtered = bank.filter(
+                question =>
+                    question.difficulty <= difficulty
+            );
+        }
+
+        return filtered;
+    }
+
+    /* =========================================================
+       GAME MODAL
+    ========================================================= */
+
+    function openGameModal() {
+        const modal = document.getElementById("gameModal");
+
+        if (modal) {
+            showModalElement(modal);
+            return;
+        }
+
+        openFallbackModal(
+            getGameTitle(gameState.activeGame),
+            `<div id="zivoGameFallback"></div>`
+        );
+    }
+
+    function renderCurrentQuestion() {
+        const question =
+            gameState.questions[
+                gameState.currentIndex
+            ];
+
+        if (!question) {
+            finishGame();
+            return;
+        }
+
+        gameState.answered = false;
+
+        const lang = player.language;
+
+        const questionText =
+            getLocalized(question.question, lang);
+
+        const options =
+            question.options[lang] ||
+            question.options.en ||
+            [];
+
+        const container =
+            document.getElementById("gameContent") ||
+            document.getElementById("gameModalContent") ||
+            document.getElementById("zivoGameFallback");
+
+        if (!container) {
+            openFallbackModal(
+                getGameTitle(gameState.activeGame),
+                `<div id="zivoGameFallback"></div>`
             );
 
-            player.totalAnswers += 1;
+            setTimeout(
+                renderCurrentQuestion,
+                0
+            );
 
-            const feedback =
-                document.getElementById(
-                    "zivo-game-feedback"
+            return;
+        }
+
+        container.innerHTML = "";
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "zivo-game-engine";
+
+        const progress = document.createElement("div");
+        progress.className = "zivo-game-progress";
+        progress.textContent =
+            `${gameState.currentIndex + 1} / ${gameState.questions.length}`;
+
+        const title = document.createElement("h2");
+        title.textContent =
+            getGameTitle(gameState.activeGame);
+
+        const questionElement =
+            document.createElement("h3");
+
+        questionElement.textContent =
+            questionText;
+
+        const optionsContainer =
+            document.createElement("div");
+
+        optionsContainer.className =
+            "zivo-game-options";
+
+        options.forEach((option, index) => {
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.className = "zivo-answer-button";
+            button.dataset.answerIndex = String(index);
+
+            button.textContent = option;
+
+            button.addEventListener(
+                "click",
+                () => {
+                    answerQuestion(index);
+                },
+                { once: true }
+            );
+
+            optionsContainer.appendChild(button);
+        });
+
+        const score = document.createElement("p");
+        score.id = "zivoGameScore";
+        score.textContent =
+            `${getText("score")}: ${gameState.score}`;
+
+        wrapper.appendChild(progress);
+        wrapper.appendChild(title);
+        wrapper.appendChild(questionElement);
+        wrapper.appendChild(optionsContainer);
+        wrapper.appendChild(score);
+
+        container.appendChild(wrapper);
+    }
+
+    function answerQuestion(selectedIndex) {
+        if (gameState.answered) {
+            return;
+        }
+
+        gameState.answered = true;
+
+        const question =
+            gameState.questions[
+                gameState.currentIndex
+            ];
+
+        if (!question) {
+            return;
+        }
+
+        const isCorrect =
+            selectedIndex === question.answer;
+
+        player.questionsAnswered += 1;
+
+        const buttons = document.querySelectorAll(
+            ".zivo-answer-button"
+        );
+
+        buttons.forEach(button => {
+            button.disabled = true;
+
+            const index = Number(
+                button.dataset.answerIndex
+            );
+
+            if (index === question.answer) {
+                button.classList.add(
+                    "correct"
                 );
+            }
 
             if (
-                currentGame !== "horror" &&
-                selectedIndex === question.answer
+                index === selectedIndex &&
+                !isCorrect
             ) {
-                gameScore += 1;
-
-                player.correctAnswers += 1;
-
-                addXP(15);
-
-                addCoins(
-                    CONFIG.coinRewards.correct
+                button.classList.add(
+                    "wrong"
                 );
-
-                if (feedback) {
-                    feedback.textContent =
-                        `✅ ${getTranslation(
-                            "correct"
-                        )} +15 XP`;
-                }
-            } else if (
-                currentGame === "horror"
-            ) {
-                gameScore += 1;
-
-                addXP(10);
-
-                addCoins(1);
-
-                if (feedback) {
-                    feedback.textContent =
-                        `👻 اختيارك غيّر القصة`;
-                }
-            } else {
-                if (feedback) {
-                    feedback.textContent =
-                        `❌ ${getTranslation(
-                            "wrong"
-                        )}`;
-                }
             }
+        });
 
-            savePlayer();
+        if (isCorrect) {
+            player.correctAnswers += 1;
+            gameState.score += 1;
 
-            setTimeout(() => {
-                currentQuestionIndex += 1;
-
-                renderGameQuestion();
-            }, 1000);
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Answer Error:",
-                error
-            );
+            addXP(REWARDS.correctAnswerXP);
+            addCoins(REWARDS.correctAnswerCoins);
 
             showToast(
-                "حدث خطأ أثناء معالجة الإجابة."
+                `✅ ${getText("correct")} +${REWARDS.correctAnswerXP} XP`,
+                "success"
             );
+        } else {
+            showToast(
+                `❌ ${getText("wrong")}`,
+                "error"
+            );
+        }
+
+        saveState();
+
+        setTimeout(() => {
+            gameState.currentIndex += 1;
+
+            if (
+                gameState.currentIndex >=
+                gameState.questions.length
+            ) {
+                finishGame();
+            } else {
+                renderCurrentQuestion();
+            }
+        }, 850);
+    }
+
+    function nextQuestion() {
+        if (!gameState.questions.length) {
+            return;
+        }
+
+        if (
+            gameState.currentIndex <
+            gameState.questions.length - 1
+        ) {
+            gameState.currentIndex += 1;
+            renderCurrentQuestion();
+        } else {
+            finishGame();
         }
     }
 
     function finishGame() {
-        try {
-            const bonusXP =
-                currentGame === "horror"
-                    ? 20
-                    : 25;
-
-            const bonusCoins =
-                CONFIG.coinRewards.gameComplete;
-
-            addXP(bonusXP);
-
-            addCoins(bonusCoins);
-
-            player.gamesPlayed += 1;
-
-            if (player.gamesPlayed >= 1) {
-                addAchievement(
-                    "first_game"
-                );
-            }
-
-            if (player.gamesPlayed >= 5) {
-                addAchievement(
-                    "five_games"
-                );
-            }
-
-            if (
-                player.correctAnswers >= 10
-            ) {
-                addAchievement(
-                    "ten_correct"
-                );
-            }
-
-            savePlayer();
-
-            openModal(`
-                <div
-                    dir="rtl"
-                    style="text-align:center;"
-                >
-
-                    <div style="font-size:60px;">
-                        🏆
-                    </div>
-
-                    <h2>
-                        ${getTranslation(
-                            "gameCompleted"
-                        )}
-                    </h2>
-
-                    <p>
-                        النتيجة:
-                        <strong>
-                            ${gameScore}
-                        </strong>
-                    </p>
-
-                    <p>
-                        +${bonusXP} XP
-                    </p>
-
-                    <p>
-                        +${bonusCoins} Z-Coin
-                    </p>
-
-                    <button
-                        id="zivo-finish-close"
-                        type="button"
-                        style="
-                            padding:12px 25px;
-                            border:0;
-                            border-radius:12px;
-                            cursor:pointer;
-                        "
-                    >
-                        ${getTranslation(
-                            "close"
-                        )}
-                    </button>
-
-                </div>
-            `);
-
-            document
-                .getElementById(
-                    "zivo-finish-close"
-                )
-                ?.addEventListener(
-                    "click",
-                    closeModal
-                );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Finish Game Error:",
-                error
-            );
+        if (!gameState.activeGame) {
+            return;
         }
+
+        player.gamesPlayed += 1;
+
+        addXP(REWARDS.gameCompletionXP);
+        addCoins(REWARDS.gameCompletionCoins);
+
+        updateStreak();
+
+        if (player.gamesPlayed === 1) {
+            unlockAchievement("first_game");
+        }
+
+        if (player.correctAnswers >= 10) {
+            unlockAchievement("ten_correct");
+        }
+
+        const total =
+            gameState.questions.length;
+
+        const score =
+            gameState.score;
+
+        const percentage =
+            total > 0
+                ? Math.round(
+                    (score / total) * 100
+                )
+                : 0;
+
+        const resultHTML = buildResultHTML(
+            score,
+            total,
+            percentage
+        );
+
+        const container =
+            document.getElementById("gameContent") ||
+            document.getElementById("gameModalContent") ||
+            document.getElementById("zivoGameFallback");
+
+        if (container) {
+            container.innerHTML = resultHTML;
+        }
+
+        saveState();
+        updateAllUI();
+
+        gameState.activeGame = null;
+        gameState.questions = [];
+        gameState.currentIndex = 0;
+        gameState.score = 0;
+        gameState.answered = false;
     }
 
-    /* ============================================================
-       19. DAILY CHALLENGE
-    ============================================================ */
+    function buildResultHTML(
+        score,
+        total,
+        percentage
+    ) {
+        const wrapper =
+            document.createElement("div");
+
+        wrapper.className =
+            "zivo-result";
+
+        const title =
+            document.createElement("h2");
+
+        title.textContent =
+            getText("completed");
+
+        const result =
+            document.createElement("p");
+
+        result.textContent =
+            `${getText("score")}: ${score}/${total} (${percentage}%)`;
+
+        const reward =
+            document.createElement("p");
+
+        reward.textContent =
+            `+${REWARDS.gameCompletionXP} XP  •  +${REWARDS.gameCompletionCoins} ZIVO`;
+
+        wrapper.appendChild(title);
+        wrapper.appendChild(result);
+        wrapper.appendChild(reward);
+
+        return wrapper.outerHTML;
+    }
+
+    /* =========================================================
+       DAILY CHALLENGE
+    ========================================================= */
 
     function startDailyChallenge() {
-        try {
-            if (!player.profileCompleted) {
-                showToast(
-                    getTranslation("noProfile")
-                );
-
-                openProfile();
-
-                return;
-            }
-
-            const today =
-                getTodayKey();
-
-            if (
-                player.dailyCompleted === today
-            ) {
-                openModal(`
-                    <div
-                        dir="rtl"
-                        style="text-align:center;"
-                    >
-                        <div style="font-size:60px;">
-                            🔥
-                        </div>
-
-                        <h2>
-                            ${getTranslation(
-                                "dailyTitle"
-                            )}
-                        </h2>
-
-                        <p>
-                            ${getTranslation(
-                                "dailyDone"
-                            )}
-                        </p>
-                    </div>
-                `);
-
-                return;
-            }
-
-            const dailyQuestions =
-                getDailyQuestions();
-
-            currentGame =
-                "daily";
-
-            currentQuestionIndex = 0;
-
-            currentGameQuestions =
-                dailyQuestions;
-
-            gameScore = 0;
-
-            renderDailyQuestion();
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Daily Error:",
-                error
-            );
+        if (!ensurePlayer()) {
+            return;
         }
-    }
 
-    function getDailyQuestions() {
-        try {
-            const all = [
-                ...QUESTION_BANK.intelligence,
-                ...QUESTION_BANK.science
+        const today =
+            getDateKey();
+
+        const dailyData =
+            getDailyData();
+
+        if (
+            dailyData &&
+            dailyData.date === today &&
+            dailyData.completed
+        ) {
+            showToast(
+                getText("dailyDone"),
+                "info"
+            );
+            return;
+        }
+
+        const allGames =
+            Object.keys(QUESTION_BANK);
+
+        const selectedGame =
+            allGames[
+                Math.floor(
+                    Math.random() *
+                    allGames.length
+                )
             ];
 
-            const seed =
-                getDateSeed();
+        const questions =
+            getQuestionsForPlayer(
+                selectedGame
+            );
 
-            const shuffled =
-                deterministicShuffle(
-                    all,
-                    seed
-                );
+        if (!questions.length) {
+            showToast(
+                "لا يوجد تحدي يومي متاح حاليًا.",
+                "error"
+            );
+            return;
+        }
 
-            return shuffled.slice(0, 3);
+        gameState.activeGame =
+            "daily";
+
+        gameState.questions =
+            shuffle(questions).slice(0, 3);
+
+        gameState.currentIndex = 0;
+        gameState.score = 0;
+        gameState.answered = false;
+        gameState.startedAt = Date.now();
+
+        openGameModal();
+        renderCurrentQuestion();
+
+        const originalFinish =
+            finishGame;
+    }
+
+    function completeDailyChallenge() {
+        const today = getDateKey();
+
+        try {
+            localStorage.setItem(
+                APP.dailyKey,
+                JSON.stringify({
+                    date: today,
+                    completed: true
+                })
+            );
         } catch (error) {
             console.error(
-                "ZIVOZONE Daily Question Error:",
+                "Daily challenge storage error:",
+                error
+            );
+        }
+
+        addXP(REWARDS.dailyXP);
+        addCoins(REWARDS.dailyCoins);
+
+        unlockAchievement("daily_first");
+    }
+
+    function getDailyData() {
+        try {
+            const raw =
+                localStorage.getItem(
+                    APP.dailyKey
+                );
+
+            if (!raw) {
+                return null;
+            }
+
+            return JSON.parse(raw);
+        } catch (error) {
+            console.error(
+                "Invalid daily challenge data:",
                 error
             );
 
-            return [];
+            return null;
         }
     }
 
-    function renderDailyQuestion() {
-        try {
-            const question =
-                currentGameQuestions[
-                    currentQuestionIndex
-                ];
+    /* =========================================================
+       PERSONALITY / WHO AM I
+    ========================================================= */
 
-            if (!question) {
-                finishDailyChallenge();
+    function startPersonalityTest() {
+        if (!ensurePlayer()) {
+            return;
+        }
 
-                return;
-            }
+        gameState.personalityAnswers = [];
+        gameState.personalityIndex = 0;
 
-            const optionsHTML =
-                question.options
-                    .map(
-                        (option, index) => `
-                            <button
-                                class="zivo-daily-option"
-                                data-option-index="${index}"
-                                type="button"
-                                style="
-                                    display:block;
-                                    width:100%;
-                                    margin:10px 0;
-                                    padding:14px;
-                                    border-radius:14px;
-                                    cursor:pointer;
-                                    background:#111827;
-                                    color:white;
-                                    border:1px solid rgba(255,255,255,.12);
-                                "
-                            >
-                                ${escapeHTML(option)}
-                            </button>
-                        `
-                    )
-                    .join("");
+        const modal =
+            document.getElementById("gameModal");
 
-            openModal(`
-                <div dir="rtl">
+        if (modal) {
+            showModalElement(modal);
+        } else {
+            openFallbackModal(
+                getText("personality"),
+                `<div id="personalityContent"></div>`
+            );
+        }
 
-                    <h2>
-                        🔥
-                        ${getTranslation(
-                            "dailyTitle"
-                        )}
-                    </h2>
+        renderPersonalityQuestion();
+    }
 
-                    <p>
-                        السؤال
-                        ${currentQuestionIndex + 1}
-                        /
-                        ${currentGameQuestions.length}
-                    </p>
+    function renderPersonalityQuestion() {
+        const question =
+            PERSONALITY_QUESTIONS[
+                gameState.personalityIndex
+            ];
 
-                    <h3>
-                        ${escapeHTML(
-                            question.question
-                        )}
-                    </h3>
+        if (!question) {
+            finishPersonalityTest();
+            return;
+        }
 
-                    <div>
-                        ${optionsHTML}
-                    </div>
+        const container =
+            document.getElementById("gameContent") ||
+            document.getElementById("gameModalContent") ||
+            document.getElementById("personalityContent") ||
+            document.getElementById("zivoGameFallback");
 
-                    <div
-                        id="zivo-daily-feedback"
-                        style="min-height:30px;"
-                    ></div>
+        if (!container) {
+            return;
+        }
 
-                </div>
-            `);
+        container.innerHTML = "";
 
-            $$(".zivo-daily-option").forEach(
-                (button) => {
-                    button.addEventListener(
-                        "click",
-                        () =>
-                            handleDailyAnswer(
-                                Number(
-                                    button.dataset
-                                        .optionIndex
-                                )
-                            )
+        const title =
+            document.createElement("h2");
+
+        title.textContent =
+            getText("personality");
+
+        const text =
+            document.createElement("h3");
+
+        text.textContent =
+            getLocalized(
+                question.text,
+                player.language
+            );
+
+        const optionsContainer =
+            document.createElement("div");
+
+        optionsContainer.className =
+            "zivo-game-options";
+
+        const options =
+            question.options[player.language] ||
+            question.options.en;
+
+        options.forEach((option, index) => {
+            const button =
+                document.createElement("button");
+
+            button.type = "button";
+            button.className =
+                "zivo-answer-button";
+
+            button.textContent = option;
+
+            button.addEventListener(
+                "click",
+                () => {
+                    gameState.personalityAnswers.push(
+                        question.answers[index].type
                     );
-                }
+
+                    gameState.personalityIndex += 1;
+
+                    renderPersonalityQuestion();
+                },
+                { once: true }
             );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Daily Render Error:",
-                error
-            );
-        }
+
+            optionsContainer.appendChild(button);
+        });
+
+        container.appendChild(title);
+        container.appendChild(text);
+        container.appendChild(optionsContainer);
     }
 
-    function handleDailyAnswer(selectedIndex) {
-        try {
-            const question =
-                currentGameQuestions[
-                    currentQuestionIndex
-                ];
+    function finishPersonalityTest() {
+        const counts = {
+            analyst: 0,
+            leader: 0,
+            creative: 0,
+            calm: 0
+        };
 
-            const buttons =
-                $$(".zivo-daily-option");
-
-            buttons.forEach(
-                (button) => {
-                    button.disabled = true;
-                }
-            );
-
-            player.totalAnswers += 1;
-
-            const feedback =
-                document.getElementById(
-                    "zivo-daily-feedback"
-                );
-
-            if (
-                selectedIndex ===
-                question.answer
-            ) {
-                gameScore += 1;
-
-                player.correctAnswers += 1;
-
-                addXP(20);
-
-                addCoins(3);
-
-                if (feedback) {
-                    feedback.textContent =
-                        `✅ ${getTranslation(
-                            "correct"
-                        )} +20 XP`;
-                }
-            } else {
-                if (feedback) {
-                    feedback.textContent =
-                        `❌ ${getTranslation(
-                            "wrong"
-                        )}`;
-                }
-            }
-
-            savePlayer();
-
-            setTimeout(() => {
-                currentQuestionIndex += 1;
-
-                renderDailyQuestion();
-            }, 900);
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Daily Answer Error:",
-                error
-            );
-        }
-    }
-
-    function finishDailyChallenge() {
-        try {
-            const today =
-                getTodayKey();
-
-            player.dailyCompleted =
-                today;
-
-            addXP(
-                CONFIG.coinRewards.daily
-            );
-
-            addCoins(
-                CONFIG.coinRewards.daily
-            );
-
-            addAchievement(
-                "daily_challenge"
-            );
-
-            savePlayer();
-
-            openModal(`
-                <div
-                    dir="rtl"
-                    style="text-align:center;"
-                >
-
-                    <div style="font-size:60px;">
-                        🔥
-                    </div>
-
-                    <h2>
-                        ${getTranslation(
-                            "dailyCompleted"
-                        )}
-                    </h2>
-
-                    <p>
-                        نتيجتك:
-                        <strong>
-                            ${gameScore}
-                        </strong>
-                    </p>
-
-                    <p>
-                        +10 XP
-                    </p>
-
-                    <p>
-                        +10 Z-Coin
-                    </p>
-
-                </div>
-            `);
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Daily Finish Error:",
-                error
-            );
-        }
-    }
-
-    /* ============================================================
-       20. WHO AM I SYSTEM
-    ============================================================ */
-
-    function startWhoAmI() {
-        try {
-            if (!player.profileCompleted) {
-                showToast(
-                    getTranslation("noProfile")
-                );
-
-                openProfile();
-
-                return;
-            }
-
-            currentWhoQuestion = 0;
-
-            whoAmIAnswers = [];
-
-            renderWhoQuestion();
-        } catch (error) {
-            console.error(
-                "ZIVOZONE WhoAmI Error:",
-                error
-            );
-        }
-    }
-
-    function renderWhoQuestion() {
-        try {
-            const question =
-                WHO_AM_I_QUESTIONS[
-                    currentWhoQuestion
-                ];
-
-            if (!question) {
-                finishWhoAmI();
-
-                return;
-            }
-
-            const options =
-                question.options
-                    .map(
-                        (option, index) => `
-                            <button
-                                class="zivo-who-option"
-                                data-option-index="${index}"
-                                type="button"
-                                style="
-                                    display:block;
-                                    width:100%;
-                                    padding:14px;
-                                    margin:10px 0;
-                                    border-radius:14px;
-                                    border:1px solid rgba(255,255,255,.12);
-                                    background:#111827;
-                                    color:white;
-                                    cursor:pointer;
-                                "
-                            >
-                                ${escapeHTML(
-                                    option.text
-                                )}
-                            </button>
-                        `
+        gameState.personalityAnswers.forEach(
+            type => {
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        counts,
+                        type
                     )
-                    .join("");
-
-            openModal(`
-                <div dir="rtl">
-
-                    <h2>
-                        🧠
-                        ${getTranslation(
-                            "whoTitle"
-                        )}
-                    </h2>
-
-                    <p>
-                        ${currentWhoQuestion + 1}
-                        /
-                        ${WHO_AM_I_QUESTIONS.length}
-                    </p>
-
-                    <h3>
-                        ${escapeHTML(
-                            question.question
-                        )}
-                    </h3>
-
-                    ${options}
-
-                </div>
-            `);
-
-            $$(".zivo-who-option").forEach(
-                (button) => {
-                    button.addEventListener(
-                        "click",
-                        () =>
-                            handleWhoAnswer(
-                                Number(
-                                    button.dataset
-                                        .optionIndex
-                                )
-                            )
-                    );
+                ) {
+                    counts[type] += 1;
                 }
-            );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Who Render Error:",
-                error
-            );
-        }
-    }
-
-    function handleWhoAnswer(index) {
-        try {
-            const question =
-                WHO_AM_I_QUESTIONS[
-                    currentWhoQuestion
-                ];
-
-            const answer =
-                question.options[index];
-
-            if (!answer) {
-                return;
             }
+        );
 
-            whoAmIAnswers.push(
-                answer.type
-            );
+        const personality =
+            Object.entries(counts)
+                .sort(
+                    (a, b) =>
+                        b[1] - a[1]
+                )[0]?.[0] ||
+            "balanced";
 
-            currentWhoQuestion += 1;
-
-            renderWhoQuestion();
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Who Answer Error:",
-                error
-            );
-        }
-    }
-
-    function finishWhoAmI() {
-        try {
-            const counts = {};
-
-            whoAmIAnswers.forEach(
-                (type) => {
-                    counts[type] =
-                        (counts[type] || 0) + 1;
-                }
-            );
-
-            let personality =
-                "explorer";
-
-            let highest = 0;
-
-            Object.entries(counts).forEach(
-                ([type, count]) => {
-                    if (count > highest) {
-                        highest = count;
-                        personality = type;
-                    }
-                }
-            );
-
-            player.personality =
-                personality;
-
-            player.stats.psychology += 1;
-
-            addXP(50);
-
-            addCoins(8);
-
-            addAchievement(
-                "who_am_i"
-            );
-
-            savePlayer();
-
-            const result =
-                getPersonalityResult(
-                    personality
-                );
-
-            openModal(`
-                <div
-                    dir="rtl"
-                    style="text-align:center;"
-                >
-
-                    <div style="font-size:65px;">
-                        🧠
-                    </div>
-
-                    <h2>
-                        ${escapeHTML(
-                            result.title
-                        )}
-                    </h2>
-
-                    <p>
-                        ${escapeHTML(
-                            result.description
-                        )}
-                    </p>
-
-                    <hr>
-
-                    <p>
-                        نقاطك:
-                        ${escapeHTML(
-                            result.traits
-                        )}
-                    </p>
-
-                    <small>
-                        ${getTranslation(
-                            "whoDescription"
-                        )}
-                    </small>
-
-                </div>
-            `);
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Personality Error:",
-                error
-            );
-        }
-    }
-
-    function getPersonalityResult(type) {
-        const results = {
+        const descriptions = {
             analyst: {
-                title: "أنت المحلل 🔍",
-                description:
-                    "تميل إلى التفكير العميق وتحليل التفاصيل قبل اتخاذ القرارات.",
-                traits:
-                    "تحليل • ملاحظة • منطق"
+                ar: "أنت تميل إلى التحليل والمنطق ودراسة التفاصيل قبل اتخاذ القرار.",
+                en: "You tend to analyze details and rely on logic before making decisions.",
+                fr: "Vous aimez analyser les détails et vous appuyer sur la logique.",
+                es: "Tiendes a analizar los detalles y usar la lógica antes de decidir.",
+                tr: "Karar vermeden önce detayları analiz etmeye ve mantığa güvenmeye eğilimlisin.",
+                de: "Du analysierst gerne Details und verlässt dich vor Entscheidungen auf Logik."
             },
 
-            thinker: {
-                title: "أنت المفكر 🧠",
-                description:
-                    "تحب التعلم وفهم الأشياء من جذورها ولا تتسرع في الحكم.",
-                traits:
-                    "تعلم • تفكير • معرفة"
+            leader: {
+                ar: "لديك ميول قيادية وتحب المبادرة وتحمل المسؤولية.",
+                en: "You have leadership tendencies and like taking initiative.",
+                fr: "Vous avez des tendances de leader et aimez prendre des initiatives.",
+                es: "Tienes tendencias de liderazgo y te gusta tomar la iniciativa.",
+                tr: "Liderlik eğilimin var ve sorumluluk almayı seviyorsun.",
+                de: "Du hast Führungsqualitäten und übernimmst gerne Verantwortung."
             },
 
-            challenger: {
-                title: "أنت المتحدي ⚔️",
-                description:
-                    "تحب المنافسة والإنجاز واختبار قدراتك باستمرار.",
-                traits:
-                    "منافسة • سرعة • جرأة"
+            creative: {
+                ar: "أنت شخص مبدع وتميل إلى الحلول الجديدة وغير التقليدية.",
+                en: "You are creative and prefer new, unconventional solutions.",
+                fr: "Vous êtes créatif et aimez les solutions originales.",
+                es: "Eres creativo y prefieres soluciones nuevas y poco convencionales.",
+                tr: "Yaratıcısın ve yeni, alışılmadık çözümleri tercih ediyorsun.",
+                de: "Du bist kreativ und bevorzugst neue, ungewöhnliche Lösungen."
             },
 
-            explorer: {
-                title: "أنت المستكشف 🌍",
-                description:
-                    "فضولي وتحب اكتشاف التجارب والاحتمالات الجديدة.",
-                traits:
-                    "فضول • تجربة • اكتشاف"
-            },
-
-            strategist: {
-                title: "أنت الاستراتيجي ♟️",
-                description:
-                    "تميل إلى التخطيط والتفكير في الخطوة القادمة قبل التحرك.",
-                traits:
-                    "تخطيط • رؤية • قرار"
+            calm: {
+                ar: "تميل إلى الهدوء والتوازن وعدم التسرع في المواقف.",
+                en: "You tend to stay calm, balanced and avoid rushing decisions.",
+                fr: "Vous avez tendance à rester calme et équilibré.",
+                es: "Tiendes a mantener la calma y evitar decisiones apresuradas.",
+                tr: "Sakin ve dengeli kalmaya, acele karar vermemeye eğilimlisin.",
+                de: "Du bleibst meist ruhig und triffst ausgewogene Entscheidungen."
             }
         };
 
-        return (
-            results[type] ||
-            results.explorer
+        const result =
+            descriptions[personality] ||
+            descriptions.calm;
+
+        const container =
+            document.getElementById("gameContent") ||
+            document.getElementById("gameModalContent") ||
+            document.getElementById("personalityContent") ||
+            document.getElementById("zivoGameFallback");
+
+        if (!container) {
+            return;
+        }
+
+        const heading =
+            document.createElement("h2");
+
+        heading.textContent =
+            getText("result");
+
+        const text =
+            document.createElement("p");
+
+        text.textContent =
+            getLocalized(
+                result,
+                player.language
+            );
+
+        const note =
+            document.createElement("small");
+
+        note.textContent =
+            player.language === "ar"
+                ? "هذا تحليل ترفيهي مبني على إجاباتك وليس تشخيصًا نفسيًا."
+                : "This is an entertainment profile based on your answers, not a psychological diagnosis.";
+
+        container.innerHTML = "";
+
+        container.appendChild(heading);
+        container.appendChild(text);
+        container.appendChild(note);
+
+        addXP(50);
+        addCoins(5);
+        unlockAchievement("personality_test");
+
+        saveState();
+        updateAllUI();
+    }
+
+    /* =========================================================
+       ACHIEVEMENTS
+    ========================================================= */
+
+    const ACHIEVEMENT_NAMES = {
+        first_profile: "First Profile",
+        first_game: "First Game",
+        ten_correct: "10 Correct Answers",
+        personality_test: "Personality Explorer",
+        daily_first: "Daily Challenger",
+        level_2: "Explorer",
+        level_3: "Challenger",
+        level_4: "Master",
+        level_5: "Legend",
+        level_6: "ZIVO Elite",
+        level_7: "ZIVO Legend"
+    };
+
+    function unlockAchievement(id) {
+        if (!id) {
+            return;
+        }
+
+        if (
+            player.achievements.includes(id)
+        ) {
+            return;
+        }
+
+        player.achievements.push(id);
+
+        saveState();
+
+        const name =
+            ACHIEVEMENT_NAMES[id] ||
+            id;
+
+        showToast(
+            `🏆 إنجاز جديد: ${name}`,
+            "success"
         );
     }
 
-    /* ============================================================
-       21. ZIVO AI - LOCAL DEMO
-    ============================================================ */
+    /* =========================================================
+       STREAK
+    ========================================================= */
 
-    function openAI() {
-        try {
-            openModal(`
-                <div dir="rtl">
+    function updateStreak() {
+        const today = getDateKey();
 
-                    <div
-                        style="
-                            display:flex;
-                            align-items:center;
-                            gap:12px;
-                        "
-                    >
-                        <div
-                            style="
-                                width:50px;
-                                height:50px;
-                                border-radius:50%;
-                                display:flex;
-                                align-items:center;
-                                justify-content:center;
-                                background:#111827;
-                                font-size:25px;
-                            "
-                        >
-                            🤖
-                        </div>
+        if (
+            player.lastPlayedDate === today
+        ) {
+            return;
+        }
 
-                        <div>
-                            <h2>
-                                ZIVO AI
-                            </h2>
-
-                            <small>
-                                Online • Demo
-                            </small>
-                        </div>
-                    </div>
-
-                    <div
-                        id="zivo-ai-messages"
-                        style="
-                            margin-top:20px;
-                            min-height:220px;
-                            max-height:350px;
-                            overflow:auto;
-                            padding:15px;
-                            background:#050914;
-                            border-radius:18px;
-                        "
-                    >
-                        <div
-                            style="
-                                padding:12px;
-                                background:#111827;
-                                border-radius:12px;
-                                margin-bottom:10px;
-                            "
-                        >
-                            ${getTranslation(
-                                "demoAI"
-                            )}
-                        </div>
-                    </div>
-
-                    <form
-                        id="zivo-ai-form"
-                        style="
-                            display:flex;
-                            gap:8px;
-                            margin-top:15px;
-                        "
-                    >
-
-                        <input
-                            id="zivo-ai-input"
-                            type="text"
-                            maxlength="500"
-                            placeholder="${getTranslation(
-                                "writeQuestion"
-                            )}"
-                            autocomplete="off"
-                            style="
-                                flex:1;
-                                padding:13px;
-                                border-radius:12px;
-                                border:1px solid #334155;
-                            "
-                        >
-
-                        <button
-                            type="submit"
-                            style="
-                                padding:12px 18px;
-                                border:0;
-                                border-radius:12px;
-                                cursor:pointer;
-                            "
-                        >
-                            إرسال
-                        </button>
-
-                    </form>
-
-                </div>
-            `);
-
-            document
-                .getElementById(
-                    "zivo-ai-form"
+        const yesterday =
+            getDateKey(
+                new Date(
+                    Date.now() -
+                    86400000
                 )
-                ?.addEventListener(
-                    "submit",
-                    handleAIMessage
-                );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE AI Error:",
-                error
             );
+
+        if (
+            player.lastPlayedDate === yesterday
+        ) {
+            player.streak += 1;
+        } else {
+            player.streak = 1;
         }
+
+        player.lastPlayedDate = today;
+
+        if (player.streak >= 3) {
+            unlockAchievement("three_day_streak");
+        }
+
+        saveState();
     }
 
-    function handleAIMessage(event) {
-        event.preventDefault();
+    /* =========================================================
+       LANGUAGE
+    ========================================================= */
 
-        try {
-            const input =
-                document.getElementById(
-                    "zivo-ai-input"
-                );
-
-            const messages =
-                document.getElementById(
-                    "zivo-ai-messages"
-                );
-
-            if (!input || !messages) {
-                return;
-            }
-
-            const question =
-                safeText(input.value);
-
-            if (!question) {
-                return;
-            }
-
-            const userMessage =
-                document.createElement("div");
-
-            userMessage.style.cssText = `
-                padding:12px;
-                background:#172554;
-                border-radius:12px;
-                margin-bottom:10px;
-            `;
-
-            userMessage.textContent =
-                question;
-
-            messages.appendChild(
-                userMessage
-            );
-
-            input.value = "";
-
-            const thinking =
-                document.createElement("div");
-
-            thinking.id =
-                "zivo-ai-thinking";
-
-            thinking.style.cssText = `
-                padding:12px;
-                background:#111827;
-                border-radius:12px;
-                margin-bottom:10px;
-            `;
-
-            thinking.textContent =
-                getTranslation(
-                    "aiThinking"
-                );
-
-            messages.appendChild(
-                thinking
-            );
-
-            messages.scrollTop =
-                messages.scrollHeight;
-
-            setTimeout(() => {
-                thinking.remove();
-
-                const response =
-                    generateLocalAIResponse(
-                        question
-                    );
-
-                const aiMessage =
-                    document.createElement(
-                        "div"
-                    );
-
-                aiMessage.style.cssText = `
-                    padding:12px;
-                    background:#111827;
-                    border-radius:12px;
-                    margin-bottom:10px;
-                `;
-
-                aiMessage.textContent =
-                    response;
-
-                messages.appendChild(
-                    aiMessage
-                );
-
-                messages.scrollTop =
-                    messages.scrollHeight;
-            }, 700);
-        } catch (error) {
-            console.error(
-                "ZIVOZONE AI Message Error:",
-                error
-            );
-        }
-    }
-
-    function generateLocalAIResponse(question) {
-        const lower =
-            question.toLowerCase();
-
+    function setLanguage(language) {
         if (
-            lower.includes("لعبة") ||
-            lower.includes("game")
-        ) {
-            return "🎮 أنصحك بتجربة الألعاب والتحديات ورفع XP حتى تفتح مستويات جديدة داخل ZIVOZONE.";
-        }
-
-        if (
-            lower.includes("من أنا") ||
-            lower.includes("personality")
-        ) {
-            return "🧠 يمكنك تشغيل اختبار «من أنا؟» وسأحلل نمط إجاباتك بشكل ترفيهي.";
-        }
-
-        if (
-            lower.includes("xp") ||
-            lower.includes("مستوى")
-        ) {
-            return `⭐ مستواك الحالي هو ${player.level} ولديك ${player.xp} XP.`;
-        }
-
-        if (
-            lower.includes("عملة") ||
-            lower.includes("coin")
-        ) {
-            return `🪙 لديك حاليًا ${player.coins} Z-Coin تجريبية.`;
-        }
-
-        if (
-            lower.includes("رياضة") ||
-            lower.includes("football")
-        ) {
-            return "⚽ قسم الرياضة في ZIVOZONE سيكون مركزًا للأخبار والنتائج والتحليلات الرياضية.";
-        }
-
-        return `🤖 سؤال ممتاز! في النسخة الحالية أستطيع مساعدتك داخل عالم ZIVOZONE. سؤالك كان: "${question}"`;
-    }
-
-    /* ============================================================
-       22. LANGUAGE SYSTEM
-    ============================================================ */
-
-    function changeLanguage(language) {
-        try {
-            if (
-                !CONFIG.supportedLanguages.includes(
-                    language
-                )
-            ) {
-                return;
-            }
-
-            player.language =
-                language;
-
-            localStorage.setItem(
-                CONFIG.languageKey,
+            !APP.supportedLanguages.includes(
                 language
-            );
-
-            savePlayer();
-
-            applyLanguage();
-
-            updatePlayerUI();
-
-            showToast(
-                CONFIG.languages[language]
-            );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Language Error:",
-                error
-            );
+            )
+        ) {
+            return;
         }
+
+        player.language = language;
+        settings.language = language;
+
+        saveState();
+        applyLanguage();
+        updateAllUI();
     }
 
     function applyLanguage() {
-        try {
-            const language =
-                player.language ||
-                CONFIG.defaultLanguage;
+        const lang =
+            APP.supportedLanguages.includes(
+                player.language
+            )
+                ? player.language
+                : APP.defaultLanguage;
 
-            document.documentElement.lang =
-                language;
+        document.documentElement.lang =
+            lang;
 
-            document.documentElement.dir =
-                language === "ar"
-                    ? "rtl"
-                    : "ltr";
+        document.documentElement.dir =
+            lang === "ar"
+                ? "rtl"
+                : "ltr";
 
-            $$("[data-i18n]").forEach(
-                (element) => {
-                    const key =
-                        element.dataset.i18n;
+        document
+            .querySelectorAll(
+                "[data-i18n]"
+            )
+            .forEach(element => {
+                const key =
+                    element.dataset.i18n;
 
+                const value =
+                    getText(key);
+
+                if (value) {
                     element.textContent =
-                        getTranslation(key);
+                        value;
                 }
+            });
+
+        document
+            .querySelectorAll(
+                "[data-i18n-placeholder]"
+            )
+            .forEach(element => {
+                const key =
+                    element.dataset
+                        .i18nPlaceholder;
+
+                const value =
+                    getText(key);
+
+                if (value) {
+                    element.setAttribute(
+                        "placeholder",
+                        value
+                    );
+                }
+            });
+
+        const selector =
+            document.getElementById(
+                "languageSelect"
             );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Apply Language Error:",
-                error
-            );
+
+        if (selector) {
+            selector.value = lang;
         }
     }
 
-    /* ============================================================
-       23. NAVIGATION
-    ============================================================ */
+    function getText(key) {
+        return (
+            I18N[player.language]?.[key] ||
+            I18N.en[key] ||
+            key
+        );
+    }
 
-    function setupNavigation() {
-        try {
-            const links =
-                $$("a[href^='#']");
+    function getLocalized(
+        translations,
+        language
+    ) {
+        if (!translations) {
+            return "";
+        }
 
-            links.forEach(
-                (link) => {
-                    link.addEventListener(
-                        "click",
-                        (event) => {
-                            const href =
-                                link.getAttribute(
-                                    "href"
-                                );
+        return (
+            translations[language] ||
+            translations.en ||
+            translations.ar ||
+            ""
+        );
+    }
 
-                            if (
-                                !href ||
-                                href === "#"
-                            ) {
-                                return;
-                            }
+    /* =========================================================
+       UI
+    ========================================================= */
 
-                            const target =
-                                document.querySelector(
-                                    href
-                                );
+    function updateAllUI() {
+        updatePlayerUI();
+        updateStatsUI();
+        updateProfileUI();
+    }
 
-                            if (target) {
-                                event.preventDefault();
+    function updatePlayerUI() {
+        const level =
+            getPlayerLevel();
 
-                                target.scrollIntoView(
-                                    {
-                                        behavior:
-                                            "smooth",
-                                        block:
-                                            "start"
-                                    }
-                                );
-                            }
+        const next =
+            getNextLevel();
+
+        const xpElements =
+            document.querySelectorAll(
+                "[data-player-xp], #playerXP"
+            );
+
+        xpElements.forEach(
+            element => {
+                element.textContent =
+                    String(player.xp);
+            }
+        );
+
+        const coinElements =
+            document.querySelectorAll(
+                "[data-player-coins], #playerCoins"
+            );
+
+        coinElements.forEach(
+            element => {
+                element.textContent =
+                    String(player.coins);
+            }
+        );
+
+        const levelElements =
+            document.querySelectorAll(
+                "[data-player-level], #playerLevel"
+            );
+
+        levelElements.forEach(
+            element => {
+                element.textContent =
+                    String(level.level);
+            }
+        );
+
+        const nameElements =
+            document.querySelectorAll(
+                "[data-player-name], #playerDisplayName"
+            );
+
+        nameElements.forEach(
+            element => {
+                element.textContent =
+                    player.name ||
+                    getText("profile");
+            }
+        );
+
+        const progressElements =
+            document.querySelectorAll(
+                "[data-xp-progress]"
+            );
+
+        progressElements.forEach(
+            element => {
+                const progress =
+                    calculateXPProgress(
+                        next
+                    );
+
+                element.style.width =
+                    `${progress}%`;
+
+                element.setAttribute(
+                    "aria-valuenow",
+                    String(progress)
+                );
+            }
+        );
+    }
+
+    function updateStatsUI() {
+        const stats = {
+            xp: player.xp,
+            coins: player.coins,
+            games: player.gamesPlayed,
+            questions:
+                player.questionsAnswered,
+            correct:
+                player.correctAnswers,
+            streak: player.streak,
+            achievements:
+                player.achievements.length
+        };
+
+        Object.entries(stats).forEach(
+            ([key, value]) => {
+                document
+                    .querySelectorAll(
+                        `[data-stat="${key}"]`
+                    )
+                    .forEach(
+                        element => {
+                            element.textContent =
+                                String(value);
                         }
                     );
-                }
+            }
+        );
+    }
+
+    function updateProfileUI() {
+        const profileName =
+            document.getElementById(
+                "profileName"
             );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Navigation Error:",
-                error
+
+        if (profileName) {
+            profileName.textContent =
+                player.name ||
+                getText("profile");
+        }
+
+        const profileEmail =
+            document.getElementById(
+                "profileEmail"
             );
+
+        if (profileEmail) {
+            profileEmail.textContent =
+                player.email ||
+                "";
         }
     }
 
-    /* ============================================================
-       24. AUTO BUTTON DETECTION
-    ============================================================ */
-
-    function setupButtons() {
-        try {
-            $$("button").forEach(
-                (button) => {
-                    if (
-                        button.dataset
-                            .zivoBound ===
-                        "true"
-                    ) {
-                        return;
-                    }
-
-                    const text =
-                        safeText(
-                            button.textContent
-                        ).toLowerCase();
-
-                    if (
-                        text.includes("اختبر عقلك") ||
-                        text === "العب الآن" ||
-                        text.includes("ذكاء")
-                    ) {
-                        button.addEventListener(
-                            "click",
-                            () =>
-                                startGame(
-                                    "intelligence"
-                                )
-                        );
-                    }
-
-                    if (
-                        text.includes("الغرفة") ||
-                        text.includes("رعب") ||
-                        text.includes("هل تجرؤ")
-                    ) {
-                        button.addEventListener(
-                            "click",
-                            () =>
-                                startGame(
-                                    "horror"
-                                )
-                        );
-                    }
-
-                    if (
-                        text.includes("العلوم") ||
-                        text.includes("علم")
-                    ) {
-                        button.addEventListener(
-                            "click",
-                            () =>
-                                startGame(
-                                    "science"
-                                )
-                        );
-                    }
-
-                    if (
-                        text.includes("تحدي اليوم") ||
-                        text.includes("اليوم") ||
-                        text.includes("daily")
-                    ) {
-                        button.addEventListener(
-                            "click",
-                            startDailyChallenge
-                        );
-                    }
-
-                    if (
-                        text.includes("من أنا") ||
-                        text.includes("اكتشف")
-                    ) {
-                        button.addEventListener(
-                            "click",
-                            startWhoAmI
-                        );
-                    }
-
-                    if (
-                        text.includes("ai") ||
-                        text.includes(
-                            "الذكاء الاصطناعي"
-                        )
-                    ) {
-                        button.addEventListener(
-                            "click",
-                            openAI
-                        );
-                    }
-
-                    if (
-                        text.includes("ملفي") ||
-                        text.includes("profile")
-                    ) {
-                        button.addEventListener(
-                            "click",
-                            openProfile
-                        );
-                    }
-
-                    button.dataset.zivoBound =
-                        "true";
-                }
-            );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Button Error:",
-                error
-            );
+    function calculateXPProgress(nextLevel) {
+        if (!nextLevel) {
+            return 100;
         }
+
+        const current =
+            getPlayerLevel();
+
+        const range =
+            nextLevel.minXP -
+            current.minXP;
+
+        if (range <= 0) {
+            return 100;
+        }
+
+        const progress =
+            player.xp -
+            current.minXP;
+
+        return Math.max(
+            0,
+            Math.min(
+                100,
+                Math.round(
+                    (progress / range) *
+                    100
+                )
+            )
+        );
     }
 
-    /* ============================================================
-       25. LANGUAGE SELECTOR
-    ============================================================ */
+    /* =========================================================
+       MODAL SYSTEM
+    ========================================================= */
 
-    function setupLanguageSelector() {
-        try {
-            const selectors =
-                $$(
-                    "#languageSelector, [data-language-selector]"
-                );
-
-            selectors.forEach(
-                (selector) => {
-                    selector.value =
-                        player.language;
-
-                    selector.addEventListener(
-                        "change",
-                        (event) => {
-                            changeLanguage(
-                                event.target.value
-                            );
-                        }
-                    );
-                }
-            );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Language Selector Error:",
-                error
-            );
+    function showModalElement(modal) {
+        if (!modal) {
+            return;
         }
-    }
 
-    /* ============================================================
-       26. LOGIN BUTTON
-    ============================================================ */
+        modal.classList.add("active");
+        modal.classList.add("show");
 
-    function setupLogin() {
-        try {
-            const loginButtons =
-                $$(
-                    "#loginButton, [data-login]"
-                );
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
 
-            loginButtons.forEach(
-                (button) => {
-                    button.addEventListener(
-                        "click",
-                        openProfile
-                    );
-                }
-            );
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Login Error:",
-                error
-            );
-        }
-    }
-
-    /* ============================================================
-       27. DATE SEED
-    ============================================================ */
-
-    function getDateSeed() {
-        const today =
-            getTodayKey();
-
-        let hash = 0;
-
-        for (
-            let index = 0;
-            index < today.length;
-            index++
+        if (
+            modal instanceof HTMLElement
         ) {
-            hash =
-                (
-                    (hash << 5) -
-                    hash +
-                    today.charCodeAt(index)
-                ) |
-                0;
+            modal.style.display = "flex";
         }
-
-        return Math.abs(hash);
     }
 
-    /* ============================================================
-       28. SHUFFLE
-    ============================================================ */
+    function closeModal(id) {
+        const modal =
+            document.getElementById(id);
+
+        if (!modal) {
+            return;
+        }
+
+        modal.classList.remove(
+            "active",
+            "show"
+        );
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        if (
+            modal instanceof HTMLElement
+        ) {
+            modal.style.display = "";
+        }
+    }
+
+    function openFallbackModal(
+        title,
+        content
+    ) {
+        let modal =
+            document.getElementById(
+                "zivoFallbackModal"
+            );
+
+        if (!modal) {
+            modal =
+                document.createElement("div");
+
+            modal.id =
+                "zivoFallbackModal";
+
+            modal.style.cssText = `
+                position:fixed;
+                inset:0;
+                z-index:99999;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                background:rgba(0,0,0,.82);
+                padding:20px;
+            `;
+
+            document.body.appendChild(
+                modal
+            );
+        }
+
+        modal.innerHTML = `
+            <div
+                style="
+                    width:min(700px,100%);
+                    max-height:90vh;
+                    overflow:auto;
+                    background:#111827;
+                    color:#fff;
+                    border-radius:20px;
+                    padding:24px;
+                    position:relative;
+                "
+            >
+                <button
+                    type="button"
+                    id="zivoFallbackClose"
+                    aria-label="${escapeHTML(
+                        getText("close")
+                    )}"
+                    style="
+                        position:absolute;
+                        top:12px;
+                        right:12px;
+                        border:0;
+                        background:#ffffff18;
+                        color:#fff;
+                        width:40px;
+                        height:40px;
+                        border-radius:50%;
+                        cursor:pointer;
+                    "
+                >×</button>
+
+                <h2>${escapeHTML(
+                    title
+                )}</h2>
+
+                <div id="zivoFallbackContent">
+                    ${content}
+                </div>
+            </div>
+        `;
+
+        modal.style.display = "flex";
+
+        document
+            .getElementById(
+                "zivoFallbackClose"
+            )
+            ?.addEventListener(
+                "click",
+                () => {
+                    modal.remove();
+                }
+            );
+    }
+
+    /* =========================================================
+       AI PLACEHOLDER
+       No secret API key is placed in the frontend.
+    ========================================================= */
+
+    function openAIModal() {
+        openFallbackModal(
+            "ZIVO AI",
+            `
+                <div style="padding:20px 0;">
+                    <p>
+                        ZIVO AI جاهز للربط بمحرك ذكاء اصطناعي حقيقي.
+                    </p>
+                    <p>
+                        في النسخة الإنتاجية سنضع API في Backend آمن،
+                        وليس داخل app.js.
+                    </p>
+                </div>
+            `
+        );
+    }
+
+    /* =========================================================
+       UTILITIES
+    ========================================================= */
+
+    function ensurePlayer() {
+        if (
+            !player.name ||
+            !player.email ||
+            !player.age
+        ) {
+            openProfileModal();
+
+            showToast(
+                getText("completeProfile"),
+                "info"
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    function scrollToSection(id) {
+        const target =
+            document.getElementById(id);
+
+        if (!target) {
+            return;
+        }
+
+        target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+
+    function getGameTitle(gameType) {
+        const keyMap = {
+            intelligence: "intelligence",
+            science: "science",
+            horror: "horror",
+            personality: "personality",
+            daily: "daily"
+        };
+
+        return getText(
+            keyMap[gameType] ||
+            gameType
+        );
+    }
+
+    function getDateKey(
+        date = new Date()
+    ) {
+        const year =
+            date.getFullYear();
+
+        const month =
+            String(
+                date.getMonth() + 1
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                date.getDate()
+            ).padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+    }
+
+    function generateId() {
+        if (
+            typeof crypto !== "undefined" &&
+            typeof crypto.randomUUID === "function"
+        ) {
+            return crypto.randomUUID();
+        }
+
+        return (
+            "zivo-" +
+            Date.now() +
+            "-" +
+            Math.random()
+                .toString(36)
+                .slice(2)
+        );
+    }
 
     function shuffle(array) {
-        try {
-            for (
-                let index =
-                    array.length - 1;
-                index > 0;
-                index--
-            ) {
-                const randomIndex =
-                    Math.floor(
-                        Math.random() *
-                        (index + 1)
-                    );
-
-                [
-                    array[index],
-                    array[randomIndex]
-                ] = [
-                    array[randomIndex],
-                    array[index]
-                ];
-            }
-
-            return array;
-        } catch (error) {
-            console.error(
-                "ZIVOZONE Shuffle Error:",
-                error
-            );
-
-            return array;
-        }
-    }
-
-    function deterministicShuffle(
-        array,
-        seed
-    ) {
-        const result =
-            [...array];
-
-        let value = seed;
+        const copy = [...array];
 
         for (
-            let index =
-                result.length - 1;
-            index > 0;
-            index--
+            let i = copy.length - 1;
+            i > 0;
+            i--
         ) {
-            value =
-                (
-                    value * 9301 +
-                    49297
-                ) %
-                233280;
-
-            const random =
-                value /
-                233280;
-
-            const randomIndex =
+            const j =
                 Math.floor(
-                    random *
-                    (index + 1)
+                    Math.random() *
+                    (i + 1)
                 );
 
             [
-                result[index],
-                result[randomIndex]
+                copy[i],
+                copy[j]
             ] = [
-                result[randomIndex],
-                result[index]
+                copy[j],
+                copy[i]
             ];
         }
 
-        return result;
+        return copy;
     }
-
-    /* ============================================================
-       29. CATEGORY NAMES
-    ============================================================ */
-
-    function getCategoryName(type) {
-        const names = {
-            intelligence:
-                getTranslation(
-                    "intelligence"
-                ),
-
-            science:
-                getTranslation(
-                    "science"
-                ),
-
-            horror:
-                getTranslation(
-                    "horror"
-                ),
-
-            psychology:
-                getTranslation(
-                    "psychology"
-                ),
-
-            daily:
-                getTranslation(
-                    "dailyTitle"
-                )
-        };
-
-        return (
-            names[type] ||
-            "ZIVOZONE"
-        );
-    }
-
-    /* ============================================================
-       30. SECURITY HELPERS
-    ============================================================ */
 
     function escapeHTML(value) {
-        const div =
-            document.createElement(
-                "div"
-            );
-
-        div.textContent =
-            String(value);
-
-        return div.innerHTML;
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
     }
 
-    function escapeAttribute(value) {
-        return escapeHTML(
-            value
-        )
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-            .replace(
-                /'/g,
-                "&#039;"
+    function showToast(
+        message,
+        type = "info"
+    ) {
+        let container =
+            document.getElementById(
+                "zivoToastContainer"
             );
+
+        if (!container) {
+            container =
+                document.createElement("div");
+
+            container.id =
+                "zivoToastContainer";
+
+            container.style.cssText = `
+                position:fixed;
+                bottom:20px;
+                left:20px;
+                z-index:100000;
+                display:flex;
+                flex-direction:column;
+                gap:10px;
+                max-width:min(420px,calc(100vw - 40px));
+            `;
+
+            document.body.appendChild(
+                container
+            );
+        }
+
+        const toast =
+            document.createElement("div");
+
+        toast.textContent =
+            message;
+
+        toast.style.cssText = `
+            padding:14px 18px;
+            border-radius:14px;
+            color:#fff;
+            background:${
+                type === "success"
+                    ? "#16a34a"
+                    : type === "error"
+                        ? "#dc2626"
+                        : "#2563eb"
+            };
+            box-shadow:0 10px 30px rgba(0,0,0,.25);
+            font-size:14px;
+            line-height:1.5;
+        `;
+
+        container.appendChild(
+            toast
+        );
+
+        setTimeout(() => {
+            toast.style.opacity = "0";
+            toast.style.transform =
+                "translateY(10px)";
+            toast.style.transition =
+                "all .25s ease";
+
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 2800);
     }
 
-    /* ============================================================
-       31. GLOBAL ZIVO API
-    ============================================================ */
+    function showStartupMessage() {
+        if (
+            player.name
+        ) {
+            return;
+        }
 
-    window.ZIVOZONE = {
-        getPlayer: () => ({
-            ...player,
-            stats: {
-                ...player.stats
-            }
-        }),
+        const hasShown =
+            sessionStorage.getItem(
+                "zivozone_welcome_shown"
+            );
 
-        startGame,
+        if (hasShown) {
+            return;
+        }
 
-        startDailyChallenge,
-
-        startWhoAmI,
-
-        openAI,
-
-        openProfile,
-
-        addXP,
-
-        addCoins,
-
-        changeLanguage,
-
-        showToast
-    };
-
-    /* ============================================================
-       32. INITIALIZATION
-    ============================================================ */
-
-    function initializeZivozone() {
         try {
-            const savedLanguage =
-                localStorage.getItem(
-                    CONFIG.languageKey
-                );
+            sessionStorage.setItem(
+                "zivozone_welcome_shown",
+                "1"
+            );
+        } catch (error) {
+            console.warn(
+                "Session storage unavailable:",
+                error
+            );
+        }
 
-            if (
-                CONFIG.supportedLanguages.includes(
-                    savedLanguage
-                )
-            ) {
-                player.language =
-                    savedLanguage;
-            }
+        setTimeout(() => {
+            showToast(
+                getText("welcome"),
+                "info"
+            );
+        }, 500);
+    }
 
-            updateStreak();
+    function createProfileHTML() {
+        return `
+            <form id="zivoFallbackProfileForm">
+                <div style="display:grid;gap:14px;">
+                    <label>
+                        ${escapeHTML(getText("name"))}
+                        <input
+                            name="name"
+                            type="text"
+                            maxlength="60"
+                            required
+                            autocomplete="name"
+                        >
+                    </label>
 
-            applyLanguage();
+                    <label>
+                        ${escapeHTML(getText("email"))}
+                        <input
+                            name="email"
+                            type="email"
+                            maxlength="254"
+                            required
+                            autocomplete="email"
+                        >
+                    </label>
 
-            updatePlayerUI();
+                    <label>
+                        ${escapeHTML(getText("age"))}
+                        <input
+                            name="age"
+                            type="number"
+                            min="6"
+                            max="100"
+                            required
+                        >
+                    </label>
 
-            setupNavigation();
+                    <label>
+                        ${escapeHTML(getText("language"))}
+                        <select name="language">
+                            <option value="ar">العربية</option>
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                            <option value="es">Español</option>
+                            <option value="tr">Türkçe</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </label>
 
-            setupButtons();
+                    <button type="submit">
+                        ${escapeHTML(getText("save"))}
+                    </button>
+                </div>
+            </form>
+        `;
+    }
 
-            setupLanguageSelector();
+    /* =========================================================
+       RESET
+    ========================================================= */
 
-            setupLogin();
-
-            createModal();
-
-            console.log(
-                "ZIVOZONE initialized successfully."
+    function resetProgress() {
+        const confirmed =
+            window.confirm(
+                player.language === "ar"
+                    ? "هل أنت متأكد؟ سيتم حذف تقدم اللاعب من هذا الجهاز."
+                    : "Are you sure? Player progress will be deleted from this device."
             );
 
-            console.log(
-                "Player:",
-                player
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            localStorage.removeItem(
+                APP.storageKey
+            );
+
+            localStorage.removeItem(
+                APP.dailyKey
+            );
+
+            localStorage.removeItem(
+                APP.settingsKey
+            );
+
+            player =
+                createDefaultPlayer();
+
+            settings =
+                createDefaultSettings();
+
+            updateAllUI();
+
+            showToast(
+                player.language === "ar"
+                    ? "تمت إعادة التقدم."
+                    : "Progress has been reset.",
+                "success"
             );
         } catch (error) {
             console.error(
-                "ZIVOZONE Initialization Error:",
+                "Reset error:",
                 error
+            );
+
+            showToast(
+                "تعذر إعادة التقدم.",
+                "error"
             );
         }
     }
 
-    if (
-        document.readyState ===
-        "loading"
-    ) {
-        document.addEventListener(
-            "DOMContentLoaded",
-            initializeZivozone
-        );
-    } else {
-        initializeZivozone();
-    }
+    /* =========================================================
+       OPTIONAL PUBLIC API
+       Useful for debugging without exposing sensitive data.
+    ========================================================= */
+
+    window.ZIVOZONE = Object.freeze({
+        version: APP.version,
+
+        getPlayer() {
+            return {
+                ...player,
+                email:
+                    player.email
+                        ? "[protected]"
+                        : ""
+            };
+        },
+
+        getLevel() {
+            return getPlayerLevel();
+        },
+
+        startGame(game) {
+            startGame(game);
+        },
+
+        startDailyChallenge() {
+            startDailyChallenge();
+        },
+
+        startPersonalityTest() {
+            startPersonalityTest();
+        },
+
+        setLanguage(language) {
+            setLanguage(language);
+        }
+    });
 
 })();
