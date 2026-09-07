@@ -1,302 +1,940 @@
--- =========================================================
--- ZIVOZONE DATABASE v1
--- Profiles + Games + XP + ZIVO Ledger + Challenges
--- =========================================================
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-create extension if not exists pgcrypto;
+    <meta
+        name="description"
+        content="ZIVOZONE — عالم رقمي ترفيهي شامل للألعاب والتحديات والذكاء والرعب والعلوم والرياضة واكتشاف الذات."
+    >
 
--- =========================================================
--- 1. PLAYER PROFILES
--- =========================================================
+    <meta
+        name="keywords"
+        content="ZIVOZONE, games, challenges, AI, IQ, horror, science, sports, entertainment"
+    >
 
-create table if not exists public.profiles (
-    id uuid primary key references auth.users(id) on delete cascade,
-    username text not null check (char_length(username) between 2 and 40),
-    age integer not null check (age between 5 and 100),
-    avatar_url text,
-    xp integer not null default 0 check (xp >= 0),
-    level integer not null default 1 check (level >= 1),
-    zivo_balance bigint not null default 0 check (zivo_balance >= 0),
-    games_played integer not null default 0 check (games_played >= 0),
-    wins integer not null default 0 check (wins >= 0),
-    streak integer not null default 0 check (streak >= 0),
-    created_at timestamptz not null default now(),
-    updated_at timestamptz not null default now()
-);
+    <meta name="theme-color" content="#070812">
 
--- =========================================================
--- 2. GAME RESULTS
--- =========================================================
+    <title>ZIVOZONE | عالمك يبدأ من هنا</title>
 
-create table if not exists public.game_results (
-    id uuid primary key default gen_random_uuid(),
-    player_id uuid not null references public.profiles(id) on delete cascade,
-    game_type text not null check (
-        game_type in ('quiz', 'science', 'horror', 'daily', 'identity')
-    ),
-    score integer not null default 0 check (score >= 0),
-    total_questions integer not null default 0 check (total_questions >= 0),
-    xp_earned integer not null default 0 check (xp_earned >= 0),
-    zivo_earned integer not null default 0 check (zivo_earned >= 0),
-    duration_seconds integer check (
-        duration_seconds is null or duration_seconds >= 0
-    ),
-    created_at timestamptz not null default now()
-);
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
--- =========================================================
--- 3. ZIVO TRANSACTIONS
--- =========================================================
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet"
+    >
 
-create table if not exists public.zivo_transactions (
-    id uuid primary key default gen_random_uuid(),
-    player_id uuid not null references public.profiles(id) on delete cascade,
-    amount bigint not null,
-    transaction_type text not null check (
-        transaction_type in (
-            'game_reward',
-            'daily_reward',
-            'achievement',
-            'purchase',
-            'admin_adjustment'
-        )
-    ),
-    reference_id uuid,
-    description text,
-    created_at timestamptz not null default now()
-);
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
 
--- =========================================================
--- 4. DAILY CHALLENGES
--- =========================================================
+<body>
 
-create table if not exists public.daily_challenges (
-    id uuid primary key default gen_random_uuid(),
-    challenge_date date not null unique,
-    title text not null,
-    description text not null,
-    game_type text not null check (
-        game_type in ('quiz', 'science', 'horror')
-    ),
-    reward_xp integer not null default 30 check (reward_xp >= 0),
-    reward_zivo integer not null default 1 check (reward_zivo >= 0),
-    is_active boolean not null default true,
-    created_at timestamptz not null default now()
-);
+    <!-- =====================================================
+         INITIAL LOADER
+    ====================================================== -->
 
--- =========================================================
--- 5. ACHIEVEMENTS
--- =========================================================
+    <div
+        id="app-loader"
+        class="loader"
+        aria-live="polite"
+        aria-label="ZIVOZONE"
+    >
+        <div class="loader-logo" aria-hidden="true">Z</div>
 
-create table if not exists public.achievements (
-    id uuid primary key default gen_random_uuid(),
-    code text not null unique,
-    title text not null,
-    description text not null,
-    reward_xp integer not null default 0 check (reward_xp >= 0),
-    reward_zivo integer not null default 0 check (reward_zivo >= 0),
-    created_at timestamptz not null default now()
-);
+        <strong class="loader-brand">
+            ZIVOZONE
+        </strong>
 
--- =========================================================
--- 6. PLAYER ACHIEVEMENTS
--- =========================================================
+        <span data-i18n="loading">
+            جاري تجهيز عالمك...
+        </span>
+    </div>
 
-create table if not exists public.player_achievements (
-    player_id uuid not null references public.profiles(id) on delete cascade,
-    achievement_id uuid not null references public.achievements(id) on delete cascade,
-    earned_at timestamptz not null default now(),
-    primary key (player_id, achievement_id)
-);
 
--- =========================================================
--- 7. IDENTITY RESULTS
--- =========================================================
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
-create table if not exists public.identity_results (
-    id uuid primary key default gen_random_uuid(),
-    player_id uuid not null references public.profiles(id) on delete cascade,
-    logic_score integer not null default 0,
-    courage_score integer not null default 0,
-    curiosity_score integer not null default 0,
-    social_score integer not null default 0,
-    personality_type text,
-    created_at timestamptz not null default now()
-);
+    <header class="topbar">
 
--- =========================================================
--- 8. INDEXES
--- =========================================================
+        <a
+            href="#home"
+            class="brand"
+            aria-label="ZIVOZONE - الصفحة الرئيسية"
+        >
+            <span
+                class="brand-mark"
+                aria-hidden="true"
+            >
+                Z
+            </span>
 
-create index if not exists idx_game_results_player
-on public.game_results(player_id);
+            <span class="brand-name">
+                ZIVOZONE
+            </span>
+        </a>
 
-create index if not exists idx_game_results_created
-on public.game_results(created_at desc);
 
-create index if not exists idx_zivo_transactions_player
-on public.zivo_transactions(player_id);
+        <nav
+            class="main-nav"
+            aria-label="التنقل الرئيسي"
+        >
 
-create index if not exists idx_zivo_transactions_created
-on public.zivo_transactions(created_at desc);
+            <a
+                href="#home"
+                data-i18n="home"
+            >
+                الرئيسية
+            </a>
 
-create index if not exists idx_identity_player
-on public.identity_results(player_id);
+            <a
+                href="#games"
+                data-i18n="games"
+            >
+                الألعاب
+            </a>
 
--- =========================================================
--- 9. ENABLE ROW LEVEL SECURITY
--- =========================================================
+            <a
+                href="#challenges"
+                data-i18n="challenges"
+            >
+                التحديات
+            </a>
 
-alter table public.profiles enable row level security;
-alter table public.game_results enable row level security;
-alter table public.zivo_transactions enable row level security;
-alter table public.daily_challenges enable row level security;
-alter table public.achievements enable row level security;
-alter table public.player_achievements enable row level security;
-alter table public.identity_results enable row level security;
+            <a
+                href="#ai"
+                data-i18n="ai"
+            >
+                ZIVO AI
+            </a>
 
--- =========================================================
--- 10. PROFILE POLICIES
--- =========================================================
+            <a
+                href="#identity"
+                data-i18n="identity"
+            >
+                من أنا؟
+            </a>
 
-drop policy if exists "Players can view own profile"
-on public.profiles;
+            <a
+                href="#sports"
+                data-i18n="sports"
+            >
+                الرياضة
+            </a>
 
-create policy "Players can view own profile"
-on public.profiles
-for select
-to authenticated
-using (auth.uid() = id);
+            <a
+                href="#profile"
+                data-i18n="profile"
+            >
+                ملفي
+            </a>
 
-drop policy if exists "Players can create own profile"
-on public.profiles;
+        </nav>
 
-create policy "Players can create own profile"
-on public.profiles
-for insert
-to authenticated
-with check (auth.uid() = id);
 
--- لا نعطي اللاعب صلاحية مباشرة لتعديل XP أو ZIVO.
--- هذه القيم ستعدل لاحقًا من خلال Backend Functions آمنة.
+        <div class="top-actions">
 
-drop policy if exists "Players can update basic profile"
-on public.profiles;
+            <!-- Language -->
+            <label
+                class="sr-only"
+                for="language-select"
+            >
+                Language
+            </label>
 
-create policy "Players can update basic profile"
-on public.profiles
-for update
-to authenticated
-using (auth.uid() = id)
-with check (auth.uid() = id);
+            <select
+                id="language-select"
+                aria-label="اختيار اللغة"
+            >
+                <option value="ar">العربية</option>
+                <option value="en">English</option>
+                <option value="fr">Français</option>
+                <option value="es">Español</option>
+                <option value="tr">Türkçe</option>
+                <option value="de">Deutsch</option>
+            </select>
 
--- =========================================================
--- 11. GAME RESULTS POLICIES
--- =========================================================
 
-drop policy if exists "Players can view own results"
-on public.game_results;
+            <!-- Login -->
+            <button
+                id="login-btn"
+                class="btn btn-primary"
+                type="button"
+                data-i18n="login"
+            >
+                تسجيل الدخول
+            </button>
 
-create policy "Players can view own results"
-on public.game_results
-for select
-to authenticated
-using (auth.uid() = player_id);
+        </div>
 
--- لن نسمح بإضافة نتائج مباشرة من المتصفح في النسخة الآمنة.
--- الإضافة ستتم لاحقًا عبر RPC / Edge Function.
+    </header>
 
--- =========================================================
--- 12. ZIVO TRANSACTIONS
--- =========================================================
 
-drop policy if exists "Players can view own ZIVO transactions"
-on public.zivo_transactions;
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
 
-create policy "Players can view own ZIVO transactions"
-on public.zivo_transactions
-for select
-to authenticated
-using (auth.uid() = player_id);
+    <main>
 
--- لا يوجد INSERT مباشر للاعب.
+        <!-- =================================================
+             HERO
+        ================================================== -->
 
--- =========================================================
--- 13. DAILY CHALLENGES
--- =========================================================
+        <section
+            id="home"
+            class="hero section"
+            aria-labelledby="hero-title"
+        >
 
-create policy "Anyone can view active daily challenges"
-on public.daily_challenges
-for select
-to authenticated
-using (is_active = true);
+            <div class="hero-copy">
 
--- =========================================================
--- 14. ACHIEVEMENTS
--- =========================================================
+                <span class="eyebrow">
+                    DIGITAL WORLD • ZIVOZONE
+                </span>
 
-create policy "Anyone can view achievements"
-on public.achievements
-for select
-to authenticated
-using (true);
 
--- =========================================================
--- 15. PLAYER ACHIEVEMENTS
--- =========================================================
+                <h1 id="hero-title">
 
-create policy "Players can view own achievements"
-on public.player_achievements
-for select
-to authenticated
-using (auth.uid() = player_id);
+                    <span class="hero-brand">
+                        ZIVOZONE
+                    </span>
 
--- =========================================================
--- 16. IDENTITY RESULTS
--- =========================================================
+                    <br>
 
-create policy "Players can view own identity results"
-on public.identity_results
-for select
-to authenticated
-using (auth.uid() = player_id);
+                    <span data-i18n="heroTitle">
+                        عالمك يبدأ من هنا
+                    </span>
 
--- =========================================================
--- 17. INITIAL ACHIEVEMENTS
--- =========================================================
+                </h1>
 
-insert into public.achievements
-(code, title, description, reward_xp, reward_zivo)
-values
-('FIRST_GAME', 'أول لعبة', 'أكمل أول لعبة في ZIVOZONE', 25, 1),
-('FIRST_WIN', 'أول انتصار', 'حقق أول فوز', 50, 2),
-('DAILY_PLAYER', 'لاعب يومي', 'أكمل تحديًا يوميًا', 30, 1),
-('LEVEL_5', 'المستوى الخامس', 'وصل إلى Level 5', 100, 5)
-on conflict (code) do nothing;
 
--- =========================================================
--- 18. FUNCTION: UPDATE TIMESTAMP
--- =========================================================
+                <p data-i18n="heroText">
+                    ألعاب وتحديات وذكاء ورعب وعلوم ورياضة واكتشاف للشخصية
+                    في عالم رقمي واحد.
+                </p>
 
-create or replace function public.set_updated_at()
-returns trigger
-language plpgsql
-security invoker
-as $$
-begin
-    new.updated_at = now();
-    return new;
-end;
-$$;
 
-drop trigger if exists profiles_updated_at
-on public.profiles;
+                <div class="hero-actions">
 
-create trigger profiles_updated_at
-before update on public.profiles
-for each row
-execute function public.set_updated_at();
+                    <button
+                        class="btn btn-primary btn-lg"
+                        type="button"
+                        data-action="scroll-games"
+                        data-i18n="startPlaying"
+                    >
+                        ابدأ اللعب
+                    </button>
 
--- =========================================================
--- DONE
--- =========================================================
+
+                    <button
+                        class="btn btn-ghost btn-lg"
+                        type="button"
+                        data-action="open-identity"
+                        data-i18n="discoverMe"
+                    >
+                        اكتشف نفسك
+                    </button>
+
+                </div>
+
+
+                <div
+                    class="hero-stats"
+                    aria-label="إحصائيات ZIVOZONE"
+                >
+
+                    <div>
+                        <b>6</b>
+                        <span data-i18n="languages">
+                            لغات
+                        </span>
+                    </div>
+
+                    <div>
+                        <b>4+</b>
+                        <span data-i18n="gameModes">
+                            أنماط ألعاب
+                        </span>
+                    </div>
+
+                    <div>
+                        <b>∞</b>
+                        <span data-i18n="challenges">
+                            تحديات
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Hero Visual -->
+
+            <div
+                class="hero-orb-wrap"
+                aria-hidden="true"
+            >
+
+                <div class="hero-orb">
+                    <span>Z</span>
+                </div>
+
+                <span class="float-tag t1">
+                    IQ
+                </span>
+
+                <span class="float-tag t2">
+                    AI
+                </span>
+
+                <span class="float-tag t3">
+                    HORROR
+                </span>
+
+                <span class="float-tag t4">
+                    SPORT
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ADVERTISEMENT
+        ================================================== -->
+
+        <section
+            class="ad-slot section-small"
+            aria-label="Advertisement"
+        >
+
+            <div class="ad-inner">
+
+                <span
+                    class="ad-badge"
+                    data-i18n="ad"
+                >
+                    إعلان
+                </span>
+
+                <strong data-i18n="adTitle">
+                    مساحتك الإعلانية هنا
+                </strong>
+
+                <span data-i18n="adText">
+                    مكان جاهز للإعلانات والرعاة عند إطلاق المنصة.
+                </span>
+
+                <button
+                    class="btn btn-small btn-ghost"
+                    type="button"
+                    data-action="ad-info"
+                    data-i18n="details"
+                >
+                    التفاصيل
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             GAMES
+        ================================================== -->
+
+        <section
+            id="games"
+            class="section"
+            aria-labelledby="games-title"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ZIVO GAMES
+                    </span>
+
+                    <h2 id="games-title" data-i18n="gamesTitle">
+                        العب وارفع مستواك
+                    </h2>
+
+                </div>
+
+
+                <span
+                    id="player-level-chip"
+                    class="level-chip"
+                >
+                    Level 1
+                </span>
+
+            </div>
+
+
+            <div class="cards-grid">
+
+                <!-- IQ -->
+
+                <article class="game-card">
+
+                    <div class="icon" aria-hidden="true">
+                        🧠
+                    </div>
+
+                    <span class="card-tag">
+                        IQ
+                    </span>
+
+                    <h3 data-i18n="speedTitle">
+                        اختبار سرعة الذكاء
+                    </h3>
+
+                    <p data-i18n="speedDesc">
+                        أسئلة تتدرج حسب مستوى اللاعب وعمره.
+                    </p>
+
+                    <div class="card-meta">
+
+                        <span>
+                            +50 XP
+                        </span>
+
+                        <span>
+                            3–5 أسئلة
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary full"
+                        type="button"
+                        data-game="quiz"
+                        data-i18n="playNow"
+                    >
+                        العب الآن
+                    </button>
+
+                </article>
+
+
+                <!-- HORROR -->
+
+                <article class="game-card">
+
+                    <div class="icon" aria-hidden="true">
+                        👻
+                    </div>
+
+                    <span class="card-tag danger">
+                        HORROR
+                    </span>
+
+                    <h3 data-i18n="horrorTitle">
+                        الغرفة المظلمة
+                    </h3>
+
+                    <p data-i18n="horrorDesc">
+                        قصة تفاعلية، اختياراتك تغيّر النهاية.
+                    </p>
+
+                    <div class="card-meta">
+
+                        <span>
+                            +75 XP
+                        </span>
+
+                        <span>
+                            تفاعلية
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary full"
+                        type="button"
+                        data-game="horror"
+                        data-i18n="start"
+                    >
+                        ابدأ
+                    </button>
+
+                </article>
+
+
+                <!-- SCIENCE -->
+
+                <article class="game-card">
+
+                    <div class="icon" aria-hidden="true">
+                        🔬
+                    </div>
+
+                    <span class="card-tag">
+                        SCIENCE
+                    </span>
+
+                    <h3 data-i18n="scienceTitle">
+                        تحدي العلوم
+                    </h3>
+
+                    <p data-i18n="scienceDesc">
+                        معلومات علمية متدرجة وممتعة.
+                    </p>
+
+                    <div class="card-meta">
+
+                        <span>
+                            +60 XP
+                        </span>
+
+                        <span>
+                            5 أسئلة
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary full"
+                        type="button"
+                        data-game="science"
+                        data-i18n="playNow"
+                    >
+                        العب الآن
+                    </button>
+
+                </article>
+
+
+                <!-- DAILY -->
+
+                <article class="game-card">
+
+                    <div class="icon" aria-hidden="true">
+                        ⚡
+                    </div>
+
+                    <span class="card-tag">
+                        DAILY
+                    </span>
+
+                    <h3 data-i18n="dailyTitle">
+                        تحدي ZIVO اليومي
+                    </h3>
+
+                    <p data-i18n="dailyDesc">
+                        مهمة يومية واحدة مع مكافأة خاصة.
+                    </p>
+
+                    <div class="card-meta">
+
+                        <span>
+                            +30 XP
+                        </span>
+
+                        <span>
+                            يومي
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary full"
+                        type="button"
+                        data-game="daily"
+                        data-i18n="playNow"
+                    >
+                        العب الآن
+                    </button>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CHALLENGES
+        ================================================== -->
+
+        <section
+            id="challenges"
+            class="section alt"
+            aria-labelledby="challenge-title"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        CHALLENGE CENTER
+                    </span>
+
+                    <h2
+                        id="challenge-title"
+                        data-i18n="challengeTitle"
+                    >
+                        مركز التحديات
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="challenge-list"
+                class="challenge-list"
+            >
+                <!-- يتم توليد التحديات بواسطة app.js -->
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             IDENTITY / WHO AM I
+        ================================================== -->
+
+        <section
+            id="identity"
+            class="section"
+            aria-labelledby="identity-title"
+        >
+
+            <div class="identity-panel">
+
+                <div>
+
+                    <span class="eyebrow">
+                        WHO AM I?
+                    </span>
+
+                    <h2
+                        id="identity-title"
+                        data-i18n="identityTitle"
+                    >
+                        اكتشف شخصيتك داخل ZIVOZONE
+                    </h2>
+
+                    <p data-i18n="identityText">
+                        اختبار ترفيهي يعتمد على اختياراتك داخل التجربة،
+                        ثم يعطيك وصفًا عامًا لنمط اللعب والتفكير.
+                        ليس تشخيصًا نفسيًا أو طبيًا.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary btn-lg"
+                    type="button"
+                    data-action="open-identity"
+                    data-i18n="takeTest"
+                >
+                    ابدأ الاختبار
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ZIVO AI
+        ================================================== -->
+
+        <section
+            id="ai"
+            class="section alt"
+            aria-labelledby="ai-title"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        ZIVO AI
+                    </span>
+
+                    <h2
+                        id="ai-title"
+                        data-i18n="aiTitle"
+                    >
+                        مساعد ZIVO الذكي
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="ai-panel">
+
+                <div
+                    id="ai-messages"
+                    class="ai-messages"
+                    aria-live="polite"
+                    aria-label="محادثة ZIVO AI"
+                >
+
+                    <div
+                        class="ai-message bot"
+                        data-i18n="aiWelcome"
+                    >
+                        أهلاً بك في ZIVO AI 🤖
+                        اسألني عن الألعاب أو مستواك أو اطلب فكرة لتحدٍ جديد.
+                    </div>
+
+                </div>
+
+
+                <form
+                    id="ai-form"
+                    class="ai-form"
+                    novalidate
+                >
+
+                    <label
+                        class="sr-only"
+                        for="ai-input"
+                    >
+                        اكتب سؤالك
+                    </label>
+
+                    <input
+                        id="ai-input"
+                        name="message"
+                        type="text"
+                        maxlength="500"
+                        autocomplete="off"
+                        required
+                        data-i18n-placeholder="aiPlaceholder"
+                        placeholder="اكتب سؤالك..."
+                    >
+
+                    <button
+                        class="btn btn-primary"
+                        type="submit"
+                        data-i18n="send"
+                    >
+                        إرسال
+                    </button>
+
+                </form>
+
+
+                <small
+                    class="muted"
+                    data-i18n="aiNote"
+                >
+                    نسخة ZIVO AI الحالية تجريبية وتعمل من الواجهة.
+                    سيتم لاحقًا ربط نموذج ذكاء اصطناعي حقيقي من خلال Backend آمن.
+                </small>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SPORTS
+        ================================================== -->
+
+        <section
+            id="sports"
+            class="section"
+            aria-labelledby="sports-title"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <span class="eyebrow">
+                        GLOBAL SPORTS
+                    </span>
+
+                    <h2
+                        id="sports-title"
+                        data-i18n="sportsTitle"
+                    >
+                        أخبار الرياضة العالمية
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="btn btn-ghost"
+                    type="button"
+                    data-action="refresh-sports"
+                    data-i18n="refresh"
+                >
+                    تحديث
+                </button>
+
+            </div>
+
+
+            <div
+                id="sports-list"
+                class="sports-grid"
+            >
+                <!-- يتم توليد الأخبار بواسطة app.js -->
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PLAYER PROFILE
+        ================================================== -->
+
+        <section
+            id="profile"
+            class="section alt"
+            aria-labelledby="profile-title"
+        >
+
+            <div class="profile-panel">
+
+                <div
+                    class="avatar"
+                    aria-hidden="true"
+                >
+                    Z
+                </div>
+
+
+                <div class="profile-main">
+
+                    <span class="eyebrow">
+                        ZIVO PLAYER
+                    </span>
+
+                    <h2 id="profile-name">
+                        Guest
+                    </h2>
+
+
+                    <div
+                        class="progress"
+                        role="progressbar"
+                        aria-label="XP Progress"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        aria-valuenow="0"
+                    >
+                        <span id="xp-progress"></span>
+                    </div>
+
+
+                    <div class="profile-stats">
+
+                        <span>
+                            Level
+                            <b id="profile-level">1</b>
+                        </span>
+
+                        <span>
+                            XP
+                            <b id="profile-xp">0</b>
+                        </span>
+
+                        <span>
+                            🪙 ZIVO
+                            <b id="profile-coins">0</b>
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-action="login"
+                    data-i18n="editProfile"
+                >
+                    إنشاء/تعديل الملف
+                </button>
+
+            </div>
+
+
+            <div
+                id="profile-note"
+                class="notice"
+                data-i18n="profileNote"
+            >
+                بيانات النسخة التجريبية محفوظة محليًا على جهازك.
+                لا تضع كلمات مرور أو بيانات حساسة هنا.
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="footer">
+
+        <strong>
+            ZIVOZONE
+        </strong>
+
+        <span>
+            © 2026 ZIVOZONE
+        </span>
+
+        <span data-i18n="footerText">
+            Built for the next generation.
+        </span>
+
+    </footer>
+
+
+    <!-- =====================================================
+         GLOBAL MODAL ROOT
+         app.js يستخدمه لإنشاء:
+         - تسجيل اللاعب
+         - الألعاب
+         - اختبار من أنا
+         - النتائج
+         - التنبيهات
+    ====================================================== -->
+
+    <div
+        id="modal-root"
+        class="modal-root"
+        aria-hidden="true"
+    ></div>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
+    <script
+        src="app.js"
+        defer
+    ></script>
+
+</body>
+</html>
