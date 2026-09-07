@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,12 +12,12 @@
 
     <meta
         name="description"
-        content="ZIVOZONE - عالم ترفيهي رقمي يجمع الألعاب والتحديات والذكاء الاصطناعي وعلم النفس والرياضة."
+        content="ZIVOZONE - عالم رقمي ترفيهي يجمع الألعاب والتحديات والذكاء والرياضة واكتشاف الشخصية."
     >
 
     <meta
         name="keywords"
-        content="ZIVOZONE, ألعاب, تحديات, ذكاء, رعب, علم النفس, رياضة, AI"
+        content="ZIVOZONE, ألعاب, تحديات, ذكاء, رعب, علوم, شخصية, رياضة, AI"
     >
 
     <meta
@@ -23,11 +25,18 @@
         content="#07111f"
     >
 
+    <meta
+        name="robots"
+        content="index, follow"
+    >
+
     <title>ZIVOZONE | عالمك الرقمي</title>
 
-    <!-- =====================================================
-         External Font
-    ====================================================== -->
+
+    <!-- ======================================================
+         FONTS
+    ======================================================= -->
+
     <link
         rel="preconnect"
         href="https://fonts.googleapis.com"
@@ -44,692 +53,923 @@
         rel="stylesheet"
     >
 
-    <!-- =====================================================
-         Font Awesome
-    ====================================================== -->
+
+    <!-- ======================================================
+         ICONS
+    ======================================================= -->
+
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
 
-    <!-- =====================================================
-         Main CSS
-    ====================================================== -->
+
+    <!-- ======================================================
+         MAIN CSS
+    ======================================================= -->
+
     <link
         rel="stylesheet"
         href="styles.css"
     >
+
 </head>
+
 
 <body>
 
-    <!-- =====================================================
-         LOADING SCREEN
-    ====================================================== -->
 
-    <div
-        id="loadingScreen"
-        class="loading-screen"
-        aria-label="جاري تحميل ZIVOZONE"
-    >
+<!-- =========================================================
+     LOADING SCREEN
+========================================================= -->
 
-        <div class="loading-content">
+<div
+    id="loadingScreen"
+    class="loading-screen"
+    aria-label="ZIVOZONE"
+>
 
-            <div class="loading-logo">
-                Z
-            </div>
+    <div class="loading-content">
 
-            <h1>
-                ZIVOZONE
-            </h1>
+        <div class="loading-logo">
+            Z
+        </div>
 
-            <p>
-                جاري تجهيز عالمك...
-            </p>
+        <h1>
+            ZIVOZONE
+        </h1>
 
-            <div class="loading-line">
-                <span></span>
-            </div>
+        <p>
+            جاري تجهيز عالمك...
+        </p>
 
+        <div class="loading-line">
+            <span></span>
         </div>
 
     </div>
 
+</div>
+
+
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
+
+<div
+    id="app"
+    class="app"
+>
+
 
     <!-- =====================================================
-         APP
+         HEADER
     ====================================================== -->
 
-    <div
-        id="app"
-        class="app"
+    <header
+        id="mainHeader"
+        class="main-header"
     >
 
-        <!-- =================================================
-             HEADER
-        ================================================== -->
+        <div class="container header-inner">
 
-        <header
-            id="mainHeader"
-            class="main-header"
-        >
 
-            <div class="container header-inner">
+            <!-- BRAND -->
 
-                <!-- Logo -->
+            <a
+                href="#home"
+                class="brand"
+                data-section="home"
+                aria-label="ZIVOZONE"
+            >
+
+                <span class="brand-symbol">
+                    Z
+                </span>
+
+                <span class="brand-text">
+                    ZIVOZONE
+                </span>
+
+            </a>
+
+
+            <!-- NAVIGATION -->
+
+            <nav
+                id="mainNavigation"
+                class="main-navigation"
+                aria-label="القائمة الرئيسية"
+            >
 
                 <a
-                    href="#"
-                    class="brand"
+                    href="#home"
                     data-section="home"
-                    aria-label="ZIVOZONE"
                 >
 
-                    <span class="brand-symbol">
-                        Z
-                    </span>
+                    <i class="fa-solid fa-house"></i>
 
-                    <span class="brand-text">
-                        ZIVOZONE
+                    <span data-i18n="welcome">
+                        الرئيسية
                     </span>
 
                 </a>
 
 
-                <!-- Navigation -->
-
-                <nav
-                    id="mainNavigation"
-                    class="main-navigation"
-                    aria-label="القائمة الرئيسية"
+                <a
+                    href="#games"
+                    data-section="games"
                 >
 
-                    <a
-                        href="#home"
-                        data-section="home"
+                    <i class="fa-solid fa-gamepad"></i>
+
+                    <span data-i18n="games">
+                        الألعاب
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#challenges"
+                    data-section="challenges"
+                >
+
+                    <i class="fa-solid fa-bolt"></i>
+
+                    <span data-i18n="challenges">
+                        التحديات
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#ai"
+                    data-section="ai"
+                >
+
+                    <i class="fa-solid fa-robot"></i>
+
+                    <span data-i18n="ai">
+                        الذكاء الاصطناعي
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#personality"
+                    data-section="personality"
+                >
+
+                    <i class="fa-solid fa-brain"></i>
+
+                    <span data-i18n="personality">
+                        من أنا؟
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#sports"
+                    data-section="sports"
+                >
+
+                    <i class="fa-solid fa-futbol"></i>
+
+                    <span data-i18n="sports">
+                        الرياضة
+                    </span>
+
+                </a>
+
+
+                <a
+                    href="#profile"
+                    data-section="profile"
+                >
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span data-i18n="profile">
+                        ملفي
+                    </span>
+
+                </a>
+
+            </nav>
+
+
+            <!-- HEADER ACTIONS -->
+
+            <div class="header-actions">
+
+
+                <!-- LANGUAGE -->
+
+                <div class="language-box">
+
+                    <i class="fa-solid fa-globe"></i>
+
+                    <select
+                        id="languageSelector"
+                        aria-label="اختيار اللغة"
+                        onchange="
+                            if (
+                                window.ZIVOZONE &&
+                                typeof window.ZIVOZONE.changeLanguage === 'function'
+                            ) {
+                                window.ZIVOZONE.changeLanguage(this.value);
+                            }
+                        "
                     >
-                        <i class="fa-solid fa-house"></i>
-                        <span data-i18n="welcome">
-                            الرئيسية
-                        </span>
-                    </a>
 
-                    <a
-                        href="#games"
-                        data-section="games"
-                    >
-                        <i class="fa-solid fa-gamepad"></i>
-                        <span data-i18n="games">
-                            الألعاب
-                        </span>
-                    </a>
+                        <option value="ar">
+                            العربية
+                        </option>
 
-                    <a
-                        href="#challenges"
-                        data-section="challenges"
-                    >
-                        <i class="fa-solid fa-bolt"></i>
-                        <span data-i18n="challenges">
-                            التحديات
-                        </span>
-                    </a>
+                        <option value="en">
+                            English
+                        </option>
 
-                    <a
-                        href="#ai"
-                        data-section="ai"
-                    >
-                        <i class="fa-solid fa-robot"></i>
-                        <span data-i18n="ai">
-                            الذكاء الاصطناعي
-                        </span>
-                    </a>
+                        <option value="fr">
+                            Français
+                        </option>
 
-                    <a
-                        href="#personality"
-                        data-section="personality"
-                    >
-                        <i class="fa-solid fa-brain"></i>
-                        <span data-i18n="personality">
-                            من أنا؟
-                        </span>
-                    </a>
+                        <option value="es">
+                            Español
+                        </option>
 
-                    <a
-                        href="#sports"
-                        data-section="sports"
-                    >
-                        <i class="fa-solid fa-futbol"></i>
-                        <span data-i18n="sports">
-                            الرياضة
-                        </span>
-                    </a>
+                        <option value="tr">
+                            Türkçe
+                        </option>
 
-                </nav>
+                    </select>
+
+                </div>
 
 
-                <!-- Header Actions -->
+                <!-- LOGIN -->
 
-                <div class="header-actions">
+                <button
+                    type="button"
+                    class="login-button"
+                    data-action="login"
+                >
 
-                    <!-- Language -->
+                    <i class="fa-solid fa-right-to-bracket"></i>
 
-                    <div class="language-box">
+                    <span data-i18n="login">
+                        تسجيل الدخول
+                    </span>
 
-                        <i class="fa-solid fa-globe"></i>
+                </button>
 
-                        <select
-                            id="languageSelector"
-                            aria-label="اختيار اللغة"
-                        >
 
-                            <option value="ar">
-                                العربية
-                            </option>
+                <!-- LOGOUT -->
 
-                            <option value="en">
-                                English
-                            </option>
+                <button
+                    type="button"
+                    class="logout-button"
+                    data-action="logout"
+                    style="display:none;"
+                >
 
-                            <option value="fr">
-                                Français
-                            </option>
+                    <i class="fa-solid fa-right-from-bracket"></i>
 
-                            <option value="es">
-                                Español
-                            </option>
+                    <span data-i18n="logout">
+                        تسجيل الخروج
+                    </span>
 
-                            <option value="tr">
-                                Türkçe
-                            </option>
+                </button>
 
-                        </select>
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main id="mainContent">
+
+
+        <!-- =================================================
+             HOME
+        ================================================== -->
+
+        <section
+            id="home"
+            data-page-section="home"
+            class="page-section active"
+        >
+
+
+            <!-- HERO -->
+
+            <div class="hero">
+
+                <div class="container hero-grid">
+
+
+                    <div class="hero-content">
+
+
+                        <div class="hero-badge">
+
+                            <span class="pulse-dot"></span>
+
+                            <span>
+                                ZIVOZONE
+                            </span>
+
+                            <span>
+                                DIGITAL WORLD
+                            </span>
+
+                        </div>
+
+
+                        <h1 class="hero-title">
+
+                            عالمك يبدأ
+
+                            <span>
+                                من هنا
+                            </span>
+
+                        </h1>
+
+
+                        <p class="hero-description">
+
+                            ألعاب وتحديات وذكاء ورعب وعلوم
+                            ورياضة واكتشاف للشخصية في عالم رقمي واحد.
+
+                        </p>
+
+
+                        <div class="hero-buttons">
+
+
+                            <button
+                                type="button"
+                                class="primary-button"
+                                data-section="games"
+                            >
+
+                                <i class="fa-solid fa-play"></i>
+
+                                <span data-i18n="play">
+                                    ابدأ اللعب
+                                </span>
+
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="secondary-button"
+                                data-section="personality"
+                            >
+
+                                <i class="fa-solid fa-user-secret"></i>
+
+                                اكتشف نفسك
+
+                            </button>
+
+                        </div>
+
+
+                        <div class="hero-stats">
+
+
+                            <div class="hero-stat">
+
+                                <strong>
+                                    +10
+                                </strong>
+
+                                <span>
+                                    ألعاب وتحديات
+                                </span>
+
+                            </div>
+
+
+                            <div class="hero-stat">
+
+                                <strong>
+                                    5
+                                </strong>
+
+                                <span>
+                                    لغات عالمية
+                                </span>
+
+                            </div>
+
+
+                            <div class="hero-stat">
+
+                                <strong>
+                                    AI
+                                </strong>
+
+                                <span>
+                                    عالم ذكي
+                                </span>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
 
-                    <!-- Login -->
+                    <!-- HERO VISUAL -->
 
-                    <button
-                        type="button"
-                        class="login-button"
-                        data-action="login"
-                    >
+                    <div class="hero-visual">
 
-                        <i class="fa-solid fa-user"></i>
+                        <div class="hero-orbit orbit-one"></div>
 
-                        <span data-i18n="login">
-                            تسجيل الدخول
-                        </span>
-
-                    </button>
+                        <div class="hero-orbit orbit-two"></div>
 
 
-                    <!-- Logout -->
+                        <div class="hero-core">
 
-                    <button
-                        type="button"
-                        class="logout-button"
-                        data-action="logout"
-                        style="display:none;"
-                    >
+                            <span>
+                                Z
+                            </span>
 
-                        <i class="fa-solid fa-right-from-bracket"></i>
+                        </div>
 
-                        <span data-i18n="logout">
-                            تسجيل الخروج
-                        </span>
 
-                    </button>
+                        <div class="floating-card floating-card-one">
+
+                            <i class="fa-solid fa-brain"></i>
+
+                            <span>
+                                IQ
+                            </span>
+
+                        </div>
+
+
+                        <div class="floating-card floating-card-two">
+
+                            <i class="fa-solid fa-ghost"></i>
+
+                            <span>
+                                HORROR
+                            </span>
+
+                        </div>
+
+
+                        <div class="floating-card floating-card-three">
+
+                            <i class="fa-solid fa-robot"></i>
+
+                            <span>
+                                AI
+                            </span>
+
+                        </div>
+
+
+                        <div class="floating-card floating-card-four">
+
+                            <i class="fa-solid fa-futbol"></i>
+
+                            <span>
+                                SPORT
+                            </span>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </header>
-
-
-        <!-- =================================================
-             MAIN
-        ================================================== -->
-
-        <main id="mainContent">
 
 
             <!-- =================================================
-                 HOME
+                 ADVERTISEMENT
             ================================================== -->
 
-            <section
-                id="home"
-                data-page-section="home"
-                class="page-section active"
-            >
+            <section class="container ad-section">
 
-                <div class="hero">
+                <div class="ad-label">
 
-                    <div class="container hero-grid">
+                    <i class="fa-solid fa-bullhorn"></i>
 
-                        <!-- Hero Text -->
+                    إعلان
 
-                        <div class="hero-content">
+                </div>
 
-                            <div class="hero-badge">
 
-                                <span class="pulse-dot"></span>
+                <div
+                    id="mainAdvertisement"
+                    class="main-ad"
+                >
 
-                                <span>
-                                    ZIVOZONE
-                                </span>
+                    <div class="ad-content">
 
-                                <span>
-                                    DIGITAL WORLD
-                                </span>
+                        <span class="ad-small">
+                            ADVERTISEMENT
+                        </span>
 
-                            </div>
+                        <h2>
+                            مساحة إعلانية مميزة
+                        </h2>
 
+                        <p>
+                            ضع إعلانك هنا للوصول إلى جمهور ZIVOZONE.
+                        </p>
 
-                            <h1 class="hero-title">
-
-                                عالمك يبدأ
-                                <span>
-                                    من هنا
-                                </span>
-
-                            </h1>
-
-
-                            <p class="hero-description">
-
-                                ألعاب، تحديات، ذكاء، رعب،
-                                علوم، علم نفس، رياضة وذكاء اصطناعي
-                                في تجربة رقمية واحدة.
-
-                            </p>
-
-
-                            <div class="hero-buttons">
-
-                                <button
-                                    type="button"
-                                    class="primary-button"
-                                    data-section="games"
-                                >
-
-                                    <i class="fa-solid fa-play"></i>
-
-                                    <span data-i18n="play">
-                                        ابدأ اللعب
-                                    </span>
-
-                                </button>
-
-
-                                <button
-                                    type="button"
-                                    class="secondary-button"
-                                    data-section="personality"
-                                >
-
-                                    <i class="fa-solid fa-user-secret"></i>
-
-                                    <span data-i18n="personality">
-                                        اكتشف نفسك
-                                    </span>
-
-                                </button>
-
-                            </div>
-
-
-                            <!-- Hero Stats -->
-
-                            <div class="hero-stats">
-
-                                <div class="hero-stat">
-
-                                    <strong>
-                                        +10
-                                    </strong>
-
-                                    <span>
-                                        ألعاب وتحديات
-                                    </span>
-
-                                </div>
-
-
-                                <div class="hero-stat">
-
-                                    <strong>
-                                        5
-                                    </strong>
-
-                                    <span>
-                                        لغات عالمية
-                                    </span>
-
-                                </div>
-
-
-                                <div class="hero-stat">
-
-                                    <strong>
-                                        AI
-                                    </strong>
-
-                                    <span>
-                                        عالم ذكي
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- Hero Visual -->
-
-                        <div class="hero-visual">
-
-                            <div class="hero-orbit orbit-one"></div>
-
-                            <div class="hero-orbit orbit-two"></div>
-
-                            <div class="hero-core">
-
-                                <span>
-                                    Z
-                                </span>
-
-                            </div>
-
-
-                            <div class="floating-card floating-card-one">
-
-                                <i class="fa-solid fa-brain"></i>
-
-                                <span>
-                                    IQ
-                                </span>
-
-                            </div>
-
-
-                            <div class="floating-card floating-card-two">
-
-                                <i class="fa-solid fa-ghost"></i>
-
-                                <span>
-                                    HORROR
-                                </span>
-
-                            </div>
-
-
-                            <div class="floating-card floating-card-three">
-
-                                <i class="fa-solid fa-robot"></i>
-
-                                <span>
-                                    AI
-                                </span>
-
-                            </div>
-
-
-                            <div class="floating-card floating-card-four">
-
-                                <i class="fa-solid fa-futbol"></i>
-
-                                <span>
-                                    SPORT
-                                </span>
-
-                            </div>
-
-                        </div>
+                        <button
+                            type="button"
+                            class="ad-button"
+                        >
+                            أعلن معنا
+                        </button>
 
                     </div>
 
                 </div>
 
+            </section>
 
-                <!-- =================================================
-                     MAIN ADVERTISEMENT
-                ================================================== -->
 
-                <section class="container ad-section">
 
-                    <div class="ad-label">
-                        <i class="fa-solid fa-bullhorn"></i>
-                        إعلان
+            <!-- =================================================
+                 CATEGORIES
+            ================================================== -->
+
+            <section class="container section-block">
+
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            EXPLORE
+                        </span>
+
+                        <h2>
+                            اكتشف عالم ZIVOZONE
+                        </h2>
+
                     </div>
 
-                    <div
-                        class="main-ad"
-                        id="mainAdvertisement"
+
+                    <button
+                        type="button"
+                        class="text-button"
+                        data-section="games"
                     >
 
-                        <div class="ad-content">
+                        عرض الكل
 
-                            <span class="ad-small">
-                                ADVERTISEMENT
-                            </span>
+                        <i class="fa-solid fa-arrow-left"></i>
 
-                            <h2>
-                                مساحة إعلانية مميزة
-                            </h2>
+                    </button>
 
-                            <p>
-                                ضع إعلانك هنا للوصول إلى جمهور ZIVOZONE.
-                            </p>
+                </div>
 
-                            <button
-                                type="button"
-                                class="ad-button"
-                            >
-                                أعلن معنا
-                            </button>
 
+
+                <div class="category-grid">
+
+
+                    <article class="category-card intelligence-card">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-brain"></i>
                         </div>
 
-                    </div>
+                        <span>
+                            ذكاء
+                        </span>
 
-                </section>
+                        <h3>
+                            اختبر عقلك
+                        </h3>
 
-
-                <!-- =================================================
-                     QUICK CATEGORIES
-                ================================================== -->
-
-                <section class="container section-block">
-
-                    <div class="section-heading">
-
-                        <div>
-
-                            <span class="section-kicker">
-                                EXPLORE
-                            </span>
-
-                            <h2>
-                                اكتشف عالم ZIVOZONE
-                            </h2>
-
-                        </div>
+                        <p>
+                            تحديات منطق وسرعة وتركيز.
+                        </p>
 
                         <button
                             type="button"
-                            class="text-button"
-                            data-section="games"
+                            class="category-button"
+                            data-game="brain"
                         >
-                            عرض الكل
-                            <i class="fa-solid fa-arrow-left"></i>
+                            ابدأ
                         </button>
 
-                    </div>
+                    </article>
 
 
-                    <div class="category-grid">
 
+                    <article class="category-card horror-card">
 
-                        <!-- Intelligence -->
-
-                        <article class="category-card intelligence-card">
-
-                            <div class="category-icon">
-                                <i class="fa-solid fa-brain"></i>
-                            </div>
-
-                            <span>
-                                ذكاء
-                            </span>
-
-                            <h3>
-                                اختبر عقلك
-                            </h3>
-
-                            <p>
-                                تحديات منطق وسرعة وتركيز.
-                            </p>
-
-                            <button
-                                type="button"
-                                data-game="brain"
-                                class="category-button"
-                            >
-                                ابدأ
-                            </button>
-
-                        </article>
-
-
-                        <!-- Horror -->
-
-                        <article class="category-card horror-card">
-
-                            <div class="category-icon">
-                                <i class="fa-solid fa-ghost"></i>
-                            </div>
-
-                            <span>
-                                رعب
-                            </span>
-
-                            <h3>
-                                هل تجرؤ؟
-                            </h3>
-
-                            <p>
-                                قرارات ومواقف لن تعرف نهايتها.
-                            </p>
-
-                            <button
-                                type="button"
-                                data-game="horror"
-                                class="category-button"
-                            >
-                                ابدأ
-                            </button>
-
-                        </article>
-
-
-                        <!-- Science -->
-
-                        <article class="category-card science-card">
-
-                            <div class="category-icon">
-                                <i class="fa-solid fa-flask"></i>
-                            </div>
-
-                            <span>
-                                علوم
-                            </span>
-
-                            <h3>
-                                تحدى معلوماتك
-                            </h3>
-
-                            <p>
-                                أسئلة علمية ممتعة ومتنوعة.
-                            </p>
-
-                            <button
-                                type="button"
-                                data-game="science"
-                                class="category-button"
-                            >
-                                ابدأ
-                            </button>
-
-                        </article>
-
-
-                        <!-- Psychology -->
-
-                        <article class="category-card psychology-card">
-
-                            <div class="category-icon">
-                                <i class="fa-solid fa-user-gear"></i>
-                            </div>
-
-                            <span>
-                                علم النفس
-                            </span>
-
-                            <h3>
-                                اكتشف شخصيتك
-                            </h3>
-
-                            <p>
-                                تعرف على نمط تفكيرك واتخاذك للقرار.
-                            </p>
-
-                            <button
-                                type="button"
-                                data-section="personality"
-                                class="category-button"
-                            >
-                                اكتشف
-                            </button>
-
-                        </article>
-
-                    </div>
-
-                </section>
-
-
-                <!-- =================================================
-                     DAILY CHALLENGE
-                ================================================== -->
-
-                <section
-                    class="container section-block daily-section"
-                    id="dailyChallenge"
-                >
-
-                    <div class="daily-card">
-
-                        <div class="daily-icon">
-                            <i class="fa-solid fa-bolt"></i>
+                        <div class="category-icon">
+                            <i class="fa-solid fa-ghost"></i>
                         </div>
 
-                        <div class="daily-content">
+                        <span>
+                            رعب
+                        </span>
 
-                            <span class="section-kicker">
-                                DAILY CHALLENGE
+                        <h3>
+                            هل تجرؤ؟
+                        </h3>
+
+                        <p>
+                            اختيارات تفاعلية ونهايات مختلفة.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="category-button"
+                            data-game="horror"
+                        >
+                            ابدأ
+                        </button>
+
+                    </article>
+
+
+
+                    <article class="category-card science-card">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-flask"></i>
+                        </div>
+
+                        <span>
+                            علوم
+                        </span>
+
+                        <h3>
+                            تحدى معلوماتك
+                        </h3>
+
+                        <p>
+                            أسئلة علمية ممتعة ومتنوعة.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="category-button"
+                            data-game="science"
+                        >
+                            ابدأ
+                        </button>
+
+                    </article>
+
+
+
+                    <article class="category-card psychology-card">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+
+                        <span>
+                            شخصية
+                        </span>
+
+                        <h3>
+                            من أنا؟
+                        </h3>
+
+                        <p>
+                            اكتشف نمط تفكيرك داخل ZIVOZONE.
+                        </p>
+
+                        <button
+                            type="button"
+                            class="category-button"
+                            data-section="personality"
+                        >
+                            اكتشف
+                        </button>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 DAILY CHALLENGE
+            ================================================== -->
+
+            <section
+                id="dailyChallenge"
+                class="container section-block daily-section"
+            >
+
+                <div class="daily-card">
+
+
+                    <div class="daily-icon">
+
+                        <i class="fa-solid fa-bolt"></i>
+
+                    </div>
+
+
+                    <div class="daily-content">
+
+                        <span class="section-kicker">
+                            DAILY ZIVO
+                        </span>
+
+                        <h2>
+                            تحدي اليوم
+                        </h2>
+
+                        <p>
+                            ادخل يوميًا وارفع XP الخاص بك.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="primary-button"
+                        data-game="brain"
+                    >
+                        العب الآن
+                    </button>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 SPORTS PREVIEW
+                 لا نستخدم sportsNews هنا حتى لا يتكرر ID.
+            ================================================== -->
+
+            <section class="container section-block">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <span class="section-kicker">
+                            GLOBAL SPORTS
+                        </span>
+
+                        <h2>
+                            أخبار الرياضة
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="text-button"
+                        data-section="sports"
+                    >
+                        المزيد
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+
+                </div>
+
+
+                <div class="sports-grid">
+
+                    <article class="news-card">
+
+                        <span>
+                            Football
+                        </span>
+
+                        <h3>
+                            تابع أحدث الأخبار الرياضية داخل ZIVOZONE
+                        </h3>
+
+                    </article>
+
+
+                    <article class="news-card">
+
+                        <span>
+                            Results
+                        </span>
+
+                        <h3>
+                            النتائج والمباريات والبطولات
+                        </h3>
+
+                    </article>
+
+
+                    <article class="news-card">
+
+                        <span>
+                            Stars
+                        </span>
+
+                        <h3>
+                            أخبار النجوم والأندية العالمية
+                        </h3>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+
+        <!-- =================================================
+             GAMES
+        ================================================== -->
+
+        <section
+            id="games"
+            data-page-section="games"
+            class="page-section"
+        >
+
+            <div class="container section-page">
+
+
+                <div class="page-hero">
+
+                    <span class="section-kicker">
+                        ZIVO GAMES
+                    </span>
+
+                    <h1>
+                        الألعاب
+                    </h1>
+
+                    <p>
+                        اختر لعبتك وابدأ بجمع XP.
+                    </p>
+
+                </div>
+
+
+
+                <div class="games-grid">
+
+
+                    <article class="game-card-preview">
+
+                        <div class="game-preview-icon">
+                            🧠
+                        </div>
+
+                        <span>
+                            ذكاء
+                        </span>
+
+                        <h2>
+                            اختبار سرعة الذكاء
+                        </h2>
+
+                        <p>
+                            اختبر قدرتك على التفكير وحل المشكلات.
+                        </p>
+
+                        <div class="game-meta">
+
+                            <span>
+                                +50 XP
                             </span>
 
-                            <h2>
-                                تحدي اليوم
-                            </h2>
-
-                            <p>
-                                ادخل يومياً وارفع مستوى XP الخاص بك.
-                            </p>
+                            <span>
+                                3 أسئلة
+                            </span>
 
                         </div>
 
@@ -741,1253 +981,1261 @@
                             العب الآن
                         </button>
 
-                    </div>
-
-                </section>
+                    </article>
 
 
-                <!-- =================================================
-                     SPORTS NEWS PREVIEW
-                ================================================== -->
 
-                <section
-                    class="container section-block"
-                >
+                    <article class="game-card-preview">
 
-                    <div class="section-heading">
+                        <div class="game-preview-icon">
+                            👻
+                        </div>
 
-                        <div>
+                        <span>
+                            رعب
+                        </span>
 
-                            <span class="section-kicker">
-                                GLOBAL SPORTS
+                        <h2>
+                            الغرفة المظلمة
+                        </h2>
+
+                        <p>
+                            قراراتك تصنع تجربتك.
+                        </p>
+
+                        <div class="game-meta">
+
+                            <span>
+                                +75 XP
                             </span>
 
-                            <h2>
-                                آخر أخبار الرياضة
-                            </h2>
+                            <span>
+                                تفاعلية
+                            </span>
 
                         </div>
 
                         <button
                             type="button"
-                            class="text-button"
-                            data-section="sports"
+                            class="primary-button"
+                            data-game="horror"
                         >
-                            المزيد
-                            <i class="fa-solid fa-arrow-left"></i>
+                            ابدأ
                         </button>
 
-                    </div>
+                    </article>
 
 
-                    <div
-                        id="sportsNews"
-                        class="sports-grid"
-                    >
 
-                        <article class="news-card">
+                    <article class="game-card-preview">
 
-                            <span>
-                                Football
-                            </span>
-
-                            <h3>
-                                جاري تحميل الأخبار...
-                            </h3>
-
-                        </article>
-
-                    </div>
-
-                </section>
-
-            </section>
-
-
-            <!-- =================================================
-                 GAMES
-            ================================================== -->
-
-            <section
-                id="games"
-                data-page-section="games"
-                class="page-section"
-            >
-
-                <div class="container section-page">
-
-                    <div class="page-hero">
-
-                        <span class="section-kicker">
-                            ZIVO GAMES
-                        </span>
-
-                        <h1>
-                            الألعاب
-                        </h1>
-
-                        <p>
-                            اختر لعبتك وابدأ بجمع XP.
-                        </p>
-
-                    </div>
-
-
-                    <div class="games-grid">
-
-
-                        <article class="game-card-preview">
-
-                            <div class="game-preview-icon">
-                                🧠
-                            </div>
-
-                            <span>
-                                ذكاء
-                            </span>
-
-                            <h2>
-                                اختبار سرعة الذكاء
-                            </h2>
-
-                            <p>
-                                هل تستطيع حل الأسئلة قبل الآخرين؟
-                            </p>
-
-                            <div class="game-meta">
-
-                                <span>
-                                    +50 XP
-                                </span>
-
-                                <span>
-                                    3 أسئلة
-                                </span>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="primary-button"
-                                data-game="brain"
-                            >
-                                العب الآن
-                            </button>
-
-                        </article>
-
-
-                        <article class="game-card-preview">
-
-                            <div class="game-preview-icon">
-                                👻
-                            </div>
-
-                            <span>
-                                رعب
-                            </span>
-
-                            <h2>
-                                الغرفة المظلمة
-                            </h2>
-
-                            <p>
-                                اختياراتك ستحدد تجربتك.
-                            </p>
-
-                            <div class="game-meta">
-
-                                <span>
-                                    +75 XP
-                                </span>
-
-                                <span>
-                                    قصة تفاعلية
-                                </span>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="primary-button"
-                                data-game="horror"
-                            >
-                                ابدأ
-                            </button>
-
-                        </article>
-
-
-                        <article class="game-card-preview">
-
-                            <div class="game-preview-icon">
-                                🔬
-                            </div>
-
-                            <span>
-                                علوم
-                            </span>
-
-                            <h2>
-                                تحدي العلوم
-                            </h2>
-
-                            <p>
-                                اختبر معلوماتك العلمية.
-                            </p>
-
-                            <div class="game-meta">
-
-                                <span>
-                                    +60 XP
-                                </span>
-
-                                <span>
-                                    معلومات
-                                </span>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="primary-button"
-                                data-game="science"
-                            >
-                                العب الآن
-                            </button>
-
-                        </article>
-
-
-                        <article class="game-card-preview locked">
-
-                            <div class="game-preview-icon">
-                                🔒
-                            </div>
-
-                            <span>
-                                قريباً
-                            </span>
-
-                            <h2>
-                                ZIVO ARENA
-                            </h2>
-
-                            <p>
-                                منافسات مباشرة بين اللاعبين.
-                            </p>
-
-                            <div class="game-meta">
-
-                                <span>
-                                    ONLINE
-                                </span>
-
-                                <span>
-                                    قريباً
-                                </span>
-
-                            </div>
-
-                            <button
-                                type="button"
-                                class="secondary-button"
-                                disabled
-                            >
-                                قريباً
-                            </button>
-
-                        </article>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 CHALLENGES
-            ================================================== -->
-
-            <section
-                id="challenges"
-                data-page-section="challenges"
-                class="page-section"
-            >
-
-                <div class="container section-page">
-
-                    <div class="page-hero">
-
-                        <span class="section-kicker">
-                            CHALLENGE CENTER
-                        </span>
-
-                        <h1>
-                            مركز التحديات
-                        </h1>
-
-                        <p>
-                            تحديات يومية وأسبوعية وموسمية.
-                        </p>
-
-                    </div>
-
-
-                    <div class="challenge-grid">
-
-                        <article class="challenge-card">
-
-                            <div class="challenge-number">
-                                01
-                            </div>
-
-                            <h2>
-                                تحدي السرعة
-                            </h2>
-
-                            <p>
-                                أجب بأسرع ما يمكنك.
-                            </p>
-
-                            <strong>
-                                +30 XP
-                            </strong>
-
-                            <button
-                                type="button"
-                                class="primary-button"
-                                data-game="brain"
-                            >
-                                ابدأ
-                            </button>
-
-                        </article>
-
-
-                        <article class="challenge-card">
-
-                            <div class="challenge-number">
-                                02
-                            </div>
-
-                            <h2>
-                                تحدي العلوم
-                            </h2>
-
-                            <p>
-                                كم معلومة تستطيع الإجابة عنها؟
-                            </p>
-
-                            <strong>
-                                +35 XP
-                            </strong>
-
-                            <button
-                                type="button"
-                                class="primary-button"
-                                data-game="science"
-                            >
-                                ابدأ
-                            </button>
-
-                        </article>
-
-
-                        <article class="challenge-card">
-
-                            <div class="challenge-number">
-                                03
-                            </div>
-
-                            <h2>
-                                تحدي الظلام
-                            </h2>
-
-                            <p>
-                                اختر طريقك ولا تعرف النتيجة.
-                            </p>
-
-                            <strong>
-                                +45 XP
-                            </strong>
-
-                            <button
-                                type="button"
-                                class="primary-button"
-                                data-game="horror"
-                            >
-                                ابدأ
-                            </button>
-
-                        </article>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 GAME SCREEN
-            ================================================== -->
-
-            <section
-                id="game"
-                data-page-section="game"
-                class="page-section"
-            >
-
-                <div class="container section-page">
-
-                    <div
-                        id="gameContainer"
-                        class="game-container"
-                    >
-
-                        <div class="empty-state">
-
-                            <div>
-                                🎮
-                            </div>
-
-                            <h2>
-                                اختر لعبة للبدء
-                            </h2>
-
-                            <button
-                                type="button"
-                                class="primary-button"
-                                data-section="games"
-                            >
-                                الألعاب
-                            </button>
-
+                        <div class="game-preview-icon">
+                            🔬
                         </div>
 
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 PERSONALITY
-            ================================================== -->
-
-            <section
-                id="personality"
-                data-page-section="personality"
-                class="page-section"
-            >
-
-                <div class="container section-page">
-
-                    <div class="page-hero personality-hero">
-
-                        <span class="section-kicker">
-                            WHO AM I?
+                        <span>
+                            علوم
                         </span>
 
-                        <h1 data-i18n="personalityTitle">
-                            اكتشف شخصيتك
-                        </h1>
+                        <h2>
+                            تحدي العلوم
+                        </h2>
 
-                        <p data-i18n="personalityIntro">
-                            أجب عن الأسئلة بصراحة لتحصل على تحليل أولي لشخصيتك.
+                        <p>
+                            اختبر معلوماتك العلمية.
                         </p>
 
-                        <div class="important-note">
-
-                            <i class="fa-solid fa-circle-info"></i>
+                        <div class="game-meta">
 
                             <span>
-                                هذا الاختبار ترفيهي وليس تشخيصاً نفسياً أو طبياً.
+                                +60 XP
+                            </span>
+
+                            <span>
+                                معلومات
                             </span>
 
                         </div>
 
-                    </div>
+                        <button
+                            type="button"
+                            class="primary-button"
+                            data-game="science"
+                        >
+                            العب الآن
+                        </button>
+
+                    </article>
 
 
-                    <div
-                        id="personalityContainer"
-                        class="personality-container"
-                    >
 
-                        <!-- app.js renders the test here -->
+                    <article class="game-card-preview locked">
 
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 AI
-            ================================================== -->
-
-            <section
-                id="ai"
-                data-page-section="ai"
-                class="page-section"
-            >
-
-                <div class="container section-page">
-
-                    <div class="page-hero">
-
-                        <span class="section-kicker">
-                            ZIVO AI
-                        </span>
-
-                        <h1>
-                            ذكاء ZIVOZONE
-                        </h1>
-
-                        <p>
-                            تحدث مع مساعد ZIVO الذكي.
-                        </p>
-
-                    </div>
-
-
-                    <div class="ai-layout">
-
-                        <div class="ai-info">
-
-                            <div class="ai-big-icon">
-                                🤖
-                            </div>
-
-                            <h2>
-                                ZIVO AI
-                            </h2>
-
-                            <p>
-                                مساعد رقمي داخل عالم ZIVOZONE
-                                للإجابة والمساعدة والتفاعل مع المستخدمين.
-                            </p>
-
-
-                            <div class="ai-features">
-
-                                <div>
-                                    <i class="fa-solid fa-comments"></i>
-                                    محادثة ذكية
-                                </div>
-
-                                <div>
-                                    <i class="fa-solid fa-lightbulb"></i>
-                                    أفكار وتحليل
-                                </div>
-
-                                <div>
-                                    <i class="fa-solid fa-gamepad"></i>
-                                    مساعدة في الألعاب
-                                </div>
-
-                            </div>
-
+                        <div class="game-preview-icon">
+                            ⚔️
                         </div>
 
-
-                        <div class="ai-chat">
-
-                            <div class="ai-chat-header">
-
-                                <div class="ai-avatar">
-                                    Z
-                                </div>
-
-                                <div>
-
-                                    <strong>
-                                        ZIVO AI
-                                    </strong>
-
-                                    <span>
-                                        Online
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <div
-                                id="aiMessages"
-                                class="ai-messages"
-                            >
-
-                                <div class="ai-message assistant">
-                                    أهلاً بك في ZIVO AI 🤖
-                                    كيف يمكنني مساعدتك؟
-                                </div>
-
-                            </div>
-
-
-                            <form
-                                id="aiForm"
-                                class="ai-form"
-                                novalidate
-                            >
-
-                                <input
-                                    id="aiInput"
-                                    name="message"
-                                    type="text"
-                                    maxlength="1000"
-                                    autocomplete="off"
-                                    data-i18n-placeholder="aiPlaceholder"
-                                    placeholder="اكتب سؤالك للذكاء الاصطناعي..."
-                                    aria-label="رسالة الذكاء الاصطناعي"
-                                >
-
-                                <button
-                                    type="submit"
-                                    aria-label="إرسال"
-                                >
-
-                                    <i class="fa-solid fa-paper-plane"></i>
-
-                                </button>
-
-                            </form>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- =================================================
-                 SPORTS
-            ================================================== -->
-
-            <section
-                id="sports"
-                data-page-section="sports"
-                class="page-section"
-            >
-
-                <div class="container section-page">
-
-                    <div class="page-hero">
-
-                        <span class="section-kicker">
-                            GLOBAL SPORTS
+                        <span>
+                            قريبًا
                         </span>
 
-                        <h1>
-                            أخبار الرياضة العالمية
-                        </h1>
+                        <h2>
+                            ZIVO ARENA
+                        </h2>
 
                         <p>
-                            كرة القدم والنتائج والأخبار والنجوم.
+                            منافسات مباشرة بين اللاعبين.
                         </p>
+
+                        <div class="game-meta">
+
+                            <span>
+                                ONLINE
+                            </span>
+
+                            <span>
+                                قريبًا
+                            </span>
+
+                        </div>
 
                         <button
                             type="button"
                             class="secondary-button"
-                            data-action="refresh-sports"
+                            disabled
                         >
-                            <i class="fa-solid fa-rotate"></i>
-                            تحديث الأخبار
+                            قريبًا
                         </button>
 
-                    </div>
-
-
-                    <div
-                        id="sportsNews"
-                        class="sports-grid"
-                    >
-
-                    </div>
+                    </article>
 
                 </div>
 
-            </section>
+            </div>
 
+        </section>
 
-            <!-- =================================================
-                 PROFILE
-            ================================================== -->
-
-            <section
-                id="profile"
-                data-page-section="profile"
-                class="page-section"
-            >
-
-                <div class="container section-page">
-
-                    <div class="profile-layout">
-
-
-                        <!-- Profile -->
-
-                        <div class="profile-card">
-
-                            <div class="profile-avatar">
-                                Z
-                            </div>
-
-                            <h1 data-user-name>
-                                ZIVO Player
-                            </h1>
-
-                            <p data-user-email>
-                            </p>
-
-                            <div class="profile-level">
-
-                                <span>
-                                    المستوى
-                                </span>
-
-                                <strong data-level>
-                                    1
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- XP -->
-
-                        <div class="xp-card">
-
-                            <div class="xp-header">
-
-                                <div>
-
-                                    <span>
-                                        XP
-                                    </span>
-
-                                    <strong data-xp>
-                                        0
-                                    </strong>
-
-                                </div>
-
-                                <div>
-
-                                    <span>
-                                        المستوى
-                                    </span>
-
-                                    <strong data-level-name>
-                                        Explorer
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            <div class="xp-progress">
-
-                                <div
-                                    class="xp-progress-bar"
-                                    data-xp-progress
-                                    style="width:0%;"
-                                ></div>
-
-                            </div>
-
-
-                            <p>
-                                المستوى التالي:
-                                <strong data-next-level>
-                                    100
-                                </strong>
-                                XP
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-        </main>
 
 
         <!-- =================================================
-             FOOTER
+             CHALLENGES
         ================================================== -->
 
-        <footer class="main-footer">
+        <section
+            id="challenges"
+            data-page-section="challenges"
+            class="page-section"
+        >
 
-            <div class="container footer-grid">
+            <div class="container section-page">
 
 
-                <div class="footer-brand">
+                <div class="page-hero">
 
-                    <div class="footer-logo">
-                        Z
-                    </div>
+                    <span class="section-kicker">
+                        CHALLENGE CENTER
+                    </span>
 
-                    <h2>
-                        ZIVOZONE
-                    </h2>
+                    <h1>
+                        مركز التحديات
+                    </h1>
 
                     <p>
-                        عالم رقمي ترفيهي يجمع الألعاب
-                        والتحديات والذكاء والرياضة.
+                        تحديات يومية وأسبوعية وموسمية.
                     </p>
 
                 </div>
 
 
-                <div class="footer-links">
 
-                    <h3>
-                        ZIVOZONE
-                    </h3>
+                <div class="challenge-grid">
 
-                    <a
-                        href="#games"
-                        data-section="games"
-                    >
-                        الألعاب
-                    </a>
 
-                    <a
-                        href="#challenges"
-                        data-section="challenges"
-                    >
-                        التحديات
-                    </a>
+                    <article class="challenge-card">
 
-                    <a
-                        href="#ai"
-                        data-section="ai"
-                    >
-                        ZIVO AI
-                    </a>
+                        <div class="challenge-number">
+                            01
+                        </div>
 
-                    <a
-                        href="#personality"
-                        data-section="personality"
-                    >
-                        من أنا؟
-                    </a>
+                        <h2>
+                            تحدي السرعة
+                        </h2>
+
+                        <p>
+                            أجب بأسرع ما يمكنك.
+                        </p>
+
+                        <strong>
+                            +30 XP
+                        </strong>
+
+                        <button
+                            type="button"
+                            class="primary-button"
+                            data-game="brain"
+                        >
+                            ابدأ
+                        </button>
+
+                    </article>
+
+
+
+                    <article class="challenge-card">
+
+                        <div class="challenge-number">
+                            02
+                        </div>
+
+                        <h2>
+                            تحدي العلوم
+                        </h2>
+
+                        <p>
+                            اختبر معرفتك العلمية.
+                        </p>
+
+                        <strong>
+                            +35 XP
+                        </strong>
+
+                        <button
+                            type="button"
+                            class="primary-button"
+                            data-game="science"
+                        >
+                            ابدأ
+                        </button>
+
+                    </article>
+
+
+
+                    <article class="challenge-card">
+
+                        <div class="challenge-number">
+                            03
+                        </div>
+
+                        <h2>
+                            تحدي الظلام
+                        </h2>
+
+                        <p>
+                            اختر طريقك ولا تعرف النتيجة.
+                        </p>
+
+                        <strong>
+                            +45 XP
+                        </strong>
+
+                        <button
+                            type="button"
+                            class="primary-button"
+                            data-game="horror"
+                        >
+                            ابدأ
+                        </button>
+
+                    </article>
 
                 </div>
 
+            </div>
 
-                <div class="footer-links">
-
-                    <h3>
-                        المجتمع
-                    </h3>
-
-                    <a href="#">
-                        عن ZIVOZONE
-                    </a>
-
-                    <a href="#">
-                        تواصل معنا
-                    </a>
-
-                    <a href="#">
-                        الشروط والأحكام
-                    </a>
-
-                    <a href="#">
-                        سياسة الخصوصية
-                    </a>
-
-                </div>
+        </section>
 
 
-                <div class="footer-ad">
 
-                    <span>
-                        AD SPACE
-                    </span>
+        <!-- =================================================
+             GAME SCREEN
+        ================================================== -->
 
-                    <div>
-                        مساحة إعلانية
+        <section
+            id="game"
+            data-page-section="game"
+            class="page-section"
+        >
+
+            <div class="container section-page">
+
+                <div
+                    id="gameContainer"
+                    class="game-container"
+                >
+
+                    <div class="empty-state">
+
+                        <div>
+                            🎮
+                        </div>
+
+                        <h2>
+                            اختر لعبة للبدء
+                        </h2>
+
+                        <button
+                            type="button"
+                            class="primary-button"
+                            data-section="games"
+                        >
+                            الألعاب
+                        </button>
+
                     </div>
 
                 </div>
 
             </div>
 
+        </section>
 
-            <div class="container footer-bottom">
 
-                <p>
-                    ©
-                    <span id="currentYear"></span>
-                    ZIVOZONE.
-                    جميع الحقوق محفوظة.
-                </p>
 
-                <span>
-                    Built for the next generation.
-                </span>
+        <!-- =================================================
+             PERSONALITY
+        ================================================== -->
+
+        <section
+            id="personality"
+            data-page-section="personality"
+            class="page-section"
+        >
+
+            <div class="container section-page">
+
+
+                <div class="page-hero personality-hero">
+
+                    <span class="section-kicker">
+                        WHO AM I?
+                    </span>
+
+                    <h1 data-i18n="personalityTitle">
+                        اكتشف شخصيتك
+                    </h1>
+
+                    <p data-i18n="personalityIntro">
+                        أجب عن الأسئلة بصراحة لتحصل على تحليل ترفيهي.
+                    </p>
+
+
+                    <div class="important-note">
+
+                        <i class="fa-solid fa-circle-info"></i>
+
+                        <span>
+                            هذا الاختبار ترفيهي ولا يمثل تشخيصًا نفسيًا أو طبيًا.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="personalityContainer"
+                    class="personality-container"
+                ></div>
 
             </div>
 
-        </footer>
+        </section>
 
-    </div>
+
+
+        <!-- =================================================
+             AI
+        ================================================== -->
+
+        <section
+            id="ai"
+            data-page-section="ai"
+            class="page-section"
+        >
+
+            <div class="container section-page">
+
+
+                <div class="page-hero">
+
+                    <span class="section-kicker">
+                        ZIVO AI
+                    </span>
+
+                    <h1>
+                        ZIVO AI
+                    </h1>
+
+                    <p>
+                        مساعد ZIVO الذكي داخل عالمك الرقمي.
+                    </p>
+
+                </div>
+
+
+
+                <div class="ai-layout">
+
+
+                    <div class="ai-info">
+
+                        <div class="ai-big-icon">
+                            🤖
+                        </div>
+
+                        <h2>
+                            ذكاء ZIVOZONE
+                        </h2>
+
+                        <p>
+                            مساعد ذكي للمحادثة والتفكير
+                            والمساعدة داخل المنصة.
+                        </p>
+
+
+                        <div class="ai-features">
+
+                            <div>
+
+                                <i class="fa-solid fa-comments"></i>
+
+                                محادثة ذكية
+
+                            </div>
+
+
+                            <div>
+
+                                <i class="fa-solid fa-lightbulb"></i>
+
+                                أفكار وتحليل
+
+                            </div>
+
+
+                            <div>
+
+                                <i class="fa-solid fa-gamepad"></i>
+
+                                مساعدة في الألعاب
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="ai-chat">
+
+
+                        <div class="ai-chat-header">
+
+                            <div class="ai-avatar">
+                                Z
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    ZIVO AI
+                                </strong>
+
+                                <span>
+                                    Online
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="aiMessages"
+                            class="ai-messages"
+                        >
+
+                            <div class="ai-message assistant">
+
+                                أهلاً بك في ZIVO AI 🤖
+                                كيف يمكنني مساعدتك؟
+
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            id="aiForm"
+                            class="ai-form"
+                            novalidate
+                        >
+
+                            <input
+                                id="aiInput"
+                                name="message"
+                                type="text"
+                                maxlength="1000"
+                                autocomplete="off"
+                                data-i18n-placeholder="aiPlaceholder"
+                                placeholder="اكتب سؤالك للذكاء الاصطناعي..."
+                                aria-label="رسالة الذكاء الاصطناعي"
+                            >
+
+
+                            <button
+                                type="submit"
+                                aria-label="إرسال"
+                            >
+
+                                <i class="fa-solid fa-paper-plane"></i>
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             SPORTS
+        ================================================== -->
+
+        <section
+            id="sports"
+            data-page-section="sports"
+            class="page-section"
+        >
+
+            <div class="container section-page">
+
+
+                <div class="page-hero">
+
+                    <span class="section-kicker">
+                        GLOBAL SPORTS
+                    </span>
+
+                    <h1>
+                        أخبار الرياضة العالمية
+                    </h1>
+
+                    <p>
+                        كرة القدم والنتائج والنجوم والبطولات.
+                    </p>
+
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        data-action="refresh-sports"
+                    >
+
+                        <i class="fa-solid fa-rotate"></i>
+
+                        تحديث الأخبار
+
+                    </button>
+
+                </div>
+
+
+
+                <!--
+                    هذا هو العنصر الوحيد الذي يحمل sportsNews.
+                    app.js سيضع الأخبار داخله.
+                -->
+
+                <div
+                    id="sportsNews"
+                    class="sports-grid"
+                >
+
+                    <article class="news-card">
+
+                        <span>
+                            ZIVO SPORTS
+                        </span>
+
+                        <h3>
+                            جاري تحميل الأخبار...
+                        </h3>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             PROFILE
+        ================================================== -->
+
+        <section
+            id="profile"
+            data-page-section="profile"
+            class="page-section"
+        >
+
+            <div class="container section-page">
+
+
+                <div class="profile-layout">
+
+
+                    <div class="profile-card">
+
+                        <div class="profile-avatar">
+                            Z
+                        </div>
+
+
+                        <h1 data-user-name>
+                            ZIVO Player
+                        </h1>
+
+
+                        <p data-user-email></p>
+
+
+                        <div class="profile-level">
+
+                            <span>
+                                المستوى
+                            </span>
+
+                            <strong data-level>
+                                1
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="xp-card">
+
+
+                        <div class="xp-header">
+
+
+                            <div>
+
+                                <span>
+                                    XP
+                                </span>
+
+                                <strong data-xp>
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    المستوى
+                                </span>
+
+                                <strong data-level-name>
+                                    Explorer
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="xp-progress">
+
+                            <div
+                                class="xp-progress-bar"
+                                data-xp-progress
+                                style="width:0%;"
+                            ></div>
+
+                        </div>
+
+
+                        <p>
+
+                            المستوى التالي:
+
+                            <strong data-next-level>
+                                100
+                            </strong>
+
+                            XP
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
 
 
     <!-- =====================================================
-         LOGIN MODAL
+         FOOTER
     ====================================================== -->
 
-    <div
-        id="loginModal"
-        class="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="loginTitle"
-    >
+    <footer class="main-footer">
 
-        <div class="modal-overlay"></div>
-
-        <div class="modal-content">
-
-            <button
-                type="button"
-                class="modal-close"
-                onclick="closeModal('loginModal')"
-                aria-label="إغلاق"
-            >
-                <i class="fa-solid fa-xmark"></i>
-            </button>
+        <div class="container footer-grid">
 
 
-            <div class="modal-icon">
-                <i class="fa-solid fa-user"></i>
+            <div class="footer-brand">
+
+                <div class="footer-logo">
+                    Z
+                </div>
+
+                <h2>
+                    ZIVOZONE
+                </h2>
+
+                <p>
+                    عالم رقمي ترفيهي يجمع الألعاب
+                    والتحديات والذكاء والرياضة.
+                </p>
+
             </div>
 
 
-            <h2 id="loginTitle">
-                انضم إلى ZIVOZONE
-            </h2>
 
+            <div class="footer-links">
 
-            <p>
-                أنشئ ملفك واحفظ تقدمك وXP الخاص بك.
-            </p>
+                <h3>
+                    ZIVOZONE
+                </h3>
 
-
-            <form
-                id="loginForm"
-                novalidate
-            >
-
-                <div class="form-group">
-
-                    <label for="userName">
-                        الاسم
-                    </label>
-
-                    <input
-                        id="userName"
-                        name="name"
-                        type="text"
-                        maxlength="50"
-                        autocomplete="name"
-                        placeholder="اكتب اسمك"
-                        required
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="userEmail">
-                        البريد الإلكتروني
-                    </label>
-
-                    <input
-                        id="userEmail"
-                        name="email"
-                        type="email"
-                        maxlength="254"
-                        autocomplete="email"
-                        placeholder="name@example.com"
-                        required
-                    >
-
-                </div>
-
-
-                <button
-                    type="submit"
-                    class="primary-button full-width"
+                <a
+                    href="#games"
+                    data-section="games"
                 >
+                    الألعاب
+                </a>
 
-                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <a
+                    href="#challenges"
+                    data-section="challenges"
+                >
+                    التحديات
+                </a>
 
-                    <span data-i18n="login">
-                        تسجيل الدخول
-                    </span>
+                <a
+                    href="#ai"
+                    data-section="ai"
+                >
+                    ZIVO AI
+                </a>
 
-                </button>
+                <a
+                    href="#personality"
+                    data-section="personality"
+                >
+                    من أنا؟
+                </a>
 
-            </form>
+            </div>
 
 
-            <small>
-                في النسخة الحالية يتم حفظ البيانات محلياً
-                على جهازك. نظام الحسابات الحقيقي سيُربط
-                بقاعدة بيانات آمنة لاحقاً.
-            </small>
+
+            <div class="footer-links">
+
+                <h3>
+                    المجتمع
+                </h3>
+
+                <a
+                    href="#profile"
+                    data-section="profile"
+                >
+                    ملفي
+                </a>
+
+                <a href="#">
+                    تواصل معنا
+                </a>
+
+                <a href="#">
+                    الشروط والأحكام
+                </a>
+
+                <a href="#">
+                    سياسة الخصوصية
+                </a>
+
+            </div>
+
+
+
+            <div class="footer-ad">
+
+                <span>
+                    AD SPACE
+                </span>
+
+                <div>
+                    مساحة إعلانية
+                </div>
+
+            </div>
 
         </div>
 
+
+
+        <div class="container footer-bottom">
+
+            <p>
+
+                ©
+
+                <span id="currentYear"></span>
+
+                ZIVOZONE
+
+                —
+                جميع الحقوق محفوظة.
+
+            </p>
+
+            <span>
+                Built for the next generation.
+            </span>
+
+        </div>
+
+    </footer>
+
+</div>
+
+
+
+<!-- =========================================================
+     LOGIN MODAL
+========================================================= -->
+
+<div
+    id="loginModal"
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="loginTitle"
+>
+
+
+    <div class="modal-overlay"></div>
+
+
+    <div class="modal-content">
+
+
+        <button
+            type="button"
+            class="modal-close"
+            onclick="closeModal('loginModal')"
+            aria-label="إغلاق"
+        >
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </button>
+
+
+        <div class="modal-icon">
+
+            <i class="fa-solid fa-user"></i>
+
+        </div>
+
+
+        <h2 id="loginTitle">
+            انضم إلى ZIVOZONE
+        </h2>
+
+
+        <p>
+            أنشئ ملفك واحفظ تقدمك وXP الخاص بك.
+        </p>
+
+
+
+        <form
+            id="loginForm"
+            novalidate
+        >
+
+
+            <div class="form-group">
+
+                <label for="userName">
+                    الاسم
+                </label>
+
+                <input
+                    id="userName"
+                    name="name"
+                    type="text"
+                    maxlength="50"
+                    autocomplete="name"
+                    placeholder="اكتب اسمك"
+                    required
+                >
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <label for="userEmail">
+                    البريد الإلكتروني
+                </label>
+
+                <input
+                    id="userEmail"
+                    name="email"
+                    type="email"
+                    maxlength="254"
+                    autocomplete="email"
+                    placeholder="name@example.com"
+                    required
+                >
+
+            </div>
+
+
+
+            <button
+                type="submit"
+                class="primary-button full-width"
+            >
+
+                <i class="fa-solid fa-right-to-bracket"></i>
+
+                <span data-i18n="login">
+                    تسجيل الدخول
+                </span>
+
+            </button>
+
+
+        </form>
+
+
+        <small>
+
+            النسخة الحالية تستخدم التخزين المحلي
+            للتجربة. الحسابات السحابية الحقيقية
+            ستكون في مرحلة Backend القادمة.
+
+        </small>
+
+
     </div>
 
-
-    <!-- =====================================================
-         NOTIFICATIONS
-    ====================================================== -->
-
-    <div
-        id="zivoNotifications"
-        class="zivo-notifications"
-        aria-live="polite"
-        aria-atomic="true"
-    ></div>
+</div>
 
 
-    <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
 
-    <script>
+<!-- =========================================================
+     NOTIFICATIONS
+========================================================= -->
 
-        /*
-         * حماية شاشة التحميل:
-         * حتى إذا حدث خطأ في ملف app.js، لا تبقى الشاشة
-         * السوداء أمام المستخدم إلى ما لا نهاية.
-         */
+<div
+    id="zivoNotifications"
+    class="zivo-notifications"
+    aria-live="polite"
+    aria-atomic="true"
+></div>
 
-        window.addEventListener("load", function () {
+
+
+<!-- =========================================================
+     LOADING FALLBACK
+========================================================= -->
+
+<script>
+
+(function () {
+
+    "use strict";
+
+    /*
+     * حماية مهمة:
+     * app.js لا يجب أن يمنع المستخدم من رؤية الموقع
+     * إذا حدث خطأ أو تأخر تحميل أحد الموارد.
+     */
+
+    function hideLoadingScreen() {
+
+        try {
+
+            const screen =
+                document.getElementById(
+                    "loadingScreen"
+                );
+
+            if (!screen) {
+                return;
+            }
+
+            screen.classList.add("hidden");
+
+            setTimeout(function () {
+
+                try {
+
+                    screen.style.display = "none";
+
+                } catch (error) {
+
+                    console.error(
+                        "Loading cleanup error:",
+                        error
+                    );
+
+                }
+
+            }, 600);
+
+        } catch (error) {
+
+            console.error(
+                "Loading screen error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    /*
+     * إخفاء شاشة التحميل بعد تحميل الصفحة.
+     */
+
+    window.addEventListener(
+        "load",
+        function () {
+
+            setTimeout(
+                hideLoadingScreen,
+                700
+            );
+
+        }
+    );
+
+
+    /*
+     * حماية إضافية:
+     * إذا تعطل JavaScript بعد مدة، لا تبقى الشاشة عالقة.
+     */
+
+    setTimeout(
+        hideLoadingScreen,
+        5000
+    );
+
+
+    /*
+     * السنة الحالية.
+     */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
 
             try {
 
-                const loadingScreen =
+                const year =
                     document.getElementById(
-                        "loadingScreen"
+                        "currentYear"
                     );
 
-                if (!loadingScreen) {
-                    return;
+                if (year) {
+
+                    year.textContent =
+                        new Date().getFullYear();
+
                 }
-
-                setTimeout(function () {
-
-                    loadingScreen.classList.add(
-                        "hidden"
-                    );
-
-                    setTimeout(function () {
-
-                        loadingScreen.style.display =
-                            "none";
-
-                    }, 500);
-
-                }, 700);
 
             } catch (error) {
 
                 console.error(
-                    "Loading screen error:",
+                    "Year initialization error:",
                     error
                 );
 
             }
 
-        });
+        }
+    );
 
 
-        /*
-         * السنة الحالية للفوتر.
-         */
+    /*
+     * إغلاق النوافذ عند الضغط على الخلفية.
+     */
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
+    document.addEventListener(
+        "click",
+        function (event) {
 
-                try {
+            try {
 
-                    const year =
-                        document.getElementById(
-                            "currentYear"
+                if (
+                    event.target.classList.contains(
+                        "modal-overlay"
+                    )
+                ) {
+
+                    const modal =
+                        event.target.closest(
+                            ".modal"
                         );
 
-                    if (year) {
-                        year.textContent =
-                            new Date().getFullYear();
-                    }
+                    if (modal) {
 
-                } catch (error) {
-
-                    console.error(
-                        "Year initialization error:",
-                        error
-                    );
-
-                }
-
-            }
-        );
-
-
-        /*
-         * إغلاق الـModal عند الضغط على الخلفية.
-         */
-
-        document.addEventListener(
-            "click",
-            function (event) {
-
-                try {
-
-                    if (
-                        event.target.classList.contains(
-                            "modal-overlay"
-                        )
-                    ) {
-
-                        const modal =
-                            event.target.closest(
-                                ".modal"
-                            );
-
-                        if (modal) {
-                            modal.classList.remove(
-                                "active"
-                            );
-                        }
+                        modal.classList.remove(
+                            "active"
+                        );
 
                     }
 
-                } catch (error) {
-
-                    console.error(
-                        "Modal overlay error:",
-                        error
-                    );
-
                 }
 
+            } catch (error) {
+
+                console.error(
+                    "Modal background error:",
+                    error
+                );
+
             }
-        );
+
+        }
+    );
 
 
-        /*
-         * إغلاق الـModal بزر ESC.
-         */
+    /*
+     * إغلاق Modal بزر ESC.
+     */
 
-        document.addEventListener(
-            "keydown",
-            function (event) {
+    document.addEventListener(
+        "keydown",
+        function (event) {
 
-                try {
+            try {
 
-                    if (event.key !== "Escape") {
-                        return;
-                    }
-
-                    document
-                        .querySelectorAll(".modal.active")
-                        .forEach(function (modal) {
-
-                            modal.classList.remove(
-                                "active"
-                            );
-
-                        });
-
-                } catch (error) {
-
-                    console.error(
-                        "ESC modal error:",
-                        error
-                    );
-
+                if (event.key !== "Escape") {
+                    return;
                 }
 
+                document
+                    .querySelectorAll(
+                        ".modal.active"
+                    )
+                    .forEach(function (modal) {
+
+                        modal.classList.remove(
+                            "active"
+                        );
+
+                    });
+
+            } catch (error) {
+
+                console.error(
+                    "Modal ESC error:",
+                    error
+                );
+
             }
-        );
 
-    </script>
+        }
+    );
 
+})();
 
-    <!-- =====================================================
-         Main Application
-    ====================================================== -->
-
-    <script
-        src="app.js"
-        defer
-    ></script>
+</script>
 
 
-    <!-- =====================================================
-         Safety fallback
-    ====================================================== -->
 
-    <noscript>
+<!-- =========================================================
+     APPLICATION JAVASCRIPT
+========================================================= -->
 
-        <div
-            style="
-                position:fixed;
-                inset:0;
-                z-index:999999;
-                background:#07111f;
-                color:#fff;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                text-align:center;
-                padding:30px;
-                font-family:Arial,sans-serif;
-            "
-        >
+<script
+    src="app.js"
+    defer
+></script>
 
-            <div>
 
-                <h1>
-                    ZIVOZONE
-                </h1>
 
-                <p>
-                    يرجى تفعيل JavaScript لتشغيل الموقع.
-                </p>
+<!-- =========================================================
+     NOSCRIPT
+========================================================= -->
 
-            </div>
+<noscript>
+
+    <div
+        style="
+            position:fixed;
+            inset:0;
+            z-index:999999;
+            background:#07111f;
+            color:#ffffff;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            padding:30px;
+            font-family:Arial,sans-serif;
+        "
+    >
+
+        <div>
+
+            <h1>
+                ZIVOZONE
+            </h1>
+
+            <p>
+                يرجى تفعيل JavaScript لتشغيل ZIVOZONE.
+            </p>
 
         </div>
 
-    </noscript>
+    </div>
+
+</noscript>
+
 
 </body>
+
 </html>
