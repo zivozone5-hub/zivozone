@@ -1,191 +1,425 @@
-(() => {
+/* ============================================================
+   ZIVOZONE AUTHENTICATION
+   Firebase Compat - Stable GitHub Pages Version
+============================================================ */
+
+(function () {
 
     "use strict";
 
 
-    // ========================================================
-    // ZIVOZONE AUTHENTICATION
-    // ========================================================
+    /* ========================================================
+       FIREBASE CONFIG
+    ======================================================== */
 
-    const firebaseConfig =
-        window.ZIVOZONE_FIREBASE_CONFIG;
+    const firebaseConfig = {
+
+        apiKey:
+            "AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s",
+
+        authDomain:
+            "zivozone-fc6ed.firebaseapp.com",
+
+        projectId:
+            "zivozone-fc6ed",
+
+        storageBucket:
+            "zivozone-fc6ed.firebasestorage.app",
+
+        messagingSenderId:
+            "169366383094",
+
+        appId:
+            "1:169366383094:web:5875e8d24b1c543e4a7fd7",
+
+        measurementId:
+            "G-ZXW8LP39JY"
+
+    };
 
 
-    if (!firebaseConfig) {
+    /* ========================================================
+       GLOBAL STATUS
+    ======================================================== */
 
-        console.error(
-            "ZIVOZONE: Firebase configuration is missing."
-        );
+    window.ZIVOZONE_FIREBASE_CONFIG =
+        firebaseConfig;
 
-        window.ZIVOZONE_AUTH = createFallbackAuth(
-            "تعذر تحميل إعدادات Firebase."
-        );
 
-        return;
+    let firebaseApp = null;
+
+    let auth = null;
+
+    let db = null;
+
+
+    /* ========================================================
+       FIREBASE INITIALIZATION
+    ======================================================== */
+
+    function initializeFirebase() {
+
+        try {
+
+            if (
+                typeof firebase === "undefined"
+            ) {
+
+                throw new Error(
+                    "Firebase SDK لم يتم تحميله."
+                );
+
+            }
+
+
+            if (
+                !firebase.apps.length
+            ) {
+
+                firebaseApp =
+                    firebase.initializeApp(
+                        firebaseConfig
+                    );
+
+            } else {
+
+                firebaseApp =
+                    firebase.app();
+
+            }
+
+
+            auth =
+                firebase.auth();
+
+
+            db =
+                firebase.firestore();
+
+
+            window.ZIVOZONE_FIREBASE_READY =
+                true;
+
+
+            console.log(
+                "🔥 ZIVOZONE Firebase initialized successfully."
+            );
+
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                "ZIVOZONE Firebase initialization error:",
+                error
+            );
+
+
+            window.ZIVOZONE_FIREBASE_READY =
+                false;
+
+
+            window.dispatchEvent(
+                new CustomEvent(
+                    "zivozone-firebase-error",
+                    {
+                        detail: error
+                    }
+                )
+            );
+
+
+            return false;
+
+        }
+
     }
 
 
-    if (
-        typeof firebase === "undefined"
+    const firebaseReady =
+        initializeFirebase();
+
+
+    /* ========================================================
+       DEFAULT PLAYER
+    ======================================================== */
+
+    const DEFAULT_PLAYER = {
+
+        level: 1,
+
+        xp: 0,
+
+        coins: 0,
+
+        wins: 0,
+
+        losses: 0,
+
+        gamesPlayed: 0,
+
+        streak: 0,
+
+        age: null,
+
+        language: "ar",
+
+        role: "player"
+
+    };
+
+
+    /* ========================================================
+       LOCAL FALLBACK
+       
+       إذا كان Firestore غير متاح،
+       الحساب نفسه يبقى يعمل.
+    ======================================================== */
+
+    function localKey(uid) {
+
+        return "zivozone_player_" + uid;
+
+    }
+
+
+    function getLocalPlayer(uid) {
+
+        try {
+
+            const raw =
+                localStorage.getItem(
+                    localKey(uid)
+                );
+
+
+            if (!raw) {
+
+                return null;
+
+            }
+
+
+            return JSON.parse(raw);
+
+        } catch {
+
+            return null;
+
+        }
+
+    }
+
+
+    function saveLocalPlayer(player) {
+
+        try {
+
+            if (
+                player &&
+                player.uid
+            ) {
+
+                localStorage.setItem(
+                    localKey(player.uid),
+                    JSON.stringify(player)
+                );
+
+            }
+
+        } catch {
+
+        }
+
+    }
+
+
+    /* ========================================================
+       CREATE PLAYER
+    ======================================================== */
+
+    async function createPlayerProfile(
+        user,
+        extraData = {}
     ) {
 
-        console.error(
-            "ZIVOZONE: Firebase SDK is not loaded."
-        );
+        if (!user) {
 
-        window.ZIVOZONE_AUTH = createFallbackAuth(
-            "تعذر تحميل Firebase."
-        );
-
-        return;
-    }
-
-
-    // ========================================================
-    // FIREBASE INITIALIZATION
-    // ========================================================
-
-    let app;
-    let auth;
-    let db;
-
-
-    try {
-
-        if (!firebase.apps.length) {
-
-            app = firebase.initializeApp(
-                firebaseConfig
+            throw new Error(
+                "لا يوجد لاعب صالح."
             );
-
-        } else {
-
-            app = firebase.app();
 
         }
 
 
-        auth =
-            firebase.auth();
+        const localPlayer =
+            getLocalPlayer(user.uid);
 
 
-        db =
-            firebase.firestore();
+        if (localPlayer) {
+
+            return localPlayer;
+
+        }
 
 
-    } catch (error) {
+        const player = {
 
-        console.error(
-            "ZIVOZONE Firebase initialization error:",
-            error
-        );
+            ...DEFAULT_PLAYER,
+
+            uid:
+                user.uid,
+
+            name:
+                extraData.name ||
+                user.displayName ||
+                "ZIVO Player",
+
+            email:
+                user.email ||
+                "",
+
+            age:
+                extraData.age ??
+                null,
+
+            language:
+                extraData.language ||
+                "ar",
+
+            createdAt:
+                new Date().toISOString(),
+
+            updatedAt:
+                new Date().toISOString()
+
+        };
 
 
-        window.ZIVOZONE_AUTH =
-            createFallbackAuth(
-                "حدث خطأ أثناء الاتصال بخدمة الحسابات."
-            );
+        /* ==============================================
+           FIRESTORE
+        =============================================== */
 
-        return;
-    }
+        if (db) {
 
+            try {
 
-    // ========================================================
-    // ERROR TRANSLATION
-    // ========================================================
-
-    function translateError(error) {
-
-        console.error(
-            "ZIVOZONE Auth Error:",
-            error
-        );
+                const ref =
+                    db
+                        .collection("users")
+                        .doc(user.uid);
 
 
-        const code =
-            error?.code || "";
+                const snap =
+                    await ref.get();
 
 
-        switch (code) {
+                if (snap.exists) {
 
-            case "auth/email-already-in-use":
-                return "هذا البريد مستخدم مسبقًا.";
+                    const existing = {
 
-            case "auth/invalid-email":
-                return "البريد الإلكتروني غير صحيح.";
+                        uid:
+                            user.uid,
 
-            case "auth/weak-password":
-                return "كلمة المرور يجب أن تكون 6 أحرف على الأقل.";
+                        ...snap.data()
 
-            case "auth/invalid-credential":
-                return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+                    };
 
-            case "auth/user-not-found":
-                return "لا يوجد حساب بهذا البريد.";
 
-            case "auth/wrong-password":
-                return "كلمة المرور غير صحيحة.";
+                    saveLocalPlayer(
+                        existing
+                    );
 
-            case "auth/too-many-requests":
-                return "محاولات كثيرة. حاول لاحقًا.";
 
-            case "auth/network-request-failed":
-                return "تحقق من اتصال الإنترنت.";
+                    return existing;
 
-            case "auth/api-key-not-valid":
-                return "مفتاح Firebase غير صالح.";
+                }
 
-            case "permission-denied":
-                return "ليس لديك صلاحية لهذه العملية.";
 
-            default:
-                return (
-                    error?.message ||
-                    "حدث خطأ. حاول مرة أخرى."
+                await ref.set(
+                    player
                 );
+
+
+                saveLocalPlayer(
+                    player
+                );
+
+
+                return player;
+
+            } catch (error) {
+
+                console.warn(
+                    "Firestore unavailable:",
+                    error
+                );
+
+            }
+
         }
+
+
+        saveLocalPlayer(
+            player
+        );
+
+
+        return player;
+
     }
 
 
-    // ========================================================
-    // REGISTER
-    // ========================================================
+    /* ========================================================
+       REGISTER
+    ======================================================== */
 
-    async function register(
+    async function registerPlayer({
         name,
         email,
-        password
-    ) {
+        password,
+        age,
+        language = "ar"
+    }) {
 
-        name =
-            String(name || "").trim();
-
-        email =
-            String(email || "").trim();
-
-        password =
-            String(password || "");
-
-
-        if (!name) {
+        if (!firebaseReady || !auth) {
 
             throw new Error(
-                "اكتب اسمك."
+                "نظام الحسابات غير متاح حاليًا. أعد تحميل الصفحة."
             );
 
         }
 
 
-        if (!email) {
+        if (
+            !name ||
+            name.trim().length < 2
+        ) {
 
             throw new Error(
-                "اكتب البريد الإلكتروني."
+                "اكتب اسم اللاعب."
             );
 
         }
 
 
-        if (password.length < 6) {
+        if (
+            !email ||
+            !email.includes("@")
+        ) {
+
+            throw new Error(
+                "أدخل بريدًا إلكترونيًا صحيحًا."
+            );
+
+        }
+
+
+        if (
+            !password ||
+            password.length < 6
+        ) {
 
             throw new Error(
                 "كلمة المرور يجب أن تكون 6 أحرف على الأقل."
@@ -194,488 +428,603 @@
         }
 
 
+        const numericAge =
+            Number(age);
+
+
+        if (
+            !Number.isInteger(
+                numericAge
+            ) ||
+            numericAge < 5 ||
+            numericAge > 100
+        ) {
+
+            throw new Error(
+                "أدخل عمرًا صحيحًا."
+            );
+
+        }
+
+
         try {
 
-            const credential =
+            const result =
                 await auth.createUserWithEmailAndPassword(
-                    email,
+                    email.trim().toLowerCase(),
                     password
                 );
 
 
             const user =
-                credential.user;
+                result.user;
 
 
-            // تحديث اسم المستخدم
             await user.updateProfile({
 
                 displayName:
-                    name
+                    name.trim()
 
             });
 
 
-            // إنشاء ملف اللاعب
-            await db
-                .collection("players")
-                .doc(user.uid)
-                .set({
-
-                    uid:
-                        user.uid,
-
-                    name:
-                        name,
-
-                    email:
-                        email,
-
-                    level:
-                        1,
-
-                    xp:
-                        0,
-
-                    coins:
-                        0,
-
-                    wins:
-                        0,
-
-                    createdAt:
-                        firebase.firestore.FieldValue.serverTimestamp(),
-
-                    updatedAt:
-                        firebase.firestore.FieldValue.serverTimestamp()
-
-                }, {
-
-                    merge:
-                        true
-
-                });
-
-
-            return user;
-
-        } catch (error) {
-
-            const message =
-                translateError(error);
-
-
-            const translated =
-                new Error(message);
-
-
-            translated.code =
-                error?.code;
-
-
-            throw translated;
-        }
-    }
-
-
-    // ========================================================
-    // LOGIN
-    // ========================================================
-
-    async function login(
-        email,
-        password
-    ) {
-
-        email =
-            String(email || "").trim();
-
-        password =
-            String(password || "");
-
-
-        if (!email) {
-
-            throw new Error(
-                "اكتب البريد الإلكتروني."
-            );
-
-        }
-
-
-        if (!password) {
-
-            throw new Error(
-                "اكتب كلمة المرور."
-            );
-
-        }
-
-
-        try {
-
-            const credential =
-                await auth.signInWithEmailAndPassword(
-                    email,
-                    password
-                );
-
-
-            return credential.user;
-
-        } catch (error) {
-
-            const message =
-                translateError(error);
-
-
-            const translated =
-                new Error(message);
-
-
-            translated.code =
-                error?.code;
-
-
-            throw translated;
-        }
-    }
-
-
-    // ========================================================
-    // LOGOUT
-    // ========================================================
-
-    async function logout() {
-
-        try {
-
-            await auth.signOut();
-
-        } catch (error) {
-
-            throw new Error(
-                translateError(error)
-            );
-
-        }
-
-    }
-
-
-    // ========================================================
-    // UPDATE PROFILE
-    // ========================================================
-
-    async function update(
-        data = {}
-    ) {
-
-        const user =
-            auth.currentUser;
-
-
-        if (!user) {
-
-            throw new Error(
-                "يجب تسجيل الدخول أولًا."
-            );
-
-        }
-
-
-        try {
-
-            const updateData = {};
-
-
-            if (
-                typeof data.name === "string" &&
-                data.name.trim()
-            ) {
-
-                updateData.name =
-                    data.name.trim();
-
-
-                await user.updateProfile({
-
-                    displayName:
-                        data.name.trim()
-
-                });
-
-            }
-
-
-            if (
-                typeof data.level === "number"
-            ) {
-
-                updateData.level =
-                    data.level;
-
-            }
-
-
-            if (
-                typeof data.xp === "number"
-            ) {
-
-                updateData.xp =
-                    data.xp;
-
-            }
-
-
-            if (
-                typeof data.coins === "number"
-            ) {
-
-                updateData.coins =
-                    data.coins;
-
-            }
-
-
-            if (
-                typeof data.wins === "number"
-            ) {
-
-                updateData.wins =
-                    data.wins;
-
-            }
-
-
-            updateData.updatedAt =
-                firebase.firestore.FieldValue.serverTimestamp();
-
-
-            await db
-                .collection("players")
-                .doc(user.uid)
-                .set(
-                    updateData,
+            const player =
+                await createPlayerProfile(
+                    user,
                     {
-                        merge: true
+                        name:
+                            name.trim(),
+
+                        age:
+                            numericAge,
+
+                        language
+
                     }
                 );
 
 
-            return true;
-
-        } catch (error) {
-
-            throw new Error(
-                translateError(error)
+            dispatchAuth(
+                true,
+                user,
+                player
             );
-
-        }
-
-    }
-
-
-    // ========================================================
-    // GET CURRENT USER
-    // ========================================================
-
-    function getUser() {
-
-        return auth.currentUser || null;
-
-    }
-
-
-    // ========================================================
-    // GET PLAYER
-    // ========================================================
-
-    async function getPlayer() {
-
-        const user =
-            auth.currentUser;
-
-
-        if (!user) {
-            return null;
-        }
-
-
-        try {
-
-            const snapshot =
-                await db
-                    .collection("players")
-                    .doc(user.uid)
-                    .get();
-
-
-            if (!snapshot.exists) {
-
-                return {
-
-                    uid:
-                        user.uid,
-
-                    name:
-                        user.displayName ||
-                        "لاعب ZIVOZONE",
-
-                    email:
-                        user.email || "",
-
-                    level:
-                        1,
-
-                    xp:
-                        0,
-
-                    coins:
-                        0,
-
-                    wins:
-                        0
-
-                };
-
-            }
 
 
             return {
 
-                uid:
-                    user.uid,
+                success: true,
 
-                ...snapshot.data()
+                user,
+
+                player
 
             };
 
         } catch (error) {
 
             console.error(
-                "ZIVOZONE getPlayer error:",
+                "Register error:",
                 error
             );
 
 
-            return null;
-        }
-    }
-
-
-    // ========================================================
-    // LOGIN STATE
-    // ========================================================
-
-    function isLoggedIn() {
-
-        return !!auth.currentUser;
-
-    }
-
-
-    // ========================================================
-    // AUTH STATE
-    // ========================================================
-
-    auth.onAuthStateChanged(
-        async (user) => {
-
-            window.ZIVOZONE_AUTH_USER =
-                user || null;
-
-
-            window.dispatchEvent(
-                new CustomEvent(
-                    "zivozone-auth-state",
-                    {
-                        detail: {
-                            user
-                        }
-                    }
+            throw new Error(
+                translateError(
+                    error
                 )
             );
 
         }
-    );
+
+    }
 
 
-    // ========================================================
-    // PUBLIC API
-    // ========================================================
+    /* ========================================================
+       LOGIN
+    ======================================================== */
+
+    async function loginPlayer(
+        email,
+        password
+    ) {
+
+        if (!firebaseReady || !auth) {
+
+            throw new Error(
+                "نظام الحسابات غير متاح حاليًا."
+            );
+
+        }
+
+
+        try {
+
+            const result =
+                await auth.signInWithEmailAndPassword(
+                    email.trim().toLowerCase(),
+                    password
+                );
+
+
+            const user =
+                result.user;
+
+
+            const player =
+                await createPlayerProfile(
+                    user
+                );
+
+
+            dispatchAuth(
+                true,
+                user,
+                player
+            );
+
+
+            return {
+
+                success: true,
+
+                user,
+
+                player
+
+            };
+
+        } catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+
+            throw new Error(
+                translateError(
+                    error
+                )
+            );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       LOGOUT
+    ======================================================== */
+
+    async function logoutPlayer() {
+
+        if (!auth) {
+
+            return;
+
+        }
+
+
+        await auth.signOut();
+
+
+        dispatchAuth(
+            false,
+            null,
+            null
+        );
+
+    }
+
+
+    /* ========================================================
+       CURRENT PLAYER
+    ======================================================== */
+
+    async function getCurrentPlayer() {
+
+        if (!auth) {
+
+            return null;
+
+        }
+
+
+        const user =
+            auth.currentUser;
+
+
+        if (!user) {
+
+            return null;
+
+        }
+
+
+        return await createPlayerProfile(
+            user
+        );
+
+    }
+
+
+    /* ========================================================
+       UPDATE PLAYER
+    ======================================================== */
+
+    async function updatePlayerData(
+        changes
+    ) {
+
+        const user =
+            auth &&
+            auth.currentUser;
+
+
+        if (!user) {
+
+            return null;
+
+        }
+
+
+        let player =
+            await createPlayerProfile(
+                user
+            );
+
+
+        player = {
+
+            ...player,
+
+            ...changes,
+
+            uid:
+                user.uid,
+
+            updatedAt:
+                new Date().toISOString()
+
+        };
+
+
+        saveLocalPlayer(
+            player
+        );
+
+
+        if (db) {
+
+            try {
+
+                await db
+                    .collection("users")
+                    .doc(user.uid)
+                    .set(
+                        player,
+                        {
+                            merge: true
+                        }
+                    );
+
+            } catch (error) {
+
+                console.warn(
+                    "Player cloud update failed:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        dispatchAuth(
+            true,
+            user,
+            player
+        );
+
+
+        return player;
+
+    }
+
+
+    /* ========================================================
+       ADD XP
+    ======================================================== */
+
+    async function addXP(
+        amount = 0
+    ) {
+
+        const player =
+            await getCurrentPlayer();
+
+
+        if (!player) {
+
+            return null;
+
+        }
+
+
+        let xp =
+            Number(player.xp || 0)
+            +
+            Number(amount || 0);
+
+
+        let level =
+            Number(player.level || 1);
+
+
+        while (
+            xp >= level * 100
+        ) {
+
+            xp -= level * 100;
+
+            level++;
+
+        }
+
+
+        return await updatePlayerData({
+
+            xp,
+
+            level
+
+        });
+
+    }
+
+
+    /* ========================================================
+       ADD COINS
+    ======================================================== */
+
+    async function addCoins(
+        amount = 0
+    ) {
+
+        const player =
+            await getCurrentPlayer();
+
+
+        if (!player) {
+
+            return null;
+
+        }
+
+
+        return await updatePlayerData({
+
+            coins:
+                Number(
+                    player.coins || 0
+                )
+                +
+                Number(amount || 0)
+
+        });
+
+    }
+
+
+    /* ========================================================
+       AUTH EVENT
+    ======================================================== */
+
+    function dispatchAuth(
+        loggedIn,
+        user,
+        player
+    ) {
+
+        window.dispatchEvent(
+
+            new CustomEvent(
+                "zivozone-auth",
+                {
+                    detail: {
+
+                        loggedIn,
+
+                        user,
+
+                        player
+
+                    }
+                }
+            )
+
+        );
+
+    }
+
+
+    /* ========================================================
+       ERROR TRANSLATOR
+    ======================================================== */
+
+    function translateError(
+        error
+    ) {
+
+        if (!error) {
+
+            return "حدث خطأ غير معروف.";
+
+        }
+
+
+        switch (
+            error.code
+        ) {
+
+            case "auth/email-already-in-use":
+
+                return "هذا البريد مستخدم مسبقًا.";
+
+            case "auth/invalid-email":
+
+                return "البريد الإلكتروني غير صحيح.";
+
+            case "auth/weak-password":
+
+                return "كلمة المرور ضعيفة.";
+
+            case "auth/invalid-credential":
+
+                return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+            case "auth/user-not-found":
+
+                return "الحساب غير موجود.";
+
+            case "auth/wrong-password":
+
+                return "كلمة المرور غير صحيحة.";
+
+            case "auth/too-many-requests":
+
+                return "محاولات كثيرة. حاول لاحقًا.";
+
+            case "auth/network-request-failed":
+
+                return "تعذر الاتصال بالإنترنت.";
+
+            case "auth/operation-not-allowed":
+
+                return "طريقة التسجيل غير مفعلة في Firebase.";
+
+            default:
+
+                return (
+                    error.message ||
+                    "حدث خطأ أثناء العملية."
+                );
+
+        }
+
+    }
+
+
+    /* ========================================================
+       AUTH STATE
+    ======================================================== */
+
+    if (auth) {
+
+        auth.onAuthStateChanged(
+            async function (user) {
+
+                if (user) {
+
+                    try {
+
+                        const player =
+                            await createPlayerProfile(
+                                user
+                            );
+
+
+                        dispatchAuth(
+                            true,
+                            user,
+                            player
+                        );
+
+                    } catch (error) {
+
+                        console.error(
+                            error
+                        );
+
+                        dispatchAuth(
+                            true,
+                            user,
+                            null
+                        );
+
+                    }
+
+                } else {
+
+                    dispatchAuth(
+                        false,
+                        null,
+                        null
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       PUBLIC API
+    ======================================================== */
 
     window.ZIVOZONE_AUTH = {
 
-        register,
+        registerPlayer,
 
-        login,
+        loginPlayer,
 
-        logout,
+        logoutPlayer,
 
-        update,
+        getCurrentPlayer,
 
-        getUser,
+        updatePlayerData,
 
-        getPlayer,
+        addXP,
 
-        isLoggedIn,
-
-        auth,
-
-        db
+        addCoins
 
     };
 
 
-    console.log(
-        "✅ ZIVOZONE Authentication initialized."
+    window.ZIVOZONE_FIREBASE = {
+
+        app:
+            firebaseApp,
+
+        auth,
+
+        db,
+
+        config:
+            firebaseConfig
+
+    };
+
+
+    /* ========================================================
+       READY
+    ======================================================== */
+
+    window.dispatchEvent(
+
+        new CustomEvent(
+            "zivozone-auth-ready"
+        )
+
     );
 
 
-    // ========================================================
-    // FALLBACK
-    // ========================================================
+    console.log(
+        "🚀 ZIVOZONE Authentication Ready"
+    );
 
-    function createFallbackAuth(
-        message
-    ) {
-
-        const fail =
-            async function () {
-
-                throw new Error(
-                    message
-                );
-
-            };
-
-
-        return {
-
-            register:
-                fail,
-
-            login:
-                fail,
-
-            logout:
-                async () => {},
-
-            update:
-                fail,
-
-            getUser:
-                () => null,
-
-            getPlayer:
-                async () => null,
-
-            isLoggedIn:
-                () => false
-
-        };
-
-    }
 
 })();
