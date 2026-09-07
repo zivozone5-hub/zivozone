@@ -1,2824 +1,2919 @@
-/* =========================================================
-   ZIVOZONE V3
-   Core Game Engine
-   Front-end prototype for GitHub Pages
+"use strict";
 
-   Responsibilities:
-   - Player profile
-   - XP / Levels
-   - ZIVO Coins
-   - Games
-   - Daily challenge
-   - Streak
-   - Achievements
-   - Language switching
-   - Modal handling
-   - Safe DOM rendering
-   - Local persistence
-
-   Security note:
-   This is a client-side prototype.
-   Real authentication, financial balances and AI API keys
-   MUST be handled by a secure backend in production.
-========================================================= */
+/*
+ * =========================================================
+ * ZIVOZONE — app.js
+ * Version 3.0
+ *
+ * Front-end prototype
+ * لا يحتوي هذا الملف على مفاتيح API أو كلمات مرور أو بيانات حساسة.
+ * جميع بيانات النسخة التجريبية تحفظ محلياً بواسطة localStorage.
+ * =========================================================
+ */
 
 (() => {
-    "use strict";
-
-    /* =========================================================
+    /* =====================================================
        CONFIGURATION
-    ========================================================= */
+    ===================================================== */
 
-    const APP = {
-        name: "ZIVOZONE",
-        version: "3.0.0",
+    const CONFIG = Object.freeze({
         storageKey: "zivozone_player_v3",
+        languageKey: "zivozone_language_v3",
         dailyKey: "zivozone_daily_v3",
-        settingsKey: "zivozone_settings_v3",
-        defaultLanguage: "ar",
-        supportedLanguages: ["ar", "en", "fr", "es", "tr", "de"]
-    };
+        maxAiMessages: 30,
+        maxNameLength: 40,
+        maxEmailLength: 120
+    });
 
-    const LEVELS = [
-        { level: 1, name: "Beginner", minXP: 0 },
-        { level: 2, name: "Explorer", minXP: 100 },
-        { level: 3, name: "Challenger", minXP: 300 },
-        { level: 4, name: "Master", minXP: 650 },
-        { level: 5, name: "Legend", minXP: 1200 },
-        { level: 6, name: "ZIVO Elite", minXP: 2000 },
-        { level: 7, name: "ZIVO Legend", minXP: 3200 }
-    ];
 
-    const REWARDS = {
-        correctAnswerXP: 20,
-        correctAnswerCoins: 2,
-        gameCompletionXP: 50,
-        gameCompletionCoins: 5,
-        dailyXP: 100,
-        dailyCoins: 10
-    };
-
-    /* =========================================================
+    /* =====================================================
        TRANSLATIONS
-    ========================================================= */
+    ===================================================== */
 
-    const I18N = {
+    const translations = {
         ar: {
-            welcome: "أهلاً بك في ZIVOZONE",
-            login: "تسجيل الدخول",
-            register: "إنشاء حساب",
+            loading: "جاري تجهيز عالمك...",
+            home: "الرئيسية",
+            games: "الألعاب",
+            challenges: "التحديات",
+            ai: "ZIVO AI",
+            identity: "من أنا؟",
+            sports: "الرياضة",
             profile: "ملفي",
-            level: "المستوى",
-            xp: "XP",
-            coins: "ZIVO",
-            play: "العب الآن",
-            next: "السؤال التالي",
-            finish: "إنهاء التحدي",
-            correct: "إجابة صحيحة!",
-            wrong: "إجابة غير صحيحة",
-            score: "النتيجة",
-            daily: "التحدي اليومي",
-            completed: "تم إكمال التحدي",
-            name: "الاسم",
-            email: "البريد الإلكتروني",
-            age: "العمر",
-            save: "حفظ",
-            close: "إغلاق",
-            reset: "إعادة التقدم",
-            intelligence: "الذكاء",
-            science: "العلوم",
-            horror: "الرعب",
-            personality: "من أنا؟",
-            noProfile: "أنشئ ملف لاعب أولاً.",
-            completeProfile: "أكمل ملفك للبدء.",
-            time: "الوقت",
-            achievements: "الإنجازات",
-            streak: "أيام متتالية",
-            result: "نتيجتك",
+            login: "تسجيل الدخول",
+            heroTitle: "عالمك يبدأ من هنا",
+            heroText:
+                "ألعاب وتحديات وذكاء ورعب وعلوم ورياضة واكتشاف للشخصية في عالم رقمي واحد.",
+            startPlaying: "ابدأ اللعب",
+            discoverMe: "اكتشف نفسك",
+            languages: "لغات",
+            gameModes: "أنماط ألعاب",
+            ad: "إعلان",
+            adTitle: "مساحتك الإعلانية هنا",
+            adText: "مكان جاهز للإعلانات والرعاة عند إطلاق المنصة.",
+            details: "التفاصيل",
+            gamesTitle: "العب وارفع مستواك",
+            speedTitle: "اختبار سرعة الذكاء",
+            speedDesc: "أسئلة تتدرج حسب مستوى اللاعب وعمره.",
+            horrorTitle: "الغرفة المظلمة",
+            horrorDesc: "قصة تفاعلية، اختياراتك تغيّر النهاية.",
+            scienceTitle: "تحدي العلوم",
+            scienceDesc: "معلومات علمية متدرجة وممتعة.",
+            dailyTitle: "تحدي ZIVO اليومي",
+            dailyDesc: "مهمة يومية واحدة مع مكافأة خاصة.",
+            playNow: "العب الآن",
             start: "ابدأ",
-            language: "اللغة",
-            dailyDone: "لقد أكملت تحدي اليوم بالفعل."
+            challengeTitle: "مركز التحديات",
+            identityTitle: "اكتشف شخصيتك داخل ZIVOZONE",
+            identityText:
+                "اختبار ترفيهي يعتمد على اختياراتك داخل التجربة، ثم يعطيك وصفًا عامًا لنمط اللعب والتفكير. ليس تشخيصًا نفسيًا أو طبيًا.",
+            takeTest: "ابدأ الاختبار",
+            aiTitle: "مساعد ZIVO الذكي",
+            aiWelcome:
+                "أهلاً بك في ZIVO AI 🤖 اسألني عن الألعاب أو مستواك أو اطلب فكرة لتحدٍ جديد.",
+            aiPlaceholder: "اكتب سؤالك...",
+            send: "إرسال",
+            aiNote:
+                "نسخة ZIVO AI الحالية تجريبية وتعمل من الواجهة. سيتم لاحقًا ربط نموذج ذكاء اصطناعي حقيقي من خلال Backend آمن.",
+            sportsTitle: "أخبار الرياضة العالمية",
+            refresh: "تحديث",
+            editProfile: "إنشاء/تعديل الملف",
+            profileNote:
+                "بيانات النسخة التجريبية محفوظة محليًا على جهازك. لا تضع كلمات مرور أو بيانات حساسة هنا."
         },
 
         en: {
-            welcome: "Welcome to ZIVOZONE",
+            loading: "Preparing your world...",
+            home: "Home",
+            games: "Games",
+            challenges: "Challenges",
+            ai: "ZIVO AI",
+            identity: "Who Am I?",
+            sports: "Sports",
+            profile: "Profile",
             login: "Login",
-            register: "Create Account",
-            profile: "My Profile",
-            level: "Level",
-            xp: "XP",
-            coins: "ZIVO",
-            play: "Play Now",
-            next: "Next Question",
-            finish: "Finish Challenge",
-            correct: "Correct!",
-            wrong: "Incorrect",
-            score: "Score",
-            daily: "Daily Challenge",
-            completed: "Challenge Completed",
-            name: "Name",
-            email: "Email",
-            age: "Age",
-            save: "Save",
-            close: "Close",
-            reset: "Reset Progress",
-            intelligence: "Intelligence",
-            science: "Science",
-            horror: "Horror",
-            personality: "Who Am I?",
-            noProfile: "Create a player profile first.",
-            completeProfile: "Complete your profile to start.",
-            time: "Time",
-            achievements: "Achievements",
-            streak: "Day Streak",
-            result: "Your Result",
+            heroTitle: "Your world starts here",
+            heroText:
+                "Games, challenges, intelligence, horror, science, sports and self-discovery in one digital world.",
+            startPlaying: "Start Playing",
+            discoverMe: "Discover Yourself",
+            languages: "Languages",
+            gameModes: "Game Modes",
+            ad: "Advertisement",
+            adTitle: "Your Advertisement Here",
+            adText: "A ready advertising space for future sponsors.",
+            details: "Details",
+            gamesTitle: "Play & Level Up",
+            speedTitle: "Speed IQ",
+            speedDesc: "Questions adapt to your age and level.",
+            horrorTitle: "The Dark Room",
+            horrorDesc: "An interactive story where your choices change the ending.",
+            scienceTitle: "Science Challenge",
+            scienceDesc: "Progressive and fun science questions.",
+            dailyTitle: "ZIVO Daily Challenge",
+            dailyDesc: "One daily mission with a special reward.",
+            playNow: "Play Now",
             start: "Start",
-            language: "Language",
-            dailyDone: "You already completed today's challenge."
+            challengeTitle: "Challenge Center",
+            identityTitle: "Discover Your ZIVO Personality",
+            identityText:
+                "A fun entertainment test based on your choices. It provides a general gaming and thinking profile, not a psychological or medical diagnosis.",
+            takeTest: "Take the Test",
+            aiTitle: "ZIVO AI Assistant",
+            aiWelcome:
+                "Welcome to ZIVO AI 🤖 Ask me about games, your level, or request a new challenge idea.",
+            aiPlaceholder: "Write your question...",
+            send: "Send",
+            aiNote:
+                "The current ZIVO AI version is a front-end prototype. A real AI model can later be connected through a secure backend.",
+            sportsTitle: "Global Sports News",
+            refresh: "Refresh",
+            editProfile: "Create/Edit Profile",
+            profileNote:
+                "Prototype data is stored locally on your device. Do not enter passwords or sensitive information here."
         },
 
         fr: {
-            welcome: "Bienvenue sur ZIVOZONE",
+            loading: "Préparation de votre monde...",
+            home: "Accueil",
+            games: "Jeux",
+            challenges: "Défis",
+            ai: "ZIVO AI",
+            identity: "Qui suis-je ?",
+            sports: "Sport",
+            profile: "Profil",
             login: "Connexion",
-            register: "Créer un compte",
-            profile: "Mon profil",
-            level: "Niveau",
-            xp: "XP",
-            coins: "ZIVO",
-            play: "Jouer",
-            next: "Question suivante",
-            finish: "Terminer",
-            correct: "Correct !",
-            wrong: "Incorrect",
-            score: "Score",
-            daily: "Défi quotidien",
-            completed: "Défi terminé",
-            name: "Nom",
-            email: "E-mail",
-            age: "Âge",
-            save: "Enregistrer",
-            close: "Fermer",
-            reset: "Réinitialiser",
-            intelligence: "Intelligence",
-            science: "Sciences",
-            horror: "Horreur",
-            personality: "Qui suis-je ?",
-            noProfile: "Créez d'abord votre profil.",
-            completeProfile: "Complétez votre profil pour commencer.",
-            time: "Temps",
-            achievements: "Succès",
-            streak: "Série de jours",
-            result: "Votre résultat",
+            heroTitle: "Votre monde commence ici",
+            heroText: "Jeux, défis, intelligence, horreur, science, sport et découverte de soi.",
+            startPlaying: "Jouer",
+            discoverMe: "Me découvrir",
+            languages: "Langues",
+            gameModes: "Modes de jeu",
+            ad: "Publicité",
+            adTitle: "Votre publicité ici",
+            adText: "Espace publicitaire prêt pour les futurs sponsors.",
+            details: "Détails",
+            gamesTitle: "Jouez et progressez",
+            speedTitle: "QI Rapide",
+            speedDesc: "Questions adaptées à votre âge et votre niveau.",
+            horrorTitle: "La chambre sombre",
+            horrorDesc: "Une histoire interactive où vos choix changent la fin.",
+            scienceTitle: "Défi scientifique",
+            scienceDesc: "Questions scientifiques progressives et amusantes.",
+            dailyTitle: "Défi quotidien ZIVO",
+            dailyDesc: "Une mission quotidienne avec une récompense.",
+            playNow: "Jouer",
             start: "Commencer",
-            language: "Langue",
-            dailyDone: "Vous avez déjà terminé le défi du jour."
+            challengeTitle: "Centre des défis",
+            identityTitle: "Découvrez votre personnalité ZIVO",
+            identityText: "Un test ludique basé sur vos choix. Il ne constitue pas un diagnostic médical ou psychologique.",
+            takeTest: "Commencer le test",
+            aiTitle: "Assistant ZIVO AI",
+            aiWelcome: "Bienvenue sur ZIVO AI 🤖",
+            aiPlaceholder: "Écrivez votre question...",
+            send: "Envoyer",
+            aiNote: "Version expérimentale de ZIVO AI.",
+            sportsTitle: "Actualités sportives mondiales",
+            refresh: "Actualiser",
+            editProfile: "Créer/Modifier le profil",
+            profileNote: "Les données de démonstration sont enregistrées localement."
         },
 
         es: {
-            welcome: "Bienvenido a ZIVOZONE",
+            loading: "Preparando tu mundo...",
+            home: "Inicio",
+            games: "Juegos",
+            challenges: "Desafíos",
+            ai: "ZIVO AI",
+            identity: "¿Quién soy?",
+            sports: "Deportes",
+            profile: "Perfil",
             login: "Iniciar sesión",
-            register: "Crear cuenta",
-            profile: "Mi perfil",
-            level: "Nivel",
-            xp: "XP",
-            coins: "ZIVO",
-            play: "Jugar ahora",
-            next: "Siguiente pregunta",
-            finish: "Finalizar",
-            correct: "¡Correcto!",
-            wrong: "Incorrecto",
-            score: "Puntuación",
-            daily: "Desafío diario",
-            completed: "Desafío completado",
-            name: "Nombre",
-            email: "Correo",
-            age: "Edad",
-            save: "Guardar",
-            close: "Cerrar",
-            reset: "Reiniciar",
-            intelligence: "Inteligencia",
-            science: "Ciencia",
-            horror: "Terror",
-            personality: "¿Quién soy?",
-            noProfile: "Crea primero tu perfil.",
-            completeProfile: "Completa tu perfil para comenzar.",
-            time: "Tiempo",
-            achievements: "Logros",
-            streak: "Racha",
-            result: "Tu resultado",
+            heroTitle: "Tu mundo comienza aquí",
+            heroText: "Juegos, desafíos, inteligencia, terror, ciencia, deportes y autodescubrimiento.",
+            startPlaying: "Jugar",
+            discoverMe: "Descubrirme",
+            languages: "Idiomas",
+            gameModes: "Modos de juego",
+            ad: "Publicidad",
+            adTitle: "Tu publicidad aquí",
+            adText: "Espacio publicitario preparado para futuros patrocinadores.",
+            details: "Detalles",
+            gamesTitle: "Juega y sube de nivel",
+            speedTitle: "IQ Rápido",
+            speedDesc: "Preguntas adaptadas a tu edad y nivel.",
+            horrorTitle: "La habitación oscura",
+            horrorDesc: "Historia interactiva donde tus decisiones cambian el final.",
+            scienceTitle: "Desafío científico",
+            scienceDesc: "Preguntas científicas progresivas y divertidas.",
+            dailyTitle: "Desafío diario ZIVO",
+            dailyDesc: "Una misión diaria con recompensa especial.",
+            playNow: "Jugar ahora",
             start: "Comenzar",
-            language: "Idioma",
-            dailyDone: "Ya has completado el desafío de hoy."
+            challengeTitle: "Centro de desafíos",
+            identityTitle: "Descubre tu personalidad ZIVO",
+            identityText: "Un test divertido basado en tus elecciones. No es un diagnóstico médico o psicológico.",
+            takeTest: "Hacer el test",
+            aiTitle: "Asistente ZIVO AI",
+            aiWelcome: "Bienvenido a ZIVO AI 🤖",
+            aiPlaceholder: "Escribe tu pregunta...",
+            send: "Enviar",
+            aiNote: "Versión experimental de ZIVO AI.",
+            sportsTitle: "Noticias deportivas mundiales",
+            refresh: "Actualizar",
+            editProfile: "Crear/Editar perfil",
+            profileNote: "Los datos de demostración se guardan localmente."
         },
 
         tr: {
-            welcome: "ZIVOZONE'a Hoş Geldin",
+            loading: "Dünyanız hazırlanıyor...",
+            home: "Ana Sayfa",
+            games: "Oyunlar",
+            challenges: "Meydan Okumalar",
+            ai: "ZIVO AI",
+            identity: "Ben Kimim?",
+            sports: "Spor",
+            profile: "Profil",
             login: "Giriş",
-            register: "Hesap Oluştur",
-            profile: "Profilim",
-            level: "Seviye",
-            xp: "XP",
-            coins: "ZIVO",
-            play: "Şimdi Oyna",
-            next: "Sonraki Soru",
-            finish: "Bitir",
-            correct: "Doğru!",
-            wrong: "Yanlış",
-            score: "Puan",
-            daily: "Günlük Görev",
-            completed: "Görev tamamlandı",
-            name: "İsim",
-            email: "E-posta",
-            age: "Yaş",
-            save: "Kaydet",
-            close: "Kapat",
-            reset: "Sıfırla",
-            intelligence: "Zeka",
-            science: "Bilim",
-            horror: "Korku",
-            personality: "Ben Kimim?",
-            noProfile: "Önce profil oluştur.",
-            completeProfile: "Başlamak için profilini tamamla.",
-            time: "Zaman",
-            achievements: "Başarımlar",
-            streak: "Seri",
-            result: "Sonucun",
+            heroTitle: "Dünyan burada başlıyor",
+            heroText: "Oyunlar, meydan okumalar, zeka, korku, bilim, spor ve kendini keşfetme.",
+            startPlaying: "Oyna",
+            discoverMe: "Kendini Keşfet",
+            languages: "Diller",
+            gameModes: "Oyun Modları",
+            ad: "Reklam",
+            adTitle: "Reklam Alanınız",
+            adText: "Gelecekteki sponsorlar için hazır reklam alanı.",
+            details: "Detaylar",
+            gamesTitle: "Oyna ve Seviye Atla",
+            speedTitle: "Hızlı Zeka",
+            speedDesc: "Sorular yaşınıza ve seviyenize göre uyarlanır.",
+            horrorTitle: "Karanlık Oda",
+            horrorDesc: "Seçimlerinizin sonu değiştirdiği interaktif hikâye.",
+            scienceTitle: "Bilim Mücadelesi",
+            scienceDesc: "Eğlenceli ve seviyeli bilim soruları.",
+            dailyTitle: "ZIVO Günlük Mücadelesi",
+            dailyDesc: "Özel ödüllü günlük görev.",
+            playNow: "Şimdi Oyna",
             start: "Başla",
-            language: "Dil",
-            dailyDone: "Bugünün görevini zaten tamamladın."
+            challengeTitle: "Meydan Okuma Merkezi",
+            identityTitle: "ZIVO Kişiliğini Keşfet",
+            identityText: "Seçimlerinize dayalı eğlenceli bir test. Tıbbi veya psikolojik teşhis değildir.",
+            takeTest: "Teste Başla",
+            aiTitle: "ZIVO AI Asistanı",
+            aiWelcome: "ZIVO AI'a hoş geldiniz 🤖",
+            aiPlaceholder: "Sorunuzu yazın...",
+            send: "Gönder",
+            aiNote: "ZIVO AI deneysel sürüm.",
+            sportsTitle: "Dünya Spor Haberleri",
+            refresh: "Yenile",
+            editProfile: "Profil Oluştur/Düzenle",
+            profileNote: "Demo verileri cihazınızda yerel olarak saklanır."
         },
 
         de: {
-            welcome: "Willkommen bei ZIVOZONE",
+            loading: "Deine Welt wird vorbereitet...",
+            home: "Startseite",
+            games: "Spiele",
+            challenges: "Herausforderungen",
+            ai: "ZIVO AI",
+            identity: "Wer bin ich?",
+            sports: "Sport",
+            profile: "Profil",
             login: "Anmelden",
-            register: "Konto erstellen",
-            profile: "Mein Profil",
-            level: "Level",
-            xp: "XP",
-            coins: "ZIVO",
-            play: "Jetzt spielen",
-            next: "Nächste Frage",
-            finish: "Beenden",
-            correct: "Richtig!",
-            wrong: "Falsch",
-            score: "Punktzahl",
-            daily: "Tägliche Herausforderung",
-            completed: "Herausforderung abgeschlossen",
-            name: "Name",
-            email: "E-Mail",
-            age: "Alter",
-            save: "Speichern",
-            close: "Schließen",
-            reset: "Fortschritt zurücksetzen",
-            intelligence: "Intelligenz",
-            science: "Wissenschaft",
-            horror: "Horror",
-            personality: "Wer bin ich?",
-            noProfile: "Erstelle zuerst ein Spielerprofil.",
-            completeProfile: "Vervollständige dein Profil.",
-            time: "Zeit",
-            achievements: "Erfolge",
-            streak: "Tages-Serie",
-            result: "Dein Ergebnis",
+            heroTitle: "Deine Welt beginnt hier",
+            heroText: "Spiele, Herausforderungen, Intelligenz, Horror, Wissenschaft, Sport und Selbstentdeckung.",
+            startPlaying: "Spielen",
+            discoverMe: "Mich entdecken",
+            languages: "Sprachen",
+            gameModes: "Spielmodi",
+            ad: "Werbung",
+            adTitle: "Ihre Werbefläche",
+            adText: "Bereite Werbefläche für zukünftige Sponsoren.",
+            details: "Details",
+            gamesTitle: "Spielen & Leveln",
+            speedTitle: "Schnell-IQ",
+            speedDesc: "Fragen passen sich Alter und Level an.",
+            horrorTitle: "Der dunkle Raum",
+            horrorDesc: "Interaktive Geschichte, deren Ende von deinen Entscheidungen abhängt.",
+            scienceTitle: "Wissenschafts-Challenge",
+            scienceDesc: "Fortschrittliche und unterhaltsame Wissenschaftsfragen.",
+            dailyTitle: "ZIVO Tages-Challenge",
+            dailyDesc: "Eine tägliche Mission mit besonderer Belohnung.",
+            playNow: "Jetzt spielen",
             start: "Start",
-            language: "Sprache",
-            dailyDone: "Du hast die heutige Herausforderung bereits abgeschlossen."
+            challengeTitle: "Challenge Center",
+            identityTitle: "Entdecke deine ZIVO-Persönlichkeit",
+            identityText: "Ein unterhaltsamer Test basierend auf deinen Entscheidungen. Keine medizinische oder psychologische Diagnose.",
+            takeTest: "Test starten",
+            aiTitle: "ZIVO AI Assistent",
+            aiWelcome: "Willkommen bei ZIVO AI 🤖",
+            aiPlaceholder: "Frage eingeben...",
+            send: "Senden",
+            aiNote: "Experimentelle ZIVO AI Version.",
+            sportsTitle: "Globale Sportnachrichten",
+            refresh: "Aktualisieren",
+            editProfile: "Profil erstellen/bearbeiten",
+            profileNote: "Demodaten werden lokal auf deinem Gerät gespeichert."
         }
     };
 
-    /* =========================================================
-       QUESTION BANK
-       ageGroup:
-       - child: under 13
-       - teen: 13-17
-       - adult: 18+
-       difficulty:
-       - 1 beginner
-       - 2 intermediate
-       - 3 advanced
-    ========================================================= */
 
-    const QUESTION_BANK = {
+    /* =====================================================
+       QUESTIONS
+       ===================================================== */
 
-        intelligence: [
+    const questionBank = {
+        easy: [
             {
-                id: "iq-001",
-                ageGroup: "child",
-                difficulty: 1,
-                question: {
-                    ar: "ما العدد الذي يأتي بعد 2، 4، 6، 8؟",
-                    en: "What number comes after 2, 4, 6, 8?",
-                    fr: "Quel nombre vient après 2, 4, 6, 8 ?",
-                    es: "¿Qué número viene después de 2, 4, 6, 8?",
-                    tr: "2, 4, 6, 8 dizisinden sonra hangi sayı gelir?",
-                    de: "Welche Zahl kommt nach 2, 4, 6, 8?"
-                },
-                options: {
-                    ar: ["9", "10", "11", "12"],
-                    en: ["9", "10", "11", "12"],
-                    fr: ["9", "10", "11", "12"],
-                    es: ["9", "10", "11", "12"],
-                    tr: ["9", "10", "11", "12"],
-                    de: ["9", "10", "11", "12"]
-                },
-                answer: 1
+                question: "ما هو الكوكب المعروف بالكوكب الأحمر؟",
+                answers: ["الأرض", "المريخ", "المشتري", "الزهرة"],
+                correct: 1
             },
-
             {
-                id: "iq-002",
-                ageGroup: "teen",
-                difficulty: 2,
-                question: {
-                    ar: "إذا كان كل مربع يحتوي على 4 نقاط، فكم نقطة في 5 مربعات؟",
-                    en: "If every square contains 4 dots, how many dots are in 5 squares?",
-                    fr: "Si chaque carré contient 4 points, combien de points dans 5 carrés ?",
-                    es: "Si cada cuadrado contiene 4 puntos, ¿cuántos puntos hay en 5 cuadrados?",
-                    tr: "Her karede 4 nokta varsa, 5 karede kaç nokta vardır?",
-                    de: "Wenn jedes Quadrat 4 Punkte enthält, wie viele Punkte sind in 5 Quadraten?"
-                },
-                options: {
-                    ar: ["10", "15", "20", "25"],
-                    en: ["10", "15", "20", "25"],
-                    fr: ["10", "15", "20", "25"],
-                    es: ["10", "15", "20", "25"],
-                    tr: ["10", "15", "20", "25"],
-                    de: ["10", "15", "20", "25"]
-                },
-                answer: 2
+                question: "كم عدد أيام الأسبوع؟",
+                answers: ["5", "6", "7", "8"],
+                correct: 2
             },
-
             {
-                id: "iq-003",
-                ageGroup: "adult",
-                difficulty: 3,
-                question: {
-                    ar: "ما الرقم التالي؟ 1، 1، 2، 3، 5، 8، ؟",
-                    en: "What is the next number? 1, 1, 2, 3, 5, 8, ?",
-                    fr: "Quel est le nombre suivant ? 1, 1, 2, 3, 5, 8, ?",
-                    es: "¿Cuál es el siguiente número? 1, 1, 2, 3, 5, 8, ?",
-                    tr: "Sıradaki sayı nedir? 1, 1, 2, 3, 5, 8, ?",
-                    de: "Welche Zahl kommt als Nächstes? 1, 1, 2, 3, 5, 8, ?"
-                },
-                options: {
-                    ar: ["11", "12", "13", "14"],
-                    en: ["11", "12", "13", "14"],
-                    fr: ["11", "12", "13", "14"],
-                    es: ["11", "12", "13", "14"],
-                    tr: ["11", "12", "13", "14"],
-                    de: ["11", "12", "13", "14"]
-                },
-                answer: 2
+                question: "أي حيوان يُعرف بأنه ملك الغابة؟",
+                answers: ["النمر", "الأسد", "الفيل", "الذئب"],
+                correct: 1
             },
-
             {
-                id: "iq-004",
-                ageGroup: "adult",
-                difficulty: 3,
-                question: {
-                    ar: "رجل لديه 3 صناديق، وفي كل صندوق 4 صناديق أصغر. كم صندوقًا لديه بالمجموع إذا حسبنا الصناديق الداخلية والخارجية؟",
-                    en: "A man has 3 boxes. Each contains 4 smaller boxes. How many boxes are there in total?",
-                    fr: "Un homme possède 3 boîtes. Chacune contient 4 petites boîtes. Combien de boîtes au total ?",
-                    es: "Un hombre tiene 3 cajas. Cada una contiene 4 cajas pequeñas. ¿Cuántas cajas hay en total?",
-                    tr: "Bir adamın 3 kutusu var. Her kutuda 4 küçük kutu bulunuyor. Toplam kaç kutu vardır?",
-                    de: "Ein Mann hat 3 Kisten. Jede enthält 4 kleinere Kisten. Wie viele Kisten gibt es insgesamt?"
-                },
-                options: {
-                    ar: ["7", "12", "15", "16"],
-                    en: ["7", "12", "15", "16"],
-                    fr: ["7", "12", "15", "16"],
-                    es: ["7", "12", "15", "16"],
-                    tr: ["7", "12", "15", "16"],
-                    de: ["7", "12", "15", "16"]
-                },
-                answer: 2
+                question: "كم يساوي 5 + 7؟",
+                answers: ["10", "11", "12", "13"],
+                correct: 2
             }
         ],
 
-        science: [
+        medium: [
             {
-                id: "science-001",
-                ageGroup: "child",
-                difficulty: 1,
-                question: {
-                    ar: "أي كوكب نعيش عليه؟",
-                    en: "Which planet do we live on?",
-                    fr: "Sur quelle planète vivons-nous ?",
-                    es: "¿En qué planeta vivimos?",
-                    tr: "Hangi gezegende yaşıyoruz?",
-                    de: "Auf welchem Planeten leben wir?"
-                },
-                options: {
-                    ar: ["المريخ", "الأرض", "المشتري", "الزهرة"],
-                    en: ["Mars", "Earth", "Jupiter", "Venus"],
-                    fr: ["Mars", "Terre", "Jupiter", "Vénus"],
-                    es: ["Marte", "Tierra", "Júpiter", "Venus"],
-                    tr: ["Mars", "Dünya", "Jüpiter", "Venüs"],
-                    de: ["Mars", "Erde", "Jupiter", "Venus"]
-                },
-                answer: 1
+                question: "إذا كان لديك 3 صناديق وفي كل صندوق 4 كرات، كم كرة لديك؟",
+                answers: ["7", "10", "12", "14"],
+                correct: 2
             },
-
             {
-                id: "science-002",
-                ageGroup: "teen",
-                difficulty: 2,
-                question: {
-                    ar: "ما الغاز الذي تحتاجه الخلايا لإنتاج الطاقة بكفاءة؟",
-                    en: "Which gas do cells need for efficient energy production?",
-                    fr: "De quel gaz les cellules ont-elles besoin pour produire efficacement de l'énergie ?",
-                    es: "¿Qué gas necesitan las células para producir energía eficientemente?",
-                    tr: "Hücrelerin verimli enerji üretimi için hangi gaza ihtiyacı vardır?",
-                    de: "Welches Gas benötigen Zellen für eine effiziente Energieproduktion?"
-                },
-                options: {
-                    ar: ["الأكسجين", "النيتروجين", "الهيدروجين", "الهيليوم"],
-                    en: ["Oxygen", "Nitrogen", "Hydrogen", "Helium"],
-                    fr: ["Oxygène", "Azote", "Hydrogène", "Hélium"],
-                    es: ["Oxígeno", "Nitrógeno", "Hidrógeno", "Helio"],
-                    tr: ["Oksijen", "Azot", "Hidrojen", "Helyum"],
-                    de: ["Sauerstoff", "Stickstoff", "Wasserstoff", "Helium"]
-                },
-                answer: 0
+                question: "ما الغاز الأكثر وجودًا في الغلاف الجوي للأرض؟",
+                answers: ["الأكسجين", "النيتروجين", "الهيدروجين", "ثاني أكسيد الكربون"],
+                correct: 1
             },
-
             {
-                id: "science-003",
-                ageGroup: "adult",
-                difficulty: 3,
-                question: {
-                    ar: "ما الوحدة الأساسية للمعلومات الوراثية؟",
-                    en: "What is the basic unit of genetic information?",
-                    fr: "Quelle est l'unité fondamentale de l'information génétique ?",
-                    es: "¿Cuál es la unidad básica de la información genética?",
-                    tr: "Genetik bilginin temel birimi nedir?",
-                    de: "Was ist die grundlegende Einheit genetischer Information?"
-                },
-                options: {
-                    ar: ["الخلية", "الجين", "العضلة", "الهرمون"],
-                    en: ["Cell", "Gene", "Muscle", "Hormone"],
-                    fr: ["Cellule", "Gène", "Muscle", "Hormone"],
-                    es: ["Célula", "Gen", "Músculo", "Hormona"],
-                    tr: ["Hücre", "Gen", "Kas", "Hormon"],
-                    de: ["Zelle", "Gen", "Muskel", "Hormon"]
-                },
-                answer: 1
+                question: "أي رقم يأتي بعد 2، 4، 8، 16؟",
+                answers: ["20", "24", "30", "32"],
+                correct: 3
+            },
+            {
+                question: "ما العضو المسؤول بشكل أساسي عن ضخ الدم؟",
+                answers: ["الرئة", "الكبد", "القلب", "المعدة"],
+                correct: 2
             }
         ],
 
-        horror: [
+        hard: [
             {
-                id: "horror-001",
-                ageGroup: "teen",
-                difficulty: 1,
-                question: {
-                    ar: "أنت وحدك في منزل مظلم وسمعت صوتًا خلفك. ما أول شيء ستفعله؟",
-                    en: "You are alone in a dark house and hear a sound behind you. What do you do first?",
-                    fr: "Vous êtes seul dans une maison sombre et entendez un bruit derrière vous. Que faites-vous ?",
-                    es: "Estás solo en una casa oscura y escuchas un ruido detrás de ti. ¿Qué haces primero?",
-                    tr: "Karanlık bir evde yalnızsın ve arkandan bir ses duydun. İlk ne yaparsın?",
-                    de: "Du bist allein in einem dunklen Haus und hörst ein Geräusch hinter dir. Was tust du zuerst?"
-                },
-                options: {
-                    ar: ["أهرب فورًا", "أتحقق من مصدر الصوت بحذر", "أصرخ", "أطفئ كل الأضواء"],
-                    en: ["Run immediately", "Carefully check the source", "Scream", "Turn off all lights"],
-                    fr: ["Je cours", "Je vérifie prudemment la source", "Je crie", "J'éteins les lumières"],
-                    es: ["Corro", "Compruebo cuidadosamente la fuente", "Grito", "Apago todas las luces"],
-                    tr: ["Hemen kaçarım", "Kaynağı dikkatlice kontrol ederim", "Bağırırım", "Tüm ışıkları kapatırım"],
-                    de: ["Ich renne sofort", "Ich prüfe vorsichtig die Quelle", "Ich schreie", "Ich schalte alle Lichter aus"]
-                },
-                answer: 1
+                question: "ما العدد التالي في السلسلة: 3، 6، 12، 24، ؟",
+                answers: ["36", "42", "48", "52"],
+                correct: 2
             },
-
             {
-                id: "horror-002",
-                ageGroup: "adult",
-                difficulty: 2,
-                question: {
-                    ar: "تسمع طرقًا متكررًا على الباب في منتصف الليل. ما التصرف الأكثر عقلانية؟",
-                    en: "You hear repeated knocking at midnight. What is the most rational response?",
-                    fr: "Vous entendez frapper à la porte au milieu de la nuit. Quelle est la réaction la plus rationnelle ?",
-                    es: "Escuchas golpes repetidos en la puerta a medianoche. ¿Cuál es la reacción más racional?",
-                    tr: "Gece yarısı kapının sürekli çalındığını duyuyorsun. En mantıklı tepki nedir?",
-                    de: "Du hörst um Mitternacht wiederholt Klopfen. Was ist die vernünftigste Reaktion?"
-                },
-                options: {
-                    ar: ["فتح الباب مباشرة", "التحقق بأمان دون فتح الباب", "تجاهل أي خطر", "الخروج وحدك"],
-                    en: ["Open immediately", "Check safely without opening", "Ignore all danger", "Go outside alone"],
-                    fr: ["Ouvrir immédiatement", "Vérifier sans ouvrir", "Ignorer le danger", "Sortir seul"],
-                    es: ["Abrir inmediatamente", "Comprobar sin abrir", "Ignorar el peligro", "Salir solo"],
-                    tr: ["Hemen açmak", "Açmadan güvenli şekilde kontrol etmek", "Tehlikeyi görmezden gelmek", "Yalnız çıkmak"],
-                    de: ["Sofort öffnen", "Sicher prüfen, ohne zu öffnen", "Gefahr ignorieren", "Allein hinausgehen"]
-                },
-                answer: 1
+                question: "أي جزء من الخلية يحتوي عادةً على المادة الوراثية؟",
+                answers: ["النواة", "الغشاء", "السيتوبلازم", "الجدار"],
+                correct: 0
+            },
+            {
+                question: "إذا كانت كل A هي B، وبعض B هي C، فهل يلزم أن تكون كل A هي C؟",
+                answers: ["نعم دائمًا", "لا يلزم", "فقط أحيانًا", "لا يمكن معرفة B"],
+                correct: 1
+            },
+            {
+                question: "ما ناتج 15 × 8؟",
+                answers: ["100", "110", "120", "130"],
+                correct: 2
             }
         ]
     };
 
-    const PERSONALITY_QUESTIONS = [
-        {
-            id: "p1",
-            text: {
-                ar: "عندما تواجه مشكلة صعبة، ماذا تفعل غالبًا؟",
-                en: "When facing a difficult problem, what do you usually do?",
-                fr: "Que faites-vous généralement face à un problème difficile ?",
-                es: "¿Qué haces normalmente ante un problema difícil?",
-                tr: "Zor bir problemle karşılaştığında genellikle ne yaparsın?",
-                de: "Was tust du normalerweise bei einem schwierigen Problem?"
-            },
-            answers: [
-                { type: "analyst" },
-                { type: "leader" },
-                { type: "creative" },
-                { type: "calm" }
-            ],
-            options: {
-                ar: ["أحلل التفاصيل", "أتخذ القرار", "أبحث عن فكرة مختلفة", "أهدأ وأنتظر"],
-                en: ["Analyze details", "Make a decision", "Find a different idea", "Stay calm and wait"],
-                fr: ["Analyser les détails", "Prendre une décision", "Chercher une idée différente", "Rester calme"],
-                es: ["Analizar detalles", "Tomar una decisión", "Buscar una idea diferente", "Mantener la calma"],
-                tr: ["Detayları analiz ederim", "Karar veririm", "Farklı fikir ararım", "Sakin kalırım"],
-                de: ["Details analysieren", "Entscheidung treffen", "Neue Idee suchen", "Ruhig bleiben"]
-            }
-        },
 
+    const scienceQuestions = [
         {
-            id: "p2",
-            text: {
-                ar: "في الفريق، ما الدور الذي تميل إليه؟",
-                en: "What role do you prefer in a team?",
-                fr: "Quel rôle préférez-vous dans une équipe ?",
-                es: "¿Qué papel prefieres en un equipo?",
-                tr: "Bir takımda hangi rolü tercih edersin?",
-                de: "Welche Rolle bevorzugst du in einem Team?"
-            },
-            answers: [
-                { type: "leader" },
-                { type: "analyst" },
-                { type: "creative" },
-                { type: "calm" }
-            ],
-            options: {
-                ar: ["القائد", "المحلل", "المبدع", "الداعم الهادئ"],
-                en: ["Leader", "Analyst", "Creative", "Calm supporter"],
-                fr: ["Leader", "Analyste", "Créatif", "Soutien calme"],
-                es: ["Líder", "Analista", "Creativo", "Apoyo tranquilo"],
-                tr: ["Lider", "Analist", "Yaratıcı", "Sakin destekçi"],
-                de: ["Anführer", "Analytiker", "Kreativer", "Ruhiger Unterstützer"]
-            }
+            question: "ما أقرب نجم إلى الأرض بعد الشمس؟",
+            answers: ["سيريوس", "بروكسيما سنتوري", "فيغا", "الشعرى"],
+            correct: 1
         },
-
         {
-            id: "p3",
-            text: {
-                ar: "ما الذي يجذبك أكثر؟",
-                en: "What attracts you the most?",
-                fr: "Qu'est-ce qui vous attire le plus ?",
-                es: "¿Qué te atrae más?",
-                tr: "Seni en çok ne çeker?",
-                de: "Was zieht dich am meisten an?"
-            },
-            answers: [
-                { type: "creative" },
-                { type: "analyst" },
-                { type: "leader" },
-                { type: "calm" }
-            ],
-            options: {
-                ar: ["الأفكار الجديدة", "الأرقام والمنطق", "التحدي والمنافسة", "الاستقرار"],
-                en: ["New ideas", "Numbers and logic", "Challenge and competition", "Stability"],
-                fr: ["Nouvelles idées", "Nombres et logique", "Défi et compétition", "Stabilité"],
-                es: ["Ideas nuevas", "Números y lógica", "Desafío y competencia", "Estabilidad"],
-                tr: ["Yeni fikirler", "Sayılar ve mantık", "Meydan okuma", "Denge"],
-                de: ["Neue Ideen", "Zahlen und Logik", "Herausforderung", "Stabilität"]
-            }
+            question: "ما الوحدة الأساسية لقياس القوة في النظام الدولي؟",
+            answers: ["جول", "واط", "نيوتن", "باسكال"],
+            correct: 2
+        },
+        {
+            question: "أي عضو يساعد الإنسان على التنفس؟",
+            answers: ["القلب", "الرئتان", "المعدة", "الكلى"],
+            correct: 1
+        },
+        {
+            question: "ما حالة الماء عند درجة تجمده الطبيعية؟",
+            answers: ["غاز", "بلازما", "سائل", "صلب"],
+            correct: 3
+        },
+        {
+            question: "ما مركز النظام الشمسي؟",
+            answers: ["الأرض", "القمر", "الشمس", "المشتري"],
+            correct: 2
         }
     ];
 
-    /* =========================================================
-       APPLICATION STATE
-    ========================================================= */
 
-    let player = createDefaultPlayer();
-    let settings = createDefaultSettings();
+    /* =====================================================
+       HORROR STORY
+    ===================================================== */
 
-    const gameState = {
-        activeGame: null,
-        questions: [],
-        currentIndex: 0,
-        score: 0,
-        answered: false,
-        startedAt: null,
-        personalityAnswers: [],
-        personalityIndex: 0
+    const horrorScenes = [
+        {
+            text: "تدخل غرفة مظلمة وتسمع صوتًا خلفك. أمامك بابان.",
+            choices: [
+                {
+                    text: "افتح الباب الأيسر",
+                    next: 1,
+                    xp: 15
+                },
+                {
+                    text: "ابقَ مكانك واستمع",
+                    next: 2,
+                    xp: 20
+                }
+            ]
+        },
+
+        {
+            text: "الباب يفتح ببطء. ترى ممرًا طويلًا وفي نهايته ضوء خافت.",
+            choices: [
+                {
+                    text: "اتجه نحو الضوء",
+                    next: 3,
+                    xp: 20
+                },
+                {
+                    text: "عد إلى الغرفة",
+                    next: 2,
+                    xp: 10
+                }
+            ]
+        },
+
+        {
+            text: "تسكت تمامًا. الصوت يقترب ثم يتوقف فجأة.",
+            choices: [
+                {
+                    text: "افتح الباب خلفك",
+                    next: 3,
+                    xp: 25
+                },
+                {
+                    text: "انتظر",
+                    next: 4,
+                    xp: 15
+                }
+            ]
+        },
+
+        {
+            text: "تصل إلى غرفة صغيرة فيها شاشة تعرض اسمك. يظهر سؤال: هل ستكمل؟",
+            choices: [
+                {
+                    text: "نعم، أكمل",
+                    next: 5,
+                    xp: 30
+                },
+                {
+                    text: "أعود",
+                    next: 4,
+                    xp: 10
+                }
+            ]
+        },
+
+        {
+            text: "الظلام يزداد، لكنك تكتشف أن الصوت كان تسجيلًا قديمًا.",
+            choices: [
+                {
+                    text: "أكمل البحث",
+                    next: 5,
+                    xp: 25
+                },
+                {
+                    text: "أنهي التجربة",
+                    next: 5,
+                    xp: 15
+                }
+            ]
+        },
+
+        {
+            text: "تصل إلى النهاية. لقد واجهت الخوف واتخذت قراراتك بنفسك.",
+            choices: []
+        }
+    ];
+
+
+    /* =====================================================
+       IDENTITY QUESTIONS
+    ===================================================== */
+
+    const identityQuestions = [
+        {
+            question: "عندما تواجه مشكلة صعبة، ماذا تفعل أولًا؟",
+            answers: [
+                { text: "أحللها بهدوء", type: "analyst" },
+                { text: "أجرب بسرعة", type: "explorer" },
+                { text: "أسأل الآخرين", type: "social" },
+                { text: "أبحث عن طريقة مختلفة", type: "creative" }
+            ]
+        },
+
+        {
+            question: "أي نوع من الألعاب يجذبك أكثر؟",
+            answers: [
+                { text: "الألغاز", type: "analyst" },
+                { text: "المغامرة", type: "explorer" },
+                { text: "المنافسة", type: "social" },
+                { text: "الإبداع", type: "creative" }
+            ]
+        },
+
+        {
+            question: "إذا خسرت تحديًا، ماذا تفعل؟",
+            answers: [
+                { text: "أراجع أخطائي", type: "analyst" },
+                { text: "أعيد المحاولة فورًا", type: "explorer" },
+                { text: "أتحدى شخصًا آخر", type: "social" },
+                { text: "أغير الاستراتيجية", type: "creative" }
+            ]
+        },
+
+        {
+            question: "اختر الوصف الأقرب لك.",
+            answers: [
+                { text: "أحب التفاصيل", type: "analyst" },
+                { text: "أحب التجربة", type: "explorer" },
+                { text: "أحب التفاعل", type: "social" },
+                { text: "أحب الأفكار الجديدة", type: "creative" }
+            ]
+        }
+    ];
+
+
+    /* =====================================================
+       SPORTS DEMO DATA
+    ===================================================== */
+
+    const sportsNews = [
+        {
+            category: "FOOTBALL",
+            title: "آخر أخبار كرة القدم العالمية",
+            text: "قسم رياضي تجريبي جاهز للربط لاحقًا بمصدر أخبار رياضي مباشر."
+        },
+        {
+            category: "CHAMPIONS",
+            title: "مباريات ونتائج وبطولات",
+            text: "سيتم تطوير هذا القسم ليعرض الأخبار والنتائج والجداول بشكل مباشر."
+        },
+        {
+            category: "WORLD",
+            title: "رياضة حول العالم",
+            text: "مساحة مخصصة لأهم الأحداث الرياضية العالمية."
+        }
+    ];
+
+
+    /* =====================================================
+       STATE
+    ===================================================== */
+
+    const defaultPlayer = {
+        id: createPlayerId(),
+        name: "Guest",
+        email: "",
+        age: 18,
+        xp: 0,
+        coins: 0,
+        gamesPlayed: 0,
+        gamesWon: 0,
+        identity: null,
+        createdAt: new Date().toISOString()
     };
 
-    /* =========================================================
-       INITIALIZATION
-    ========================================================= */
+    let player = loadPlayer();
 
-    document.addEventListener("DOMContentLoaded", () => {
-        safeRun(() => {
-            loadState();
-            applyLanguage();
-            bindEvents();
-            updateAllUI();
-            showStartupMessage();
-        });
-    });
+    let currentLanguage =
+        localStorage.getItem(CONFIG.languageKey) || "ar";
 
-    function safeRun(callback) {
+    let currentQuiz = null;
+    let currentHorrorScene = 0;
+    let identityState = null;
+
+
+    /* =====================================================
+       DOM HELPERS
+    ===================================================== */
+
+    const $ = (selector, parent = document) => {
         try {
-            return callback();
+            return parent.querySelector(selector);
         } catch (error) {
-            console.error("[ZIVOZONE ERROR]", error);
-            showToast("حدث خطأ غير متوقع. حاول مرة أخرى.", "error");
+            console.error("ZIVOZONE selector error:", error);
             return null;
         }
-    }
+    };
 
-    /* =========================================================
-       PLAYER STATE
-    ========================================================= */
 
-    function createDefaultPlayer() {
-        return {
-            id: generateId(),
-            name: "",
-            email: "",
-            age: null,
-            language: APP.defaultLanguage,
-            xp: 0,
-            coins: 0,
-            streak: 0,
-            lastPlayedDate: null,
-            gamesPlayed: 0,
-            questionsAnswered: 0,
-            correctAnswers: 0,
-            achievements: [],
-            createdAt: new Date().toISOString()
-        };
-    }
-
-    function createDefaultSettings() {
-        return {
-            language: APP.defaultLanguage
-        };
-    }
-
-    function loadState() {
+    const $$ = (selector, parent = document) => {
         try {
-            const storedPlayer = localStorage.getItem(APP.storageKey);
-            const storedSettings = localStorage.getItem(APP.settingsKey);
-
-            if (storedPlayer) {
-                const parsed = JSON.parse(storedPlayer);
-
-                if (parsed && typeof parsed === "object") {
-                    player = {
-                        ...createDefaultPlayer(),
-                        ...parsed
-                    };
-                }
-            }
-
-            if (storedSettings) {
-                const parsedSettings = JSON.parse(storedSettings);
-
-                if (parsedSettings && typeof parsedSettings === "object") {
-                    settings = {
-                        ...createDefaultSettings(),
-                        ...parsedSettings
-                    };
-                }
-            }
-
-            if (!APP.supportedLanguages.includes(player.language)) {
-                player.language = APP.defaultLanguage;
-            }
-
-            settings.language = player.language;
+            return Array.from(parent.querySelectorAll(selector));
         } catch (error) {
-            console.error("Failed to load state:", error);
+            console.error("ZIVOZONE selectors error:", error);
+            return [];
+        }
+    };
 
-            player = createDefaultPlayer();
-            settings = createDefaultSettings();
 
-            try {
-                localStorage.removeItem(APP.storageKey);
-                localStorage.removeItem(APP.settingsKey);
-            } catch (storageError) {
-                console.error("Failed to clear corrupted state:", storageError);
+    const createElement = (tag, className = "") => {
+        const element = document.createElement(tag);
+
+        if (className) {
+            element.className = className;
+        }
+
+        return element;
+    };
+
+
+    /* =====================================================
+       STORAGE
+    ===================================================== */
+
+    function createPlayerId() {
+        try {
+            if (window.crypto && crypto.randomUUID) {
+                return crypto.randomUUID();
             }
+        } catch (error) {
+            console.warn("Crypto UUID unavailable:", error);
+        }
+
+        return `zivo-${Date.now()}-${Math.random()
+            .toString(36)
+            .slice(2, 10)}`;
+    }
+
+
+    function loadPlayer() {
+        try {
+            const saved = localStorage.getItem(CONFIG.storageKey);
+
+            if (!saved) {
+                return { ...defaultPlayer };
+            }
+
+            const parsed = JSON.parse(saved);
+
+            if (!parsed || typeof parsed !== "object") {
+                return { ...defaultPlayer };
+            }
+
+            return {
+                ...defaultPlayer,
+                ...parsed,
+                xp: sanitizeNumber(parsed.xp, 0),
+                coins: sanitizeNumber(parsed.coins, 0),
+                gamesPlayed: sanitizeNumber(parsed.gamesPlayed, 0),
+                gamesWon: sanitizeNumber(parsed.gamesWon, 0),
+                age: sanitizeAge(parsed.age)
+            };
+        } catch (error) {
+            console.error("Unable to load player:", error);
+            return { ...defaultPlayer };
         }
     }
 
-    function saveState() {
+
+    function savePlayer() {
         try {
-            localStorage.setItem(APP.storageKey, JSON.stringify(player));
-
-            settings.language = player.language;
-
             localStorage.setItem(
-                APP.settingsKey,
-                JSON.stringify(settings)
+                CONFIG.storageKey,
+                JSON.stringify(player)
             );
-
-            return true;
         } catch (error) {
-            console.error("Failed to save state:", error);
-            showToast("تعذر حفظ التقدم على هذا الجهاز.", "error");
-            return false;
+            console.error("Unable to save player:", error);
+
+            showToast(
+                "تعذر حفظ البيانات محليًا.",
+                "error"
+            );
         }
     }
 
-    /* =========================================================
-       PLAYER LEVEL SYSTEM
-    ========================================================= */
 
-    function getPlayerLevel() {
-        let current = LEVELS[0];
+    function sanitizeNumber(value, fallback = 0) {
+        const number = Number(value);
 
-        for (const level of LEVELS) {
-            if (player.xp >= level.minXP) {
-                current = level;
-            } else {
-                break;
-            }
+        if (!Number.isFinite(number) || number < 0) {
+            return fallback;
         }
 
-        return current;
+        return Math.floor(number);
     }
 
-    function getNextLevel() {
-        const current = getPlayerLevel();
 
-        return LEVELS.find(
-            level => level.level === current.level + 1
-        ) || null;
-    }
+    function sanitizeAge(value) {
+        const age = Number(value);
 
-    function addXP(amount) {
-        if (!Number.isFinite(amount) || amount <= 0) {
-            return;
+        if (!Number.isFinite(age)) {
+            return 18;
         }
 
-        const oldLevel = getPlayerLevel().level;
+        return Math.min(
+            100,
+            Math.max(6, Math.floor(age))
+        );
+    }
 
-        player.xp += Math.floor(amount);
 
-        const newLevel = getPlayerLevel().level;
+    function escapeText(value, maxLength = 500) {
+        return String(value ?? "")
+            .slice(0, maxLength)
+            .replace(/[<>]/g, "");
+    }
+
+
+    /* =====================================================
+       LEVEL SYSTEM
+    ===================================================== */
+
+    function getLevel(xp) {
+        return Math.max(
+            1,
+            Math.floor(xp / 250) + 1
+        );
+    }
+
+
+    function getLevelName(level) {
+        if (level <= 2) return "Rookie";
+        if (level <= 4) return "Explorer";
+        if (level <= 7) return "Pro";
+        if (level <= 10) return "Master";
+
+        return "ZIVO Legend";
+    }
+
+
+    function getDifficulty() {
+        const level = getLevel(player.xp);
+
+        if (level <= 2) {
+            return "easy";
+        }
+
+        if (level <= 5) {
+            return "medium";
+        }
+
+        return "hard";
+    }
+
+
+    function addReward(xp, coins) {
+        const oldLevel = getLevel(player.xp);
+
+        player.xp += sanitizeNumber(xp);
+        player.coins += sanitizeNumber(coins);
+
+        const newLevel = getLevel(player.xp);
+
+        savePlayer();
+        updateProfile();
 
         if (newLevel > oldLevel) {
-            unlockAchievement(`level_${newLevel}`);
             showToast(
-                `🎉 وصلت إلى المستوى ${newLevel}!`,
+                `🎉 Level Up! أصبحت ${getLevelName(newLevel)} — Level ${newLevel}`,
                 "success"
             );
         }
-
-        saveState();
-        updateAllUI();
     }
 
-    function addCoins(amount) {
-        if (!Number.isFinite(amount) || amount <= 0) {
-            return;
+
+    /* =====================================================
+       PROFILE UI
+    ===================================================== */
+
+    function updateProfile() {
+        const level = getLevel(player.xp);
+
+        const profileName = $("#profile-name");
+        const profileLevel = $("#profile-level");
+        const profileXP = $("#profile-xp");
+        const profileCoins = $("#profile-coins");
+        const progress = $("#xp-progress");
+        const levelChip = $("#player-level-chip");
+
+        if (profileName) {
+            profileName.textContent =
+                escapeText(player.name || "Guest", 40);
         }
 
-        player.coins += Math.floor(amount);
-
-        saveState();
-        updateAllUI();
-    }
-
-    /* =========================================================
-       EVENT BINDING
-    ========================================================= */
-
-    function bindEvents() {
-        document.addEventListener("click", handleGlobalClick);
-
-        document.addEventListener("submit", event => {
-            const form = event.target;
-
-            if (!(form instanceof HTMLFormElement)) {
-                return;
-            }
-
-            if (
-                form.id === "registerForm" ||
-                form.id === "profileForm"
-            ) {
-                event.preventDefault();
-
-                safeRun(() => saveProfileFromForm(form));
-            }
-        });
-
-        document.addEventListener("change", event => {
-            const target = event.target;
-
-            if (
-                target instanceof HTMLSelectElement &&
-                (
-                    target.id === "languageSelect" ||
-                    target.name === "language"
-                )
-            ) {
-                setLanguage(target.value);
-            }
-        });
-    }
-
-    function handleGlobalClick(event) {
-        const target = event.target.closest(
-            "button, a, [data-game], [data-open-profile], [data-scroll-to], [data-close-modal], [data-language]"
-        );
-
-        if (!target) {
-            return;
+        if (profileLevel) {
+            profileLevel.textContent = String(level);
         }
 
-        if (
-            target instanceof HTMLAnchorElement &&
-            target.getAttribute("href") &&
-            target.getAttribute("href") !== "#" &&
-            !target.hasAttribute("data-scroll-to")
-        ) {
-            return;
+        if (profileXP) {
+            profileXP.textContent = String(player.xp);
         }
 
-        event.preventDefault();
-
-        safeRun(() => {
-            if (target.dataset.game) {
-                startGame(target.dataset.game);
-                return;
-            }
-
-            if (target.dataset.openProfile !== undefined) {
-                openProfileModal();
-                return;
-            }
-
-            if (target.dataset.scrollTo) {
-                scrollToSection(target.dataset.scrollTo);
-                return;
-            }
-
-            if (target.dataset.closeModal !== undefined) {
-                closeModal(target.dataset.closeModal);
-                return;
-            }
-
-            if (target.dataset.language) {
-                setLanguage(target.dataset.language);
-                return;
-            }
-
-            handleButtonById(target);
-        });
-    }
-
-    function handleButtonById(button) {
-        const id = button.id;
-
-        if (!id) {
-            return;
+        if (profileCoins) {
+            profileCoins.textContent = String(player.coins);
         }
 
-        switch (id) {
-            case "loginBtn":
-            case "registerBtn":
-            case "openRegister":
-                openProfileModal();
-                break;
+        if (levelChip) {
+            levelChip.textContent =
+                `Level ${level} • ${getLevelName(level)}`;
+        }
 
-            case "profileBtn":
-                openProfileModal();
-                break;
+        if (progress) {
+            const currentLevelXP =
+                (level - 1) * 250;
 
-            case "dailyChallengeBtn":
-                startDailyChallenge();
-                break;
-
-            case "closeGameModal":
-                closeModal("gameModal");
-                break;
-
-            case "closeProfileModal":
-                closeModal("profileModal");
-                break;
-
-            case "closeRegisterModal":
-                closeModal("registerModal");
-                break;
-
-            case "nextQuestionBtn":
-                nextQuestion();
-                break;
-
-            case "finishGameBtn":
-                finishGame();
-                break;
-
-            case "saveProfileBtn":
-                saveProfileFromForm(
-                    document.getElementById("profileForm") ||
-                    document.getElementById("registerForm")
+            const progressValue =
+                Math.min(
+                    100,
+                    Math.max(
+                        0,
+                        ((player.xp - currentLevelXP) / 250) * 100
+                    )
                 );
-                break;
 
-            case "resetProgressBtn":
-                resetProgress();
-                break;
+            progress.style.width =
+                `${progressValue}%`;
 
-            case "personalityBtn":
-            case "whoAmIBtn":
-                startPersonalityTest();
-                break;
+            const parent =
+                progress.closest('[role="progressbar"]');
 
-            case "aiBtn":
-            case "openAIBtn":
-                openAIModal();
-                break;
-
-            default:
-                break;
+            if (parent) {
+                parent.setAttribute(
+                    "aria-valuenow",
+                    String(Math.round(progressValue))
+                );
+            }
         }
     }
 
-    /* =========================================================
-       PROFILE
-    ========================================================= */
 
-    function openProfileModal() {
-        const modal =
-            document.getElementById("profileModal") ||
-            document.getElementById("registerModal");
+    /* =====================================================
+       LANGUAGE
+    ===================================================== */
 
-        if (!modal) {
-            openFallbackModal(
-                getText("profile"),
-                createProfileHTML()
+    function setLanguage(language) {
+        try {
+            if (!translations[language]) {
+                language = "ar";
+            }
+
+            currentLanguage = language;
+
+            localStorage.setItem(
+                CONFIG.languageKey,
+                language
             );
-            return;
-        }
 
-        const form =
-            modal.querySelector("form") ||
-            document.getElementById("profileForm") ||
-            document.getElementById("registerForm");
+            const direction =
+                language === "ar" ? "rtl" : "ltr";
 
-        if (form) {
-            fillProfileForm(form);
-        }
+            document.documentElement.lang = language;
+            document.documentElement.dir = direction;
 
-        showModalElement(modal);
-    }
+            $$("[data-i18n]").forEach((element) => {
+                const key = element.dataset.i18n;
+                const value = translations[language][key];
 
-    function fillProfileForm(form) {
-        const nameInput = form.querySelector(
-            '[name="name"], #playerName, #name'
-        );
+                if (value) {
+                    element.textContent = value;
+                }
+            });
 
-        const emailInput = form.querySelector(
-            '[name="email"], #playerEmail, #email'
-        );
+            $$("[data-i18n-placeholder]").forEach((element) => {
+                const key =
+                    element.dataset.i18nPlaceholder;
 
-        const ageInput = form.querySelector(
-            '[name="age"], #playerAge, #age'
-        );
+                const value =
+                    translations[language][key];
 
-        const languageInput = form.querySelector(
-            '[name="language"], #languageSelect'
-        );
+                if (value) {
+                    element.placeholder = value;
+                }
+            });
 
-        if (nameInput) {
-            nameInput.value = player.name;
-        }
+            const selector =
+                $("#language-select");
 
-        if (emailInput) {
-            emailInput.value = player.email;
-        }
-
-        if (ageInput) {
-            ageInput.value = player.age || "";
-        }
-
-        if (languageInput) {
-            languageInput.value = player.language;
+            if (selector) {
+                selector.value = language;
+            }
+        } catch (error) {
+            console.error(
+                "Language system error:",
+                error
+            );
         }
     }
 
-    function saveProfileFromForm(form) {
-        if (!form) {
-            showToast(getText("completeProfile"), "error");
+
+    /* =====================================================
+       MODAL SYSTEM
+    ===================================================== */
+
+    function getModalRoot() {
+        return $("#modal-root");
+    }
+
+
+    function closeModal() {
+        const root = getModalRoot();
+
+        if (!root) {
             return;
         }
 
-        const nameInput = form.querySelector(
-            '[name="name"], #playerName, #name'
-        );
+        root.classList.remove("open");
+        root.setAttribute("aria-hidden", "true");
+        root.replaceChildren();
 
-        const emailInput = form.querySelector(
-            '[name="email"], #playerEmail, #email'
-        );
+        document.body.style.overflow = "";
+    }
 
-        const ageInput = form.querySelector(
-            '[name="age"], #playerAge, #age'
-        );
 
-        const languageInput = form.querySelector(
-            '[name="language"], #languageSelect'
-        );
+    function openModal(title, contentBuilder) {
+        const root = getModalRoot();
 
-        const name = nameInput
-            ? String(nameInput.value).trim()
-            : player.name;
-
-        const email = emailInput
-            ? String(emailInput.value).trim()
-            : player.email;
-
-        const age = ageInput
-            ? Number(ageInput.value)
-            : player.age;
-
-        const language = languageInput
-            ? String(languageInput.value)
-            : player.language;
-
-        if (name.length < 2 || name.length > 60) {
+        if (!root) {
             showToast(
-                "اكتب اسمًا صحيحًا بين حرفين و60 حرفًا.",
+                "تعذر فتح النافذة.",
                 "error"
             );
-            return;
+            return null;
         }
 
-        if (!isValidEmail(email)) {
-            showToast(
-                "أدخل بريدًا إلكترونيًا صحيحًا.",
-                "error"
+        root.replaceChildren();
+
+        const modal = createElement("div", "modal");
+
+        const closeButton =
+            createElement("button", "modal-close");
+
+        closeButton.type = "button";
+        closeButton.setAttribute(
+            "aria-label",
+            "Close"
+        );
+        closeButton.textContent = "×";
+
+        closeButton.addEventListener(
+            "click",
+            closeModal
+        );
+
+        const heading =
+            createElement("h2");
+
+        heading.textContent =
+            escapeText(title, 100);
+
+        modal.append(
+            closeButton,
+            heading
+        );
+
+        try {
+            const content =
+                contentBuilder();
+
+            if (content) {
+                modal.appendChild(content);
+            }
+        } catch (error) {
+            console.error(
+                "Modal content error:",
+                error
             );
+
+            const errorMessage =
+                createElement("p");
+
+            errorMessage.className = "modal-subtitle";
+            errorMessage.textContent =
+                "حدث خطأ أثناء تحميل المحتوى.";
+
+            modal.appendChild(errorMessage);
+        }
+
+        root.appendChild(modal);
+
+        root.classList.add("open");
+        root.setAttribute("aria-hidden", "false");
+
+        document.body.style.overflow = "hidden";
+
+        return modal;
+    }
+
+
+    function setupModalClosing() {
+        const root = getModalRoot();
+
+        if (!root) {
             return;
         }
 
-        if (
-            !Number.isInteger(age) ||
-            age < 6 ||
-            age > 100
-        ) {
-            showToast(
-                "العمر يجب أن يكون بين 6 و100 سنة.",
-                "error"
+        root.addEventListener("click", (event) => {
+            if (event.target === root) {
+                closeModal();
+            }
+        });
+    }
+
+
+    /* =====================================================
+       TOAST
+    ===================================================== */
+
+    function showToast(message, type = "success") {
+        try {
+            let container =
+                $(".toast-container");
+
+            if (!container) {
+                container =
+                    createElement(
+                        "div",
+                        "toast-container"
+                    );
+
+                document.body.appendChild(container);
+            }
+
+            const toast =
+                createElement(
+                    "div",
+                    `toast ${type}`
+                );
+
+            toast.textContent =
+                escapeText(message, 300);
+
+            container.appendChild(toast);
+
+            window.setTimeout(() => {
+                toast.remove();
+
+                if (
+                    container.children.length === 0
+                ) {
+                    container.remove();
+                }
+            }, 3500);
+        } catch (error) {
+            console.error(
+                "Toast error:",
+                error
             );
-            return;
         }
+    }
 
-        if (!APP.supportedLanguages.includes(language)) {
-            showToast("اللغة غير مدعومة.", "error");
-            return;
-        }
 
-        const isNewPlayer = !player.name;
+    /* =====================================================
+       LOGIN / PROFILE
+    ===================================================== */
 
-        player.name = name;
-        player.email = email;
-        player.age = age;
-        player.language = language;
+    function openLoginModal() {
+        openModal(
+            "ZIVOZONE • ملف اللاعب",
+            () => {
+                const form =
+                    createElement(
+                        "form",
+                        "modal-form"
+                    );
 
-        if (isNewPlayer) {
-            unlockAchievement("first_profile");
-        }
+                form.noValidate = true;
 
-        saveState();
-        applyLanguage();
-        updateAllUI();
+                const nameLabel =
+                    createElement("label");
 
-        closeModal("profileModal");
-        closeModal("registerModal");
+                nameLabel.textContent =
+                    "اسم اللاعب";
 
-        showToast(
-            "تم حفظ ملفك بنجاح 🎉",
-            "success"
+                const nameInput =
+                    createElement("input");
+
+                nameInput.type = "text";
+                nameInput.maxLength =
+                    CONFIG.maxNameLength;
+                nameInput.required = true;
+                nameInput.value =
+                    player.name === "Guest"
+                        ? ""
+                        : player.name;
+
+                const emailLabel =
+                    createElement("label");
+
+                emailLabel.textContent =
+                    "البريد الإلكتروني";
+
+                const emailInput =
+                    createElement("input");
+
+                emailInput.type = "email";
+                emailInput.maxLength =
+                    CONFIG.maxEmailLength;
+                emailInput.autocomplete = "email";
+                emailInput.value =
+                    player.email || "";
+
+                const ageLabel =
+                    createElement("label");
+
+                ageLabel.textContent =
+                    "العمر";
+
+                const ageInput =
+                    createElement("input");
+
+                ageInput.type = "number";
+                ageInput.min = "6";
+                ageInput.max = "100";
+                ageInput.required = true;
+                ageInput.value =
+                    String(player.age || 18);
+
+                const actions =
+                    createElement(
+                        "div",
+                        "modal-actions"
+                    );
+
+                const cancel =
+                    createElement(
+                        "button",
+                        "btn btn-ghost"
+                    );
+
+                cancel.type = "button";
+                cancel.textContent = "إلغاء";
+
+                cancel.addEventListener(
+                    "click",
+                    closeModal
+                );
+
+                const save =
+                    createElement(
+                        "button",
+                        "btn btn-primary"
+                    );
+
+                save.type = "submit";
+                save.textContent =
+                    "حفظ الملف";
+
+                actions.append(
+                    cancel,
+                    save
+                );
+
+                form.append(
+                    nameLabel,
+                    nameInput,
+                    emailLabel,
+                    emailInput,
+                    ageLabel,
+                    ageInput,
+                    actions
+                );
+
+                form.addEventListener(
+                    "submit",
+                    (event) => {
+                        event.preventDefault();
+
+                        try {
+                            const name =
+                                escapeText(
+                                    nameInput.value.trim(),
+                                    CONFIG.maxNameLength
+                                );
+
+                            const email =
+                                escapeText(
+                                    emailInput.value.trim(),
+                                    CONFIG.maxEmailLength
+                                );
+
+                            const age =
+                                sanitizeAge(
+                                    ageInput.value
+                                );
+
+                            if (name.length < 2) {
+                                showToast(
+                                    "اكتب اسمًا صحيحًا.",
+                                    "error"
+                                );
+                                return;
+                            }
+
+                            if (
+                                email &&
+                                !isValidEmail(email)
+                            ) {
+                                showToast(
+                                    "البريد الإلكتروني غير صحيح.",
+                                    "error"
+                                );
+                                return;
+                            }
+
+                            player.name = name;
+                            player.email = email;
+                            player.age = age;
+
+                            savePlayer();
+                            updateProfile();
+                            closeModal();
+
+                            showToast(
+                                "تم حفظ ملفك بنجاح 🎉",
+                                "success"
+                            );
+                        } catch (error) {
+                            console.error(
+                                "Profile save error:",
+                                error
+                            );
+
+                            showToast(
+                                "حدث خطأ أثناء حفظ الملف.",
+                                "error"
+                            );
+                        }
+                    }
+                );
+
+                return form;
+            }
         );
     }
+
 
     function isValidEmail(email) {
-        if (!email || email.length > 254) {
-            return false;
-        }
-
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+            email
+        );
     }
 
-    /* =========================================================
-       GAME ENGINE
-    ========================================================= */
 
-    function startGame(gameType) {
-        if (!ensurePlayer()) {
-            return;
-        }
+    /* =====================================================
+       QUIZ ENGINE
+    ===================================================== */
 
-        const normalizedType = normalizeGameType(gameType);
+    function getQuestionsForPlayer() {
+        const difficulty =
+            getDifficulty();
 
-        if (normalizedType === "personality") {
-            startPersonalityTest();
-            return;
-        }
+        let questions =
+            questionBank[difficulty] ||
+            questionBank.easy;
 
-        if (normalizedType === "daily") {
-            startDailyChallenge();
-            return;
-        }
+        /*
+         * في النسخة القادمة يمكن توسيع بنك الأسئلة
+         * ليصبح ديناميكيًا حسب العمر، المنطقة والمستوى.
+         * هنا نضمن تجربة مختلفة في كل جولة.
+         */
 
-        if (!QUESTION_BANK[normalizedType]) {
+        questions =
+            [...questions].sort(
+                () => Math.random() - 0.5
+            );
+
+        return questions.slice(0, 4);
+    }
+
+
+    function startQuiz(type = "quiz") {
+        try {
+            const questions =
+                type === "science"
+                    ? [...scienceQuestions]
+                    : getQuestionsForPlayer();
+
+            currentQuiz = {
+                type,
+                questions,
+                index: 0,
+                score: 0,
+                locked: false
+            };
+
+            player.gamesPlayed += 1;
+            savePlayer();
+
+            renderQuizQuestion();
+        } catch (error) {
+            console.error(
+                "Quiz start error:",
+                error
+            );
+
             showToast(
-                "هذه اللعبة غير متاحة حاليًا.",
+                "تعذر تشغيل اللعبة.",
                 "error"
             );
+        }
+    }
+
+
+    function renderQuizQuestion() {
+        if (!currentQuiz) {
             return;
         }
 
-        const questions = getQuestionsForPlayer(
-            normalizedType
-        );
+        const question =
+            currentQuiz.questions[
+                currentQuiz.index
+            ];
 
-        if (!questions.length) {
-            showToast(
-                "لا توجد أسئلة مناسبة لهذا المستوى.",
-                "error"
-            );
+        if (!question) {
+            finishQuiz();
             return;
         }
 
-        gameState.activeGame = normalizedType;
-        gameState.questions = shuffle(
-            questions
-        ).slice(0, Math.min(5, questions.length));
+        const modal =
+            openModal(
+                currentQuiz.type === "science"
+                    ? "🔬 تحدي العلوم"
+                    : "🧠 اختبار الذكاء",
+                () => {
+                    const wrapper =
+                        createElement("div");
 
-        gameState.currentIndex = 0;
-        gameState.score = 0;
-        gameState.answered = false;
-        gameState.startedAt = Date.now();
+                    const progress =
+                        createElement(
+                            "div",
+                            "game-progress"
+                        );
 
-        openGameModal();
+                    const current =
+                        createElement("span");
 
-        renderCurrentQuestion();
-    }
+                    current.textContent =
+                        `السؤال ${
+                            currentQuiz.index + 1
+                        } / ${
+                            currentQuiz.questions.length
+                        }`;
 
-    function normalizeGameType(type) {
-        const value = String(type || "")
-            .toLowerCase()
-            .trim();
+                    const difficulty =
+                        createElement("span");
 
-        const aliases = {
-            iq: "intelligence",
-            intelligence: "intelligence",
-            smart: "intelligence",
-            ذكاء: "intelligence",
+                    difficulty.textContent =
+                        getDifficulty()
+                            .toUpperCase();
 
-            science: "science",
-            علوم: "science",
+                    progress.append(
+                        current,
+                        difficulty
+                    );
 
-            horror: "horror",
-            fear: "horror",
-            رعب: "horror",
+                    const questionBox =
+                        createElement(
+                            "div",
+                            "game-question"
+                        );
 
-            personality: "personality",
-            "who-am-i": "personality",
-            "من-انا": "personality",
+                    const heading =
+                        createElement("h3");
 
-            daily: "daily"
-        };
+                    heading.textContent =
+                        question.question;
 
-        return aliases[value] || value;
-    }
+                    const answers =
+                        createElement(
+                            "div",
+                            "answers"
+                        );
 
-    function getAgeGroup(age) {
-        if (!Number.isFinite(age)) {
-            return "adult";
-        }
+                    question.answers.forEach(
+                        (answer, index) => {
+                            const button =
+                                createElement(
+                                    "button",
+                                    "answer-btn"
+                                );
 
-        if (age < 13) {
-            return "child";
-        }
+                            button.type = "button";
+                            button.textContent =
+                                answer;
 
-        if (age < 18) {
-            return "teen";
-        }
+                            button.addEventListener(
+                                "click",
+                                () => {
+                                    handleAnswer(
+                                        index,
+                                        button,
+                                        answers
+                                    );
+                                }
+                            );
 
-        return "adult";
-    }
+                            answers.appendChild(button);
+                        }
+                    );
 
-    function getDifficultyForPlayer() {
-        const level = getPlayerLevel().level;
+                    questionBox.append(
+                        heading,
+                        answers
+                    );
 
-        if (level <= 2) {
-            return 1;
-        }
+                    wrapper.append(
+                        progress,
+                        questionBox
+                    );
 
-        if (level <= 4) {
-            return 2;
-        }
-
-        return 3;
-    }
-
-    function getQuestionsForPlayer(gameType) {
-        const bank = QUESTION_BANK[gameType];
-
-        if (!Array.isArray(bank)) {
-            return [];
-        }
-
-        const ageGroup = getAgeGroup(player.age);
-        const difficulty = getDifficultyForPlayer();
-
-        let filtered = bank.filter(
-            question =>
-                question.ageGroup === ageGroup &&
-                question.difficulty <= difficulty
-        );
-
-        if (!filtered.length) {
-            filtered = bank.filter(
-                question =>
-                    question.ageGroup === ageGroup
+                    return wrapper;
+                }
             );
-        }
-
-        if (!filtered.length) {
-            filtered = bank.filter(
-                question =>
-                    question.difficulty <= difficulty
-            );
-        }
-
-        return filtered;
-    }
-
-    /* =========================================================
-       GAME MODAL
-    ========================================================= */
-
-    function openGameModal() {
-        const modal = document.getElementById("gameModal");
 
         if (modal) {
-            showModalElement(modal);
-            return;
+            modal.dataset.game = "quiz";
         }
-
-        openFallbackModal(
-            getGameTitle(gameState.activeGame),
-            `<div id="zivoGameFallback"></div>`
-        );
     }
 
-    function renderCurrentQuestion() {
-        const question =
-            gameState.questions[
-                gameState.currentIndex
-            ];
 
-        if (!question) {
-            finishGame();
+    function handleAnswer(
+        selectedIndex,
+        selectedButton,
+        answersContainer
+    ) {
+        if (
+            !currentQuiz ||
+            currentQuiz.locked
+        ) {
             return;
         }
 
-        gameState.answered = false;
-
-        const lang = player.language;
-
-        const questionText =
-            getLocalized(question.question, lang);
-
-        const options =
-            question.options[lang] ||
-            question.options.en ||
-            [];
-
-        const container =
-            document.getElementById("gameContent") ||
-            document.getElementById("gameModalContent") ||
-            document.getElementById("zivoGameFallback");
-
-        if (!container) {
-            openFallbackModal(
-                getGameTitle(gameState.activeGame),
-                `<div id="zivoGameFallback"></div>`
-            );
-
-            setTimeout(
-                renderCurrentQuestion,
-                0
-            );
-
-            return;
-        }
-
-        container.innerHTML = "";
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "zivo-game-engine";
-
-        const progress = document.createElement("div");
-        progress.className = "zivo-game-progress";
-        progress.textContent =
-            `${gameState.currentIndex + 1} / ${gameState.questions.length}`;
-
-        const title = document.createElement("h2");
-        title.textContent =
-            getGameTitle(gameState.activeGame);
-
-        const questionElement =
-            document.createElement("h3");
-
-        questionElement.textContent =
-            questionText;
-
-        const optionsContainer =
-            document.createElement("div");
-
-        optionsContainer.className =
-            "zivo-game-options";
-
-        options.forEach((option, index) => {
-            const button =
-                document.createElement("button");
-
-            button.type = "button";
-            button.className = "zivo-answer-button";
-            button.dataset.answerIndex = String(index);
-
-            button.textContent = option;
-
-            button.addEventListener(
-                "click",
-                () => {
-                    answerQuestion(index);
-                },
-                { once: true }
-            );
-
-            optionsContainer.appendChild(button);
-        });
-
-        const score = document.createElement("p");
-        score.id = "zivoGameScore";
-        score.textContent =
-            `${getText("score")}: ${gameState.score}`;
-
-        wrapper.appendChild(progress);
-        wrapper.appendChild(title);
-        wrapper.appendChild(questionElement);
-        wrapper.appendChild(optionsContainer);
-        wrapper.appendChild(score);
-
-        container.appendChild(wrapper);
-    }
-
-    function answerQuestion(selectedIndex) {
-        if (gameState.answered) {
-            return;
-        }
-
-        gameState.answered = true;
+        currentQuiz.locked = true;
 
         const question =
-            gameState.questions[
-                gameState.currentIndex
+            currentQuiz.questions[
+                currentQuiz.index
             ];
 
-        if (!question) {
-            return;
-        }
+        const buttons =
+            Array.from(
+                answersContainer.children
+            );
 
-        const isCorrect =
-            selectedIndex === question.answer;
+        buttons.forEach(
+            (button, index) => {
+                button.disabled = true;
 
-        player.questionsAnswered += 1;
-
-        const buttons = document.querySelectorAll(
-            ".zivo-answer-button"
+                if (
+                    index === question.correct
+                ) {
+                    button.classList.add(
+                        "correct"
+                    );
+                }
+            }
         );
 
-        buttons.forEach(button => {
-            button.disabled = true;
+        const correct =
+            selectedIndex === question.correct;
 
-            const index = Number(
-                button.dataset.answerIndex
+        if (correct) {
+            selectedButton.classList.add(
+                "correct"
             );
 
-            if (index === question.answer) {
-                button.classList.add(
-                    "correct"
-                );
-            }
-
-            if (
-                index === selectedIndex &&
-                !isCorrect
-            ) {
-                button.classList.add(
-                    "wrong"
-                );
-            }
-        });
-
-        if (isCorrect) {
-            player.correctAnswers += 1;
-            gameState.score += 1;
-
-            addXP(REWARDS.correctAnswerXP);
-            addCoins(REWARDS.correctAnswerCoins);
+            currentQuiz.score += 1;
 
             showToast(
-                `✅ ${getText("correct")} +${REWARDS.correctAnswerXP} XP`,
+                "إجابة صحيحة! +XP 🎯",
                 "success"
             );
         } else {
+            selectedButton.classList.add(
+                "wrong"
+            );
+
             showToast(
-                `❌ ${getText("wrong")}`,
+                "إجابة غير صحيحة، حاول مرة أخرى.",
                 "error"
             );
         }
 
-        saveState();
+        window.setTimeout(() => {
+            currentQuiz.index += 1;
+            currentQuiz.locked = false;
 
-        setTimeout(() => {
-            gameState.currentIndex += 1;
+            closeModal();
 
             if (
-                gameState.currentIndex >=
-                gameState.questions.length
+                currentQuiz.index <
+                currentQuiz.questions.length
             ) {
-                finishGame();
+                renderQuizQuestion();
             } else {
-                renderCurrentQuestion();
+                finishQuiz();
             }
         }, 850);
     }
 
-    function nextQuestion() {
-        if (!gameState.questions.length) {
+
+    function finishQuiz() {
+        if (!currentQuiz) {
             return;
-        }
-
-        if (
-            gameState.currentIndex <
-            gameState.questions.length - 1
-        ) {
-            gameState.currentIndex += 1;
-            renderCurrentQuestion();
-        } else {
-            finishGame();
-        }
-    }
-
-    function finishGame() {
-        if (!gameState.activeGame) {
-            return;
-        }
-
-        player.gamesPlayed += 1;
-
-        addXP(REWARDS.gameCompletionXP);
-        addCoins(REWARDS.gameCompletionCoins);
-
-        updateStreak();
-
-        if (player.gamesPlayed === 1) {
-            unlockAchievement("first_game");
-        }
-
-        if (player.correctAnswers >= 10) {
-            unlockAchievement("ten_correct");
         }
 
         const total =
-            gameState.questions.length;
+            currentQuiz.questions.length;
 
         const score =
-            gameState.score;
+            currentQuiz.score;
 
-        const percentage =
-            total > 0
-                ? Math.round(
-                    (score / total) * 100
-                )
-                : 0;
+        const won =
+            score >= Math.ceil(total / 2);
 
-        const resultHTML = buildResultHTML(
-            score,
-            total,
-            percentage
+        let xp = 10 + score * 15;
+        let coins = won ? 3 + score : 1;
+
+        if (currentQuiz.type === "science") {
+            xp += 10;
+        }
+
+        if (won) {
+            player.gamesWon += 1;
+        }
+
+        addReward(xp, coins);
+
+        const resultScore =
+            `${score} / ${total}`;
+
+        currentQuiz = null;
+
+        openModal(
+            won
+                ? "🎉 أحسنت!"
+                : "💪 جولة جيدة!",
+            () => {
+                const box =
+                    createElement(
+                        "div",
+                        "result-box"
+                    );
+
+                const icon =
+                    createElement(
+                        "div",
+                        "result-icon"
+                    );
+
+                icon.textContent =
+                    won ? "🏆" : "🧠";
+
+                const heading =
+                    createElement("h3");
+
+                heading.textContent =
+                    `نتيجتك: ${resultScore}`;
+
+                const text =
+                    createElement("p");
+
+                text.textContent =
+                    won
+                        ? "لقد نجحت في التحدي وحصلت على مكافآتك."
+                        : "استمر في اللعب وارفع مستواك.";
+
+                const rewards =
+                    createElement(
+                        "div",
+                        "reward-line"
+                    );
+
+                const xpReward =
+                    createElement(
+                        "span",
+                        "reward"
+                    );
+
+                xpReward.textContent =
+                    `+${xp} XP`;
+
+                const coinReward =
+                    createElement(
+                        "span",
+                        "reward"
+                    );
+
+                coinReward.textContent =
+                    `🪙 +${coins} ZIVO`;
+
+                rewards.append(
+                    xpReward,
+                    coinReward
+                );
+
+                const actions =
+                    createElement(
+                        "div",
+                        "modal-actions"
+                    );
+
+                const again =
+                    createElement(
+                        "button",
+                        "btn btn-primary"
+                    );
+
+                again.type = "button";
+                again.textContent =
+                    "جولة جديدة";
+
+                again.addEventListener(
+                    "click",
+                    () => {
+                        closeModal();
+                        startQuiz(
+                            currentQuiz?.type ||
+                            "quiz"
+                        );
+                    }
+                );
+
+                const close =
+                    createElement(
+                        "button",
+                        "btn btn-ghost"
+                    );
+
+                close.type = "button";
+                close.textContent =
+                    "إغلاق";
+
+                close.addEventListener(
+                    "click",
+                    closeModal
+                );
+
+                actions.append(
+                    again,
+                    close
+                );
+
+                box.append(
+                    icon,
+                    heading,
+                    text,
+                    rewards,
+                    actions
+                );
+
+                return box;
+            }
         );
-
-        const container =
-            document.getElementById("gameContent") ||
-            document.getElementById("gameModalContent") ||
-            document.getElementById("zivoGameFallback");
-
-        if (container) {
-            container.innerHTML = resultHTML;
-        }
-
-        saveState();
-        updateAllUI();
-
-        gameState.activeGame = null;
-        gameState.questions = [];
-        gameState.currentIndex = 0;
-        gameState.score = 0;
-        gameState.answered = false;
     }
 
-    function buildResultHTML(
-        score,
-        total,
-        percentage
-    ) {
-        const wrapper =
-            document.createElement("div");
 
-        wrapper.className =
-            "zivo-result";
+    /* =====================================================
+       HORROR GAME
+    ===================================================== */
 
-        const title =
-            document.createElement("h2");
+    function startHorror() {
+        currentHorrorScene = 0;
 
-        title.textContent =
-            getText("completed");
+        player.gamesPlayed += 1;
+        savePlayer();
 
-        const result =
-            document.createElement("p");
-
-        result.textContent =
-            `${getText("score")}: ${score}/${total} (${percentage}%)`;
-
-        const reward =
-            document.createElement("p");
-
-        reward.textContent =
-            `+${REWARDS.gameCompletionXP} XP  •  +${REWARDS.gameCompletionCoins} ZIVO`;
-
-        wrapper.appendChild(title);
-        wrapper.appendChild(result);
-        wrapper.appendChild(reward);
-
-        return wrapper.outerHTML;
+        renderHorrorScene();
     }
 
-    /* =========================================================
-       DAILY CHALLENGE
-    ========================================================= */
 
-    function startDailyChallenge() {
-        if (!ensurePlayer()) {
-            return;
-        }
-
-        const today =
-            getDateKey();
-
-        const dailyData =
-            getDailyData();
-
-        if (
-            dailyData &&
-            dailyData.date === today &&
-            dailyData.completed
-        ) {
-            showToast(
-                getText("dailyDone"),
-                "info"
-            );
-            return;
-        }
-
-        const allGames =
-            Object.keys(QUESTION_BANK);
-
-        const selectedGame =
-            allGames[
-                Math.floor(
-                    Math.random() *
-                    allGames.length
-                )
+    function renderHorrorScene() {
+        const scene =
+            horrorScenes[
+                currentHorrorScene
             ];
 
-        const questions =
-            getQuestionsForPlayer(
-                selectedGame
-            );
-
-        if (!questions.length) {
-            showToast(
-                "لا يوجد تحدي يومي متاح حاليًا.",
-                "error"
-            );
+        if (!scene) {
             return;
         }
 
-        gameState.activeGame =
-            "daily";
+        openModal(
+            "👻 الغرفة المظلمة",
+            () => {
+                const wrapper =
+                    createElement("div");
 
-        gameState.questions =
-            shuffle(questions).slice(0, 3);
+                const sceneBox =
+                    createElement(
+                        "div",
+                        "horror-scene"
+                    );
 
-        gameState.currentIndex = 0;
-        gameState.score = 0;
-        gameState.answered = false;
-        gameState.startedAt = Date.now();
+                const title =
+                    createElement("h3");
 
-        openGameModal();
-        renderCurrentQuestion();
+                title.textContent =
+                    "الغرفة المظلمة";
 
-        const originalFinish =
-            finishGame;
+                const text =
+                    createElement("p");
+
+                text.textContent =
+                    scene.text;
+
+                sceneBox.append(
+                    title,
+                    text
+                );
+
+                if (
+                    scene.choices &&
+                    scene.choices.length
+                ) {
+                    const choices =
+                        createElement(
+                            "div",
+                            "answers"
+                        );
+
+                    scene.choices.forEach(
+                        (choice) => {
+                            const button =
+                                createElement(
+                                    "button",
+                                    "answer-btn"
+                                );
+
+                            button.type = "button";
+                            button.textContent =
+                                choice.text;
+
+                            button.addEventListener(
+                                "click",
+                                () => {
+                                    addReward(
+                                        choice.xp,
+                                        1
+                                    );
+
+                                    currentHorrorScene =
+                                        choice.next;
+
+                                    closeModal();
+
+                                    window.setTimeout(
+                                        renderHorrorScene,
+                                        180
+                                    );
+                                }
+                            );
+
+                            choices.appendChild(
+                                button
+                            );
+                        }
+                    );
+
+                    sceneBox.appendChild(
+                        choices
+                    );
+                } else {
+                    const finish =
+                        createElement(
+                            "button",
+                            "btn btn-primary full"
+                        );
+
+                    finish.type = "button";
+                    finish.textContent =
+                        "إنهاء التجربة";
+
+                    finish.style.marginTop =
+                        "20px";
+
+                    finish.addEventListener(
+                        "click",
+                        () => {
+                            addReward(25, 5);
+                            closeModal();
+
+                            showToast(
+                                "أنهيت تجربة الرعب 👻 +25 XP",
+                                "success"
+                            );
+                        }
+                    );
+
+                    sceneBox.appendChild(
+                        finish
+                    );
+                }
+
+                wrapper.appendChild(
+                    sceneBox
+                );
+
+                return wrapper;
+            }
+        );
     }
 
-    function completeDailyChallenge() {
-        const today = getDateKey();
 
+    /* =====================================================
+       DAILY CHALLENGE
+    ===================================================== */
+
+    function getTodayKey() {
+        const now = new Date();
+
+        return [
+            now.getFullYear(),
+            String(now.getMonth() + 1)
+                .padStart(2, "0"),
+            String(now.getDate())
+                .padStart(2, "0")
+        ].join("-");
+    }
+
+
+    function getDailyState() {
+        try {
+            const raw =
+                localStorage.getItem(
+                    CONFIG.dailyKey
+                );
+
+            if (!raw) {
+                return {
+                    date: getTodayKey(),
+                    completed: false
+                };
+            }
+
+            const parsed =
+                JSON.parse(raw);
+
+            if (
+                !parsed ||
+                parsed.date !== getTodayKey()
+            ) {
+                return {
+                    date: getTodayKey(),
+                    completed: false
+                };
+            }
+
+            return {
+                date: getTodayKey(),
+                completed:
+                    Boolean(parsed.completed)
+            };
+        } catch (error) {
+            console.error(
+                "Daily state error:",
+                error
+            );
+
+            return {
+                date: getTodayKey(),
+                completed: false
+            };
+        }
+    }
+
+
+    function setDailyCompleted() {
         try {
             localStorage.setItem(
-                APP.dailyKey,
+                CONFIG.dailyKey,
                 JSON.stringify({
-                    date: today,
+                    date: getTodayKey(),
                     completed: true
                 })
             );
         } catch (error) {
             console.error(
-                "Daily challenge storage error:",
+                "Daily save error:",
                 error
             );
         }
-
-        addXP(REWARDS.dailyXP);
-        addCoins(REWARDS.dailyCoins);
-
-        unlockAchievement("daily_first");
     }
 
-    function getDailyData() {
-        try {
-            const raw =
-                localStorage.getItem(
-                    APP.dailyKey
-                );
 
-            if (!raw) {
-                return null;
-            }
-
-            return JSON.parse(raw);
-        } catch (error) {
-            console.error(
-                "Invalid daily challenge data:",
-                error
-            );
-
-            return null;
-        }
-    }
-
-    /* =========================================================
-       PERSONALITY / WHO AM I
-    ========================================================= */
-
-    function startPersonalityTest() {
-        if (!ensurePlayer()) {
-            return;
-        }
-
-        gameState.personalityAnswers = [];
-        gameState.personalityIndex = 0;
-
-        const modal =
-            document.getElementById("gameModal");
-
-        if (modal) {
-            showModalElement(modal);
-        } else {
-            openFallbackModal(
-                getText("personality"),
-                `<div id="personalityContent"></div>`
-            );
-        }
-
-        renderPersonalityQuestion();
-    }
-
-    function renderPersonalityQuestion() {
-        const question =
-            PERSONALITY_QUESTIONS[
-                gameState.personalityIndex
-            ];
-
-        if (!question) {
-            finishPersonalityTest();
-            return;
-        }
-
+    function renderChallenges() {
         const container =
-            document.getElementById("gameContent") ||
-            document.getElementById("gameModalContent") ||
-            document.getElementById("personalityContent") ||
-            document.getElementById("zivoGameFallback");
+            $("#challenge-list");
 
         if (!container) {
             return;
         }
 
-        container.innerHTML = "";
+        container.replaceChildren();
 
-        const title =
-            document.createElement("h2");
+        const daily =
+            getDailyState();
 
-        title.textContent =
-            getText("personality");
+        const challenges = [
+            {
+                title: "🧠 أكمل اختبار الذكاء",
+                text: "أجب عن الأسئلة وحاول تحقيق نصف الإجابات أو أكثر.",
+                reward: "+50 XP • +5 ZIVO",
+                action: () => startQuiz("quiz")
+            },
+            {
+                title: "🔬 تحدي العلوم",
+                text: "اختبر معلوماتك العلمية في جولة قصيرة.",
+                reward: "+60 XP • +6 ZIVO",
+                action: () => startQuiz("science")
+            },
+            {
+                title: daily.completed
+                    ? "✅ التحدي اليومي مكتمل"
+                    : "⚡ التحدي اليومي",
+                text: daily.completed
+                    ? "عد غدًا للحصول على تحدٍ جديد."
+                    : "أكمل مهمتك اليومية واحصل على مكافأة.",
+                reward: daily.completed
+                    ? "تم الاستلام"
+                    : "+30 XP • +3 ZIVO",
+                action: daily.completed
+                    ? null
+                    : completeDailyChallenge
+            }
+        ];
 
-        const text =
-            document.createElement("h3");
-
-        text.textContent =
-            getLocalized(
-                question.text,
-                player.language
-            );
-
-        const optionsContainer =
-            document.createElement("div");
-
-        optionsContainer.className =
-            "zivo-game-options";
-
-        const options =
-            question.options[player.language] ||
-            question.options.en;
-
-        options.forEach((option, index) => {
-            const button =
-                document.createElement("button");
-
-            button.type = "button";
-            button.className =
-                "zivo-answer-button";
-
-            button.textContent = option;
-
-            button.addEventListener(
-                "click",
-                () => {
-                    gameState.personalityAnswers.push(
-                        question.answers[index].type
+        challenges.forEach(
+            (challenge) => {
+                const card =
+                    createElement(
+                        "article",
+                        "challenge-card"
                     );
 
-                    gameState.personalityIndex += 1;
+                const title =
+                    createElement("h3");
 
-                    renderPersonalityQuestion();
-                },
-                { once: true }
-            );
+                title.textContent =
+                    challenge.title;
 
-            optionsContainer.appendChild(button);
-        });
+                const text =
+                    createElement("p");
 
-        container.appendChild(title);
-        container.appendChild(text);
-        container.appendChild(optionsContainer);
-    }
+                text.textContent =
+                    challenge.text;
 
-    function finishPersonalityTest() {
-        const counts = {
-            analyst: 0,
-            leader: 0,
-            creative: 0,
-            calm: 0
-        };
+                const reward =
+                    createElement(
+                        "div",
+                        "challenge-reward"
+                    );
 
-        gameState.personalityAnswers.forEach(
-            type => {
-                if (
-                    Object.prototype.hasOwnProperty.call(
-                        counts,
-                        type
-                    )
-                ) {
-                    counts[type] += 1;
+                reward.textContent =
+                    `🎁 ${challenge.reward}`;
+
+                card.append(
+                    title,
+                    text,
+                    reward
+                );
+
+                if (challenge.action) {
+                    const button =
+                        createElement(
+                            "button",
+                            "btn btn-primary full"
+                        );
+
+                    button.type = "button";
+                    button.textContent =
+                        "ابدأ التحدي";
+
+                    button.style.marginTop =
+                        "15px";
+
+                    button.addEventListener(
+                        "click",
+                        challenge.action
+                    );
+
+                    card.appendChild(button);
                 }
+
+                container.appendChild(card);
             }
         );
+    }
 
-        const personality =
-            Object.entries(counts)
-                .sort(
-                    (a, b) =>
-                        b[1] - a[1]
-                )[0]?.[0] ||
-            "balanced";
 
-        const descriptions = {
+    function completeDailyChallenge() {
+        const daily =
+            getDailyState();
+
+        if (daily.completed) {
+            showToast(
+                "لقد أكملت تحدي اليوم بالفعل.",
+                "error"
+            );
+            return;
+        }
+
+        setDailyCompleted();
+
+        player.gamesPlayed += 1;
+        player.gamesWon += 1;
+
+        addReward(30, 3);
+
+        renderChallenges();
+
+        openModal(
+            "⚡ تحدي اليوم",
+            () => {
+                const box =
+                    createElement(
+                        "div",
+                        "result-box"
+                    );
+
+                const icon =
+                    createElement(
+                        "div",
+                        "result-icon"
+                    );
+
+                icon.textContent = "🏆";
+
+                const title =
+                    createElement("h3");
+
+                title.textContent =
+                    "تم إنجاز التحدي اليومي!";
+
+                const text =
+                    createElement("p");
+
+                text.textContent =
+                    "مكافأتك محفوظة في حسابك.";
+
+                const rewards =
+                    createElement(
+                        "div",
+                        "reward-line"
+                    );
+
+                const xp =
+                    createElement(
+                        "span",
+                        "reward"
+                    );
+
+                xp.textContent =
+                    "+30 XP";
+
+                const coins =
+                    createElement(
+                        "span",
+                        "reward"
+                    );
+
+                coins.textContent =
+                    "🪙 +3 ZIVO";
+
+                rewards.append(
+                    xp,
+                    coins
+                );
+
+                box.append(
+                    icon,
+                    title,
+                    text,
+                    rewards
+                );
+
+                return box;
+            }
+        );
+    }
+
+
+    /* =====================================================
+       IDENTITY TEST
+    ===================================================== */
+
+    function startIdentityTest() {
+        identityState = {
+            index: 0,
+            scores: {
+                analyst: 0,
+                explorer: 0,
+                social: 0,
+                creative: 0
+            }
+        };
+
+        renderIdentityQuestion();
+    }
+
+
+    function renderIdentityQuestion() {
+        if (!identityState) {
+            return;
+        }
+
+        const item =
+            identityQuestions[
+                identityState.index
+            ];
+
+        if (!item) {
+            finishIdentityTest();
+            return;
+        }
+
+        openModal(
+            "🧩 من أنا؟",
+            () => {
+                const wrapper =
+                    createElement("div");
+
+                const progress =
+                    createElement(
+                        "div",
+                        "game-progress"
+                    );
+
+                const left =
+                    createElement("span");
+
+                left.textContent =
+                    `السؤال ${
+                        identityState.index + 1
+                    } / ${
+                        identityQuestions.length
+                    }`;
+
+                const right =
+                    createElement("span");
+
+                right.textContent =
+                    "ZIVO PROFILE";
+
+                progress.append(
+                    left,
+                    right
+                );
+
+                const box =
+                    createElement(
+                        "div",
+                        "game-question"
+                    );
+
+                const heading =
+                    createElement("h3");
+
+                heading.textContent =
+                    item.question;
+
+                const answers =
+                    createElement(
+                        "div",
+                        "answers"
+                    );
+
+                item.answers.forEach(
+                    (answer) => {
+                        const button =
+                            createElement(
+                                "button",
+                                "answer-btn"
+                            );
+
+                        button.type = "button";
+                        button.textContent =
+                            answer.text;
+
+                        button.addEventListener(
+                            "click",
+                            () => {
+                                identityState.scores[
+                                    answer.type
+                                ] += 1;
+
+                                identityState.index += 1;
+
+                                closeModal();
+
+                                window.setTimeout(
+                                    renderIdentityQuestion,
+                                    120
+                                );
+                            }
+                        );
+
+                        answers.appendChild(
+                            button
+                        );
+                    }
+                );
+
+                box.append(
+                    heading,
+                    answers
+                );
+
+                wrapper.append(
+                    progress,
+                    box
+                );
+
+                return wrapper;
+            }
+        );
+    }
+
+
+    function finishIdentityTest() {
+        if (!identityState) {
+            return;
+        }
+
+        const scores =
+            identityState.scores;
+
+        const entries =
+            Object.entries(scores);
+
+        entries.sort(
+            (a, b) => b[1] - a[1]
+        );
+
+        const type =
+            entries[0][0];
+
+        const profile =
+            getIdentityProfile(type);
+
+        player.identity =
+            profile.name;
+
+        addReward(80, 8);
+
+        identityState = null;
+
+        openModal(
+            "✨ نتيجة من أنا؟",
+            () => {
+                const wrapper =
+                    createElement(
+                        "div",
+                        "identity-result"
+                    );
+
+                const typeElement =
+                    createElement(
+                        "div",
+                        "identity-type"
+                    );
+
+                typeElement.textContent =
+                    profile.name;
+
+                const description =
+                    createElement("p");
+
+                description.className =
+                    "modal-subtitle";
+
+                description.textContent =
+                    profile.description;
+
+                const bars =
+                    createElement(
+                        "div",
+                        "identity-bars"
+                    );
+
+                entries.forEach(
+                    ([key, value]) => {
+                        const row =
+                            createElement("div");
+
+                        const label =
+                            createElement(
+                                "div",
+                                "identity-bar-label"
+                            );
+
+                        const name =
+                            createElement("span");
+
+                        name.textContent =
+                            getIdentityName(key);
+
+                        const score =
+                            createElement("span");
+
+                        score.textContent =
+                            `${value}/${identityQuestions.length}`;
+
+                        label.append(
+                            name,
+                            score
+                        );
+
+                        const bar =
+                            createElement(
+                                "div",
+                                "identity-bar"
+                            );
+
+                        const fill =
+                            createElement("span");
+
+                        fill.style.width =
+                            `${Math.min(
+                                100,
+                                (value /
+                                    identityQuestions.length) *
+                                    100
+                            )}%`;
+
+                        bar.appendChild(fill);
+
+                        row.append(
+                            label,
+                            bar
+                        );
+
+                        bars.appendChild(row);
+                    }
+                );
+
+                const note =
+                    createElement(
+                        "p",
+                        "modal-subtitle"
+                    );
+
+                note.style.marginTop =
+                    "18px";
+
+                note.textContent =
+                    "هذه نتيجة ترفيهية مبنية على إجاباتك داخل ZIVOZONE وليست تشخيصًا نفسيًا أو طبيًا.";
+
+                wrapper.append(
+                    typeElement,
+                    description,
+                    bars,
+                    note
+                );
+
+                return wrapper;
+            }
+        );
+    }
+
+
+    function getIdentityProfile(type) {
+        const profiles = {
             analyst: {
-                ar: "أنت تميل إلى التحليل والمنطق ودراسة التفاصيل قبل اتخاذ القرار.",
-                en: "You tend to analyze details and rely on logic before making decisions.",
-                fr: "Vous aimez analyser les détails et vous appuyer sur la logique.",
-                es: "Tiendes a analizar los detalles y usar la lógica antes de decidir.",
-                tr: "Karar vermeden önce detayları analiz etmeye ve mantığa güvenmeye eğilimlisin.",
-                de: "Du analysierst gerne Details und verlässt dich vor Entscheidungen auf Logik."
+                name: "العقل المحلل 🧠",
+                description:
+                    "تميل إلى التفكير المنظم وتحليل التفاصيل قبل اتخاذ القرار."
             },
 
-            leader: {
-                ar: "لديك ميول قيادية وتحب المبادرة وتحمل المسؤولية.",
-                en: "You have leadership tendencies and like taking initiative.",
-                fr: "Vous avez des tendances de leader et aimez prendre des initiatives.",
-                es: "Tienes tendencias de liderazgo y te gusta tomar la iniciativa.",
-                tr: "Liderlik eğilimin var ve sorumluluk almayı seviyorsun.",
-                de: "Du hast Führungsqualitäten und übernimmst gerne Verantwortung."
+            explorer: {
+                name: "المستكشف ⚡",
+                description:
+                    "تحب التجربة والمغامرة وتتعلم كثيرًا من خوض التجارب الجديدة."
+            },
+
+            social: {
+                name: "القائد الاجتماعي 🤝",
+                description:
+                    "تستمتع بالمنافسة والتفاعل وتميل إلى مشاركة الآخرين."
             },
 
             creative: {
-                ar: "أنت شخص مبدع وتميل إلى الحلول الجديدة وغير التقليدية.",
-                en: "You are creative and prefer new, unconventional solutions.",
-                fr: "Vous êtes créatif et aimez les solutions originales.",
-                es: "Eres creativo y prefieres soluciones nuevas y poco convencionales.",
-                tr: "Yaratıcısın ve yeni, alışılmadık çözümleri tercih ediyorsun.",
-                de: "Du bist kreativ und bevorzugst neue, ungewöhnliche Lösungen."
-            },
-
-            calm: {
-                ar: "تميل إلى الهدوء والتوازن وعدم التسرع في المواقف.",
-                en: "You tend to stay calm, balanced and avoid rushing decisions.",
-                fr: "Vous avez tendance à rester calme et équilibré.",
-                es: "Tiendes a mantener la calma y evitar decisiones apresuradas.",
-                tr: "Sakin ve dengeli kalmaya, acele karar vermemeye eğilimlisin.",
-                de: "Du bleibst meist ruhig und triffst ausgewogene Entscheidungen."
+                name: "المبدع 💡",
+                description:
+                    "تنجذب إلى الأفكار الجديدة والحلول غير التقليدية."
             }
         };
 
-        const result =
-            descriptions[personality] ||
-            descriptions.calm;
+        return profiles[type] ||
+            profiles.analyst;
+    }
 
+
+    function getIdentityName(type) {
+        const names = {
+            analyst: "تحليل",
+            explorer: "استكشاف",
+            social: "اجتماعي",
+            creative: "إبداع"
+        };
+
+        return names[type] || type;
+    }
+
+
+    /* =====================================================
+       ZIVO AI — LOCAL PROTOTYPE
+    ===================================================== */
+
+    function setupAI() {
+        const form =
+            $("#ai-form");
+
+        const input =
+            $("#ai-input");
+
+        const messages =
+            $("#ai-messages");
+
+        if (!form || !input || !messages) {
+            return;
+        }
+
+        form.addEventListener(
+            "submit",
+            (event) => {
+                event.preventDefault();
+
+                try {
+                    const text =
+                        escapeText(
+                            input.value.trim(),
+                            500
+                        );
+
+                    if (!text) {
+                        return;
+                    }
+
+                    addAIMessage(
+                        text,
+                        "user"
+                    );
+
+                    input.value = "";
+
+                    window.setTimeout(() => {
+                        const response =
+                            generateAIResponse(text);
+
+                        addAIMessage(
+                            response,
+                            "bot"
+                        );
+                    }, 350);
+                } catch (error) {
+                    console.error(
+                        "AI error:",
+                        error
+                    );
+
+                    showToast(
+                        "تعذر معالجة الرسالة.",
+                        "error"
+                    );
+                }
+            }
+        );
+    }
+
+
+    function addAIMessage(text, type) {
+        const messages =
+            $("#ai-messages");
+
+        if (!messages) {
+            return;
+        }
+
+        const message =
+            createElement(
+                "div",
+                `ai-message ${type}`
+            );
+
+        message.textContent =
+            escapeText(text, 700);
+
+        messages.appendChild(message);
+
+        while (
+            messages.children.length >
+            CONFIG.maxAiMessages
+        ) {
+            messages.firstElementChild.remove();
+        }
+
+        messages.scrollTop =
+            messages.scrollHeight;
+    }
+
+
+    function generateAIResponse(input) {
+        const text =
+            input.toLowerCase();
+
+        if (
+            text.includes("مستوى") ||
+            text.includes("level")
+        ) {
+            return `مستواك الحالي Level ${getLevel(
+                player.xp
+            )} ولديك ${player.xp} XP. استمر بالتحديات لفتح مستويات أعلى.`;
+        }
+
+        if (
+            text.includes("عملة") ||
+            text.includes("zivo") ||
+            text.includes("coin")
+        ) {
+            return `رصيدك الحالي هو ${player.coins} ZIVO. في هذه النسخة العملة تجريبية داخل الموقع، وسيتم لاحقًا تصميم نظام اقتصادي حقيقي بشكل منفصل وآمن.`;
+        }
+
+        if (
+            text.includes("لعبة") ||
+            text.includes("game")
+        ) {
+            return "أنصحك بتجربة اختبار الذكاء ثم تحدي العلوم، وبعدها جرّب الغرفة المظلمة 👻.";
+        }
+
+        if (
+            text.includes("شخص") ||
+            text.includes("نفسي") ||
+            text.includes("who am i")
+        ) {
+            return "جرّب قسم «من أنا؟». سيجمع إجاباتك داخل الاختبار ويعطيك ملفًا ترفيهيًا عن أسلوب تفكيرك.";
+        }
+
+        if (
+            text.includes("رياض") ||
+            text.includes("sport")
+        ) {
+            return "قسم الرياضة في ZIVOZONE مجهز حاليًا ليتم ربطه لاحقًا بمصادر أخبار ونتائج رياضية مباشرة.";
+        }
+
+        return "أنا ZIVO AI 🤖. أستطيع في هذه النسخة مساعدتك في فهم نظام ZIVOZONE والألعاب والمستويات والتحديات. في المرحلة القادمة سنربطني بنموذج ذكاء اصطناعي حقيقي عبر Backend آمن.";
+    }
+
+
+    /* =====================================================
+       SPORTS
+    ===================================================== */
+
+    function renderSports() {
         const container =
-            document.getElementById("gameContent") ||
-            document.getElementById("gameModalContent") ||
-            document.getElementById("personalityContent") ||
-            document.getElementById("zivoGameFallback");
+            $("#sports-list");
 
         if (!container) {
             return;
         }
 
-        const heading =
-            document.createElement("h2");
+        container.replaceChildren();
 
-        heading.textContent =
-            getText("result");
-
-        const text =
-            document.createElement("p");
-
-        text.textContent =
-            getLocalized(
-                result,
-                player.language
-            );
-
-        const note =
-            document.createElement("small");
-
-        note.textContent =
-            player.language === "ar"
-                ? "هذا تحليل ترفيهي مبني على إجاباتك وليس تشخيصًا نفسيًا."
-                : "This is an entertainment profile based on your answers, not a psychological diagnosis.";
-
-        container.innerHTML = "";
-
-        container.appendChild(heading);
-        container.appendChild(text);
-        container.appendChild(note);
-
-        addXP(50);
-        addCoins(5);
-        unlockAchievement("personality_test");
-
-        saveState();
-        updateAllUI();
-    }
-
-    /* =========================================================
-       ACHIEVEMENTS
-    ========================================================= */
-
-    const ACHIEVEMENT_NAMES = {
-        first_profile: "First Profile",
-        first_game: "First Game",
-        ten_correct: "10 Correct Answers",
-        personality_test: "Personality Explorer",
-        daily_first: "Daily Challenger",
-        level_2: "Explorer",
-        level_3: "Challenger",
-        level_4: "Master",
-        level_5: "Legend",
-        level_6: "ZIVO Elite",
-        level_7: "ZIVO Legend"
-    };
-
-    function unlockAchievement(id) {
-        if (!id) {
-            return;
-        }
-
-        if (
-            player.achievements.includes(id)
-        ) {
-            return;
-        }
-
-        player.achievements.push(id);
-
-        saveState();
-
-        const name =
-            ACHIEVEMENT_NAMES[id] ||
-            id;
-
-        showToast(
-            `🏆 إنجاز جديد: ${name}`,
-            "success"
-        );
-    }
-
-    /* =========================================================
-       STREAK
-    ========================================================= */
-
-    function updateStreak() {
-        const today = getDateKey();
-
-        if (
-            player.lastPlayedDate === today
-        ) {
-            return;
-        }
-
-        const yesterday =
-            getDateKey(
-                new Date(
-                    Date.now() -
-                    86400000
-                )
-            );
-
-        if (
-            player.lastPlayedDate === yesterday
-        ) {
-            player.streak += 1;
-        } else {
-            player.streak = 1;
-        }
-
-        player.lastPlayedDate = today;
-
-        if (player.streak >= 3) {
-            unlockAchievement("three_day_streak");
-        }
-
-        saveState();
-    }
-
-    /* =========================================================
-       LANGUAGE
-    ========================================================= */
-
-    function setLanguage(language) {
-        if (
-            !APP.supportedLanguages.includes(
-                language
-            )
-        ) {
-            return;
-        }
-
-        player.language = language;
-        settings.language = language;
-
-        saveState();
-        applyLanguage();
-        updateAllUI();
-    }
-
-    function applyLanguage() {
-        const lang =
-            APP.supportedLanguages.includes(
-                player.language
-            )
-                ? player.language
-                : APP.defaultLanguage;
-
-        document.documentElement.lang =
-            lang;
-
-        document.documentElement.dir =
-            lang === "ar"
-                ? "rtl"
-                : "ltr";
-
-        document
-            .querySelectorAll(
-                "[data-i18n]"
-            )
-            .forEach(element => {
-                const key =
-                    element.dataset.i18n;
-
-                const value =
-                    getText(key);
-
-                if (value) {
-                    element.textContent =
-                        value;
-                }
-            });
-
-        document
-            .querySelectorAll(
-                "[data-i18n-placeholder]"
-            )
-            .forEach(element => {
-                const key =
-                    element.dataset
-                        .i18nPlaceholder;
-
-                const value =
-                    getText(key);
-
-                if (value) {
-                    element.setAttribute(
-                        "placeholder",
-                        value
-                    );
-                }
-            });
-
-        const selector =
-            document.getElementById(
-                "languageSelect"
-            );
-
-        if (selector) {
-            selector.value = lang;
-        }
-    }
-
-    function getText(key) {
-        return (
-            I18N[player.language]?.[key] ||
-            I18N.en[key] ||
-            key
-        );
-    }
-
-    function getLocalized(
-        translations,
-        language
-    ) {
-        if (!translations) {
-            return "";
-        }
-
-        return (
-            translations[language] ||
-            translations.en ||
-            translations.ar ||
-            ""
-        );
-    }
-
-    /* =========================================================
-       UI
-    ========================================================= */
-
-    function updateAllUI() {
-        updatePlayerUI();
-        updateStatsUI();
-        updateProfileUI();
-    }
-
-    function updatePlayerUI() {
-        const level =
-            getPlayerLevel();
-
-        const next =
-            getNextLevel();
-
-        const xpElements =
-            document.querySelectorAll(
-                "[data-player-xp], #playerXP"
-            );
-
-        xpElements.forEach(
-            element => {
-                element.textContent =
-                    String(player.xp);
-            }
-        );
-
-        const coinElements =
-            document.querySelectorAll(
-                "[data-player-coins], #playerCoins"
-            );
-
-        coinElements.forEach(
-            element => {
-                element.textContent =
-                    String(player.coins);
-            }
-        );
-
-        const levelElements =
-            document.querySelectorAll(
-                "[data-player-level], #playerLevel"
-            );
-
-        levelElements.forEach(
-            element => {
-                element.textContent =
-                    String(level.level);
-            }
-        );
-
-        const nameElements =
-            document.querySelectorAll(
-                "[data-player-name], #playerDisplayName"
-            );
-
-        nameElements.forEach(
-            element => {
-                element.textContent =
-                    player.name ||
-                    getText("profile");
-            }
-        );
-
-        const progressElements =
-            document.querySelectorAll(
-                "[data-xp-progress]"
-            );
-
-        progressElements.forEach(
-            element => {
-                const progress =
-                    calculateXPProgress(
-                        next
+        sportsNews.forEach(
+            (item) => {
+                const card =
+                    createElement(
+                        "article",
+                        "sport-card"
                     );
 
-                element.style.width =
-                    `${progress}%`;
+                const category =
+                    createElement(
+                        "span",
+                        "sport-category"
+                    );
 
-                element.setAttribute(
-                    "aria-valuenow",
-                    String(progress)
+                category.textContent =
+                    item.category;
+
+                const title =
+                    createElement("h3");
+
+                title.textContent =
+                    item.title;
+
+                const text =
+                    createElement("p");
+
+                text.textContent =
+                    item.text;
+
+                card.append(
+                    category,
+                    title,
+                    text
                 );
+
+                container.appendChild(card);
             }
         );
     }
 
-    function updateStatsUI() {
-        const stats = {
-            xp: player.xp,
-            coins: player.coins,
-            games: player.gamesPlayed,
-            questions:
-                player.questionsAnswered,
-            correct:
-                player.correctAnswers,
-            streak: player.streak,
-            achievements:
-                player.achievements.length
-        };
 
-        Object.entries(stats).forEach(
-            ([key, value]) => {
-                document
-                    .querySelectorAll(
-                        `[data-stat="${key}"]`
-                    )
-                    .forEach(
-                        element => {
-                            element.textContent =
-                                String(value);
-                        }
-                    );
-            }
-        );
-    }
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
 
-    function updateProfileUI() {
-        const profileName =
-            document.getElementById(
-                "profileName"
-            );
+    function handleAction(action) {
+        switch (action) {
+            case "login":
+                openLoginModal();
+                break;
 
-        if (profileName) {
-            profileName.textContent =
-                player.name ||
-                getText("profile");
-        }
+            case "scroll-games":
+                scrollToElement("#games");
+                break;
 
-        const profileEmail =
-            document.getElementById(
-                "profileEmail"
-            );
+            case "open-identity":
+                startIdentityTest();
+                break;
 
-        if (profileEmail) {
-            profileEmail.textContent =
-                player.email ||
-                "";
+            case "refresh-sports":
+                renderSports();
+
+                showToast(
+                    "تم تحديث قسم الرياضة.",
+                    "success"
+                );
+                break;
+
+            case "ad-info":
+                showAdInfo();
+                break;
+
+            default:
+                console.warn(
+                    `Unknown action: ${action}`
+                );
         }
     }
 
-    function calculateXPProgress(nextLevel) {
-        if (!nextLevel) {
-            return 100;
-        }
 
-        const current =
-            getPlayerLevel();
+    function scrollToElement(selector) {
+        const element =
+            $(selector);
 
-        const range =
-            nextLevel.minXP -
-            current.minXP;
-
-        if (range <= 0) {
-            return 100;
-        }
-
-        const progress =
-            player.xp -
-            current.minXP;
-
-        return Math.max(
-            0,
-            Math.min(
-                100,
-                Math.round(
-                    (progress / range) *
-                    100
-                )
-            )
-        );
-    }
-
-    /* =========================================================
-       MODAL SYSTEM
-    ========================================================= */
-
-    function showModalElement(modal) {
-        if (!modal) {
+        if (!element) {
             return;
         }
 
-        modal.classList.add("active");
-        modal.classList.add("show");
-
-        modal.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-
-        if (
-            modal instanceof HTMLElement
-        ) {
-            modal.style.display = "flex";
-        }
-    }
-
-    function closeModal(id) {
-        const modal =
-            document.getElementById(id);
-
-        if (!modal) {
-            return;
-        }
-
-        modal.classList.remove(
-            "active",
-            "show"
-        );
-
-        modal.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-        if (
-            modal instanceof HTMLElement
-        ) {
-            modal.style.display = "";
-        }
-    }
-
-    function openFallbackModal(
-        title,
-        content
-    ) {
-        let modal =
-            document.getElementById(
-                "zivoFallbackModal"
-            );
-
-        if (!modal) {
-            modal =
-                document.createElement("div");
-
-            modal.id =
-                "zivoFallbackModal";
-
-            modal.style.cssText = `
-                position:fixed;
-                inset:0;
-                z-index:99999;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                background:rgba(0,0,0,.82);
-                padding:20px;
-            `;
-
-            document.body.appendChild(
-                modal
-            );
-        }
-
-        modal.innerHTML = `
-            <div
-                style="
-                    width:min(700px,100%);
-                    max-height:90vh;
-                    overflow:auto;
-                    background:#111827;
-                    color:#fff;
-                    border-radius:20px;
-                    padding:24px;
-                    position:relative;
-                "
-            >
-                <button
-                    type="button"
-                    id="zivoFallbackClose"
-                    aria-label="${escapeHTML(
-                        getText("close")
-                    )}"
-                    style="
-                        position:absolute;
-                        top:12px;
-                        right:12px;
-                        border:0;
-                        background:#ffffff18;
-                        color:#fff;
-                        width:40px;
-                        height:40px;
-                        border-radius:50%;
-                        cursor:pointer;
-                    "
-                >×</button>
-
-                <h2>${escapeHTML(
-                    title
-                )}</h2>
-
-                <div id="zivoFallbackContent">
-                    ${content}
-                </div>
-            </div>
-        `;
-
-        modal.style.display = "flex";
-
-        document
-            .getElementById(
-                "zivoFallbackClose"
-            )
-            ?.addEventListener(
-                "click",
-                () => {
-                    modal.remove();
-                }
-            );
-    }
-
-    /* =========================================================
-       AI PLACEHOLDER
-       No secret API key is placed in the frontend.
-    ========================================================= */
-
-    function openAIModal() {
-        openFallbackModal(
-            "ZIVO AI",
-            `
-                <div style="padding:20px 0;">
-                    <p>
-                        ZIVO AI جاهز للربط بمحرك ذكاء اصطناعي حقيقي.
-                    </p>
-                    <p>
-                        في النسخة الإنتاجية سنضع API في Backend آمن،
-                        وليس داخل app.js.
-                    </p>
-                </div>
-            `
-        );
-    }
-
-    /* =========================================================
-       UTILITIES
-    ========================================================= */
-
-    function ensurePlayer() {
-        if (
-            !player.name ||
-            !player.email ||
-            !player.age
-        ) {
-            openProfileModal();
-
-            showToast(
-                getText("completeProfile"),
-                "info"
-            );
-
-            return false;
-        }
-
-        return true;
-    }
-
-    function scrollToSection(id) {
-        const target =
-            document.getElementById(id);
-
-        if (!target) {
-            return;
-        }
-
-        target.scrollIntoView({
+        element.scrollIntoView({
             behavior: "smooth",
             block: "start"
         });
     }
 
-    function getGameTitle(gameType) {
-        const keyMap = {
-            intelligence: "intelligence",
-            science: "science",
-            horror: "horror",
-            personality: "personality",
-            daily: "daily"
-        };
 
-        return getText(
-            keyMap[gameType] ||
-            gameType
+    function showAdInfo() {
+        openModal(
+            "📢 الإعلانات في ZIVOZONE",
+            () => {
+                const wrapper =
+                    createElement("div");
+
+                const text =
+                    createElement(
+                        "p",
+                        "modal-subtitle"
+                    );
+
+                text.textContent =
+                    "هذه المساحة مصممة لتصبح لاحقًا منطقة إعلانية حقيقية يمكن ربطها بشبكة إعلانات أو رعاة مباشرة.";
+
+                wrapper.appendChild(text);
+
+                return wrapper;
+            }
         );
     }
 
-    function getDateKey(
-        date = new Date()
-    ) {
-        const year =
-            date.getFullYear();
 
-        const month =
-            String(
-                date.getMonth() + 1
-            ).padStart(2, "0");
+    /* =====================================================
+       EVENT DELEGATION
+    ===================================================== */
 
-        const day =
-            String(
-                date.getDate()
-            ).padStart(2, "0");
+    function setupActions() {
+        document.addEventListener(
+            "click",
+            (event) => {
+                const actionElement =
+                    event.target.closest(
+                        "[data-action]"
+                    );
 
-        return `${year}-${month}-${day}`;
+                if (actionElement) {
+                    handleAction(
+                        actionElement.dataset.action
+                    );
+
+                    return;
+                }
+
+                const gameElement =
+                    event.target.closest(
+                        "[data-game]"
+                    );
+
+                if (gameElement) {
+                    const game =
+                        gameElement.dataset.game;
+
+                    switch (game) {
+                        case "quiz":
+                            startQuiz("quiz");
+                            break;
+
+                        case "science":
+                            startQuiz("science");
+                            break;
+
+                        case "horror":
+                            startHorror();
+                            break;
+
+                        case "daily":
+                            completeDailyChallenge();
+                            break;
+
+                        default:
+                            console.warn(
+                                "Unknown game:",
+                                game
+                            );
+                    }
+                }
+            }
+        );
     }
 
-    function generateId() {
-        if (
-            typeof crypto !== "undefined" &&
-            typeof crypto.randomUUID === "function"
-        ) {
-            return crypto.randomUUID();
+
+    /* =====================================================
+       KEYBOARD CONTROLS
+    ===================================================== */
+
+    function setupKeyboard() {
+        document.addEventListener(
+            "keydown",
+            (event) => {
+                if (event.key === "Escape") {
+                    closeModal();
+                }
+            }
+        );
+    }
+
+
+    /* =====================================================
+       LANGUAGE SELECT
+    ===================================================== */
+
+    function setupLanguage() {
+        const selector =
+            $("#language-select");
+
+        if (!selector) {
+            return;
         }
 
-        return (
-            "zivo-" +
-            Date.now() +
-            "-" +
-            Math.random()
-                .toString(36)
-                .slice(2)
-        );
-    }
-
-    function shuffle(array) {
-        const copy = [...array];
-
-        for (
-            let i = copy.length - 1;
-            i > 0;
-            i--
-        ) {
-            const j =
-                Math.floor(
-                    Math.random() *
-                    (i + 1)
+        selector.addEventListener(
+            "change",
+            () => {
+                setLanguage(
+                    selector.value
                 );
-
-            [
-                copy[i],
-                copy[j]
-            ] = [
-                copy[j],
-                copy[i]
-            ];
-        }
-
-        return copy;
-    }
-
-    function escapeHTML(value) {
-        return String(value ?? "")
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-    }
-
-    function showToast(
-        message,
-        type = "info"
-    ) {
-        let container =
-            document.getElementById(
-                "zivoToastContainer"
-            );
-
-        if (!container) {
-            container =
-                document.createElement("div");
-
-            container.id =
-                "zivoToastContainer";
-
-            container.style.cssText = `
-                position:fixed;
-                bottom:20px;
-                left:20px;
-                z-index:100000;
-                display:flex;
-                flex-direction:column;
-                gap:10px;
-                max-width:min(420px,calc(100vw - 40px));
-            `;
-
-            document.body.appendChild(
-                container
-            );
-        }
-
-        const toast =
-            document.createElement("div");
-
-        toast.textContent =
-            message;
-
-        toast.style.cssText = `
-            padding:14px 18px;
-            border-radius:14px;
-            color:#fff;
-            background:${
-                type === "success"
-                    ? "#16a34a"
-                    : type === "error"
-                        ? "#dc2626"
-                        : "#2563eb"
-            };
-            box-shadow:0 10px 30px rgba(0,0,0,.25);
-            font-size:14px;
-            line-height:1.5;
-        `;
-
-        container.appendChild(
-            toast
+            }
         );
-
-        setTimeout(() => {
-            toast.style.opacity = "0";
-            toast.style.transform =
-                "translateY(10px)";
-            toast.style.transition =
-                "all .25s ease";
-
-            setTimeout(() => {
-                toast.remove();
-            }, 300);
-        }, 2800);
     }
 
-    function showStartupMessage() {
-        if (
-            player.name
-        ) {
+
+    /* =====================================================
+       LOADER
+    ===================================================== */
+
+    function hideLoader() {
+        const loader =
+            $("#app-loader");
+
+        if (!loader) {
             return;
         }
 
-        const hasShown =
-            sessionStorage.getItem(
-                "zivozone_welcome_shown"
-            );
-
-        if (hasShown) {
-            return;
-        }
-
-        try {
-            sessionStorage.setItem(
-                "zivozone_welcome_shown",
-                "1"
-            );
-        } catch (error) {
-            console.warn(
-                "Session storage unavailable:",
-                error
-            );
-        }
-
-        setTimeout(() => {
-            showToast(
-                getText("welcome"),
-                "info"
+        window.setTimeout(() => {
+            loader.classList.add(
+                "hidden"
             );
         }, 500);
     }
 
-    function createProfileHTML() {
-        return `
-            <form id="zivoFallbackProfileForm">
-                <div style="display:grid;gap:14px;">
-                    <label>
-                        ${escapeHTML(getText("name"))}
-                        <input
-                            name="name"
-                            type="text"
-                            maxlength="60"
-                            required
-                            autocomplete="name"
-                        >
-                    </label>
 
-                    <label>
-                        ${escapeHTML(getText("email"))}
-                        <input
-                            name="email"
-                            type="email"
-                            maxlength="254"
-                            required
-                            autocomplete="email"
-                        >
-                    </label>
+    /* =====================================================
+       DAILY RESET / MIDNIGHT CHECK
+    ===================================================== */
 
-                    <label>
-                        ${escapeHTML(getText("age"))}
-                        <input
-                            name="age"
-                            type="number"
-                            min="6"
-                            max="100"
-                            required
-                        >
-                    </label>
-
-                    <label>
-                        ${escapeHTML(getText("language"))}
-                        <select name="language">
-                            <option value="ar">العربية</option>
-                            <option value="en">English</option>
-                            <option value="fr">Français</option>
-                            <option value="es">Español</option>
-                            <option value="tr">Türkçe</option>
-                            <option value="de">Deutsch</option>
-                        </select>
-                    </label>
-
-                    <button type="submit">
-                        ${escapeHTML(getText("save"))}
-                    </button>
-                </div>
-            </form>
-        `;
+    function scheduleDailyRefresh() {
+        window.setInterval(
+            () => {
+                renderChallenges();
+            },
+            60 * 1000
+        );
     }
 
-    /* =========================================================
-       RESET
-    ========================================================= */
 
-    function resetProgress() {
-        const confirmed =
-            window.confirm(
-                player.language === "ar"
-                    ? "هل أنت متأكد؟ سيتم حذف تقدم اللاعب من هذا الجهاز."
-                    : "Are you sure? Player progress will be deleted from this device."
-            );
+    /* =====================================================
+       INITIALIZATION
+    ===================================================== */
 
-        if (!confirmed) {
-            return;
-        }
-
+    function init() {
         try {
-            localStorage.removeItem(
-                APP.storageKey
+            setLanguage(
+                currentLanguage
             );
 
-            localStorage.removeItem(
-                APP.dailyKey
-            );
+            updateProfile();
 
-            localStorage.removeItem(
-                APP.settingsKey
-            );
+            renderChallenges();
 
-            player =
-                createDefaultPlayer();
+            renderSports();
 
-            settings =
-                createDefaultSettings();
+            setupActions();
 
-            updateAllUI();
+            setupKeyboard();
 
-            showToast(
-                player.language === "ar"
-                    ? "تمت إعادة التقدم."
-                    : "Progress has been reset.",
-                "success"
+            setupLanguage();
+
+            setupAI();
+
+            setupModalClosing();
+
+            scheduleDailyRefresh();
+
+            hideLoader();
+
+            console.info(
+                "ZIVOZONE initialized successfully."
             );
         } catch (error) {
             console.error(
-                "Reset error:",
+                "ZIVOZONE initialization failed:",
                 error
             );
 
+            hideLoader();
+
             showToast(
-                "تعذر إعادة التقدم.",
+                "حدث خطأ في تشغيل بعض وظائف الموقع. يرجى تحديث الصفحة.",
                 "error"
             );
         }
     }
 
-    /* =========================================================
-       OPTIONAL PUBLIC API
-       Useful for debugging without exposing sensitive data.
-    ========================================================= */
 
-    window.ZIVOZONE = Object.freeze({
-        version: APP.version,
+    /* =====================================================
+       START
+    ===================================================== */
 
-        getPlayer() {
-            return {
-                ...player,
-                email:
-                    player.email
-                        ? "[protected]"
-                        : ""
-            };
-        },
-
-        getLevel() {
-            return getPlayerLevel();
-        },
-
-        startGame(game) {
-            startGame(game);
-        },
-
-        startDailyChallenge() {
-            startDailyChallenge();
-        },
-
-        startPersonalityTest() {
-            startPersonalityTest();
-        },
-
-        setLanguage(language) {
-            setLanguage(language);
-        }
-    });
+    if (
+        document.readyState === "loading"
+    ) {
+        document.addEventListener(
+            "DOMContentLoaded",
+            init,
+            { once: true }
+        );
+    } else {
+        init();
+    }
 
 })();
