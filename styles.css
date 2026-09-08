@@ -38,3 +38,24 @@
    V5 CHALLENGE FEEDBACK + SPORT IDENTITY
 ============================================================ */
 .question-progress{height:5px;background:#171b2b;border-radius:99px;overflow:hidden;margin:14px 0 18px}.question-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:width .35s ease}.answer-correct{border-color:#28d98b!important;background:rgba(40,217,139,.14)!important;box-shadow:0 0 22px rgba(40,217,139,.12)}.answer-wrong{border-color:#e44368!important;background:rgba(228,67,104,.13)!important;box-shadow:0 0 22px rgba(228,67,104,.12)}.answer:disabled{cursor:default;opacity:1}.football-card{border-color:#203d4a}.football-card:hover{box-shadow:0 0 45px rgba(45,220,255,.12)}.challenge-card .card-tag{letter-spacing:.5px}.modal-card.horror-modal.phase-3 .question-progress span{background:linear-gradient(90deg,#d82b61,#ff4f78)}
+
+
+/* ============================================================
+   ZIVOZONE V6 — PREMIUM Z MARK + CHALLENGE WORLDS
+============================================================ */
+.brand-mark,.loader-logo{position:relative;isolation:isolate;overflow:hidden;font-family:Arial,sans-serif;font-weight:1000;letter-spacing:-2px;background:radial-gradient(circle at 30% 20%,#36dcff 0,#4d35ff 42%,#140b2d 100%);border:1px solid rgba(255,255,255,.16);box-shadow:0 0 22px rgba(75,80,255,.35),inset 0 0 18px rgba(255,255,255,.08)}
+.brand-mark:before,.loader-logo:before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg,transparent 0 68%,rgba(255,255,255,.85) 72%,transparent 77%);animation:zOrbit 2.8s linear infinite;z-index:-1}
+.brand-mark:after,.loader-logo:after{content:"Z";position:absolute;inset:0;display:grid;place-items:center;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.45);transform:translate(3px,2px);opacity:.28;animation:zGhost 3.6s steps(1) infinite}
+.brand-mark{animation:zPulse 3.4s ease-in-out infinite,zGlitch 7s steps(1) infinite}
+.loader-logo{animation:zLoader 1.2s ease-in-out infinite}
+.challenge-list{grid-template-columns:repeat(2,minmax(0,1fr));max-width:1180px}
+.challenge-card{min-height:122px}
+.challenge-card:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 0 45%,rgba(255,255,255,.025) 50%,transparent 55%);transform:translateX(-100%);transition:.7s}
+.challenge-card:hover:after{transform:translateX(100%)}
+.game-card[data-game="football"]{border-color:#1f4c50}
+@keyframes zOrbit{to{transform:rotate(360deg)}}
+@keyframes zPulse{0%,100%{transform:perspective(500px) rotateY(0) scale(1);filter:brightness(1)}45%{transform:perspective(500px) rotateY(-10deg) scale(1.07);filter:brightness(1.25)}55%{transform:perspective(500px) rotateY(10deg) scale(1.02)}}
+@keyframes zGhost{0%,88%,100%{clip-path:inset(0);transform:translate(3px,2px)}90%{clip-path:inset(20% 0 58%);transform:translate(-4px,0)}93%{clip-path:inset(62% 0 15%);transform:translate(5px,-1px)}}
+@keyframes zGlitch{0%,94%,100%{filter:none}95%{filter:hue-rotate(75deg) saturate(1.8) brightness(1.3);transform:skewX(-7deg) scale(1.05)}96%{transform:skewX(5deg) scale(.98)}}
+@keyframes zLoader{50%{transform:rotateY(180deg) scale(1.08);box-shadow:0 0 55px rgba(60,190,255,.5)}}
+@media(max-width:700px){.challenge-list{grid-template-columns:1fr}.brand-mark{width:40px;height:40px}.brand-name{font-size:18px}}
