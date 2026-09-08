@@ -201,4 +201,63 @@
   window.addEventListener('zivozone-auth',e=>{syncFromPlayer();profile();const el=$('#firebase-status');if(el){el.textContent=e.detail?.cloud?'●':'○';el.classList.toggle('online',!!e.detail?.cloud);el.title=e.detail?.cloud?'Firebase connected':'Guest/local mode'}});
   window.addEventListener('zivozone-language',()=>{const sel=$('#language-select');if(sel)sel.value=lang()});
   loadState();document.addEventListener('DOMContentLoaded',()=>{bind();applyLanguage();setTimeout(()=>$('#app-loader')?.classList.add('hidden'),650)});
+  /* ========================================================
+     V17 — ZIVO PLAYER SYSTEM
+  ======================================================== */
+  const PLAYER_KEY='zivozone_player_v17';
+  const PLAYER_DEFAULT={
+    level:1,totalXP:0,bestScore:0,bestStreak:0,gamesPlayed:0,
+    questionsAnswered:0,timedOut:0,
+    stats:{intelligence:0,speed:0,focus:0,memory:0,courage:0},
+    history:[],daily:{date:'',done:false}
+  };
+  function cloneDefault(){return JSON.parse(JSON.stringify(PLAYER_DEFAULT))}
+  function getPlayer(){
+    try{
+      const raw=JSON.parse(localStorage.getItem(PLAYER_KEY)||'null');
+      const p=Object.assign(cloneDefault(),raw||{});
+      p.stats=Object.assign({},PLAYER_DEFAULT.stats,raw?.stats||{});
+      p.history=Array.isArray(raw?.history)?raw.history:[];
+      p.daily=Object.assign({},PLAYER_DEFAULT.daily,raw?.daily||{});
+      return p;
+    }catch(e){return cloneDefault()}
+  }
+  function savePlayer(p){
+    localStorage.setItem(PLAYER_KEY,JSON.stringify(p));
+    window.dispatchEvent(new CustomEvent('zivo:player-updated',{detail:p}));
+  }
+  function xpForLevel(level){return Math.round(100*Math.pow(Math.max(1,level),1.22))}
+  function recalcLevel(p){
+    let level=1;
+    while(level<100 && p.totalXP>=xpForLevel(level+1)) level++;
+    p.level=level; return p;
+  }
+  function addPlayerProgress(result){
+    const p=getPlayer();
+    const score=Number(result.score)||0, speed=Number(result.speedScore)||0;
+    const streak=Number(result.bestStreak)||0, timeout=Number(result.timedOut)||0;
+    const xp=Math.min(250,Math.max(5,Math.round(score*.35)+Math.round(speed*.08)+Math.min(40,streak*2)+Math.max(0,20-timeout*3)));
+    p.totalXP+=xp;p.gamesPlayed++;p.questionsAnswered+=Number(result.questions)||0;p.timedOut+=timeout;
+    p.bestScore=Math.max(p.bestScore,score);p.bestStreak=Math.max(p.bestStreak,streak);
+    const map={iq:'intelligence',science:'intelligence',math:'intelligence',memory:'memory',reaction:'speed',focus:'focus',sports:'focus',horror:'courage',identity:'focus'};
+    const stat=map[result.id]; if(stat)p.stats[stat]=Math.min(100,(p.stats[stat]||0)+Math.max(1,Math.round(xp/18)));
+    p.history.unshift({id:result.id||'challenge',score,xp,streak,speedScore:speed,timedOut:timeout,at:new Date().toISOString()});
+    p.history=p.history.slice(0,30);recalcLevel(p);savePlayer(p);return {xp,player:p};
+  }
+  function playerTitle(p){return p.level>=80?'ZIVO LEGEND':p.level>=50?'MASTER':p.level>=30?'ELITE':p.level>=15?'HUNTER':p.level>=5?'RISING':'ROOKIE'}
+  function playerCard(){
+    const p=getPlayer(),next=p.level<100?xpForLevel(p.level+1):p.totalXP,current=p.level===1?0:xpForLevel(p.level);
+    const progress=p.level>=100?100:Math.max(0,Math.min(100,((p.totalXP-current)/(next-current))*100));
+    return `<section class="zivo-player-card"><div class="zivo-player-top"><div><span class="eyebrow">ZIVO PLAYER</span><h2>LEVEL ${p.level}</h2><p>${playerTitle(p)}</p></div><div class="zivo-player-badge">⚡ ${p.totalXP} XP</div></div><div class="zivo-xp-track"><span style="width:${progress}%"></span></div><div class="zivo-player-stats"><span>🏆 ${p.bestScore}</span><span>🔥 ${p.bestStreak}</span><span>🎮 ${p.gamesPlayed}</span></div><div class="zivo-skill-grid">${[['🧠','Intelligence','intelligence'],['⚡','Speed','speed'],['🎯','Focus','focus'],['🧩','Memory','memory'],['👻','Courage','courage']].map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span><strong>${p.stats[x[2]]}</strong></div>`).join('')}</div></section>`
+  }
+  function openPlayerProfile(){
+    if(typeof openModal!=='function')return;
+    const p=getPlayer();
+    openModal(`${playerCard()}<div class="zivo-history"><h3>Recent Runs</h3>${p.history.length?p.history.slice(0,8).map(h=>`<div class="zivo-history-row"><span>${esc(h.id)}</span><b>${h.score}</b><span>+${h.xp} XP</span><small>${new Date(h.at).toLocaleDateString()}</small></div>`).join(''):'<p class="muted">Play a challenge to build your history.</p>'}</div><button class="btn btn-ghost" id="close-player">Close</button>`,'player-profile-modal');
+    document.getElementById('close-player')?.addEventListener('click',closeModal);
+  }
+  function isDailyAvailable(){const p=getPlayer(),d=new Date().toISOString().slice(0,10);return p.daily.date!==d||!p.daily.done}
+  function markDailyDone(){const p=getPlayer();p.daily={date:new Date().toISOString().slice(0,10),done:true};savePlayer(p)}
+  window.ZIVOZONE_PLAYER={get:getPlayer,save:savePlayer,recalc:recalcLevel,addProgress:addPlayerProgress,open:openPlayerProfile,isDailyAvailable,markDailyDone};
+
 })();

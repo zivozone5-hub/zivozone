@@ -202,3 +202,12 @@ body.horror-active{background:#020207!important}.horror-active .topbar,.horror-a
 @media(max-width:700px){
   .pressure-hud{width:100%;justify-content:center;font-size:.78rem}
 }
+
+/* V17 — PLAYER PROFILE */
+.zivo-player-card{padding:20px;border:1px solid rgba(124,108,255,.2);border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(15,12,28,.75));box-shadow:0 18px 50px rgba(0,0,0,.24)}
+.zivo-player-top{display:flex;justify-content:space-between;gap:16px}.zivo-player-top h2{margin:4px 0;font-size:2rem}.zivo-player-top p{margin:0;color:#9ea6c6}.zivo-player-badge{padding:9px 12px;border-radius:999px;background:rgba(124,108,255,.12);font-weight:800}
+.zivo-xp-track{height:9px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;margin:18px 0 10px}.zivo-xp-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#37e08f,#7c6cff,#4dd8ff)}
+.zivo-player-stats{display:flex;gap:10px;flex-wrap:wrap}.zivo-player-stats span{padding:6px 9px;border-radius:10px;background:rgba(255,255,255,.035)}
+.zivo-skill-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}.zivo-skill-grid div{display:flex;flex-direction:column;gap:3px;padding:10px;border-radius:14px;background:rgba(255,255,255,.025)}.zivo-skill-grid span{font-size:.68rem;color:#8e96b5}
+.zivo-history{margin-top:16px}.zivo-history-row{display:grid;grid-template-columns:1fr 60px 70px 90px;gap:8px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+@media(max-width:700px){.zivo-skill-grid{grid-template-columns:repeat(2,1fr)}.zivo-history-row{grid-template-columns:1fr 50px 60px}.zivo-history-row small{display:none}}
