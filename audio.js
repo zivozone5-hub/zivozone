@@ -10,6 +10,7 @@
   'use strict';
   let ctx=null, input=null, master=null, compressor=null;
   let challengeNodes=[], timers=[];
+  let media={}, mediaSources={}, mediaGains={}, mediaPans={};
   let enabled=true, volume=.92, activeMode=null, started=false;
   const KEY='zivozone_audio_v9';
   try{
@@ -19,6 +20,39 @@
   }catch(e){}
 
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+  const ASSETS={
+    iq:'assets/audio/iq_ambient.mp3',science:'assets/audio/science_ambient.mp3',daily:'assets/audio/daily_ambient.mp3',
+    football:'assets/audio/football_ambient.mp3',logic:'assets/audio/logic_ambient.mp3',memory:'assets/audio/memory_ambient.mp3',
+    strategy:'assets/audio/strategy_ambient.mp3',math:'assets/audio/math_ambient.mp3',reaction:'assets/audio/reaction_ambient.mp3',
+    horror:'assets/audio/horror_ambient.mp3', laugh:'assets/audio/horror_laugh.mp3', scream:'assets/audio/horror_scream.mp3'
+  };
+  function loadMedia(name){
+    if(media[name]) return media[name];
+    const el=new Audio(ASSETS[name]); el.preload='auto'; el.loop=!['laugh','scream'].includes(name); el.crossOrigin='anonymous';
+    try{
+      const c=ensure(); const src=c.createMediaElementSource(el), g=c.createGain(), p=c.createStereoPanner?c.createStereoPanner():null;
+      g.gain.value=0; src.connect(g); if(p){g.connect(p);p.connect(input);mediaPans[name]=p}else g.connect(input);
+      mediaSources[name]=src; mediaGains[name]=g;
+    }catch(e){}
+    media[name]=el; return el;
+  }
+  async function playAmbient(mode){
+    const name=ASSETS[mode]?mode:null; if(!name||!enabled)return;
+    const el=loadMedia(name); const g=mediaGains[name];
+    try{await el.play();}catch(e){}
+    if(g&&ctx)g.gain.setTargetAtTime(mode==='horror'?.72:.42,ctx.currentTime,.9);
+  }
+  function stopMedia(){
+    Object.keys(media).forEach(name=>{try{media[name].pause();media[name].currentTime=0}catch(e){} if(mediaGains[name]&&ctx)mediaGains[name].gain.setTargetAtTime(0,ctx.currentTime,.12)});
+  }
+  async function playScare(name,pan=0,gain=.72){
+    if(!enabled||!started)return; const el=loadMedia(name); const g=mediaGains[name]; const p=mediaPans[name];
+    try{el.currentTime=0;if(p)p.pan.value=clamp(pan,-1,1);if(g&&ctx)g.gain.setValueAtTime(gain,ctx.currentTime);await el.play();
+      el.onended=()=>{if(g&&ctx)g.gain.setTargetAtTime(0,ctx.currentTime,.08)};
+    }catch(e){}
+  }
+
   function ensure(){
     if(ctx)return ctx;
     const AC=window.AudioContext||window.webkitAudioContext;
@@ -79,6 +113,7 @@
   }
   function clearChallenge(){
     timers.forEach(clearInterval);timers=[];
+    stopMedia();
     challengeNodes.forEach(n=>{try{n.stop()}catch(e){}});challengeNodes=[];
     activeMode=null;started=false;
   }
@@ -121,6 +156,7 @@
     unlock();clearChallenge();
     if(!enabled)return;
     activeMode=mode;started=true;const c=ensure();if(!c)return;
+    playAmbient(mode);
     const profiles={
       iq:{base:72,second:108,filter:1400},
       science:{base:118,second:176,filter:1000},
@@ -145,8 +181,8 @@
         const pan=Math.random()>.5?.94:-.94;
         tone(27+Math.random()*15,.85,.105,'sawtooth',pan,20);
         noise(.9,.075,250,-pan*.65);
-        if(Math.random()<.48)eerieLaugh();
-        if(Math.random()<.16)distantScream();
+        if(Math.random()<.30){eerieLaugh();playScare('laugh',pan,.48)}
+        if(Math.random()<.10){distantScream();playScare('scream',-pan,.62)}
       },3600));
       timers.push(setInterval(()=>{
         if(!enabled||activeMode!=='horror')return;
@@ -190,7 +226,7 @@
   function horrorAnswer(d){if(activeMode!=='horror')return;tone(Math.max(32,105-d*7),.2,.075,'sine',Math.random()>.5?.8:-.8,32);if(d>=9)warden()}
   function checkpoint(){if(activeMode!=='horror')return;tone(35,.9,.17,'sawtooth',-.8,22);tone(38,.9,.15,'sawtooth',.8,23);noise(.9,.11,260)}
   function whisper(){if(activeMode!=='horror')return;tone(31,.7,.09,'sine',-.8,20);tone(34,.75,.08,'sine',.8,20);noise(.8,.035,900,0)}
-  function setEnabled(v){enabled=!!v;ensure();if(master)master.gain.setTargetAtTime(enabled?volume:0,ctx.currentTime,.08);if(!enabled)clearChallenge();save()}
+  function setEnabled(v){enabled=!!v;ensure();if(master)master.gain.setTargetAtTime(enabled?volume:0,ctx.currentTime,.08);if(!enabled)clearChallenge(); else if(started&&activeMode)playAmbient(activeMode);save()}
   function setVolume(v){volume=clamp(+v,.05,1);ensure();if(master)master.gain.setTargetAtTime(enabled?volume:0,ctx.currentTime,.08);save()}
   window.ZIVOZONE_AUDIO={unlock,setEnabled,isEnabled:()=>enabled,toggle:()=>setEnabled(!enabled),setVolume,volume:()=>volume,click,hover,correct,wrong,success,question,startChallenge,stopChallenge,danger,warden,phase,horrorPulse,horrorAnswer,checkpoint,whisper,active:()=>started};
 })();
