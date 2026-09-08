@@ -442,6 +442,7 @@
 (function(){
   const USED='zivozone_v20_played_questions';
   const $=(s,r=document)=>r.querySelector(s);
+  const locV20=o=>typeof o==='string'?o:(o?.[document.documentElement.lang]||o?.ar||o?.en||o?.zh||o?.hi||o?.es||'');
   const escV20=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const norm=x=>String(x??'').trim().toLowerCase().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[،,؛;]/g,' ').replace(/\s+/g,' ');
 
@@ -480,9 +481,15 @@
     document.body.appendChild(m);return m;
   }
   function answer(question,value){
-    if(window.ZIVOZONE_V18?.scoreAnswer) return window.ZIVOZONE_V18.scoreAnswer(question,value);
-    const a=norm(question.answer),v=norm(value);
-    return a===v || (question.alternatives||[]).some(x=>norm(x)===v);
+    const v=norm(value);
+    // V8/V21 choice questions store the correct option as numeric `c` and labels in `a`.
+    if(Array.isArray(question.a) && Number.isInteger(Number(question.c))){
+      const idx=Number(question.c);
+      if(idx>=0 && idx<question.a.length && norm(locV20(question.a[idx]))===v) return true;
+    }
+    const direct=question.answer ?? question.extra?.answer;
+    if(direct!==undefined && norm(direct)===v) return true;
+    return (question.alternatives||[]).some(x=>norm(locV20(x))===v);
   }
   function start(id){
     const run=pick(id); if(!run)return;
@@ -502,7 +509,7 @@
         <div class="v20-head"><button class="v20-exit">خروج</button><span>${escV20(run.icon)} ${escV20(run.title)}</span><b>${i+1}/10</b></div>
         <div class="v20-progress"><i style="width:${((i)/10)*100}%"></i></div>
         <div class="v20-meta"><span>${phase}</span><strong id="v20-timer">10</strong></div>
-        <article class="v20-question"><div class="v20-qnum">QUESTION ${String(i+1).padStart(2,'0')}</div><h2>${escV20(q.q||q.question||'')}</h2>
+        <article class="v20-question"><div class="v20-qnum">QUESTION ${String(i+1).padStart(2,'0')}</div><h2>${escV20(locV20(q.q||q.question||''))}</h2>
         <div class="v20-answer-area">${answerArea(q)}</div></article>
         <div class="v20-live"><span>🔥 ${streak}</span><span>🏆 ${score}</span></div>
       </div>`;
@@ -520,8 +527,8 @@
       try{const C=window.AudioContext||window.webkitAudioContext,c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=180;o.type='triangle';g.gain.value=.035;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.12);setTimeout(()=>c.close(),250)}catch(e){}
     }
     function answerArea(q){
-      const choices=q.options||q.choices||q.answers;
-      if(Array.isArray(choices)&&choices.length) return `<div class="v20-options">${choices.map(x=>`<button type="button" class="v20-option" data-value="${escV20(x)}">${escV20(x)}</button>`).join('')}</div>`;
+      const choices=q.options||q.choices||q.answers||q.a;
+      if(Array.isArray(choices)&&choices.length) return `<div class="v20-options">${choices.map(x=>`<button type="button" class="v20-option" data-value="${escV20(locV20(x))}">${escV20(locV20(x))}</button>`).join('')}</div>`;
       return `<form class="v20-form"><input autocomplete="off" placeholder="اكتب إجابتك هنا" aria-label="الإجابة"><button type="submit">إجابة</button></form>`;
     }
     function submit(form,q){
