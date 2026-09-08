@@ -789,3 +789,140 @@
   });
   setTimeout(flush,2500);
 })();
+
+
+/* ============================================================
+   ZIVOZONE V28 — FIRESTORE PLAYER CLOUD BRIDGE
+   Additive layer. Existing Firebase/Auth code is preserved.
+   It supports the common Firebase compat SDK when available,
+   and exposes a bridge for modular SDK projects without
+   guessing or replacing the project's initialization.
+============================================================ */
+(function(){
+  'use strict';
+  const QUEUE='zivozone_v28_sync_queue';
+  const DEVICE='zivozone_v28_device';
+  const getDevice=()=>{
+    let id=localStorage.getItem(DEVICE);
+    if(!id){id=(crypto.randomUUID?crypto.randomUUID():'dev_'+Date.now()+'_'+Math.random().toString(36).slice(2));try{localStorage.setItem(DEVICE,id)}catch(e){}}
+    return id;
+  };
+  const readQ=()=>{try{return JSON.parse(localStorage.getItem(QUEUE)||'[]')}catch(e){return[]}};
+  const writeQ=q=>{try{localStorage.setItem(QUEUE,JSON.stringify(q.slice(-100)))}catch(e){}};
+  const currentUser=()=>{
+    try{
+      if(window.firebase?.auth) return window.firebase.auth().currentUser||null;
+    }catch(e){}
+    try{return window.ZIVOZONE_AUTH?.getPlayer?.()?.user||window.ZIVOZONE_AUTH?.getPlayer?.()||null}catch(e){return null}
+  };
+  const uid=()=>currentUser()?.uid||window.ZIVOZONE_AUTH?.getPlayer?.()?.uid||null;
+
+  function makeEvent(type,payload){
+    const p=window.ZIVOZONE_V27?.snapshot?.()||{};
+    return {type,payload,uid:uid()||null,deviceId:getDevice(),createdAt:new Date().toISOString(),
+            player:{level:p.level||1,xp:p.xp||0,games:p.games||0,bestScore:p.bestScore||0,streak:p.streak||1}};
+  }
+
+  async function compatWrite(item){
+    const f=window.firebase;
+    if(!f?.firestore||!f?.auth) return false;
+    const user=f.auth().currentUser;
+    if(!user) return false;
+    const db=f.firestore();
+    const ref=db.collection('players').doc(user.uid);
+    // Transactionally update a player's safe aggregate. Challenge reward values
+    // are not accepted from this browser as authoritative.
+    await db.runTransaction(async tx=>{
+      const snap=await tx.get(ref);
+      const old=snap.exists?snap.data():{};
+      tx.set(ref,{
+        uid:user.uid,
+        level:Number(item.player.level)||1,
+        xp:Number(item.player.xp)||0,
+        games:Number(item.player.games)||0,
+        bestScore:Number(item.player.bestScore)||0,
+        streak:Number(item.player.streak)||1,
+        lastSeen:item.createdAt
+      },{merge:true});
+    });
+    return true;
+  }
+
+  async function sync(){
+    const q=readQ();
+    if(!q.length) return true;
+    if(!uid()) return false;
+    let remaining=[];
+    for(const item of q){
+      try{
+        if(await compatWrite(item)) continue;
+      }catch(e){}
+      remaining.push(item);
+    }
+    writeQ(remaining);
+    return remaining.length===0;
+  }
+
+  function enqueue(type,payload){
+    const q=readQ();q.push(makeEvent(type,payload));writeQ(q);sync();
+  }
+
+  window.ZIVOZONE_V28={
+    cloud:()=>!!(window.firebase?.firestore&&window.firebase?.auth),
+    uid, sync, pending:()=>readQ().length,
+    enqueue
+  };
+
+  window.addEventListener('zivozone-progress',e=>{
+    const d=e.detail||{};
+    enqueue('challenge_complete',{
+      challenge:String(d.challenge||'unknown'),
+      correct:Number(d.correct)||0,
+      total:Number(d.total)||0,
+      score:Number(d.score)||0
+    });
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')sync()});
+  window.addEventListener('online',sync);
+  setTimeout(sync,1500);
+})();
+
+
+/* ============================================================
+   V28 — CLOUD PLAYER CENTER
+============================================================ */
+(function(){
+  'use strict';
+  function mount(){
+    if(document.getElementById('v28-center'))return;
+    const o=document.createElement('div');o.id='v28-center';o.className='v28-overlay';
+    o.innerHTML=`<div class="v28-card">
+      <button class="v28-close">×</button>
+      <div class="v28-head"><div class="v28-z">Z</div><div><small>PLAYER CLOUD</small><h2>مركز اللاعب</h2></div></div>
+      <div class="v28-cloud"><span id="v28-dot">●</span><b id="v28-cloud-text">فحص الاتصال...</b></div>
+      <div class="v28-grid" id="v28-stats"></div>
+      <div class="v28-actions"><button id="v28-sync">مزامنة الآن</button><button id="v28-refresh">تحديث البيانات</button></div>
+      <p class="v28-note">بيانات الملف والتقدم يمكن مزامنتها إلى Firebase عند توفر حساب مسجل واتصال Firebase متوافق. المكافآت المالية أو قيم ZIVO لا تُعتبر موثوقة من المتصفح.</p>
+    </div>`;
+    document.body.appendChild(o);
+    o.querySelector('.v28-close').onclick=()=>o.classList.remove('open');
+    o.querySelector('#v28-sync').onclick=async()=>{await window.ZIVOZONE_V28?.sync?.();render()};
+    o.querySelector('#v28-refresh').onclick=render;
+  }
+  function render(){
+    mount();
+    const o=document.getElementById('v28-center');o.classList.add('open');
+    const p=window.ZIVOZONE_V26?.profile?.()||{},cloud=window.ZIVOZONE_V28?.cloud?.(),pending=window.ZIVOZONE_V28?.pending?.()||0;
+    o.querySelector('#v28-cloud-text').textContent=cloud?'Firebase متصل':'Firebase غير متاح حاليًا';
+    o.querySelector('#v28-dot').textContent=cloud?'●':'○';
+    o.querySelector('#v28-stats').innerHTML=[
+      ['ZIVO',p.balance||0],['LEVEL',p.level||1],['XP',p.xp||0],['GAMES',p.games||0],['BEST',p.bestScore||0],['PENDING',pending]
+    ].map(v=>`<div><span>${v[0]}</span><b>${v[1]}</b></div>`).join('');
+  }
+  function button(){
+    if(document.getElementById('v28-open'))return;
+    const b=document.createElement('button');b.id='v28-open';b.textContent='☁ اللاعب';
+    b.onclick=render;document.body.appendChild(b);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',button);else button();
+})();
