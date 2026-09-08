@@ -1,1090 +1,642 @@
+nges · JS
 /* ============================================================
    ZIVOZONE CHALLENGE BANK
-   ============================================================
-
-   NORMAL CHALLENGES
-   - 10 questions
-   - Difficulty 1 → 10
-
-   HORROR
-   - 30 questions
-   - Difficulty 1 → 30
-   - Phase 1: 1–10
-   - Phase 2: 11–20
-   - Phase 3: 21–30 EXTREME
-
-   ============================================================ */
-
-(function () {
-
-    "use strict";
-
-
-    /* ============================================================
-       HELPERS
-    ============================================================ */
-
-    function answer(text, correct) {
-
-        return {
-            text: text,
-            correct: correct
-        };
-
-    }
-
-
-    function question(
-        q,
-        answers,
-        difficulty
-    ) {
-
-        return {
-            q: q,
-            difficulty: difficulty,
-            answers: answers
-        };
-
-    }
-
-
-    /* ============================================================
-       MAIN BANK
-    ============================================================ */
-
-    window.ZIVOZONE_CHALLENGES = {
-
-
-        /* ========================================================
-           IQ
-        ======================================================== */
-
-        iq: {
-
-            id: "iq",
-
-            type: "normal",
-
-            title: "اختبار سرعة الذكاء",
-
-            description:
-                "اختبر سرعة تفكيرك ومنطقك تحت الضغط.",
-
-            icon: "🧠",
-
-            xp: 50,
-
-            questions: [
-
-                question(
-                    "ما العدد التالي: 2، 4، 6، 8، ؟",
-                    [
-                        answer("9", false),
-                        answer("10", true),
-                        answer("11", false),
-                        answer("12", false)
-                    ],
-                    1
-                ),
-
-                question(
-                    "إذا كان لديك 3 تفاحات وأخذت تفاحتين، كم تفاحة أصبحت تملك؟",
-                    [
-                        answer("واحدة", false),
-                        answer("اثنتان", true),
-                        answer("ثلاث", false),
-                        answer("خمس", false)
-                    ],
-                    2
-                ),
-
-                question(
-                    "أي كلمة لا تنتمي إلى المجموعة؟",
-                    [
-                        answer("سيارة", false),
-                        answer("حافلة", false),
-                        answer("قطار", false),
-                        answer("تفاحة", true)
-                    ],
-                    3
-                ),
-
-                question(
-                    "إذا كان جميع اللاعبين رياضيين، وبعض الرياضيين مدربين، فهل جميع اللاعبين مدربين؟",
-                    [
-                        answer("نعم دائمًا", false),
-                        answer("لا يمكن الاستنتاج", true),
-                        answer("نعم إذا كانوا محترفين", false),
-                        answer("فقط بعضهم", false)
-                    ],
-                    4
-                ),
-
-                question(
-                    "ما العدد المفقود: 3، 6، 12، 24، ؟",
-                    [
-                        answer("36", false),
-                        answer("42", false),
-                        answer("48", true),
-                        answer("50", false)
-                    ],
-                    5
-                ),
-
-                question(
-                    "إذا كانت الساعة تشير إلى 3:00، فما الزاوية بين العقربين؟",
-                    [
-                        answer("30 درجة", false),
-                        answer("60 درجة", false),
-                        answer("90 درجة", true),
-                        answer("180 درجة", false)
-                    ],
-                    6
-                ),
-
-                question(
-                    "رجل لديه 4 بنات، ولكل بنت أخ واحد. كم عدد الأبناء؟",
-                    [
-                        answer("4", false),
-                        answer("5", true),
-                        answer("8", false),
-                        answer("9", false)
-                    ],
-                    7
-                ),
-
-                question(
-                    "إذا كان A أكبر من B، وB أكبر من C، فأي عبارة صحيحة؟",
-                    [
-                        answer("C أكبر من A", false),
-                        answer("A أكبر من C", true),
-                        answer("A يساوي C", false),
-                        answer("لا يمكن معرفة شيء", false)
-                    ],
-                    8
-                ),
-
-                question(
-                    "ما العدد الذي يكمل النمط: 1، 1، 2، 3، 5، 8، ؟",
-                    [
-                        answer("11", false),
-                        answer("12", false),
-                        answer("13", true),
-                        answer("15", false)
-                    ],
-                    9
-                ),
-
-                question(
-                    "إذا كان كل ZIVO لاعبًا ذكيًا، وبعض اللاعبين الأذكياء سريعون، فما النتيجة المنطقية المؤكدة؟",
-                    [
-                        answer("كل ZIVO سريعون", false),
-                        answer("بعض ZIVO قد يكونون سريعين", true),
-                        answer("لا يوجد ZIVO سريع", false),
-                        answer("كل السريعين ZIVO", false)
-                    ],
-                    10
-                )
-
-            ]
-
-        },
-
-
-        /* ========================================================
-           SCIENCE
-        ======================================================== */
-
-        science: {
-
-            id: "science",
-
-            type: "normal",
-
-            title: "تحدي العلوم",
-
-            description:
-                "معلومات علمية متدرجة وممتعة.",
-
-            icon: "🔬",
-
-            xp: 60,
-
-            questions: [
-
-                question(
-                    "ما الكوكب المعروف بالكوكب الأحمر؟",
-                    [
-                        answer("المريخ", true),
-                        answer("الزهرة", false),
-                        answer("عطارد", false),
-                        answer("المشتري", false)
-                    ],
-                    1
-                ),
-
-                question(
-                    "ما الغاز الذي يحتاجه الإنسان للتنفس؟",
-                    [
-                        answer("الأكسجين", true),
-                        answer("الهيدروجين", false),
-                        answer("الهيليوم", false),
-                        answer("النيتروجين فقط", false)
-                    ],
-                    2
-                ),
-
-                question(
-                    "ما العضو الذي يضخ الدم في جسم الإنسان؟",
-                    [
-                        answer("الرئة", false),
-                        answer("الكبد", false),
-                        answer("القلب", true),
-                        answer("المعدة", false)
-                    ],
-                    3
-                ),
-
-                question(
-                    "ما وحدة قياس القوة؟",
-                    [
-                        answer("جول", false),
-                        answer("نيوتن", true),
-                        answer("واط", false),
-                        answer("فولت", false)
-                    ],
-                    4
-                ),
-
-                question(
-                    "أي جزء من الخلية يحتوي غالبًا على المادة الوراثية؟",
-                    [
-                        answer("النواة", true),
-                        answer("الغشاء", false),
-                        answer("السيتوبلازم", false),
-                        answer("الجدار فقط", false)
-                    ],
-                    5
-                ),
-
-                question(
-                    "ما سرعة الضوء تقريبًا في الفراغ؟",
-                    [
-                        answer("30 ألف كم/ث", false),
-                        answer("300 ألف كم/ث", true),
-                        answer("3 ملايين كم/ث", false),
-                        answer("3000 كم/ث", false)
-                    ],
-                    6
-                ),
-
-                question(
-                    "ما القوة التي تجذب الأجسام نحو الأرض؟",
-                    [
-                        answer("المغناطيسية", false),
-                        answer("الاحتكاك", false),
-                        answer("الجاذبية", true),
-                        answer("الطفو", false)
-                    ],
-                    7
-                ),
-
-                question(
-                    "أي جزيء يحمل المعلومات الوراثية الأساسية؟",
-                    [
-                        answer("DNA", true),
-                        answer("ATP", false),
-                        answer("CO2", false),
-                        answer("H2O", false)
-                    ],
-                    8
-                ),
-
-                question(
-                    "أي طبقة من الغلاف الجوي تحتوي على معظم الأوزون؟",
-                    [
-                        answer("التروبوسفير", false),
-                        answer("الستراتوسفير", true),
-                        answer("الميزوسفير", false),
-                        answer("الإكسوسفير", false)
-                    ],
-                    9
-                ),
-
-                question(
-                    "ما المبدأ الذي ينص على أن الطاقة لا تفنى ولا تستحدث من العدم؟",
-                    [
-                        answer("قانون حفظ الطاقة", true),
-                        answer("قانون بويل", false),
-                        answer("مبدأ باسكال", false),
-                        answer("قانون أوم", false)
-                    ],
-                    10
-                )
-
-            ]
-
-        },
-
-
-        /* ========================================================
-           DAILY
-        ======================================================== */
-
-        daily: {
-
-            id: "daily",
-
-            type: "normal",
-
-            title: "تحدي ZIVO اليومي",
-
-            description:
-                "تحدٍ يومي يمنحك سببًا للعودة.",
-
-            icon: "⚡",
-
-            xp: 30,
-
-            questions: [
-
-                question(
-                    "كم عدد أيام الأسبوع؟",
-                    [
-                        answer("5", false),
-                        answer("6", false),
-                        answer("7", true),
-                        answer("8", false)
-                    ],
-                    1
-                ),
-
-                question(
-                    "ما عاصمة الأردن؟",
-                    [
-                        answer("عمّان", true),
-                        answer("إربد", false),
-                        answer("الزرقاء", false),
-                        answer("العقبة", false)
-                    ],
-                    2
-                ),
-
-                question(
-                    "كم دقيقة في الساعة؟",
-                    [
-                        answer("30", false),
-                        answer("45", false),
-                        answer("60", true),
-                        answer("90", false)
-                    ],
-                    3
-                ),
-
-                question(
-                    "ما أكبر محيط على الأرض؟",
-                    [
-                        answer("الأطلسي", false),
-                        answer("الهندي", false),
-                        answer("الهادئ", true),
-                        answer("المتجمد الشمالي", false)
-                    ],
-                    4
-                ),
-
-                question(
-                    "أي رياضة تستخدم فيها كرة مستديرة ومرميان؟",
-                    [
-                        answer("كرة القدم", true),
-                        answer("التنس", false),
-                        answer("الجولف", false),
-                        answer("السباحة", false)
-                    ],
-                    5
-                ),
-
-                question(
-                    "كم ضلعًا للمثلث؟",
-                    [
-                        answer("2", false),
-                        answer("3", true),
-                        answer("4", false),
-                        answer("5", false)
-                    ],
-                    6
-                ),
-
-                question(
-                    "ما المعدن السائل في درجة حرارة الغرفة؟",
-                    [
-                        answer("الحديد", false),
-                        answer("النحاس", false),
-                        answer("الزئبق", true),
-                        answer("الذهب", false)
-                    ],
-                    7
-                ),
-
-                question(
-                    "ما الكوكب الأكبر في المجموعة الشمسية؟",
-                    [
-                        answer("الأرض", false),
-                        answer("المشتري", true),
-                        answer("زحل", false),
-                        answer("نبتون", false)
-                    ],
-                    8
-                ),
-
-                question(
-                    "إذا كان لديك 100 نقطة وخسرت 37 نقطة، كم بقي؟",
-                    [
-                        answer("53", false),
-                        answer("63", true),
-                        answer("67", false),
-                        answer("73", false)
-                    ],
-                    9
-                ),
-
-                question(
-                    "ما الشيء الذي كلما أخذت منه كبر؟",
-                    [
-                        answer("المال", false),
-                        answer("الحفرة", true),
-                        answer("الكتاب", false),
-                        answer("الماء", false)
-                    ],
-                    10
-                )
-
-            ]
-
-        },
-
-
-        /* ========================================================
-           PSYCHOLOGICAL HORROR
-        ======================================================== */
-
-        horror: {
-
-            id: "horror",
-
-            type: "special",
-
-            special: true,
-
-            title: "الغرفة المظلمة",
-
-            description:
-                "30 مرحلة. كلما تقدمت، أصبح الخروج أصعب.",
-
-            icon: "👁️",
-
-            xp: 150,
-
-            phases: {
-
-                phase1: {
-                    from: 1,
-                    to: 10,
-                    name: "البداية"
-                },
-
-                phase2: {
-                    from: 11,
-                    to: 20,
-                    name: "الحارس"
-                },
-
-                phase3: {
-                    from: 21,
-                    to: 30,
-                    name: "لا تنظر خلفك"
-                }
-
+   10 QUESTIONS / CHALLENGE
+   Difficulty:
+   1-3   Easy
+   4-5   Medium
+   6-7   Hard
+   8-10  EXTREME
+============================================================ */
+ 
+window.ZIVOZONE_CHALLENGES = {
+ 
+    iq: {
+ 
+        id: "iq",
+ 
+        title: "تحدي الذكاء",
+ 
+        category: "IQ",
+ 
+        icon: "🧠",
+ 
+        description:
+            "اختبر المنطق وسرعة التفكير.",
+ 
+        questions: [
+ 
+            {
+                difficulty: 1,
+                question: "ما العدد الذي يأتي بعد 2، 4، 6، 8؟",
+                answers: ["9", "10", "11", "12"],
+                correct: 1
             },
-
-            guardianMessages: [
-
-                "أنت دخلت فقط... لماذا لا تخرج؟",
-
-                "أنا أراك.",
-
-                "السؤال التالي ليس كما يبدو.",
-
-                "لقد وصلت أبعد مما توقعت.",
-
-                "لا تحاول تخمين ما أريد.",
-
-                "بقي القليل.",
-
-                "أنت تعرف أنني هنا.",
-
-                "آخر ثلاث مراحل... لا تخطئ."
-
-            ],
-
-            questions: [
-
-                /* ==========================
-                   PHASE 1
-                ========================== */
-
-                question(
-                    "أنت في غرفة مظلمة. أمامك بابان. أيهما تختار؟",
-                    [
-                        answer("الباب الذي يحمل ضوءًا خافتًا", true),
-                        answer("الباب المغلق تمامًا", false),
-                        answer("أكسر الجدار", false),
-                        answer("أنتظر", false)
-                    ],
-                    1
-                ),
-
-                question(
-                    "تسمع طرقًا واحدًا خلفك. ماذا تفعل؟",
-                    [
-                        answer("ألتفت فورًا", false),
-                        answer("أكمل طريقي", true),
-                        answer("أصرخ", false),
-                        answer("أغلق عيني", false)
-                    ],
-                    2
-                ),
-
-                question(
-                    "وجدت مفتاحًا على الأرض، لكن لا يوجد باب أمامك. ماذا يعني ذلك؟",
-                    [
-                        answer("لا شيء مؤكد", true),
-                        answer("هناك باب خلفك بالتأكيد", false),
-                        answer("المفتاح مزيف", false),
-                        answer("يجب أن أكسره", false)
-                    ],
-                    3
-                ),
-
-                question(
-                    "يظهر رقم 4 على الحائط ثم يختفي. ما أفضل تصرف؟",
-                    [
-                        answer("أعتبره معلومة وأواصل", true),
-                        answer("ألمس الحائط", false),
-                        answer("أبحث عن الرقم", false),
-                        answer("أغلق اللعبة", false)
-                    ],
-                    4
-                ),
-
-                question(
-                    "أمامك مرآة، لكن انعكاسك لا يتحرك. ماذا تفعل؟",
-                    [
-                        answer("أقترب منها", false),
-                        answer("ألمسها", false),
-                        answer("أبتعد عنها", true),
-                        answer("أحطمها فورًا", false)
-                    ],
-                    5
-                ),
-
-                question(
-                    "تسمع صوتًا يقول: لا تتحرك. ماذا تفعل؟",
-                    [
-                        answer("أتحرك بسرعة", false),
-                        answer("أتوقف وأراقب", true),
-                        answer("أصرخ", false),
-                        answer("أبحث عن الصوت", false)
-                    ],
-                    6
-                ),
-
-                question(
-                    "ظهر ظل بجانبك، لكنه لا يملك مصدرًا واضحًا. ما الاستنتاج الصحيح؟",
-                    [
-                        answer("هناك شخص بالتأكيد", false),
-                        answer("هناك ضوء بالتأكيد", false),
-                        answer("لا يمكن الجزم بالسبب", true),
-                        answer("الظل حقيقي", false)
-                    ],
-                    7
-                ),
-
-                question(
-                    "وجدت ورقة مكتوب عليها: أنت لست وحدك. ما الذي تعرفه يقينًا؟",
-                    [
-                        answer("يوجد شخص معك", false),
-                        answer("الرسالة صحيحة", false),
-                        answer("لا نعرف من كتبها أو ماذا تعني", true),
-                        answer("الحارس كتبها", false)
-                    ],
-                    8
-                ),
-
-                question(
-                    "باب الغرفة مفتوح، لكنك سمعت صوت قفل. ماذا تعتمد عليه؟",
-                    [
-                        answer("الخوف", false),
-                        answer("الصوت فقط", false),
-                        answer("الملاحظة المباشرة", true),
-                        answer("التخمين", false)
-                    ],
-                    9
-                ),
-
-                question(
-                    "آخر شيء تراه قبل انطفاء الضوء هو ابتسامة في المرآة. ما القرار الأكثر عقلانية؟",
-                    [
-                        answer("أقترب", false),
-                        answer("أبقى في مكان واضح وآمن", true),
-                        answer("أكسر المرآة فورًا", false),
-                        answer("أغمض عيني وأركض", false)
-                    ],
-                    10
-                ),
-
-
-                /* ==========================
-                   PHASE 2
-                   THE GUARDIAN
-                ========================== */
-
-                question(
-                    "يقول الحارس: أنا خلفك. دون أن تلتفت، كيف تعرف أنه صادق؟",
-                    [
-                        answer("لا أستطيع التأكد", true),
-                        answer("لأنه قال ذلك", false),
-                        answer("لأنني أشعر به", false),
-                        answer("لأن الظلام دليل", false)
-                    ],
-                    11
-                ),
-
-                question(
-                    "يقول الحارس: اختر الباب الذي لم تنظر إليه. ماذا تفعل؟",
-                    [
-                        answer("أختار عشوائيًا", true),
-                        answer("أختار الباب الأحمر", false),
-                        answer("أختار الباب الأكبر", false),
-                        answer("أرفض لأنني أعرف أنه فخ", false)
-                    ],
-                    12
-                ),
-
-                question(
-                    "على الحائط جملة: لا تثق بالحارس. ثم يقول الحارس: لا تثق بالحائط. ما المشكلة؟",
-                    [
-                        answer("كلاهما قد يكون مضللًا", true),
-                        answer("الحارس صادق", false),
-                        answer("الحائط صادق", false),
-                        answer("لا يوجد أي تناقض", false)
-                    ],
-                    13
-                ),
-
-                question(
-                    "يخبرك الحارس أن الوقت توقف. الساعة أمامك تتحرك. ما الدليل الأقوى؟",
-                    [
-                        answer("كلام الحارس", false),
-                        answer("الساعة وحدها تثبت أن عقاربها تتحرك", true),
-                        answer("الخوف", false),
-                        answer("الصوت", false)
-                    ],
-                    14
-                ),
-
-                question(
-                    "يقول الحارس: إذا أجبت صحيحًا سأقترب. هل يجب أن تختار إجابة خاطئة؟",
-                    [
-                        answer("ليس بالضرورة، لأن كلامه قد يكون خدعة", true),
-                        answer("نعم دائمًا", false),
-                        answer("لا دائمًا", false),
-                        answer("أغلق عيني", false)
-                    ],
-                    15
-                ),
-
-                question(
-                    "يظهر أمامك خياران: الحقيقة أو النجاة. ماذا تختار؟",
-                    [
-                        answer("الحقيقة", true),
-                        answer("النجاة", false),
-                        answer("كلاهما", false),
-                        answer("لا شيء", false)
-                    ],
-                    16
-                ),
-
-                question(
-                    "الحارس يكرر إجابتك قبل أن تختارها. ماذا يعني ذلك؟",
-                    [
-                        answer("قد يكون يحاول التأثير عليك", true),
-                        answer("يعرف المستقبل يقينًا", false),
-                        answer("هو أنت", false),
-                        answer("الإجابة خاطئة", false)
-                    ],
-                    17
-                ),
-
-                question(
-                    "تظهر أمامك ثلاث ظلال بينما ترى شخصًا واحدًا فقط. ما الاستنتاج الأكثر حذرًا؟",
-                    [
-                        answer("هناك ثلاثة أشخاص", false),
-                        answer("الضوء قد يصنع أكثر من ظل", true),
-                        answer("الحارس استنسخ نفسه", false),
-                        answer("الظلال كائنات", false)
-                    ],
-                    18
-                ),
-
-                question(
-                    "الحارس يقول: السؤال التالي لا توجد له إجابة صحيحة. ماذا تفعل؟",
-                    [
-                        answer("أقيّم السؤال بدل تصديق العبارة", true),
-                        answer("أستسلم", false),
-                        answer("أختار أول إجابة", false),
-                        answer("أبحث عن الحارس", false)
-                    ],
-                    19
-                ),
-
-                question(
-                    "قبل المرحلة التالية تسمع صوتًا يقول اسمك. ما الحقيقة الوحيدة المؤكدة؟",
-                    [
-                        answer("شخص يعرف اسمك", false),
-                        answer("الصوت قال اسمك", true),
-                        answer("الحارس بجانبك", false),
-                        answer("أنت في خطر", false)
-                    ],
-                    20
-                ),
-
-
-                /* ==========================
-                   PHASE 3
-                   EXTREME
-                ========================== */
-
-                question(
-                    "يقول الحارس: إذا اخترت الإجابة الصحيحة ستخسر. هل العبارة كافية لتغيير منطق السؤال؟",
-                    [
-                        answer("لا، يجب فصل التهديد عن صحة الإجابة", true),
-                        answer("نعم", false),
-                        answer("بالتأكيد سأخطئ", false),
-                        answer("لا توجد إجابة", false)
-                    ],
-                    21
-                ),
-
-                question(
-                    "توجد أربعة أبواب. الحارس يعرف الباب الصحيح، لكنه يقول: اختر عكس ما سأقوله. ماذا تعرف؟",
-                    [
-                        answer("لا يمكن ضمان الباب الصحيح من كلامه", true),
-                        answer("الباب الذي يقوله خاطئ", false),
-                        answer("عكس كلامه صحيح", false),
-                        answer("الحارس لا يعرف", false)
-                    ],
-                    22
-                ),
-
-                question(
-                    "تظهر رسالة: لا تثق بهذه الرسالة. كيف تتعامل معها منطقيًا؟",
-                    [
-                        answer("أعتبرها معلومة غير موثوقة حتى يوجد دليل", true),
-                        answer("أصدقها", false),
-                        answer("أرفضها قطعًا", false),
-                        answer("أفعل عكسها دائمًا", false)
-                    ],
-                    23
-                ),
-
-                question(
-                    "الحارس يطرح عليك سؤالًا وإجابته تعتمد على ما ستختاره بعد الإجابة. ما المشكلة؟",
-                    [
-                        answer("السؤال دائري وقد لا يملك جوابًا ثابتًا", true),
-                        answer("الإجابة دائمًا نعم", false),
-                        answer("الحارس يعرف كل شيء", false),
-                        answer("السؤال سهل", false)
-                    ],
-                    24
-                ),
-
-                question(
-                    "أمامك مرآتان، وكل واحدة تعكس الأخرى بلا نهاية. أين تنتهي الصورة؟",
-                    [
-                        answer("لا يوجد موضع نهائي واضح في الانعكاس المثالي", true),
-                        answer("في المرآة الأولى", false),
-                        answer("في المرآة الثانية", false),
-                        answer("خلفك", false)
-                    ],
-                    25
-                ),
-
-                question(
-                    "الحارس يقول: أنا لا أستطيع الكذب. ثم يقول: أنا أكذب الآن. ما النتيجة؟",
-                    [
-                        answer("تناقض منطقي", true),
-                        answer("الحارس صادق", false),
-                        answer("الحارس كاذب فقط", false),
-                        answer("لا يوجد تناقض", false)
-                    ],
-                    26
-                ),
-
-                question(
-                    "إذا كانت كل إجابة أمامك مصممة لتجعلك تخاف، فما أفضل وسيلة لمقاومة اللعبة؟",
-                    [
-                        answer("فصل المشاعر عن تقييم الأدلة", true),
-                        answer("اختيار الأسرع دائمًا", false),
-                        answer("اختيار الأكثر رعبًا", false),
-                        answer("عدم القراءة", false)
-                    ],
-                    27
-                ),
-
-                question(
-                    "يقول الحارس: أنت وصلت إلى النهاية. لكن العداد يظهر 28 من 30. ماذا تثق به؟",
-                    [
-                        answer("العداد دليل مباشر على المرحلة الحالية", true),
-                        answer("الحارس دائمًا", false),
-                        answer("الإحساس", false),
-                        answer("الصوت", false)
-                    ],
-                    28
-                ),
-
-                question(
-                    "المرحلة 29: الحارس يسألك: من كان يراقبك طوال الوقت؟ ما الإجابة الأكثر دقة؟",
-                    [
-                        answer("لا توجد معلومات كافية للجزم", true),
-                        answer("الحارس", false),
-                        answer("المرآة", false),
-                        answer("اللاعب نفسه", false)
-                    ],
-                    29
-                ),
-
-                question(
-                    "المرحلة 30. يظهر السؤال: هل كنت تخاف لأن الحارس موجود... أم لأنك صدقت أنه موجود؟",
-                    [
-                        answer("لا يمكن الجزم دون معرفة الحقيقة خارج اللعبة", true),
-                        answer("الحارس موجود بالتأكيد", false),
-                        answer("الخوف دليل على وجوده", false),
-                        answer("كل شيء كان حقيقيًا", false)
-                    ],
-                    30
-                )
-
-            ]
-
-        }
-
-    };
-
-
-    /* ============================================================
-       GET SINGLE CHALLENGE
-    ============================================================ */
-
-    window.ZIVOZONE_CHALLENGES.get = function (id) {
-
-        if (!id) {
-            return null;
-        }
-
-        return this[id] || null;
-
-    };
-
-
-    /* ============================================================
-       GET NORMAL CHALLENGES
-       HORROR IS EXCLUDED
-    ============================================================ */
-
-    window.ZIVOZONE_CHALLENGES.getAll = function () {
-
-        return Object.keys(this)
-
-            .filter(function (key) {
-
-                return (
-
-                    typeof window
-                        .ZIVOZONE_CHALLENGES[key]
-                        === "object"
-
-                    &&
-
-                    window
-                        .ZIVOZONE_CHALLENGES[key]
-                        .questions
-
-                    &&
-
-                    !window
-                        .ZIVOZONE_CHALLENGES[key]
-                        .special
-
-                );
-
-            })
-
-            .map(function (key) {
-
-                return window
-                    .ZIVOZONE_CHALLENGES[key];
-
-            });
-
-    };
-
-
-    /* ============================================================
-       GET SPECIAL CHALLENGES
-    ============================================================ */
-
-    window.ZIVOZONE_CHALLENGES.getSpecial = function () {
-
-        return Object.keys(this)
-
-            .filter(function (key) {
-
-                return (
-
-                    typeof window
-                        .ZIVOZONE_CHALLENGES[key]
-                        === "object"
-
-                    &&
-
-                    window
-                        .ZIVOZONE_CHALLENGES[key]
-                        .special
-
-                );
-
-            })
-
-            .map(function (key) {
-
-                return window
-                    .ZIVOZONE_CHALLENGES[key];
-
-            });
-
-    };
-
-
-    /* ============================================================
-       VALIDATION
-    ============================================================ */
-
-    window.ZIVOZONE_CHALLENGES.validate = function () {
-
-        var bank =
-            window.ZIVOZONE_CHALLENGES;
-
-
-        var problems = [];
-
-
-        Object.keys(bank).forEach(function (key) {
-
-            var challenge = bank[key];
-
-
-            if (
-                !challenge ||
-                typeof challenge !== "object" ||
-                !challenge.questions
-            ) {
-                return;
+ 
+            {
+                difficulty: 2,
+                question: "لديك 5 تفاحات وأعطيت صديقك تفاحتين. كم بقي لديك؟",
+                answers: ["2", "3", "4", "5"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 3,
+                question: "أي كلمة مختلفة عن البقية؟",
+                answers: ["سيارة", "حافلة", "قطار", "تفاحة"],
+                correct: 3
+            },
+ 
+            {
+                difficulty: 4,
+                question: "ما العدد التالي؟ 3، 6، 12، 24، ؟",
+                answers: ["36", "42", "48", "52"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 5,
+                question: "إذا كان أحمد أطول من سامر، وسامر أطول من خالد، فمن الأقصر؟",
+                answers: ["أحمد", "سامر", "خالد", "لا يمكن معرفة ذلك"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 6,
+                question: "ما العدد المفقود؟ 1، 4، 9، 16، ؟",
+                answers: ["20", "24", "25", "30"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 7,
+                question: "إذا كانت الساعة 3:15، فما الزاوية الأصغر بين العقربين تقريبًا؟",
+                answers: ["0°", "7.5°", "15°", "30°"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 8,
+                question: "لديك 3 مفاتيح خارج غرفة، وداخل الغرفة 3 مصابيح. يمكنك دخول الغرفة مرة واحدة فقط. كيف تعرف أي مفتاح لأي مصباح؟",
+                answers: [
+                    "تشغيل مفتاح واحد فقط",
+                    "تشغيل مفتاحين والدخول",
+                    "تشغيل الأول فترة ثم إطفاؤه وتشغيل الثاني ثم الدخول وفحص الحرارة والضوء",
+                    "لا يمكن معرفة ذلك"
+                ],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 9,
+                question: "رجل ينظر إلى صورة ويقول: ليس لي أخ أو أخت، لكن والد هذا الرجل هو ابن أبي. من في الصورة؟",
+                answers: [
+                    "والده",
+                    "ابنه",
+                    "جده",
+                    "عمه"
+                ],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 10,
+                question: "لديك 12 كرة متطابقة ظاهريًا، واحدة منها أثقل أو أخف، وميزان ذو كفتين. ما أقل عدد من الوزنات اللازمة دائمًا لتحديد الكرة ومعرفة إن كانت أثقل أم أخف؟",
+                answers: [
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ],
+                correct: 1
             }
-
-
-            challenge.questions.forEach(
-                function (q, index) {
-
-                    var correctCount =
-                        q.answers.filter(
-                            function (a) {
-                                return a.correct;
-                            }
-                        ).length;
-
-
-                    if (correctCount !== 1) {
-
-                        problems.push(
-                            key +
-                            " السؤال " +
-                            (index + 1) +
-                            " يحتوي على " +
-                            correctCount +
-                            " إجابة صحيحة."
-                        );
-
-                    }
-
-                }
-            );
-
-        });
-
-
-        return problems;
-
-    };
-
-
-    /* ============================================================
-       READY
-    ============================================================ */
-
-    console.log(
-        "🧠 ZIVOZONE Challenge Bank Ready"
-    );
-
-
-    console.log(
-        "Normal Challenges:",
-        window
-            .ZIVOZONE_CHALLENGES
-            .getAll()
-            .length
-    );
-
-
-    console.log(
-        "Special Challenges:",
-        window
-            .ZIVOZONE_CHALLENGES
-            .getSpecial()
-            .length
-    );
-
-
-    var validation =
-        window
-            .ZIVOZONE_CHALLENGES
-            .validate();
-
-
-    if (validation.length) {
-
-        console.error(
-            "❌ Challenge Bank Problems:",
-            validation
-        );
-
-    } else {
-
-        console.log(
-            "✅ Challenge Bank Validation Passed"
-        );
-
+ 
+        ]
+ 
+    },
+ 
+ 
+    science: {
+ 
+        id: "science",
+ 
+        title: "تحدي العلوم",
+ 
+        category: "SCIENCE",
+ 
+        icon: "🔬",
+ 
+        description:
+            "من المعلومات الأساسية إلى الأسئلة العلمية الصعبة.",
+ 
+        questions: [
+ 
+            {
+                difficulty: 1,
+                question: "ما الكوكب المعروف بالكوكب الأحمر؟",
+                answers: ["الأرض", "المريخ", "الزهرة", "المشتري"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 2,
+                question: "ما الغاز الذي يحتاجه الإنسان للتنفس؟",
+                answers: ["الأكسجين", "الهيدروجين", "الهيليوم", "ثاني أكسيد الكربون"],
+                correct: 0
+            },
+ 
+            {
+                difficulty: 3,
+                question: "كم عدد قارات العالم؟",
+                answers: ["5", "6", "7", "8"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 4,
+                question: "ما العضو الذي يضخ الدم في جسم الإنسان؟",
+                answers: ["الكبد", "الرئة", "القلب", "الكلى"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 5,
+                question: "ما الحالة التي يتحول فيها الماء إلى بخار؟",
+                answers: ["التجمد", "التبخر", "التكاثف", "الانصهار"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 6,
+                question: "أي جزء من الخلية يحتوي غالبًا على المادة الوراثية؟",
+                answers: ["النواة", "الغشاء", "السيتوبلازم", "الجدار"],
+                correct: 0
+            },
+ 
+            {
+                difficulty: 7,
+                question: "ما القوة التي تجذب الأجسام نحو الأرض؟",
+                answers: ["المغناطيسية", "الجاذبية", "الاحتكاك", "الضغط"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 8,
+                question: "لماذا يبدو البرق قبل سماع الرعد؟",
+                answers: [
+                    "لأن الصوت لا ينتج",
+                    "لأن الضوء ينتقل أسرع من الصوت",
+                    "لأن الرعد يحدث لاحقًا",
+                    "لأن الهواء يمنع الضوء"
+                ],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 9,
+                question: "أي جسيم يحمل شحنة كهربائية سالبة؟",
+                answers: ["البروتون", "النيوترون", "الإلكترون", "الفوتون"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 10,
+                question: "أي مبدأ يفسر لماذا لا يمكن تحديد موضع وسرعة جسيم كمومي بدقة مطلقة في الوقت نفسه؟",
+                answers: [
+                    "مبدأ أرخميدس",
+                    "مبدأ عدم اليقين لهايزنبرغ",
+                    "قانون بويل",
+                    "قانون نيوتن الثالث"
+                ],
+                correct: 1
+            }
+ 
+        ]
+ 
+    },
+ 
+ 
+    football: {
+ 
+        id: "football",
+ 
+        title: "تحدي كرة القدم",
+ 
+        category: "FOOTBALL",
+ 
+        icon: "⚽",
+ 
+        description:
+            "اختبر معرفتك بكرة القدم والتكتيك.",
+ 
+        questions: [
+ 
+            {
+                difficulty: 1,
+                question: "كم لاعبًا يبدأ به الفريق داخل الملعب في كرة القدم؟",
+                answers: ["9", "10", "11", "12"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 2,
+                question: "كم شوطًا في مباراة كرة القدم؟",
+                answers: ["1", "2", "3", "4"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 3,
+                question: "من اللاعب الوحيد الذي يمكنه لمس الكرة بيده داخل منطقة جزائه بشكل طبيعي؟",
+                answers: ["المهاجم", "المدافع", "حارس المرمى", "الجناح"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 4,
+                question: "ماذا يسمى تمرير الكرة إلى لاعب في وضع تسلل؟",
+                answers: [
+                    "تمريرة صحيحة دائمًا",
+                    "قد تؤدي إلى مخالفة تسلل",
+                    "ركلة ركنية",
+                    "رمية تماس"
+                ],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 5,
+                question: "ما الهدف الأساسي من الضغط العالي؟",
+                answers: [
+                    "إضاعة الوقت",
+                    "استعادة الكرة قريبًا من مرمى الخصم",
+                    "الدفاع داخل منطقة الجزاء",
+                    "إيقاف اللعب"
+                ],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 6,
+                question: "في نظام 4-3-3، كم لاعبًا يوجد عادة في خط الوسط؟",
+                answers: ["2", "3", "4", "5"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 7,
+                question: "ما المقصود بالتحول الهجومي؟",
+                answers: [
+                    "انتقال الفريق من الهجوم إلى الدفاع",
+                    "انتقال الفريق من الدفاع إلى الهجوم بعد استعادة الكرة",
+                    "تغيير حارس المرمى",
+                    "تنفيذ رمية تماس"
+                ],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 8,
+                question: "ما الخطر التكتيكي الأكبر عند تطبيق ضغط عالٍ دون تغطية خلف خط الضغط؟",
+                answers: [
+                    "زيادة الاستحواذ",
+                    "ترك مساحات خلف الخط الأول يمكن استغلالها",
+                    "زيادة عدد الركنيات",
+                    "انخفاض سرعة اللعب"
+                ],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 9,
+                question: "فريقك يفقد الكرة والجناحان متقدمان جدًا. ما التصرف التكتيكي الأسرع لتقليل خطر المرتدة؟",
+                answers: [
+                    "التقدم بالجميع",
+                    "إعادة تنظيم العمق وإغلاق الممر المركزي أولًا",
+                    "ترك قلب الدفاع والتوجه للأطراف",
+                    "تجاهل الكرة"
+                ],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 10,
+                question: "أمام ضغط عالٍ من الخصم، ما الحل الأكثر تكاملًا للخروج من الضغط إذا كان الخصم يغلق العمق؟",
+                answers: [
+                    "اللعب دائمًا في العمق",
+                    "تثبيت الضغط ثم استخدام العرض واللاعب الثالث لكسر الخط",
+                    "إرسال كل الكرات الطويلة عشوائيًا",
+                    "إرجاع الكرة للحارس فقط"
+                ],
+                correct: 1
+            }
+ 
+        ]
+ 
+    },
+ 
+ 
+    memory: {
+ 
+        id: "memory",
+ 
+        title: "تحدي الذاكرة",
+ 
+        category: "MEMORY",
+ 
+        icon: "👁️",
+ 
+        description:
+            "هل تستطيع تذكر التفاصيل تحت الضغط؟",
+ 
+        questions: [
+ 
+            {
+                difficulty: 1,
+                question: "تذكر الرقم: 7. ما الرقم الذي شاهدته؟",
+                answers: ["5", "6", "7", "8"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 2,
+                question: "تذكر اللون: أحمر، أزرق، أخضر. ما اللون الثاني؟",
+                answers: ["أحمر", "أزرق", "أخضر", "أصفر"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 3,
+                question: "أي كلمة كانت موجودة؟ قمر، باب، شجرة، بحر.",
+                answers: ["سيارة", "بحر", "كتاب", "هاتف"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 4,
+                question: "ما الرقم الذي يأتي بعد 12 في التسلسل المعروض؟",
+                answers: ["11", "13", "14", "15"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 5,
+                question: "إذا كان الترتيب: كرة، حذاء، قميص، قبعة، فما العنصر الثالث؟",
+                answers: ["كرة", "حذاء", "قميص", "قبعة"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 6,
+                question: "أي ترتيب صحيح؟ 4 - 8 - 2 - 9",
+                answers: [
+                    "4 - 2 - 8 - 9",
+                    "4 - 8 - 2 - 9",
+                    "8 - 4 - 2 - 9",
+                    "9 - 2 - 8 - 4"
+                ],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 7,
+                question: "إذا ظهرت الكلمات: نجم، قمر، شمس، بحر، جبل، ما الكلمة التي كانت في المنتصف؟",
+                answers: ["قمر", "شمس", "بحر", "جبل"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 8,
+                question: "ما التسلسل الصحيح؟ 3 - 1 - 8 - 6 - 4",
+                answers: [
+                    "3 - 1 - 8 - 6 - 4",
+                    "3 - 8 - 1 - 6 - 4",
+                    "1 - 3 - 8 - 4 - 6",
+                    "4 - 6 - 8 - 1 - 3"
+                ],
+                correct: 0
+            },
+ 
+            {
+                difficulty: 9,
+                question: "تذكر: 5، 2، 9، 1، 7. ما الرقم الثاني من اليمين؟",
+                answers: ["2", "9", "1", "7"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 10,
+                question: "أي تسلسل يطابق التسلسل الأصلي تمامًا: 8، 3، 6، 1، 9، 4؟",
+                answers: [
+                    "8، 3، 6، 1، 9، 4",
+                    "8، 6، 3، 1، 9، 4",
+                    "8، 3، 1، 6، 9، 4",
+                    "4، 9، 1، 6، 3، 8"
+                ],
+                correct: 0
+            }
+ 
+        ]
+ 
+    },
+ 
+ 
+    daily: {
+ 
+        id: "daily",
+ 
+        title: "تحدي اليوم",
+ 
+        category: "DAILY",
+ 
+        icon: "⚡",
+ 
+        description:
+            "10 أسئلة مختلفة تتغير يوميًا.",
+ 
+        questions: [
+ 
+            {
+                difficulty: 1,
+                question: "كم يومًا في الأسبوع؟",
+                answers: ["5", "6", "7", "8"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 2,
+                question: "ما عاصمة الأردن؟",
+                answers: ["عمان", "إربد", "الزرقاء", "العقبة"],
+                correct: 0
+            },
+ 
+            {
+                difficulty: 3,
+                question: "كم شهرًا في السنة؟",
+                answers: ["10", "11", "12", "13"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 4,
+                question: "ما أكبر محيطات العالم؟",
+                answers: ["الأطلسي", "الهندي", "الهادئ", "المتجمد"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 5,
+                question: "كم ضلعًا للمثلث؟",
+                answers: ["2", "3", "4", "5"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 6,
+                question: "ما عكس كلمة سريع؟",
+                answers: ["قوي", "بطيء", "ذكي", "كبير"],
+                correct: 1
+            },
+ 
+            {
+                difficulty: 7,
+                question: "أي رقم ليس من مضاعفات 3؟",
+                answers: ["12", "18", "21", "25"],
+                correct: 3
+            },
+ 
+            {
+                difficulty: 8,
+                question: "إذا كان 5 × 5 = 25، فما قيمة 25 ÷ 5؟",
+                answers: ["3", "4", "5", "6"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 9,
+                question: "ما العدد التالي: 2، 6، 12، 20، 30، ؟",
+                answers: ["36", "40", "42", "44"],
+                correct: 2
+            },
+ 
+            {
+                difficulty: 10,
+                question: "إذا كان كل A هو B، وبعض B هو C، فهل يمكن الجزم بأن بعض A هو C؟",
+                answers: [
+                    "نعم دائمًا",
+                    "لا يمكن الجزم",
+                    "نعم إذا كان A أكبر",
+                    "نعم إذا كان C أكبر"
+                ],
+                correct: 1
+            }
+ 
+        ]
+ 
+    },
+ 
+ 
+    horror: {
+ 
+        id: "horror",
+ 
+        title: "الغرفة المظلمة",
+ 
+        category: "HORROR",
+ 
+        icon: "🕯️",
+ 
+        special: true,
+ 
+        totalQuestions: 30,
+ 
+        description:
+            "30 سؤال. كلما تعمقت، زاد الظلام. هل تجرؤ تكمل؟",
+ 
+        guardianMessages: {
+ 
+            5:  "أنت لسا بالبداية... لكن حاسس فيه شي بيراقبك.",
+            10: "قليل جدًا وين وصلوا لهون بسهولة.",
+            12: "لسا مبكر تستسلم... أليس كذلك؟",
+            15: "الصوت يقترب. كمّل.",
+            18: "شي فيك تغيّر... تنفسك صار أسرع؟",
+            20: "قليلون جدًا يصلون هذا العمق.",
+            22: "قليلين وصلوا لهون. متأكد بدك تكمل؟",
+            25: "أنت الآن ضمن أندر 5% يلي وصلوا لهون.",
+            28: "الباب الأخير... لا عودة بعده.",
+            30: "أنت... ناجٍ. قلة نادرة وصلت لهذا المستوى."
+ 
+        },
+ 
+        questions: [
+ 
+            { difficulty: 1, question: "ما لون السماء في يوم صافٍ؟", answers: ["أحمر", "أزرق", "أخضر", "أصفر"], correct: 1 },
+            { difficulty: 1, question: "كم عدد أيام الأسبوع؟", answers: ["5", "6", "7", "8"], correct: 2 },
+            { difficulty: 2, question: "ما عكس كلمة 'نور'؟", answers: ["ظلام", "ضوء", "حرارة", "برودة"], correct: 0 },
+            { difficulty: 2, question: "كم عدد الحواس الأساسية للإنسان؟", answers: ["3", "4", "5", "6"], correct: 2 },
+            { difficulty: 3, question: "أي حيوان يُعرف بأنه يرى في الظلام جيدًا؟", answers: ["الأرنب", "القط", "الحصان", "البقرة"], correct: 1 },
+ 
+            { difficulty: 3, question: "كم عدد الغرف التي مررت بها حتى الآن دون أن تشعر؟ (تخيّل: 3)", answers: ["1", "2", "3", "4"], correct: 2 },
+            { difficulty: 4, question: "ما الصوت الذي يصدره الباب الخشبي القديم عادة؟", answers: ["صرير", "رنين", "طقطقة", "صفير"], correct: 0 },
+            { difficulty: 4, question: "أي وقت من اليوم يكون الظلام فيه في أعمق حالاته؟", answers: ["الفجر", "منتصف الليل", "الغروب", "الظهر"], correct: 1 },
+            { difficulty: 5, question: "لو انطفأ الضوء فجأة وأنت وحدك، ما أول رد فعل طبيعي؟", answers: ["الصراخ", "التجمد لثوانٍ", "الركض فورًا", "الضحك"], correct: 1 },
+            { difficulty: 5, question: "ما العدد الذي يليه صمت طويل في العد التنازلي: 3، 2، ؟", answers: ["0", "1", "-1", "لا شيء"], correct: 1 },
+ 
+            { difficulty: 6, question: "أي صوت يعتبر الأكثر إثارة للقلق في مكان مظلم وهادئ؟", answers: ["نقطة ماء تتساقط", "موسيقى هادئة", "صوت سيارة بعيدة", "صوت طائر"], correct: 0 },
+            { difficulty: 6, question: "كم شخصًا عادة ما يكمل تحديًا كهذا حتى النهاية من كل 100؟", answers: ["50", "25", "10", "أقل من 5"], correct: 3 },
+            { difficulty: 6, question: "ماذا تسمى الحالة التي يتجمد فيها الجسم من الخوف المفاجئ؟", answers: ["استجابة القتال أو الهروب", "الإغماء", "الدوار", "لا شيء من ذلك"], correct: 0 },
+            { difficulty: 7, question: "لو سمعت خطوات خلفك في ممر مظلم، كم ثانية تنتظر قبل الالتفات؟", answers: ["فورًا", "ثانية أو اثنتين", "لا ألتفت أبدًا", "أركض مباشرة"], correct: 1 },
+            { difficulty: 7, question: "أي جزء من الدماغ مسؤول بشكل أساسي عن الشعور بالخوف؟", answers: ["اللوزة الدماغية", "المخيخ", "الفص الجبهي", "جذع الدماغ"], correct: 0 },
+ 
+            { difficulty: 7, question: "كم من الوقت مضى منذ أن نظرت خلفك آخر مرة؟ (تخيّل الآن)", answers: ["ثانية", "دقيقة", "لا أتذكر", "لم أنظر بعد"], correct: 2 },
+            { difficulty: 8, question: "الباب أمامك مغلق نصفيًا... ماذا تفعل؟", answers: ["أدفعه وأدخل", "أناديهم أولًا", "أبتعد", "أستمع أولًا"], correct: 3 },
+            { difficulty: 8, question: "ما أطول مدة يمكن أن يبقى فيها الإنسان بدون أن يرمش دون أن يتضرر؟", answers: ["ثوانٍ قليلة", "دقيقة كاملة", "لا حد لذلك", "لا يمكن التحكم بها"], correct: 0 },
+            { difficulty: 8, question: "لو انقطع الاتصال بجهازك الآن في هذه اللحظة بالذات، ماذا سيحدث؟", answers: ["لا شيء", "تفقد تقدمك", "يعيد الاتصال تلقائيًا", "لا أعرف"], correct: 1 },
+            { difficulty: 9, question: "كم عدد الأشخاص الذين وصلوا هذا السؤال بالذات، برأيك؟", answers: ["أغلب اللاعبين", "نصفهم", "القليل جدًا", "لا أحد"], correct: 2 },
+ 
+            { difficulty: 9, question: "الصوت الذي تسمعه الآن خلفك... من أين هو؟", answers: ["الرياح", "جهازك", "لا يوجد صوت", "لا أعرف"], correct: 2 },
+            { difficulty: 9, question: "لو خُيّرت الآن بين التوقف أو المتابعة، ماذا تختار حقًا؟", answers: ["أتوقف", "أتابع", "لا أستطيع القرار", "أعود لاحقًا"], correct: 1 },
+            { difficulty: 10, question: "كم مرة نظرت حولك منذ بداية هذا التحدي؟", answers: ["ولا مرة", "مرة واحدة", "أكثر من مرة", "لا أتذكر"], correct: 2 },
+            { difficulty: 10, question: "الغرفة الأخيرة لا تُرى فيها الجدران... ما أول شيء تفعله؟", answers: ["أمد يدي للأمام", "أقف مكاني", "أنادي بصوت عالٍ", "أغلق عيني"], correct: 0 },
+            { difficulty: 10, question: "هل ما زلت تسمع نبضك الآن، أم نبض شيء آخر؟", answers: ["نبضي فقط", "لا أعرف", "شيء آخر", "توقف كل شيء"], correct: 1 },
+ 
+            { difficulty: 10, question: "لو اختفى كل الضوء الآن، كم ثانية تحتاج لتتقبل الفكرة؟", answers: ["فورًا", "ثوانٍ قليلة", "لا أتقبلها", "لا أهتم"], correct: 1 },
+            { difficulty: 10, question: "الباب الأخير مفتوح قليلًا. من الجهة الأخرى صمت تام. ماذا تفعل؟", answers: ["أدخل", "أنتظر", "أتراجع", "أغلقه"], correct: 0 },
+            { difficulty: 10, question: "لو كان أحدهم يشاهدك الآن وأنت تلعب... هل ستتصرف بشكل مختلف؟", answers: ["نعم", "لا", "ربما", "لا أعرف"], correct: 1 },
+            { difficulty: 10, question: "كم شخصًا برأيك وصل إلى هذا السؤال بالذات واستمر حتى النهاية؟", answers: ["الكثيرون", "القليل جدًا", "لا أحد", "لا أعرف"], correct: 3 },
+            { difficulty: 10, question: "أنت على بعد سؤال واحد من النهاية. هل ما زلت متأكدًا أنك بخير؟", answers: ["نعم تمامًا", "لست متأكدًا", "لا أريد المتابعة", "لنكمل فقط"], correct: 3 }
+ 
+        ]
+ 
     }
-
-
-})();
+ 
+};
+ 
+ 
+/* ============================================================
+   HELPERS
+============================================================ */
+ 
+window.ZIVOZONE_CHALLENGES.get = function (id) {
+ 
+    return this[id] || null;
+ 
+};
+ 
+ 
+window.ZIVOZONE_CHALLENGES.getAll = function () {
+ 
+    return Object.keys(this)
+        .filter(
+            key =>
+                typeof this[key] === "object" &&
+                this[key].questions &&
+                !this[key].special
+        )
+        .map(
+            key =>
+                this[key]
+        );
+ 
+};
+ 
