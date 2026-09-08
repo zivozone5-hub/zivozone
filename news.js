@@ -24,15 +24,30 @@
   async function loadJordan(box,lang='ar'){
     if(!box)return;
     box.innerHTML=`<article class="sports-card loading-card"><div class="spinner"></div><h3>🇯🇴 ${esc(tr('jordanFootballNews',lang).replace('🇯🇴 ','').replace('🇯🇴',''))}</h3><p>${esc(tr('loader',lang))}</p></article>`;
-    const q=encodeURIComponent('Jordanian football OR Jordan Football Association');
-    const rss=`https://news.google.com/rss/search?q=${q}&hl=en&gl=JO&ceid=JO:en`;
-    let items=[];
-    try{
-      const r=await fetch(rss,{cache:'no-store'});
-      if(r.ok){const xml=await r.text(),doc=new DOMParser().parseFromString(xml,'text/xml');items=[...doc.querySelectorAll('item')].slice(0,8).map(i=>({title:i.querySelector('title')?.textContent||'',link:i.querySelector('link')?.textContent||'',pub:i.querySelector('pubDate')?.textContent||'',source:i.querySelector('source')?.textContent||''})).filter(x=>x.title)}
-    }catch(e){}
-    const official=jordanSources.map(x=>({title:x.title[lang]||x.title.en,link:x.url,pub:'',source:'JFA / Petra',icon:x.icon}));
-    if(!items.length)items=official;
+    // IMPORTANT: Google News RSS cannot be fetched directly from GitHub Pages
+    // because the browser blocks it with CORS. Do not fetch it here.
+    // Keep the Jordan hub reliable by using official Jordan sources in-page.
+    // A Google News search link is provided as a navigation fallback.
+    const official=jordanSources.map(x=>({
+      title:x.title[lang]||x.title.en,
+      link:x.url,
+      pub:'',
+      source:'JFA / Petra',
+      icon:x.icon
+    }));
+    const q=encodeURIComponent('كرة القدم الأردنية OR الاتحاد الأردني لكرة القدم');
+    official.push({
+      title: lang==='ar' ? 'آخر أخبار كرة القدم الأردنية' :
+             lang==='zh' ? '约旦足球最新新闻' :
+             lang==='hi' ? 'जॉर्डन फुटबॉल की ताज़ा खबरें' :
+             lang==='es' ? 'Últimas noticias del fútbol jordano' :
+             'Latest Jordanian football news',
+      link:`https://news.google.com/search?q=${q}&hl=ar&gl=JO&ceid=JO%3Aar`,
+      pub:'',
+      source:'Google News',
+      icon:'📰'
+    });
+    let items=official;
     box.innerHTML=items.map(x=>`<article class="sports-card jordan-news-card"><div class="news-live-top"><span class="match-icon">${x.icon||'🇯🇴'}</span><span class="card-tag">${esc(x.source||'Jordan Football')}</span></div><h3>${esc(x.title)}</h3>${x.pub?`<small class="muted">${esc(new Date(x.pub).toLocaleString(locale(lang),{dateStyle:'medium',timeStyle:'short'}))}</small>`:''}<a class="btn btn-ghost" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">${esc(tr('openNews',lang))}</a></article>`).join('');
   }
   window.ZIVOZONE_NEWS={load,loadJordan};
