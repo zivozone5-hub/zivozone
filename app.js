@@ -730,7 +730,7 @@
     sh.innerHTML='<div class="v26-shop">'+catalog.map(i=>`<article class="v26-item"><h4>${i.name}</h4><p>${i.desc}</p><button data-buy="${i.id}" ${s.owned.includes(i.id)?'disabled':''}>${s.owned.includes(i.id)?'مملوك':'شراء '+i.price+' ZIVO'}</button></article>`).join('')+'</div>';
     sh.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{if(!buy(b.dataset.buy))alert('رصيد ZIVO غير كافٍ أو العنصر مملوك.');render('shop')});
     const rows=[['1','أنت','—'],['2','قادم قريبًا','—'],['3','قادم قريبًا','—'],['4','قادم قريبًا','—'],['5','قادم قريبًا','—']];
-    bo.innerHTML='<div class="v26-board">'+rows.map(r=>`<div class="v26-row"><span>${r[0]}</span><b>${r[1]}</b><b>${r[2]}</b></div>`).join('')+'</div><p class="v26-note">هذه واجهة تجهيز للـLeaderboard. الترتيب العالمي الحقيقي يحتاج قراءة وكتابة آمنة من Firebase عبر قواعد وصول مناسبة، ولن أضع رصيدًا قابلًا للتلاعب من المتصفح على أنه رصيد سحابي حقيقي.</p>';
+    bo.innerHTML='<div class="v26-board"><div class="v26-row"><span>★</span><b>أداؤك الحالي</b><b>'+p.bestScore+'</b></div>'+rows.map(r=>`<div class="v26-row"><span>${r[0]}</span><b>${r[1]}</b><b>${r[2]}</b></div>`).join('')+'</div><p class="v26-note">هذه واجهة تجهيز للـLeaderboard. الترتيب العالمي الحقيقي يحتاج قراءة وكتابة آمنة من Firebase عبر قواعد وصول مناسبة، ولن أضع رصيدًا قابلًا للتلاعب من المتصفح على أنه رصيد سحابي حقيقي.</p>';
     o.querySelectorAll('.v26-section').forEach(e=>e.classList.remove('active'));o.querySelector('#v26-'+tab).classList.add('active');
     o.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
   }
@@ -742,4 +742,50 @@
   }
   window.ZIVOZONE_V26={open,buy,claimDaily,profile,catalog};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',button);else button();
+})();
+
+
+/* ============================================================
+   ZIVOZONE V27 — CLOUD READY / PLAYER RECORDS / LEADERBOARD
+   Uses existing Firebase initialization when exposed by auth.js.
+   Server-side validation remains required for production rewards.
+============================================================ */
+(function(){
+  'use strict';
+  const K='zivozone_v27_cloud_queue';
+  const safeRead=()=>{try{return JSON.parse(localStorage.getItem(K)||'[]')}catch(e){return[]}};
+  const safeWrite=v=>{try{localStorage.setItem(K,JSON.stringify(v.slice(-100)))}catch(e){}};
+  function uid(){
+    const p=window.ZIVOZONE_AUTH?.getPlayer?.(); return p?.uid||p?.id||p?.user?.uid||null;
+  }
+  function snapshot(){
+    const p=window.ZIVOZONE_V26?.profile?.()||{};
+    return {uid:uid(),level:p.level||1,xp:p.xp||0,games:p.games||0,bestScore:p.bestScore||0,streak:p.streak||1,at:Date.now()};
+  }
+  function queue(event){
+    const q=safeRead();q.push({event,data:snapshot(),challenge:event.challenge||null});safeWrite(q);
+    return q;
+  }
+  async function flush(){
+    // Compatible bridge: if a future Firebase connector is exposed, use it.
+    // No guessed Firebase API is called, preventing breakage of the working V21/V26 setup.
+    const bridge=window.ZIVOZONE_FIREBASE_BRIDGE;
+    if(!bridge?.savePlayerEvent)return false;
+    const q=safeRead();
+    for(const item of q){
+      try{await bridge.savePlayerEvent(item)}catch(e){return false}
+    }
+    safeWrite([]);return true;
+  }
+  function submitChallenge(challenge,correct,total,score){
+    const item={challenge,correct,total,score};
+    const q=safeRead();q.push({event:'challenge_complete',data:snapshot(),challenge:item});safeWrite(q);
+    flush();
+  }
+  window.ZIVOZONE_V27={snapshot,queue,flush,submitChallenge,pending:()=>safeRead().length};
+  window.addEventListener('zivozone-progress',e=>{
+    const d=e.detail||{};
+    if(d.challenge) submitChallenge(d.challenge,d.correct,d.total,d.score);
+  });
+  setTimeout(flush,2500);
 })();
