@@ -19,5 +19,3 @@ Do not change the Firebase configuration in `index.html`.
 
 ## Firebase
 No Firebase credentials were changed. Existing Authentication and Firestore collections remain the source of truth for signed-in player data and results.
-
-V13: 20-question identity test, four ad placements, robust exit delegation, 3D Z orbit, horror mid-session voice, preserved Firebase.
