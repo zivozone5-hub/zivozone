@@ -29,6 +29,8 @@
   function phase(level=1){if(activeMode!=='horror')return;horrorPulse(level);if(level>=2){tone(34,.9,.15,'sawtooth',-.7,20);tone(48,.8,.11,'sine',.7,24)}if(level>=3){noise(1.6,.13,260,-.85);noise(1.6,.13,260,.85);distantScream()}}
   function question(d){if(!started||!enabled)return;if(activeMode==='horror'){tone(Math.max(25,78-d*3),.45,.12,'sawtooth',Math.random()>.5?.8:-.8,25);if(d>=7)noise(.5,.06,220,Math.random()>.5?.9:-.9);return}const f=Math.max(60,400-d*22);tone(f,.1,.045,activeMode==='reaction'?'square':'triangle',Math.random()>.5?.4:-.4,f*1.35)}
   function click(){if(!started)return;tone(activeMode==='horror'?170:500,.06,.07,activeMode==='reaction'?'square':'triangle',Math.random()>.5?.25:-.25)}
+  function tick(){if(!started||!enabled)return;tone(activeMode==='horror'?260:760,.055,.028,'sine',0,activeMode==='horror'?210:620)}
+  function timeout(){if(!started||!enabled)return;if(activeMode==='horror'){tone(48,.35,.11,'sawtooth',0,24);noise(.3,.06,180,Math.random()>.5?.8:-.8)}else{tone(120,.16,.055,'triangle',0,70)}}
   function correct(){if(activeMode==='horror')return;tone(680,.11,.06,'sine',0,950);tone(950,.13,.04,'triangle',.1,1200)}
   function wrong(){if(activeMode==='horror')return;tone(115,.2,.075,'sawtooth',0,52);noise(.16,.025,450)}
   function success(){tone(420,.12,.05,'triangle');tone(620,.16,.05,'triangle',.1,900);tone(900,.22,.05,'sine',-.1,1200)}
@@ -42,5 +44,5 @@
   function setEnabled(v){enabled=!!v;ensure();if(master)master.gain.setTargetAtTime(enabled?volume:0,ctx.currentTime,.08);if(!enabled)stopChallenge();save()}
   function setVolume(v){volume=clamp(Number(v),.05,1);ensure();if(master)master.gain.setTargetAtTime(enabled?volume:0,ctx.currentTime,.08);save()}
   function narrate(text){if(activeMode!=='horror'||!text||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=(document.documentElement.lang||'ar')==='ar'?'ar-SA':'en-US';u.rate=.78;u.pitch=.48;u.volume=clamp(volume*.72,.15,.8);speechSynthesis.speak(u)}catch(e){}}
-  window.ZIVOZONE_AUDIO={unlock,setEnabled,isEnabled:()=>enabled,toggle:()=>setEnabled(!enabled),setVolume,volume:()=>volume,click,correct,wrong,success,question,startChallenge,stopChallenge,horrorPulse,phase,checkpoint,narrate,warden,whisper,horrorAnswer,active:()=>started};
+  window.ZIVOZONE_AUDIO={unlock,setEnabled,isEnabled:()=>enabled,toggle:()=>setEnabled(!enabled),setVolume,volume:()=>volume,click,tick,timeout,correct,wrong,success,question,startChallenge,stopChallenge,horrorPulse,phase,checkpoint,narrate,warden,whisper,horrorAnswer,active:()=>started};
 })();

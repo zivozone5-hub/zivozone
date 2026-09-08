@@ -40,11 +40,6 @@
   Object.assign(T.zh,{timeLeft:'剩余时间',timeUp:'时间到'});
   Object.assign(T.hi,{timeLeft:'शेष समय',timeUp:'समय समाप्त'});
   Object.assign(T.es,{timeLeft:'Tiempo restante',timeUp:'Se acabó el tiempo'});
-  Object.assign(T.ar,{pressure:'نقاط الضغط',streak:'السلسلة',bestStreak:'أفضل سلسلة',speedBonus:'مكافأة السرعة',timedOut:'انتهى الوقت',pressureHint:'كلما أجبت أسرع، ارتفعت مكافأتك.',secondsPerQuestion:'10 ثوانٍ لكل سؤال'});
-  Object.assign(T.en,{pressure:'Pressure score',streak:'Streak',bestStreak:'Best streak',speedBonus:'Speed bonus',timedOut:'Timed out',pressureHint:'The faster you answer, the higher your reward.',secondsPerQuestion:'10 seconds per question'});
-  Object.assign(T.zh,{pressure:'压力分',streak:'连击',bestStreak:'最佳连击',speedBonus:'速度奖励',timedOut:'超时',pressureHint:'回答越快，奖励越高。',secondsPerQuestion:'每题10秒'});
-  Object.assign(T.hi,{pressure:'प्रेशर स्कोर',streak:'स्ट्रीक',bestStreak:'सर्वश्रेष्ठ स्ट्रीक',speedBonus:'स्पीड बोनस',timedOut:'समय समाप्त',pressureHint:'जितनी जल्दी जवाब देंगे, उतना अधिक इनाम मिलेगा।',secondsPerQuestion:'हर प्रश्न के लिए 10 सेकंड'});
-  Object.assign(T.es,{pressure:'Puntuación de presión',streak:'Racha',bestStreak:'Mejor racha',speedBonus:'Bono de velocidad',timedOut:'Tiempo agotado',pressureHint:'Cuanto más rápido respondas, mayor será tu recompensa.',secondsPerQuestion:'10 segundos por pregunta'});
   function get(){return localStorage.getItem(LANG_KEY)||'ar'}
   function set(lang){if(!LANGS.includes(lang))lang='ar';localStorage.setItem(LANG_KEY,lang);document.documentElement.lang=lang;document.documentElement.dir=DIR[lang];window.dispatchEvent(new CustomEvent('zivozone-language',{detail:{lang}}));return lang}
   function tr(key,lang=get()){return (T[lang]&&T[lang][key])||T.ar[key]||key}

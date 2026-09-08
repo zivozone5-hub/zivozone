@@ -8,7 +8,7 @@
   const CONFIG=window.ZIVOZONE_FIREBASE_CONFIG;
   let user=null, player=null, cloud=false, ready=false, auth=null, db=null;
   const t=k=>window.zivoT?window.zivoT(k):k;
-  const defaultPlayer=(u)=>({uid:u.uid,name:u.name||'ZIVO Player',age:Number(u.age)||18,email:u.email||'',level:1,xp:0,coins:0,wins:0,losses:0,gamesPlayed:0,streak:0,language:window.ZIVOZONE_I18N?.get?.()||'ar'});
+  const defaultPlayer=(u)=>({uid:u.uid,name:u.name||'ZIVO Player',age:Number(u.age)||18,email:u.email||'',level:1,xp:0,coins:0,wins:0,losses:0,gamesPlayed:0,streak:0,bestStreak:0,language:window.ZIVOZONE_I18N?.get?.()||'ar'});
   const localAccounts=()=>{try{return JSON.parse(localStorage.getItem('zivozone_accounts')||'{}')}catch(e){return {}}};
   function saveLocal(){localStorage.setItem(KEY,JSON.stringify({user,player}))}
   function loadLocal(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x?.user){user=x.user;player=x.player||defaultPlayer(user)}}catch(e){}}

@@ -178,27 +178,3 @@ body.horror-active{background:#020207!important}.horror-active .topbar,.horror-a
   .question-timer{padding:11px 12px}
   .question-timer strong{font-size:1.35rem}
 }
-
-
-/* ============================================================
-   V16 — PRESSURE ENGINE / SPEED SCORE / STREAK
-============================================================ */
-.pressure-hud{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:6px 9px;
-  border:1px solid rgba(124,60,255,.20);
-  border-radius:10px;
-  background:rgba(124,60,255,.055);
-  color:#cbd1ec;
-  font-variant-numeric:tabular-nums;
-}
-.pressure-hud b{color:#fff}
-.question-timer:not(.urgent) strong{transition:transform .18s ease}
-.question-timer.urgent strong{animation:timerNumberPulse .48s ease-in-out infinite alternate}
-@keyframes timerNumberPulse{from{transform:scale(1)}to{transform:scale(1.1)}}
-.game-footer{flex-wrap:wrap}
-@media(max-width:700px){
-  .pressure-hud{width:100%;justify-content:center;font-size:.78rem}
-}
