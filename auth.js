@@ -1,90 +1,230 @@
 /* ============================================================
-   ZIVOZONE AUTHENTICATION
-   Firebase Compat - Stable GitHub Pages Version
+   ZIVOZONE AUTH SYSTEM
+   Firebase Authentication
+   Guest Mode
+   Firestore Player Profile
 ============================================================ */
 
-(function () {
+(() => {
 
     "use strict";
 
 
     /* ========================================================
-       FIREBASE CONFIG
+       CONFIG
     ======================================================== */
 
-    const firebaseConfig = {
+    const CONFIG =
+        window.ZIVOZONE_FIREBASE_CONFIG;
 
-        apiKey:
-            "AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s",
 
-        authDomain:
-            "zivozone-fc6ed.firebaseapp.com",
-
-        projectId:
-            "zivozone-fc6ed",
-
-        storageBucket:
-            "zivozone-fc6ed.firebasestorage.app",
-
-        messagingSenderId:
-            "169366383094",
-
-        appId:
-            "1:169366383094:web:5875e8d24b1c543e4a7fd7",
-
-        measurementId:
-            "G-ZXW8LP39JY"
-
-    };
+    const LOCAL_KEY =
+        "zivozone_player_cache_v6";
 
 
     /* ========================================================
-       GLOBAL STATUS
+       STATE
     ======================================================== */
 
-    window.ZIVOZONE_FIREBASE_CONFIG =
-        firebaseConfig;
+    let firebaseReady = false;
 
+    let authReady = false;
 
-    let firebaseApp = null;
+    let firestoreReady = false;
 
     let auth = null;
 
     let db = null;
+
+    let currentUser = null;
+
+    let currentPlayer = null;
+
+
+    /* ========================================================
+       DEFAULT PLAYER
+    ======================================================== */
+
+    function createDefaultPlayer(user = {}) {
+
+        return {
+
+            uid:
+                user.uid || "",
+
+            name:
+                user.name || "لاعب ZIVO",
+
+            age:
+                Number(user.age) || 18,
+
+            email:
+                user.email || "",
+
+            level:
+                1,
+
+            xp:
+                0,
+
+            coins:
+                0,
+
+            wins:
+                0,
+
+            gamesPlayed:
+                0,
+
+            language:
+                "ar",
+
+            createdAt:
+                null
+
+        };
+
+    }
+
+
+    /* ========================================================
+       EVENTS
+    ======================================================== */
+
+    function emit() {
+
+        window.dispatchEvent(
+
+            new CustomEvent(
+                "zivozone-auth",
+                {
+                    detail: {
+
+                        user:
+                            currentUser,
+
+                        player:
+                            currentPlayer,
+
+                        ready:
+                            authReady,
+
+                        cloud:
+                            firebaseReady,
+
+                        firestore:
+                            firestoreReady
+
+                    }
+                }
+            )
+
+        );
+
+    }
+
+
+    /* ========================================================
+       LOCAL CACHE
+    ======================================================== */
+
+    function saveLocalCache() {
+
+        try {
+
+            localStorage.setItem(
+
+                LOCAL_KEY,
+
+                JSON.stringify({
+
+                    user:
+                        currentUser,
+
+                    player:
+                        currentPlayer
+
+                })
+
+            );
+
+        } catch (error) {
+
+            console.warn(
+                "ZIVOZONE local cache error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    function loadLocalCache() {
+
+        try {
+
+            const raw =
+                localStorage.getItem(LOCAL_KEY);
+
+            if (!raw)
+                return;
+
+            const data =
+                JSON.parse(raw);
+
+            if (data?.user) {
+
+                currentUser =
+                    data.user;
+
+                currentPlayer =
+                    data.player ||
+                    createDefaultPlayer(
+                        data.user
+                    );
+
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "ZIVOZONE cache load error:",
+                error
+            );
+
+        }
+
+    }
 
 
     /* ========================================================
        FIREBASE INITIALIZATION
     ======================================================== */
 
-    function initializeFirebase() {
+    async function initFirebase() {
+
+        if (
+            !CONFIG ||
+            !window.firebase
+        ) {
+
+            console.warn(
+                "ZIVOZONE Firebase configuration unavailable."
+            );
+
+            return false;
+
+        }
+
 
         try {
 
-            if (
-                typeof firebase === "undefined"
-            ) {
+            if (!firebase.apps.length) {
 
-                throw new Error(
-                    "Firebase SDK لم يتم تحميله."
+                firebase.initializeApp(
+                    CONFIG
                 );
-
-            }
-
-
-            if (
-                !firebase.apps.length
-            ) {
-
-                firebaseApp =
-                    firebase.initializeApp(
-                        firebaseConfig
-                    );
-
-            } else {
-
-                firebaseApp =
-                    firebase.app();
 
             }
 
@@ -93,16 +233,52 @@
                 firebase.auth();
 
 
-            db =
-                firebase.firestore();
-
-
-            window.ZIVOZONE_FIREBASE_READY =
+            firebaseReady =
                 true;
 
 
-            console.log(
-                "🔥 ZIVOZONE Firebase initialized successfully."
+            try {
+
+                db =
+                    firebase.firestore();
+
+                firestoreReady =
+                    true;
+
+            } catch (firestoreError) {
+
+                console.warn(
+                    "Firestore unavailable:",
+                    firestoreError
+                );
+
+                db =
+                    null;
+
+                firestoreReady =
+                    false;
+
+            }
+
+
+            try {
+
+                await auth.setPersistence(
+                    firebase.auth.Auth.Persistence.LOCAL
+                );
+
+            } catch (persistenceError) {
+
+                console.warn(
+                    "Auth persistence warning:",
+                    persistenceError
+                );
+
+            }
+
+
+            auth.onAuthStateChanged(
+                handleAuthState
             );
 
 
@@ -111,24 +287,12 @@
         } catch (error) {
 
             console.error(
-                "ZIVOZONE Firebase initialization error:",
+                "Firebase initialization failed:",
                 error
             );
 
-
-            window.ZIVOZONE_FIREBASE_READY =
+            firebaseReady =
                 false;
-
-
-            window.dispatchEvent(
-                new CustomEvent(
-                    "zivozone-firebase-error",
-                    {
-                        detail: error
-                    }
-                )
-            );
-
 
             return false;
 
@@ -137,222 +301,97 @@
     }
 
 
-    const firebaseReady =
-        initializeFirebase();
-
-
     /* ========================================================
-       DEFAULT PLAYER
+       AUTH STATE
     ======================================================== */
 
-    const DEFAULT_PLAYER = {
+    async function handleAuthState(firebaseUser) {
 
-        level: 1,
+        if (!firebaseUser) {
 
-        xp: 0,
+            currentUser =
+                null;
 
-        coins: 0,
+            /*
+             * لا نحذف الكاش مباشرة.
+             * هذا يساعد الواجهة على الاستقرار.
+             */
 
-        wins: 0,
+            currentPlayer =
+                null;
 
-        losses: 0,
+            authReady =
+                true;
 
-        gamesPlayed: 0,
+            emit();
 
-        streak: 0,
-
-        age: null,
-
-        language: "ar",
-
-        role: "player"
-
-    };
-
-
-    /* ========================================================
-       LOCAL FALLBACK
-       
-       إذا كان Firestore غير متاح،
-       الحساب نفسه يبقى يعمل.
-    ======================================================== */
-
-    function localKey(uid) {
-
-        return "zivozone_player_" + uid;
-
-    }
-
-
-    function getLocalPlayer(uid) {
-
-        try {
-
-            const raw =
-                localStorage.getItem(
-                    localKey(uid)
-                );
-
-
-            if (!raw) {
-
-                return null;
-
-            }
-
-
-            return JSON.parse(raw);
-
-        } catch {
-
-            return null;
-
-        }
-
-    }
-
-
-    function saveLocalPlayer(player) {
-
-        try {
-
-            if (
-                player &&
-                player.uid
-            ) {
-
-                localStorage.setItem(
-                    localKey(player.uid),
-                    JSON.stringify(player)
-                );
-
-            }
-
-        } catch {
-
-        }
-
-    }
-
-
-    /* ========================================================
-       CREATE PLAYER
-    ======================================================== */
-
-    async function createPlayerProfile(
-        user,
-        extraData = {}
-    ) {
-
-        if (!user) {
-
-            throw new Error(
-                "لا يوجد لاعب صالح."
-            );
+            return;
 
         }
 
 
-        const localPlayer =
-            getLocalPlayer(user.uid);
-
-
-        if (localPlayer) {
-
-            return localPlayer;
-
-        }
-
-
-        const player = {
-
-            ...DEFAULT_PLAYER,
+        currentUser = {
 
             uid:
-                user.uid,
-
-            name:
-                extraData.name ||
-                user.displayName ||
-                "ZIVO Player",
+                firebaseUser.uid,
 
             email:
-                user.email ||
-                "",
+                firebaseUser.email || "",
 
-            age:
-                extraData.age ??
-                null,
-
-            language:
-                extraData.language ||
-                "ar",
-
-            createdAt:
-                new Date().toISOString(),
-
-            updatedAt:
-                new Date().toISOString()
+            emailVerified:
+                !!firebaseUser.emailVerified
 
         };
 
 
-        /* ==============================================
-           FIRESTORE
-        =============================================== */
+        currentPlayer =
+            createDefaultPlayer(
+                currentUser
+            );
 
-        if (db) {
+
+        /* ====================================================
+           FIRESTORE PROFILE
+        ==================================================== */
+
+        if (
+            db &&
+            firestoreReady
+        ) {
 
             try {
 
-                const ref =
-                    db
-                        .collection("users")
-                        .doc(user.uid);
+                const snapshot =
+                    await db
+                        .collection("players")
+                        .doc(firebaseUser.uid)
+                        .get();
 
 
-                const snap =
-                    await ref.get();
+                if (snapshot.exists) {
 
+                    currentPlayer = {
 
-                if (snap.exists) {
+                        ...createDefaultPlayer(
+                            currentUser
+                        ),
 
-                    const existing = {
+                        ...snapshot.data(),
 
                         uid:
-                            user.uid,
+                            firebaseUser.uid,
 
-                        ...snap.data()
+                        email:
+                            firebaseUser.email || ""
 
                     };
 
-
-                    saveLocalPlayer(
-                        existing
-                    );
-
-
-                    return existing;
-
                 }
-
-
-                await ref.set(
-                    player
-                );
-
-
-                saveLocalPlayer(
-                    player
-                );
-
-
-                return player;
 
             } catch (error) {
 
                 console.warn(
-                    "Firestore unavailable:",
+                    "Could not load player profile:",
                     error
                 );
 
@@ -361,12 +400,12 @@
         }
 
 
-        saveLocalPlayer(
-            player
-        );
+        saveLocalCache();
 
+        authReady =
+            true;
 
-        return player;
+        emit();
 
     }
 
@@ -375,51 +414,85 @@
        REGISTER
     ======================================================== */
 
-    async function registerPlayer({
-        name,
-        email,
-        password,
-        age,
-        language = "ar"
-    }) {
+    async function register(data) {
 
-        if (!firebaseReady || !auth) {
+        if (
+            !firebaseReady ||
+            !auth
+        ) {
 
             throw new Error(
-                "نظام الحسابات غير متاح حاليًا. أعد تحميل الصفحة."
+                "Firebase غير جاهز. تأكد من تحميل الصفحة مرة أخرى."
+            );
+
+        }
+
+
+        const name =
+            String(
+                data.name || ""
+            ).trim();
+
+
+        const email =
+            String(
+                data.email || ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        const password =
+            String(
+                data.password || ""
+            );
+
+
+        const age =
+            Number(
+                data.age
+            );
+
+
+        /* ====================================================
+           VALIDATION
+        ==================================================== */
+
+        if (name.length < 2) {
+
+            throw new Error(
+                "اكتب اسم اللاعب بشكل صحيح."
             );
 
         }
 
 
         if (
-            !name ||
-            name.trim().length < 2
+            !Number.isInteger(age) ||
+            age < 5 ||
+            age > 100
         ) {
 
             throw new Error(
-                "اكتب اسم اللاعب."
+                "العمر يجب أن يكون بين 5 و100."
             );
 
         }
 
 
         if (
-            !email ||
-            !email.includes("@")
+            !/^[^\s@]+@[^\s@]+\.[^\s@]+$/
+                .test(email)
         ) {
 
             throw new Error(
-                "أدخل بريدًا إلكترونيًا صحيحًا."
+                "البريد الإلكتروني غير صحيح."
             );
 
         }
 
 
-        if (
-            !password ||
-            password.length < 6
-        ) {
+        if (password.length < 6) {
 
             throw new Error(
                 "كلمة المرور يجب أن تكون 6 أحرف على الأقل."
@@ -428,94 +501,111 @@
         }
 
 
-        const numericAge =
-            Number(age);
+        /* ====================================================
+           CREATE FIREBASE USER
+        ==================================================== */
 
-
-        if (
-            !Number.isInteger(
-                numericAge
-            ) ||
-            numericAge < 5 ||
-            numericAge > 100
-        ) {
-
-            throw new Error(
-                "أدخل عمرًا صحيحًا."
-            );
-
-        }
-
-
-        try {
-
-            const result =
-                await auth.createUserWithEmailAndPassword(
-                    email.trim().toLowerCase(),
+        const result =
+            await auth
+                .createUserWithEmailAndPassword(
+                    email,
                     password
                 );
 
 
-            const user =
-                result.user;
+        const firebaseUser =
+            result.user;
 
 
-            await user.updateProfile({
-
-                displayName:
-                    name.trim()
-
-            });
-
-
-            const player =
-                await createPlayerProfile(
-                    user,
-                    {
-                        name:
-                            name.trim(),
-
-                        age:
-                            numericAge,
-
-                        language
-
-                    }
-                );
-
-
-            dispatchAuth(
-                true,
-                user,
-                player
-            );
-
-
-            return {
-
-                success: true,
-
-                user,
-
-                player
-
-            };
-
-        } catch (error) {
-
-            console.error(
-                "Register error:",
-                error
-            );
-
+        if (!firebaseUser) {
 
             throw new Error(
-                translateError(
-                    error
-                )
+                "تعذر إنشاء الحساب."
             );
 
         }
+
+
+        currentUser = {
+
+            uid:
+                firebaseUser.uid,
+
+            email:
+                firebaseUser.email || email,
+
+            emailVerified:
+                !!firebaseUser.emailVerified
+
+        };
+
+
+        currentPlayer = {
+
+            ...createDefaultPlayer(
+                currentUser
+            ),
+
+            name:
+                name,
+
+            age:
+                age
+
+        };
+
+
+        /* ====================================================
+           FIRESTORE
+        ==================================================== */
+
+        if (
+            db &&
+            firestoreReady
+        ) {
+
+            try {
+
+                await db
+                    .collection("players")
+                    .doc(firebaseUser.uid)
+                    .set(
+
+                        {
+
+                            ...currentPlayer,
+
+                            createdAt:
+                                firebase.firestore.FieldValue
+                                    .serverTimestamp()
+
+                        },
+
+                        {
+                            merge:
+                                true
+                        }
+
+                    );
+
+            } catch (error) {
+
+                console.warn(
+                    "Player profile save failed:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        saveLocalCache();
+
+        emit();
+
+
+        return currentPlayer;
 
     }
 
@@ -524,71 +614,63 @@
        LOGIN
     ======================================================== */
 
-    async function loginPlayer(
+    async function login(
         email,
         password
     ) {
 
-        if (!firebaseReady || !auth) {
+        if (
+            !firebaseReady ||
+            !auth
+        ) {
 
             throw new Error(
-                "نظام الحسابات غير متاح حاليًا."
+                "Firebase غير جاهز."
             );
 
         }
 
 
-        try {
-
-            const result =
-                await auth.signInWithEmailAndPassword(
-                    email.trim().toLowerCase(),
-                    password
-                );
-
-
-            const user =
-                result.user;
+        email =
+            String(
+                email || ""
+            )
+                .trim()
+                .toLowerCase();
 
 
-            const player =
-                await createPlayerProfile(
-                    user
-                );
-
-
-            dispatchAuth(
-                true,
-                user,
-                player
+        password =
+            String(
+                password || ""
             );
 
 
-            return {
-
-                success: true,
-
-                user,
-
-                player
-
-            };
-
-        } catch (error) {
-
-            console.error(
-                "Login error:",
-                error
-            );
-
+        if (!email) {
 
             throw new Error(
-                translateError(
-                    error
-                )
+                "اكتب البريد الإلكتروني."
             );
 
         }
+
+
+        if (!password) {
+
+            throw new Error(
+                "اكتب كلمة المرور."
+            );
+
+        }
+
+
+        await auth
+            .signInWithEmailAndPassword(
+                email,
+                password
+            );
+
+
+        return currentPlayer;
 
     }
 
@@ -597,54 +679,39 @@
        LOGOUT
     ======================================================== */
 
-    async function logoutPlayer() {
+    async function logout() {
 
-        if (!auth) {
+        if (
+            auth &&
+            firebaseReady
+        ) {
 
-            return;
-
-        }
-
-
-        await auth.signOut();
-
-
-        dispatchAuth(
-            false,
-            null,
-            null
-        );
-
-    }
-
-
-    /* ========================================================
-       CURRENT PLAYER
-    ======================================================== */
-
-    async function getCurrentPlayer() {
-
-        if (!auth) {
-
-            return null;
+            await auth.signOut();
 
         }
 
 
-        const user =
-            auth.currentUser;
+        currentUser =
+            null;
+
+        currentPlayer =
+            null;
 
 
-        if (!user) {
+        try {
 
-            return null;
+            localStorage.removeItem(
+                LOCAL_KEY
+            );
+
+        } catch (error) {
+
+            console.warn(error);
 
         }
 
 
-        return await createPlayerProfile(
-            user
-        );
+        emit();
 
     }
 
@@ -653,60 +720,46 @@
        UPDATE PLAYER
     ======================================================== */
 
-    async function updatePlayerData(
-        changes
+    async function updatePlayer(
+        patch = {}
     ) {
 
-        const user =
-            auth &&
-            auth.currentUser;
-
-
-        if (!user) {
-
+        if (!currentPlayer)
             return null;
 
-        }
 
+        currentPlayer = {
 
-        let player =
-            await createPlayerProfile(
-                user
-            );
+            ...currentPlayer,
 
-
-        player = {
-
-            ...player,
-
-            ...changes,
-
-            uid:
-                user.uid,
-
-            updatedAt:
-                new Date().toISOString()
+            ...patch
 
         };
 
 
-        saveLocalPlayer(
-            player
-        );
+        saveLocalCache();
 
 
-        if (db) {
+        if (
+            db &&
+            firestoreReady &&
+            currentUser?.uid
+        ) {
 
             try {
 
                 await db
-                    .collection("users")
-                    .doc(user.uid)
+                    .collection("players")
+                    .doc(currentUser.uid)
                     .set(
-                        player,
+
+                        patch,
+
                         {
-                            merge: true
+                            merge:
+                                true
                         }
+
                     );
 
             } catch (error) {
@@ -721,252 +774,77 @@
         }
 
 
-        dispatchAuth(
-            true,
-            user,
-            player
-        );
+        emit();
 
 
-        return player;
+        return currentPlayer;
 
     }
 
 
     /* ========================================================
-       ADD XP
+       GETTERS
     ======================================================== */
 
-    async function addXP(
-        amount = 0
-    ) {
+    function getUser() {
 
-        const player =
-            await getCurrentPlayer();
-
-
-        if (!player) {
-
-            return null;
-
-        }
-
-
-        let xp =
-            Number(player.xp || 0)
-            +
-            Number(amount || 0);
-
-
-        let level =
-            Number(player.level || 1);
-
-
-        while (
-            xp >= level * 100
-        ) {
-
-            xp -= level * 100;
-
-            level++;
-
-        }
-
-
-        return await updatePlayerData({
-
-            xp,
-
-            level
-
-        });
+        return currentUser;
 
     }
 
 
-    /* ========================================================
-       ADD COINS
-    ======================================================== */
+    function getPlayer() {
 
-    async function addCoins(
-        amount = 0
-    ) {
-
-        const player =
-            await getCurrentPlayer();
-
-
-        if (!player) {
-
-            return null;
-
-        }
-
-
-        return await updatePlayerData({
-
-            coins:
-                Number(
-                    player.coins || 0
-                )
-                +
-                Number(amount || 0)
-
-        });
+        return currentPlayer;
 
     }
 
 
-    /* ========================================================
-       AUTH EVENT
-    ======================================================== */
+    function isLoggedIn() {
 
-    function dispatchAuth(
-        loggedIn,
-        user,
-        player
-    ) {
-
-        window.dispatchEvent(
-
-            new CustomEvent(
-                "zivozone-auth",
-                {
-                    detail: {
-
-                        loggedIn,
-
-                        user,
-
-                        player
-
-                    }
-                }
-            )
-
+        return !!(
+            currentUser &&
+            currentPlayer
         );
 
     }
 
 
-    /* ========================================================
-       ERROR TRANSLATOR
-    ======================================================== */
+    function isReady() {
 
-    function translateError(
-        error
-    ) {
+        return authReady;
 
-        if (!error) {
-
-            return "حدث خطأ غير معروف.";
-
-        }
+    }
 
 
-        switch (
-            error.code
-        ) {
+    function isCloudReady() {
 
-            case "auth/email-already-in-use":
+        return firebaseReady;
 
-                return "هذا البريد مستخدم مسبقًا.";
+    }
 
-            case "auth/invalid-email":
 
-                return "البريد الإلكتروني غير صحيح.";
+    function isFirestoreReady() {
 
-            case "auth/weak-password":
-
-                return "كلمة المرور ضعيفة.";
-
-            case "auth/invalid-credential":
-
-                return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-
-            case "auth/user-not-found":
-
-                return "الحساب غير موجود.";
-
-            case "auth/wrong-password":
-
-                return "كلمة المرور غير صحيحة.";
-
-            case "auth/too-many-requests":
-
-                return "محاولات كثيرة. حاول لاحقًا.";
-
-            case "auth/network-request-failed":
-
-                return "تعذر الاتصال بالإنترنت.";
-
-            case "auth/operation-not-allowed":
-
-                return "طريقة التسجيل غير مفعلة في Firebase.";
-
-            default:
-
-                return (
-                    error.message ||
-                    "حدث خطأ أثناء العملية."
-                );
-
-        }
+        return firestoreReady;
 
     }
 
 
     /* ========================================================
-       AUTH STATE
+       INITIALIZATION
     ======================================================== */
 
-    if (auth) {
+    async function init() {
 
-        auth.onAuthStateChanged(
-            async function (user) {
+        loadLocalCache();
 
-                if (user) {
+        await initFirebase();
 
-                    try {
+        authReady =
+            true;
 
-                        const player =
-                            await createPlayerProfile(
-                                user
-                            );
-
-
-                        dispatchAuth(
-                            true,
-                            user,
-                            player
-                        );
-
-                    } catch (error) {
-
-                        console.error(
-                            error
-                        );
-
-                        dispatchAuth(
-                            true,
-                            user,
-                            null
-                        );
-
-                    }
-
-                } else {
-
-                    dispatchAuth(
-                        false,
-                        null,
-                        null
-                    );
-
-                }
-
-            }
-        );
+        emit();
 
     }
 
@@ -977,54 +855,34 @@
 
     window.ZIVOZONE_AUTH = {
 
-        registerPlayer,
+        register,
 
-        loginPlayer,
+        login,
 
-        logoutPlayer,
+        logout,
 
-        getCurrentPlayer,
+        update:
+            updatePlayer,
 
-        updatePlayerData,
+        getUser,
 
-        addXP,
+        getPlayer,
 
-        addCoins
+        isLoggedIn,
 
-    };
+        isReady,
 
+        isCloudReady,
 
-    window.ZIVOZONE_FIREBASE = {
-
-        app:
-            firebaseApp,
-
-        auth,
-
-        db,
-
-        config:
-            firebaseConfig
+        isFirestoreReady
 
     };
 
 
     /* ========================================================
-       READY
+       START
     ======================================================== */
 
-    window.dispatchEvent(
-
-        new CustomEvent(
-            "zivozone-auth-ready"
-        )
-
-    );
-
-
-    console.log(
-        "🚀 ZIVOZONE Authentication Ready"
-    );
-
+    init();
 
 })();
