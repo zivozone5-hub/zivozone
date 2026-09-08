@@ -1,0 +1,43 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Private player profile. The UID is the ownership boundary.
+    match /players/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false;
+
+      match /results/{resultId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null && request.auth.uid == userId;
+        allow update, delete: if false;
+      }
+    }
+
+    // Server-managed content. The current static site uses challenges.js.
+    // These collections are ready for a future admin/backend workflow.
+    match /questions/{questionId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /dailyChallenges/{challengeId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Optional public sports cache, writable only by a trusted backend later.
+    match /sports/{documentId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Everything else is denied.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
