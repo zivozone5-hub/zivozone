@@ -1030,3 +1030,67 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',button);else button();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V30 — PLAYER IDENTITY / PROGRESSION / STATS
+   Additive layer; preserves V29 and previous systems.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v30_identity';
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
+  const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+  const clean=s=>String(s||'لاعب ZIVO').replace(/[<>"'`]/g,'').trim().slice(0,24)||'لاعب ZIVO';
+  const getUser=()=>{try{return window.firebase?.auth?.()?.currentUser||null}catch(e){return null}};
+  const cloud=()=>!!getUser();
+  function get(){
+    const p=window.ZIVOZONE_V26?.profile?.()||{},old=read();
+    return {...old,name:clean(getUser()?.displayName||old.name),level:Number(p.level)||old.level||1,
+      xp:Number(p.xp)||old.xp||0,balance:Number(p.balance)||old.balance||0,games:Number(p.games)||old.games||0,
+      bestScore:Number(p.bestScore)||old.bestScore||0,streak:Number(p.streak)||old.streak||0};
+  }
+  function stats(){
+    const s=read();return s.challengeStats||{};
+  }
+  function record(d){
+    const s=get(), all=stats(), key=String(d.challenge||'general').slice(0,60);
+    const q=all[key]||{games:0,correct:0,total:0,best:0};
+    q.games++;q.correct+=Number(d.correct)||0;q.total+=Number(d.total)||0;q.best=Math.max(q.best,Number(d.score)||0);
+    all[key]=q;s.challengeStats=all;s.name=s.name||'لاعب ZIVO';write(s);
+    try{window.ZIVOZONE_V29?.saveProfile?.()}catch(e){}
+    return q;
+  }
+  function render(){
+    const s=get(),all=stats();
+    const rows=Object.entries(all).sort((a,b)=>b[1].best-a[1].best).slice(0,12);
+    const o=document.getElementById('v30-panel');if(!o)return;
+    o.querySelector('.v30-name').textContent=s.name;
+    o.querySelector('.v30-avatar').textContent=(s.name[0]||'Z').toUpperCase();
+    o.querySelector('.v30-main').innerHTML=[
+      ['LEVEL',s.level],['XP',s.xp],['ZIVO',s.balance],['GAMES',s.games],['BEST',s.bestScore],['STREAK',s.streak]
+    ].map(v=>`<div><span>${v[0]}</span><b>${v[1]}</b></div>`).join('');
+    o.querySelector('.v30-challenges').innerHTML=rows.length?rows.map(([k,v])=>`<div class="v30-line"><b>${clean(k)}</b><span>${v.games} لعب · ${v.correct}/${v.total}</span><strong>${v.best}</strong></div>`).join(''):'ابدأ التحديات لتكوين سجلّك.';
+  }
+  function open(){
+    let o=document.getElementById('v30-panel');
+    if(!o){
+      o=document.createElement('div');o.id='v30-panel';o.className='v30-overlay';
+      o.innerHTML=`<div class="v30-card"><button class="v30-close">×</button>
+        <div class="v30-profile"><div class="v30-avatar">Z</div><div><small>PLAYER IDENTITY</small><h2 class="v30-name">لاعب ZIVO</h2><em>ملف اللاعب</em></div></div>
+        <div class="v30-main"></div>
+        <h3>سجل التحديات</h3><div class="v30-challenges"></div>
+        <p class="v30-note">هذا السجل يجمع أداءك حسب نوع التحدي. بيانات الترتيب والمكافآت النهائية تعتمد على Firebase وقواعد الأمان.</p>
+      </div>`;
+      document.body.appendChild(o);o.querySelector('.v30-close').onclick=()=>o.classList.remove('open');
+    }
+    o.classList.add('open');render();
+  }
+  function mount(){
+    if(document.getElementById('v30-open'))return;
+    const b=document.createElement('button');b.id='v30-open';b.textContent='👤 ملفي';b.onclick=open;document.body.appendChild(b);
+  }
+  window.ZIVOZONE_V30={get,stats,record,open,render};
+  window.addEventListener('zivozone-progress',e=>record(e.detail||{}));
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
