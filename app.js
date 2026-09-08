@@ -261,3 +261,44 @@
   window.ZIVOZONE_PLAYER={get:getPlayer,save:savePlayer,recalc:recalcLevel,addProgress:addPlayerProgress,open:openPlayerProfile,isDailyAvailable,markDailyDone};
 
 })();
+
+
+/* ============================================================
+   V18 — CHALLENGE ROTATION + ANTI-REPEAT + ANSWER TYPES
+============================================================ */
+(function(){
+  const USED_KEY='zivozone_used_questions_v18';
+  function used(){
+    try{return JSON.parse(localStorage.getItem(USED_KEY)||'[]')}catch(e){return []}
+  }
+  function saveUsed(arr){localStorage.setItem(USED_KEY,JSON.stringify(arr.slice(-500)))}
+  function rememberQuestions(list){
+    const u=used(),set=new Set(u);
+    list.forEach(q=>{if(q?.id&&!set.has(q.id)){u.push(q.id);set.add(q.id)}});
+    saveUsed(u);
+  }
+  function expandedBank(id){
+    if(!window.ZIVOZONE_V18?.get)return null;
+    return window.ZIVOZONE_V18.get(id);
+  }
+  window.ZIVOZONE_V18_ENGINE={
+    used,saveUsed,rememberQuestions,expandedBank,
+    nextRun:function(id){
+      const b=expandedBank(id);if(!b)return null;
+      const fresh=b.questions.filter(q=>!used().includes(q.id));
+      const source=fresh.length>=10?fresh:b.questions.slice().sort(()=>Math.random()-.5);
+      const run=Object.assign({},b,{questions:source.slice(0,10).sort((x,y)=>x.difficulty-y.difficulty)});
+      rememberQuestions(run.questions);
+      return run;
+    },
+    clearHistory:function(){saveUsed([])}
+  };
+})();
+
+(function(){
+  window.ZIVOZONE_V18_CATALOG=[
+    {id:'logic',label:'Logic Lab',icon:'🧠'},
+    {id:'pattern',label:'Pattern Break',icon:'🔷'},
+    {id:'focus',label:'Focus Trap',icon:'🎯'}
+  ];
+})();

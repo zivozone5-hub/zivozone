@@ -211,3 +211,11 @@ body.horror-active{background:#020207!important}.horror-active .topbar,.horror-a
 .zivo-skill-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}.zivo-skill-grid div{display:flex;flex-direction:column;gap:3px;padding:10px;border-radius:14px;background:rgba(255,255,255,.025)}.zivo-skill-grid span{font-size:.68rem;color:#8e96b5}
 .zivo-history{margin-top:16px}.zivo-history-row{display:grid;grid-template-columns:1fr 60px 70px 90px;gap:8px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06)}
 @media(max-width:700px){.zivo-skill-grid{grid-template-columns:repeat(2,1fr)}.zivo-history-row{grid-template-columns:1fr 50px 60px}.zivo-history-row small{display:none}}
+
+/* ============================================================
+   V18 — CHALLENGE TYPE PRESENTATION
+============================================================ */
+.v18-type-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;border:1px solid rgba(124,108,255,.22);background:rgba(124,108,255,.08);font-size:.76rem}
+.v18-difficulty{display:flex;gap:4px;align-items:center}
+.v18-difficulty i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.12)}
+.v18-difficulty i.on{background:#7c6cff;box-shadow:0 0 9px rgba(124,108,255,.55)}

@@ -167,3 +167,83 @@
   window.ZIVOZONE_CHALLENGES.get=id=>bank[id]||null;
   window.ZIVOZONE_CHALLENGES.getAll=()=>Object.values(bank).filter(x=>x&&!x.special);
 })();
+
+/* ============================================================
+   V18 — EXPANDED CHALLENGE BANK
+   10-question runs, escalating 1→10.
+   Types: sequence, numeric, text, pattern, logic, odd-one-out.
+   Existing challenge banks above are preserved.
+============================================================ */
+window.ZIVOZONE_V18_BANK = {
+  logic: {
+    id:"logic_v18", title:"Logic Lab", icon:"🧠", special:false,
+    questions:[
+      {id:"logic18_01",type:"numeric",difficulty:1,q:"أكمل: 2، 4، 6، 8، ؟",answer:"10"},
+      {id:"logic18_02",type:"numeric",difficulty:2,q:"أكمل: 3، 6، 12، 24، ؟",answer:"48"},
+      {id:"logic18_03",type:"text",difficulty:3,q:"أي كلمة لا تنتمي: تفاحة، برتقالة، موزة، كرسي؟",answer:"كرسي"},
+      {id:"logic18_04",type:"numeric",difficulty:4,q:"إذا كان 5 + 3 = 16 و 4 + 2 = 12 وفق قاعدة ثابتة، فما 6 + 2؟",answer:"16"},
+      {id:"logic18_05",type:"numeric",difficulty:5,q:"أكمل: 1، 4، 9، 16، 25، ؟",answer:"36"},
+      {id:"logic18_06",type:"numeric",difficulty:6,q:"عدد إذا ضربته في نفسه ثم أضفت 6 حصلت على 42. ما العدد الموجب؟",answer:"6"},
+      {id:"logic18_07",type:"text",difficulty:7,q:"لديك 3 مفاتيح خارج غرفة و3 مصابيح داخلها. يمكنك دخول الغرفة مرة واحدة فقط. كيف تعرف أي مفتاح لأي مصباح؟ اكتب الفكرة المختصرة.",answer:"تشغيل مفتاح ثم إطفاؤه وتشغيل الثاني ثم الدخول وفحص الضوء والحرارة"},
+      {id:"logic18_08",type:"numeric",difficulty:8,q:"أكمل: 2، 3، 5، 8، 13، 21، ؟",answer:"34"},
+      {id:"logic18_09",type:"text",difficulty:9,q:"رجل ينظر إلى صورة ويقول: ليس لي أخ أو أخت، لكن والد هذا الرجل هو ابن أبي. من في الصورة؟",answer:"ابنه"},
+      {id:"logic18_10",type:"numeric",difficulty:10,q:"لديك 8 كرات متشابهة، واحدة أثقل. بميزان كفتين ووزنتين فقط، كيف تعثر عليها؟ اكتب الخطوات.",answer:"3 مقابل 3 ثم وزن كرة مقابل كرة من المجموعة الأثقل أو المتبقية"}
+    ]
+  },
+  pattern: {
+    id:"pattern_v18", title:"Pattern Break", icon:"🔷", special:false,
+    questions:[
+      {id:"pattern18_01",type:"sequence",difficulty:1,q:"أكمل النمط: A B A B A ؟",answer:"B"},
+      {id:"pattern18_02",type:"sequence",difficulty:2,q:"أكمل: 10، 20، 30، 40، ؟",answer:"50"},
+      {id:"pattern18_03",type:"sequence",difficulty:3,q:"أكمل: 1، 2، 4، 7، 11، ؟",answer:"16"},
+      {id:"pattern18_04",type:"sequence",difficulty:4,q:"أكمل: 81، 27، 9، 3، ؟",answer:"1"},
+      {id:"pattern18_05",type:"sequence",difficulty:5,q:"أكمل: 2، 6، 12، 20، 30، ؟",answer:"42"},
+      {id:"pattern18_06",type:"sequence",difficulty:6,q:"أكمل: 1، 1، 2، 3، 5، 8، ؟",answer:"13"},
+      {id:"pattern18_07",type:"sequence",difficulty:7,q:"أكمل: 100، 96، 88، 76، 60، ؟",answer:"40"},
+      {id:"pattern18_08",type:"sequence",difficulty:8,q:"أكمل: 3، 8، 15، 24، 35، ؟",answer:"48"},
+      {id:"pattern18_09",type:"sequence",difficulty:9,q:"أكمل: 1، 3، 6، 10، 15، 21، ؟",answer:"28"},
+      {id:"pattern18_10",type:"sequence",difficulty:10,q:"أكمل: 2، 5، 11، 23، 47، ؟",answer:"95"}
+    ]
+  },
+  focus: {
+    id:"focus_v18", title:"Focus Trap", icon:"🎯", special:false,
+    questions:[
+      {id:"focus18_01",type:"text",difficulty:1,q:"اكتب الكلمة الثالثة فقط: أحمر — أزرق — أخضر — أصفر",answer:"أخضر"},
+      {id:"focus18_02",type:"text",difficulty:2,q:"كم مرة يظهر حرف الألف في: باب؟",answer:"1"},
+      {id:"focus18_03",type:"numeric",difficulty:3,q:"من الأرقام 7، 2، 9، 4 اكتب الأصغر.",answer:"2"},
+      {id:"focus18_04",type:"text",difficulty:4,q:"اكتب آخر كلمة: قمر، شمس، نجمة، بحر",answer:"بحر"},
+      {id:"focus18_05",type:"numeric",difficulty:5,q:"ما الرقم الذي لا ينتمي: 2، 4، 8، 15، 16؟",answer:"15"},
+      {id:"focus18_06",type:"text",difficulty:6,q:"أي كلمة مختلفة: كتاب، قلم، دفتر، تفاحة؟",answer:"تفاحة"},
+      {id:"focus18_07",type:"numeric",difficulty:7,q:"إذا طلبت منك تجاهل الرقم 7 واختيار أكبر رقم من 3، 9، 5، 8، ما إجابتك؟",answer:"9"},
+      {id:"focus18_08",type:"text",difficulty:8,q:"اقرأ بدقة: واحد، اثنان، أربعة، ثلاثة. ما الكلمة التي تخالف الترتيب الطبيعي؟",answer:"أربعة"},
+      {id:"focus18_09",type:"numeric",difficulty:9,q:"ما العدد المختلف: 12، 18، 24، 31، 36؟",answer:"31"},
+      {id:"focus18_10",type:"text",difficulty:10,q:"اكتب فقط أول حرف من كلمة «انتباه».",answer:"ا"}
+    ]
+  }
+};
+
+window.ZIVOZONE_V18 = {
+  version:18,
+  banks:window.ZIVOZONE_V18_BANK,
+  normalize:function(v){
+    return String(v??"").trim().toLowerCase()
+      .replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه")
+      .replace(/[،,؛;]/g," ").replace(/\s+/g," ");
+  },
+  get:function(id){
+    const b=this.banks[id]; if(!b)return null;
+    return JSON.parse(JSON.stringify(b));
+  },
+  all:function(){return Object.values(this.banks).map(x=>JSON.parse(JSON.stringify(x)))},
+  scoreAnswer:function(question,value){
+    const a=this.normalize(question.answer),v=this.normalize(value);
+    return a===v || (question.alternatives||[]).some(x=>this.normalize(x)===v);
+  },
+  makeRun:function(id,used){
+    const b=this.get(id); if(!b)return null;
+    const seen=new Set(used||[]);
+    const fresh=b.questions.filter(q=>!seen.has(q.id));
+    const pool=(fresh.length>=10?fresh:b.questions.slice()).sort(()=>Math.random()-.5);
+    return Object.assign({},b,{questions:pool.slice(0,10).sort((a,b)=>a.difficulty-b.difficulty)});
+  }
+};
