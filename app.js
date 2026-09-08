@@ -1094,3 +1094,71 @@
   window.addEventListener('zivozone-progress',e=>record(e.detail||{}));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V31 — ACHIEVEMENTS / BADGES / SHAREABLE PLAYER CARD
+   Additive layer. Existing systems remain untouched.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v31_achievements';
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
+  const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+  const p=()=>window.ZIVOZONE_V30?.get?.()||window.ZIVOZONE_V26?.profile?.()||{};
+  const defs=[
+    ['first_step','FIRST STEP','أول تحدي','🎯',s=>s.games>=1],
+    ['speed','10 SECONDS','أجبت قبل انتهاء الوقت','⚡',s=>s.challengeStats&&Object.values(s.challengeStats).some(v=>v.games>0)],
+    ['ten_games','TEN RUNS','10 ألعاب مكتملة','🔥',s=>s.games>=10],
+    ['perfect','PERFECT RUN','نتيجة كاملة في تحدٍ','💎',s=>s.bestScore>=100],
+    ['streak','STREAK','بنيت سلسلة لعب','🔗',s=>s.streak>=3],
+    ['veteran','VETERAN','25 لعبة مكتملة','🏆',s=>s.games>=25],
+    ['dark','DARK SURVIVOR','دخلت الغرفة المظلمة','🌑',s=>Object.keys(s.challengeStats||{}).some(k=>/horror|dark|رعب|مظلم/i.test(k))]
+  ];
+  function state(){
+    const old=read(),s=p(),unlocked=old.unlocked||[];
+    const now=defs.filter(d=>d[4](s)).map(d=>d[0]);
+    now.forEach(id=>{if(!unlocked.includes(id))unlocked.push(id)});
+    const out={unlocked,updatedAt:Date.now()};write(out);return out;
+  }
+  function card(){
+    const s=p(),a=state(),o=document.getElementById('v31-achievements');if(!o)return;
+    o.querySelector('.v31-count').textContent=`${a.unlocked.length}/${defs.length}`;
+    o.querySelector('.v31-list').innerHTML=defs.map(d=>{
+      const on=a.unlocked.includes(d[0]);
+      return `<div class="v31-badge ${on?'on':'off'}"><i>${d[3]}</i><div><b>${d[1]}</b><span>${d[2]}</span></div><strong>${on?'✓':'?'}</strong></div>`;
+    }).join('');
+    o.querySelector('.v31-level').textContent=s.level||1;
+  }
+  function open(){
+    let o=document.getElementById('v31-achievements');
+    if(!o){
+      o=document.createElement('div');o.id='v31-achievements';o.className='v31-overlay';
+      o.innerHTML=`<div class="v31-card"><button class="v31-close">×</button>
+       <div class="v31-head"><div class="v31-emblem">Z</div><div><small>ACHIEVEMENT SYSTEM</small><h2>إنجازات اللاعب</h2><span>المستوى <b class="v31-level">1</b> · <b class="v31-count">0/7</b></span></div></div>
+       <div class="v31-list"></div>
+       <button class="v31-share">شارك بطاقة اللاعب</button>
+      </div>`;
+      document.body.appendChild(o);
+      o.querySelector('.v31-close').onclick=()=>o.classList.remove('open');
+      o.querySelector('.v31-share').onclick=share;
+    }
+    o.classList.add('open');card();
+  }
+  async function share(){
+    const s=p(),a=state();
+    const text=`ZIVOZONE — ${s.name||'لاعب ZIVO'} | Level ${s.level||1} | XP ${s.xp||0} | ZIVO ${s.balance||0} | Best ${s.bestScore||0} | Achievements ${a.unlocked.length}/${defs.length}`;
+    try{
+      if(navigator.share){await navigator.share({title:'ZIVOZONE Player Card',text});return}
+      await navigator.clipboard.writeText(text);
+      alert('تم نسخ بطاقة اللاعب للمشاركة');
+    }catch(e){}
+  }
+  function mount(){
+    if(document.getElementById('v31-open'))return;
+    const b=document.createElement('button');b.id='v31-open';b.textContent='🏅 إنجازاتي';b.onclick=open;document.body.appendChild(b);
+  }
+  window.ZIVOZONE_V31={state,open,share};
+  window.addEventListener('zivozone-progress',()=>{state()});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
