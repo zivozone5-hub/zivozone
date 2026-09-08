@@ -95,5 +95,16 @@ window.ZIVOZONE_SECURITY={appCheckSiteKey:''};
 <script src="ads.js"></script>
 <script src="auth.js"></script>
 <script src="app.js"></script>
+
+<script>
+document.addEventListener('click',function(e){
+  const b=e.target.closest('[data-challenge],[data-game]');
+  if(!b||!window.ZIVOZONE_V20)return;
+  const id=b.dataset.challenge||b.dataset.game;
+  if(id==='horror'||window.ZIVOZONE_V20.findBanks().some(x=>x.id===id||x.id?.startsWith(id+'_v18'))){
+    e.preventDefault();e.stopImmediatePropagation();window.ZIVOZONE_V20.start(id);
+  }
+},true);
+</script>
 </body>
 </html>

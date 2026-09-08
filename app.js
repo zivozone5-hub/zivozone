@@ -432,3 +432,118 @@
   window.ZIVOZONE_DARKROOM_V19={start,stop,next,isActive:()=>state.active,whisper,update};
   ensureUI(); bindChallengeEvents();
 })();
+
+
+/* ============================================================
+   V20 — REAL CHALLENGE CENTER
+   Connects existing banks to a unified playable runner.
+   Existing Firebase/auth/previous systems remain untouched.
+============================================================ */
+(function(){
+  const USED='zivozone_v20_played_questions';
+  const $=(s,r=document)=>r.querySelector(s);
+  const escV20=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const norm=x=>String(x??'').trim().toLowerCase().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[،,؛;]/g,' ').replace(/\s+/g,' ');
+
+  function readUsed(){try{return JSON.parse(localStorage.getItem(USED)||'[]')}catch(e){return[]}}
+  function writeUsed(v){localStorage.setItem(USED,JSON.stringify(v.slice(-1000)))}
+  function mark(list){
+    const u=readUsed(),set=new Set(u);
+    list.forEach(q=>{if(q?.id&&!set.has(q.id)){u.push(q.id);set.add(q.id)}});writeUsed(u);
+  }
+  function findBanks(){
+    const out=[];
+    if(window.ZIVOZONE_CHALLENGES){
+      Object.keys(window.ZIVOZONE_CHALLENGES).forEach(k=>{
+        const b=window.ZIVOZONE_CHALLENGES[k];
+        if(b&&Array.isArray(b.questions)&&!b.special) out.push(b);
+      });
+    }
+    if(window.ZIVOZONE_V18_BANK) Object.values(window.ZIVOZONE_V18_BANK).forEach(b=>out.push(b));
+    const seen=new Set();
+    return out.filter(b=>b?.id&&!seen.has(b.id)&&seen.add(b.id));
+  }
+  function pick(id){
+    const banks=findBanks(), b=banks.find(x=>x.id===id)||banks.find(x=>x.id?.startsWith(id+'_v18'))||banks[0];
+    if(!b)return null;
+    const used=new Set(readUsed());
+    let fresh=b.questions.filter(q=>q?.id&&!used.has(q.id));
+    if(fresh.length<Math.min(10,b.questions.length)) fresh=b.questions.slice();
+    const run=fresh.slice().sort(()=>Math.random()-.5).slice(0,10).sort((x,y)=>(x.difficulty||0)-(y.difficulty||0));
+    mark(run);
+    return {id:b.id,title:b.title||b.name||'Challenge',icon:b.icon||'🧠',questions:run};
+  }
+  function ensureMount(){
+    let m=$('#zivo-v20-runner');
+    if(m)return m;
+    m=document.createElement('div');m.id='zivo-v20-runner';m.className='zivo-v20-runner';
+    document.body.appendChild(m);return m;
+  }
+  function answer(question,value){
+    if(window.ZIVOZONE_V18?.scoreAnswer) return window.ZIVOZONE_V18.scoreAnswer(question,value);
+    const a=norm(question.answer),v=norm(value);
+    return a===v || (question.alternatives||[]).some(x=>norm(x)===v);
+  }
+  function start(id){
+    const run=pick(id); if(!run)return;
+    const mount=ensureMount();
+    let i=0,score=0,streak=0,best=0,timed=0,startAt=0,timer=null;
+    let locked=false;
+    function cleanup(){clearInterval(timer);timer=null}
+    function close(){
+      cleanup();mount.classList.remove('active');document.body.classList.remove('v20-playing');
+      if(window.ZIVOZONE_DARKROOM_V19?.isActive())window.ZIVOZONE_DARKROOM_V19.stop();
+    }
+    function render(){
+      const q=run.questions[i]; if(!q){finish();return}
+      locked=false;startAt=performance.now();
+      const phase=q.difficulty>=8?'EXTREME':q.difficulty>=6?'HARD':q.difficulty>=4?'MEDIUM':'EASY';
+      mount.innerHTML=`<div class="v20-shell">
+        <div class="v20-head"><button class="v20-exit">خروج</button><span>${escV20(run.icon)} ${escV20(run.title)}</span><b>${i+1}/10</b></div>
+        <div class="v20-progress"><i style="width:${((i)/10)*100}%"></i></div>
+        <div class="v20-meta"><span>${phase}</span><strong id="v20-timer">10</strong></div>
+        <article class="v20-question"><div class="v20-qnum">QUESTION ${String(i+1).padStart(2,'0')}</div><h2>${escV20(q.q||q.question||'')}</h2>
+        <div class="v20-answer-area">${answerArea(q)}</div></article>
+        <div class="v20-live"><span>🔥 ${streak}</span><span>🏆 ${score}</span></div>
+      </div>`;
+      $('.v20-exit',mount).onclick=close;
+      const form=$('.v20-form',mount);
+      form?.addEventListener('submit',e=>{e.preventDefault();submit(form,q)});
+      const opts=mount.querySelectorAll('.v20-option');
+      opts.forEach(o=>o.onclick=()=>submit({value:o.dataset.value},q));
+      cleanup();let left=10;
+      timer=setInterval(()=>{left--;const t=$('#v20-timer');if(t)t.textContent=left;
+        if(left<=0){timed++;streak=0;locked=true;beep();setTimeout(()=>{i++;render()},250)}
+      },1000);
+    }
+    function beep(){
+      try{const C=window.AudioContext||window.webkitAudioContext,c=new C(),o=c.createOscillator(),g=c.createGain();o.frequency.value=180;o.type='triangle';g.gain.value=.035;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.12);setTimeout(()=>c.close(),250)}catch(e){}
+    }
+    function answerArea(q){
+      const choices=q.options||q.choices||q.answers;
+      if(Array.isArray(choices)&&choices.length) return `<div class="v20-options">${choices.map(x=>`<button type="button" class="v20-option" data-value="${escV20(x)}">${escV20(x)}</button>`).join('')}</div>`;
+      return `<form class="v20-form"><input autocomplete="off" placeholder="اكتب إجابتك هنا" aria-label="الإجابة"><button type="submit">إجابة</button></form>`;
+    }
+    function submit(form,q){
+      if(locked)return;locked=true;cleanup();
+      const value=form?.value!==undefined?form.value:form?.querySelector('input')?.value;
+      const ok=answer(q,value);const elapsed=(performance.now()-startAt)/1000;
+      if(ok){score+=Math.max(10,50+Math.round((10-Math.min(10,elapsed))*5)+(q.difficulty||1)*5);streak++;best=Math.max(best,streak)}
+      else streak=0;
+      setTimeout(()=>{i++;render()},300);
+    }
+    function finish(){
+      cleanup();
+      if(window.ZIVOZONE_PLAYER?.addProgress){
+        window.ZIVOZONE_PLAYER.addProgress({id:run.id,score,bestStreak:best,timedOut:timed,questions:run.questions.length,speedScore:Math.max(0,100-timed*8)});
+      }
+      mount.innerHTML=`<div class="v20-result"><div class="v20-result-icon">✓</div><h2>انتهت الجولة</h2><div class="v20-result-score">${score}</div><p>أفضل سلسلة: ${best} &nbsp; • &nbsp; انتهى وقت: ${timed}</p><div><button class="v20-again">جولة جديدة</button><button class="v20-exit">خروج</button></div></div>`;
+      $('.v20-again',mount).onclick=()=>start(run.id);
+      $('.v20-exit',mount).onclick=close;
+    }
+    mount.classList.add('active');document.body.classList.add('v20-playing');
+    if(id==='horror'&&window.ZIVOZONE_DARKROOM_V19)window.ZIVOZONE_DARKROOM_V19.start();
+    render();
+  }
+  window.ZIVOZONE_V20={start,findBanks,pick,clearHistory:()=>writeUsed([])};
+})();
