@@ -926,3 +926,107 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',button);else button();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V29 — SECURE PLAYER DATA + LEADERBOARD CORE
+   Additive. Existing Firebase initialization is never replaced.
+============================================================ */
+(function(){
+  'use strict';
+  const LOCAL='zivozone_v29_profile';
+  const read=()=>{try{return JSON.parse(localStorage.getItem(LOCAL)||'{}')}catch(e){return{}}};
+  const write=v=>{try{localStorage.setItem(LOCAL,JSON.stringify(v))}catch(e){}};
+  const user=()=>{try{return window.firebase?.auth?.()?.currentUser||null}catch(e){return null}};
+  const cloud=()=>!!(window.firebase?.auth&&window.firebase?.firestore&&user());
+  const profile=()=>window.ZIVOZONE_V26?.profile?.()||window.ZIVOZONE_V27?.snapshot?.()||{};
+  const sanitizeName=n=>String(n||'لاعب ZIVO').replace(/[<>"'`]/g,'').trim().slice(0,24)||'لاعب ZIVO';
+
+  async function saveProfile(){
+    if(!cloud()) return false;
+    const u=user(),p=profile(),name=sanitizeName(u.displayName||read().name);
+    try{
+      const db=window.firebase.firestore();
+      await db.collection('players').doc(u.uid).set({
+        uid:u.uid,
+        displayName:name,
+        level:Number(p.level)||1,
+        xp:Number(p.xp)||0,
+        games:Number(p.games)||0,
+        bestScore:Number(p.bestScore)||0,
+        streak:Number(p.streak)||1,
+        updatedAt:new Date().toISOString()
+      },{merge:true});
+      return true;
+    }catch(e){return false}
+  }
+
+  async function submitScore(score,challenge){
+    const n=Math.max(0,Math.min(100,Number(score)||0));
+    if(!cloud()) return false;
+    const u=user();
+    try{
+      const db=window.firebase.firestore();
+      // Store an immutable-ish attempt record. Trust-sensitive reward
+      // calculations must be performed server-side later.
+      await db.collection('players').doc(u.uid).collection('attempts').add({
+        challenge:String(challenge||'unknown').slice(0,80),
+        score:n,
+        createdAt:new Date().toISOString()
+      });
+      return true;
+    }catch(e){return false}
+  }
+
+  async function leaderboard(limit=20){
+    if(!cloud()) return [];
+    try{
+      const db=window.firebase.firestore();
+      const snap=await db.collection('players').orderBy('bestScore','desc').limit(Math.min(50,Math.max(1,limit))).get();
+      return snap.docs.map((d,i)=>({rank:i+1,...d.data(),displayName:sanitizeName(d.data().displayName)}));
+    }catch(e){return []}
+  }
+
+  window.ZIVOZONE_V29={cloud,saveProfile,submitScore,leaderboard,sanitizeName};
+  window.addEventListener('zivozone-progress',e=>{
+    const d=e.detail||{};
+    saveProfile();
+    if(d.score!=null)submitScore(d.score,d.challenge);
+  });
+  setTimeout(saveProfile,1800);
+})();
+
+
+/* ============================================================
+   V29 — GLOBAL LEADERBOARD PANEL
+============================================================ */
+(function(){
+  function open(){
+    let o=document.getElementById('v29-board');
+    if(!o){
+      o=document.createElement('div');o.id='v29-board';o.className='v29-overlay';
+      o.innerHTML=`<div class="v29-card"><button class="v29-close">×</button>
+      <div class="v29-title"><div class="v29-z">Z</div><div><small>GLOBAL RANK</small><h2>المتصدرون</h2></div></div>
+      <div id="v29-status" class="v29-status">جاري تحميل الترتيب...</div>
+      <div id="v29-list" class="v29-list"></div>
+      <p class="v29-note">يظهر الترتيب العالمي عندما يكون اللاعب مسجلًا وFirestore متاحًا. النتائج الموثوقة يجب أن تخضع لقواعد Firebase والتحقق من الخادم.</p>
+      </div>`;
+      document.body.appendChild(o);o.querySelector('.v29-close').onclick=()=>o.classList.remove('open');
+    }
+    o.classList.add('open');load();
+  }
+  async function load(){
+    const s=document.getElementById('v29-status'),l=document.getElementById('v29-list');
+    if(!s||!l)return;
+    if(!window.ZIVOZONE_V29?.cloud?.()){s.textContent='سجّل الدخول لعرض الترتيب العالمي';l.innerHTML='';return}
+    const rows=await window.ZIVOZONE_V29.leaderboard(20);
+    if(!rows.length){s.textContent='لا توجد نتائج سحابية بعد';l.innerHTML='';return}
+    s.textContent='أفضل النتائج · ZIVOZONE';
+    l.innerHTML=rows.map(r=>`<div class="v29-row"><span>#${r.rank}</span><b>${window.ZIVOZONE_V29.sanitizeName(r.displayName)}</b><strong>${Number(r.bestScore)||0}</strong></div>`).join('');
+  }
+  function button(){
+    if(document.getElementById('v29-open'))return;
+    const b=document.createElement('button');b.id='v29-open';b.textContent='🏆 المتصدرون';b.onclick=open;document.body.appendChild(b);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',button);else button();
+})();
