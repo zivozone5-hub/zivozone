@@ -423,11 +423,9 @@
     window.dispatchEvent(new CustomEvent('zivo:darkroom-stopped'));
   }
   function bindChallengeEvents(){
-    document.addEventListener('click',e=>{
-      if(!state.active)return;
-      const t=e.target.closest('button,[role="button"],.option,.answer-option');
-      if(t && !t.classList.contains('z19-exit')) setTimeout(next,120);
-    },true);
+    /* V21.2: the main ZIVOZONE horror runner owns question progression.
+       The old delegated click listener caused a single answer to advance
+       twice. Dark Room remains visual/audio/narrative only. */
   }
   window.ZIVOZONE_DARKROOM_V19={start,stop,next,isActive:()=>state.active,whisper,update};
   ensureUI(); bindChallengeEvents();
