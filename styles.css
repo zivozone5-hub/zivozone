@@ -285,3 +285,14 @@ body.zivo-dark-active{overflow:hidden}
 @keyframes z24-in{from{opacity:0;transform:translateY(-12px) scale(.98)}to{opacity:1;transform:none}}
 @keyframes z24-spin{to{transform:rotateY(360deg)}}
 @media(max-width:600px){.zivo-v24-banner{right:10px;top:70px;width:calc(100vw - 20px)}.v24-result-grid{grid-template-columns:1fr 1fr}}
+
+/* ============================================================
+   V25 — ZIVO ECONOMY
+============================================================ */
+#z25-wallet-btn{position:fixed;right:18px;bottom:18px;z-index:9400;display:flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid rgba(255,255,255,.12);border-radius:15px;background:rgba(7,8,14,.86);color:#fff;cursor:pointer;backdrop-filter:blur(14px);box-shadow:0 12px 38px rgba(0,0,0,.35)}
+#z25-wallet-btn small{display:block;font-size:7px;letter-spacing:1.5px;color:#7e859b}#z25-wallet-btn b{display:block;font-size:13px}
+.z25-mini,.z25-round{display:grid;place-items:center;border-radius:50%;font-weight:1000;color:#fff;background:radial-gradient(circle at 35% 30%,#c0c8ff,#45416e 58%,#111);border:1px solid rgba(255,255,255,.45)}
+.z25-mini{width:29px;height:29px;font-size:14px}.z25-round{width:55px;height:55px;font-size:27px}
+.z25-panel{position:fixed;right:18px;bottom:72px;z-index:9450;width:min(370px,calc(100vw - 36px));padding:18px;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:rgba(6,7,13,.95);backdrop-filter:blur(20px);box-shadow:0 25px 90px rgba(0,0,0,.55);color:#fff;opacity:0;pointer-events:none;transform:translateY(12px);transition:.25s}
+.z25-panel.open{opacity:1;pointer-events:auto;transform:none}.z25-close{position:absolute;right:12px;top:10px;border:0;background:none;color:#8c93a8;font-size:21px;cursor:pointer}.z25-head{display:flex;align-items:center;gap:11px}.z25-head small{font-size:8px;letter-spacing:2px;color:#7d8499}.z25-head h3{margin:3px 0 0;font-size:18px}.z25-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:16px 0}.z25-stats div{padding:10px;border-radius:12px;background:rgba(255,255,255,.04);text-align:center}.z25-stats span{display:block;font-size:8px;color:#81889e}.z25-stats b{display:block;margin-top:4px;font-size:17px}.z25-missions{display:grid;gap:7px}.z25-missions div{display:flex;justify-content:space-between;padding:11px 12px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(255,255,255,.025);font-size:11px}.z25-missions span{color:#b6bcff}.z25-note{margin:14px 0 0;color:#70778d;font-size:9px;line-height:1.6}
+@media(max-width:600px){#z25-wallet-btn{right:8px;bottom:8px}.z25-panel{right:8px;bottom:60px;width:calc(100vw - 16px)}}
