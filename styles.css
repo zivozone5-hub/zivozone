@@ -104,3 +104,24 @@ body.horror-active{background:#020207!important}.horror-active .topbar,.horror-a
 @keyframes zOrbit{0%{transform:perspective(700px) rotateY(0deg) rotateX(8deg)}50%{transform:perspective(700px) rotateY(180deg) rotateX(-8deg)}100%{transform:perspective(700px) rotateY(360deg) rotateX(8deg)}}
 @media(max-width:900px){.challenge-layout{grid-template-columns:1fr}.ad-rail{position:relative;top:auto;order:2;min-height:0}.ad-rail .ad-inner{min-height:120px}.challenge-main{order:1}}
 @media(prefers-reduced-motion:reduce){.brand-mark,.hero-orb span,.loader-logo,.horror-modal.phase-3 .modal-card,.warden{animation:none}}
+
+
+/* ============================================================
+   V12 — ZIVO ORBIT + MULTI AD SLOTS + DARK ROOM FINISH
+============================================================ */
+.hero-orb{position:relative;isolation:isolate;overflow:visible}
+.hero-orb>span:first-child{position:relative;z-index:4;display:grid;place-items:center;text-shadow:0 0 30px rgba(130,70,255,.75),0 0 70px rgba(30,220,255,.22)}
+.z-orbit{position:absolute;left:50%;top:50%;width:260px;height:260px;margin:-130px 0 0 -130px;border:1px solid rgba(124,60,255,.18);border-radius:50%;display:flex;align-items:flex-start;justify-content:center;padding-top:5px;font-size:9px;letter-spacing:.28em;white-space:nowrap;color:rgba(210,220,255,.72);text-shadow:0 0 12px rgba(124,60,255,.65);pointer-events:none;transform-style:preserve-3d}
+.orbit-a{animation:orbitA 12s linear infinite}
+.orbit-b{width:310px;height:310px;margin:-155px 0 0 -155px;color:rgba(85,230,255,.58);border-color:rgba(85,230,255,.13);animation:orbitB 18s linear infinite reverse}
+.orbit-c{width:360px;height:360px;margin:-180px 0 0 -180px;color:rgba(255,95,125,.48);border-color:rgba(255,95,125,.1);animation:orbitC 24s linear infinite}
+@keyframes orbitA{from{transform:rotateX(68deg) rotateZ(0deg)}to{transform:rotateX(68deg) rotateZ(360deg)}}
+@keyframes orbitB{from{transform:rotateX(72deg) rotateY(16deg) rotateZ(0deg)}to{transform:rotateX(72deg) rotateY(16deg) rotateZ(360deg)}}
+@keyframes orbitC{from{transform:rotateX(76deg) rotateY(-14deg) rotateZ(360deg)}to{transform:rotateX(76deg) rotateY(-14deg) rotateZ(0deg)}}
+.ad-slot{transition:opacity .25s ease,transform .25s ease}.ad-slot[hidden]{display:none!important}.ad-slot[data-density="low"]{min-height:70px}.ad-slot[data-density="normal"]{min-height:100px}.ad-slot[data-density="high"]{min-height:140px}
+.ad-slot-inline{margin:0 0 18px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:14px 18px;border:1px dashed rgba(255,255,255,.1);border-radius:16px;background:linear-gradient(90deg,rgba(255,255,255,.025),rgba(124,60,255,.045),rgba(255,255,255,.025));color:rgba(220,225,240,.7)}
+.ad-slot-compact{margin-top:18px;min-height:70px!important}.ad-slot-wide{max-width:1180px;margin:0 auto 20px;display:flex;justify-content:center;align-items:center;gap:12px;padding:10px 18px;border:1px dashed rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.018);font-size:.82rem;color:rgba(220,225,240,.6)}
+.ad-rail.ad-slot{min-height:250px}
+.horror-checkpoint .modal-actions .btn,.save-call~.modal-actions .btn{min-width:150px}
+@media(max-width:700px){.z-orbit{width:210px;height:210px;margin:-105px 0 0 -105px;font-size:7px}.orbit-b{width:250px;height:250px;margin:-125px 0 0 -125px}.orbit-c{width:290px;height:290px;margin:-145px 0 0 -145px}.ad-slot-wide{margin-left:14px;margin-right:14px}}
+@media(prefers-reduced-motion:reduce){.orbit-a,.orbit-b,.orbit-c{animation:none}}
