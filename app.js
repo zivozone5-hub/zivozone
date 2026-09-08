@@ -669,3 +669,77 @@
   }
   window.ZIVOZONE_V22_CONTENT={read,write,mark,freshQuestions};
 })();
+
+
+/* ============================================================
+   ZIVOZONE V26 — WALLET + REWARDS + LEADERBOARD READY
+   Stable/additive layer. No replacement of Firebase config.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v26_store';
+  const DEFAULT={owned:[],purchases:0,spent:0,dailyClaim:null};
+  const catalog=[
+    {id:'streak_shield',name:'Streak Shield',price:25,desc:'يحمي سلسلة أيامك مرة واحدة عند الانقطاع.'},
+    {id:'double_xp',name:'Double XP',price:40,desc:'مضاعفة XP لجولة واحدة في النظام الداعم.'},
+    {id:'mystery_badge',name:'Mystery Badge',price:75,desc:'شارة غامضة تظهر في ملف اللاعب.'},
+    {id:'dark_pass',name:'Dark Pass',price:100,desc:'عنصر تجميلي مرتبط بالغرفة المظلمة.'}
+  ];
+  function read(){try{return Object.assign({},DEFAULT,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return {...DEFAULT}}}
+  function write(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){};window.dispatchEvent(new CustomEvent('zivozone-v26',{detail:s}));return s}
+  function balance(){return Number(window.ZIVOZONE_V25?.get?.()?.balance||0)}
+  function buy(id){
+    const item=catalog.find(x=>x.id===id),s=read();if(!item)return false;
+    if(s.owned.includes(id))return true;
+    if(balance()<item.price)return false;
+    if(!window.ZIVOZONE_V25?.spend?.(item.price,'shop:'+id))return false;
+    s.owned.push(id);s.purchases++;s.spent+=item.price;write(s);render();return true;
+  }
+  function claimDaily(){
+    const d=new Date().toISOString().slice(0,10),s=read();
+    if(s.dailyClaim===d)return false;
+    s.dailyClaim=d;write(s);
+    window.ZIVOZONE_V25?.add?.(3,'daily_claim_v26');render();return true;
+  }
+  function profile(){
+    const p=window.ZIVOZONE_V21?.get?.()||{},s=read(),v=window.ZIVOZONE_V25?.get?.()||{};
+    return {level:p.level||1,xp:p.xp||0,games:p.games||0,bestScore:p.bestScore||0,balance:v.balance||0,streak:v.streak||1,spent:s.spent||0};
+  }
+  function open(tab){
+    let o=document.getElementById('v26-overlay');
+    if(!o){
+      o=document.createElement('div');o.id='v26-overlay';o.className='v26-overlay';
+      o.innerHTML=`<div class="v26-card"><button class="v26-close">×</button>
+      <div class="v26-head"><div class="v26-logo">Z</div><div><small>ZIVOZONE V26</small><h2>ZIVO Hub</h2></div></div>
+      <div class="v26-tabs"><button data-tab="wallet">المحفظة</button><button data-tab="shop">المتجر</button><button data-tab="board">الترتيب</button></div>
+      <section id="v26-wallet" class="v26-section"></section><section id="v26-shop" class="v26-section"></section><section id="v26-board" class="v26-section"></section>
+      <p class="v26-note">ZIVO مكافأة افتراضية داخل ZIVOZONE. لا تمثل مالًا ولا وعدًا بقيمة مالية. الرصيد الحقيقي للمشروع يجب أن يُدار لاحقًا من خادم موثوق عند تفعيل الاقتصاد السحابي.</p></div>`;
+      document.body.appendChild(o);
+      o.querySelector('.v26-close').onclick=()=>o.classList.remove('open');
+      o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')});
+      o.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>render(b.dataset.tab));
+    }
+    o.classList.add('open');render(tab||'wallet');
+  }
+  function render(tab='wallet'){
+    const o=document.getElementById('v26-overlay');if(!o)return;
+    const p=profile(),s=read();
+    const w=o.querySelector('#v26-wallet'),sh=o.querySelector('#v26-shop'),bo=o.querySelector('#v26-board');
+    w.innerHTML=`<div class="v26-grid"><div class="v26-stat"><span>ZIVO</span><b>${p.balance}</b></div><div class="v26-stat"><span>LEVEL</span><b>${p.level}</b></div><div class="v26-stat"><span>STREAK</span><b>${p.streak}</b></div><div class="v26-stat"><span>XP</span><b>${p.xp}</b></div><div class="v26-stat"><span>BEST</span><b>${p.bestScore}</b></div><div class="v26-stat"><span>GAMES</span><b>${p.games}</b></div></div><br><button id="v26-daily" style="width:100%;padding:11px;border:0;border-radius:11px;cursor:pointer">استلم مكافأة الدخول اليومية +3 ZIVO</button>`;
+    w.querySelector('#v26-daily').onclick=()=>{claimDaily();render('wallet')};
+    sh.innerHTML='<div class="v26-shop">'+catalog.map(i=>`<article class="v26-item"><h4>${i.name}</h4><p>${i.desc}</p><button data-buy="${i.id}" ${s.owned.includes(i.id)?'disabled':''}>${s.owned.includes(i.id)?'مملوك':'شراء '+i.price+' ZIVO'}</button></article>`).join('')+'</div>';
+    sh.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{if(!buy(b.dataset.buy))alert('رصيد ZIVO غير كافٍ أو العنصر مملوك.');render('shop')});
+    const rows=[['1','أنت','—'],['2','قادم قريبًا','—'],['3','قادم قريبًا','—'],['4','قادم قريبًا','—'],['5','قادم قريبًا','—']];
+    bo.innerHTML='<div class="v26-board">'+rows.map(r=>`<div class="v26-row"><span>${r[0]}</span><b>${r[1]}</b><b>${r[2]}</b></div>`).join('')+'</div><p class="v26-note">هذه واجهة تجهيز للـLeaderboard. الترتيب العالمي الحقيقي يحتاج قراءة وكتابة آمنة من Firebase عبر قواعد وصول مناسبة، ولن أضع رصيدًا قابلًا للتلاعب من المتصفح على أنه رصيد سحابي حقيقي.</p>';
+    o.querySelectorAll('.v26-section').forEach(e=>e.classList.remove('active'));o.querySelector('#v26-'+tab).classList.add('active');
+    o.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  }
+  function button(){
+    if(document.getElementById('v26-open'))return;
+    const b=document.createElement('button');b.id='v26-open';b.textContent='ZIVO';b.title='ZIVO Hub';
+    b.style.cssText='position:fixed;right:18px;bottom:72px;z-index:9401;border:1px solid rgba(255,255,255,.13);border-radius:13px;padding:8px 13px;background:rgba(7,8,14,.88);color:#fff;font-weight:900;cursor:pointer;backdrop-filter:blur(12px)';
+    b.onclick=()=>open('wallet');document.body.appendChild(b);
+  }
+  window.ZIVOZONE_V26={open,buy,claimDaily,profile,catalog};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',button);else button();
+})();
