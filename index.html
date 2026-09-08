@@ -96,6 +96,7 @@ window.ZIVOZONE_SECURITY={appCheckSiteKey:''};
 <script src="ads.js"></script>
 <script src="auth.js"></script>
 <script src="app.js"></script>
+<script src="v23_smart.js"></script>
 
 <script>
 document.addEventListener('click',function(e){
@@ -106,6 +107,17 @@ document.addEventListener('click',function(e){
     e.preventDefault();e.stopImmediatePropagation();window.ZIVOZONE_V20.start(id);
   }
 },true);
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  if(document.getElementById('zivo-v24-balance'))return;
+  const x=document.createElement('div');
+  x.id='zivo-v24-balance';x.className='zivo-v24-balance';
+  x.innerHTML='<span class="z24-mini-coin">Z</span><span><small>ZIVO</small><b data-zivo-balance>0</b></span>';
+  document.body.appendChild(x);
+  setTimeout(()=>window.ZIVOZONE_V24?.refresh?.(),1000);
+});
 </script>
 </body>
 </html>

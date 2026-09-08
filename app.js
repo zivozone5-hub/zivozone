@@ -468,9 +468,28 @@
     const used=new Set(readUsed());
     let fresh=b.questions.filter(q=>q?.id&&!used.has(q.id));
     if(fresh.length<Math.min(10,b.questions.length)) fresh=b.questions.slice();
-    const run=fresh.slice().sort(()=>Math.random()-.5).slice(0,10).sort((x,y)=>(x.difficulty||0)-(y.difficulty||0));
+
+    // V23 SMART SELECTION: preserve the 10-question climb while adapting the mix
+    // to the player's current level and recent performance.
+    const p=window.ZIVOZONE_V21?.get?.()||window.ZIVOZONE_PLAYER?.get?.()||{};
+    const level=Math.max(1,Number(p.level)||1);
+    const history=Array.isArray(p.history)?p.history.slice(-5):[];
+    const recentAvg=history.length?history.reduce((n,x)=>n+(Number(x.score)||0),0)/history.length:50;
+    let shift=level>=20?1:level>=8?0.5:0;
+    if(recentAvg>=80)shift+=0.5;
+    if(recentAvg<45)shift-=0.5;
+    const target=[1,2,3,4,5,6,7,8,9,10].map((d,i)=>Math.max(1,Math.min(10,Math.round(d+shift*(i/9)))));
+    const remaining=fresh.slice();
+    const run=[];
+    target.forEach((td)=>{
+      if(!remaining.length)return;
+      let bestIndex=0,bestDistance=Infinity;
+      remaining.forEach((q,i)=>{const d=Number(q.difficulty??q.d??1)||1;const distance=Math.abs(d-td)+Math.random()*.35;if(distance<bestDistance){bestDistance=distance;bestIndex=i}});
+      run.push(remaining.splice(bestIndex,1)[0]);
+    });
+    while(run.length<Math.min(10,fresh.length))run.push(remaining.shift());
     mark(run);
-    return {id:b.id,title:b.title||b.name||'Challenge',icon:b.icon||'🧠',questions:run};
+    return {id:b.id,title:b.title||b.name||'Challenge',icon:b.icon||'🧠',questions:run.slice(0,10)};
   }
   function ensureMount(){
     let m=$('#zivo-v20-runner');
