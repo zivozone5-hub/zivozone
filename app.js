@@ -547,3 +547,79 @@
   }
   window.ZIVOZONE_V20={start,findBanks,pick,clearHistory:()=>writeUsed([])};
 })();
+
+
+/* ============================================================
+   V21 — PLAYER CLOUD PROGRESSION
+   Additive layer. Never replaces existing Firebase/auth code.
+============================================================ */
+(function(){
+  const LOCAL='zivozone_v21_progress';
+  const state={queue:[],syncing:false};
+
+  function loadLocal(){
+    try{return JSON.parse(localStorage.getItem(LOCAL)||'{"xp":0,"level":1,"games":0,"streak":0,"bestScore":0,"history":[]}')}catch(e){return {xp:0,level:1,games:0,streak:0,bestScore:0,history:[]}}
+  }
+  function saveLocal(p){try{localStorage.setItem(LOCAL,JSON.stringify(p))}catch(e){}}
+  function calcLevel(xp){return Math.max(1,Math.min(100,Math.floor(Math.sqrt(Math.max(0,xp)/25))+1))}
+  function merge(base,delta){
+    const p=Object.assign(loadLocal(),base||{});
+    p.xp=Math.max(0,Number(p.xp)||0)+(Number(delta.xp)||0);
+    p.level=calcLevel(p.xp);
+    p.games=(Number(p.games)||0)+1;
+    p.bestScore=Math.max(Number(p.bestScore)||0,Number(delta.score)||0);
+    p.streak=Math.max(Number(p.streak)||0,Number(delta.streak)||0);
+    p.history=Array.isArray(p.history)?p.history.slice(-29):[];
+    p.history.push({at:Date.now(),challenge:delta.challenge||'unknown',score:Number(delta.score)||0,xp:Number(delta.xp)||0});
+    saveLocal(p);return p;
+  }
+  async function cloudWrite(p){
+    // Hook into existing public ZIVOZONE/Firebase APIs when available.
+    try{
+      if(window.ZIVOZONE_AUTH?.savePlayerProgress) return await window.ZIVOZONE_AUTH.savePlayerProgress(p);
+      if(window.ZIVOZONE_FIREBASE?.savePlayerProgress) return await window.ZIVOZONE_FIREBASE.savePlayerProgress(p);
+      if(window.savePlayerProgress) return await window.savePlayerProgress(p);
+    }catch(e){console.warn('ZIVO V21 cloud sync deferred',e)}
+    return false;
+  }
+  async function sync(){
+    if(state.syncing)return false;state.syncing=true;
+    try{const p=loadLocal();const r=await cloudWrite(p);state.syncing=false;return r}catch(e){state.syncing=false;return false}
+  }
+  async function record(result){
+    const xp=Math.max(5,Math.round((Number(result.score)||0)/20)+((result.streak||0)*2));
+    const p=merge(null,Object.assign({},result,{xp}));
+    window.dispatchEvent(new CustomEvent('zivozone-progress',{detail:p}));
+    await sync();return p;
+  }
+  function get(){return loadLocal()}
+  window.ZIVOZONE_V21={record,get,sync,calcLevel};
+  window.ZIVOZONE_PLAYER=window.ZIVOZONE_PLAYER||{};
+  const oldAdd=window.ZIVOZONE_PLAYER.addProgress;
+  window.ZIVOZONE_PLAYER.addProgress=async function(result){
+    if(typeof oldAdd==='function'){try{await oldAdd.call(this,result)}catch(e){}}
+    return record(result);
+  };
+})();
+
+
+/* ============================================================
+   V21 — LIVE PLAYER HUD
+============================================================ */
+(function(){
+  function mount(){
+    if(document.getElementById('zivo-v21-hud'))return;
+    const el=document.createElement('aside');
+    el.id='zivo-v21-hud';el.className='zivo-v21-hud';
+    el.innerHTML='<div><span>LEVEL</span><b id="v21-level">1</b></div><div><span>XP</span><b id="v21-xp">0</b></div><div><span>BEST</span><b id="v21-best">0</b></div>';
+    document.body.appendChild(el);
+    refresh();
+  }
+  function refresh(){
+    const p=window.ZIVOZONE_V21?.get?.()||{};
+    const l=document.getElementById('v21-level'),x=document.getElementById('v21-xp'),b=document.getElementById('v21-best');
+    if(l)l.textContent=p.level||1;if(x)x.textContent=p.xp||0;if(b)b.textContent=p.bestScore||0;
+  }
+  window.addEventListener('zivozone-progress',refresh);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();

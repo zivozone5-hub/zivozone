@@ -262,3 +262,10 @@ body.zivo-dark-active{overflow:hidden}
 .v20-live{display:flex;gap:10px;padding:18px 0;color:#aab0c8}.v20-live span{padding:7px 10px;border-radius:10px;background:rgba(255,255,255,.04)}
 .v20-result{max-width:700px;margin:15vh auto;text-align:center;padding:40px;border-radius:28px;border:1px solid rgba(255,255,255,.1);background:rgba(10,10,18,.9)}.v20-result-icon{font-size:4rem}.v20-result-score{font-size:4rem;font-weight:900;margin:10px}.v20-result button{margin:8px}
 @media(max-width:650px){.v20-options{grid-template-columns:1fr}.v20-question{padding:22px}.v20-form{flex-direction:column}}
+
+/* ============================================================
+   V21 — PLAYER HUD
+============================================================ */
+.zivo-v21-hud{position:fixed;left:16px;bottom:16px;z-index:9000;display:flex;gap:7px;padding:8px;border:1px solid rgba(255,255,255,.09);border-radius:15px;background:rgba(5,6,11,.72);backdrop-filter:blur(14px);box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.zivo-v21-hud div{min-width:56px;text-align:center}.zivo-v21-hud span{display:block;font-size:8px;letter-spacing:1.5px;color:#777f9a}.zivo-v21-hud b{display:block;margin-top:2px;color:#fff;font-size:13px}
+@media(max-width:600px){.zivo-v21-hud{left:8px;bottom:8px;transform:scale(.92);transform-origin:left bottom}}
