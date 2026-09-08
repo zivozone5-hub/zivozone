@@ -628,3 +628,25 @@
   window.addEventListener('zivozone-progress',refresh);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+/* ============================================================
+   V22 — CONTENT QUALITY / ROTATION LAYER
+   Keeps Dark Room isolated. Improves normal challenge selection.
+============================================================ */
+(function(){
+  const USED='zivozone_v22_played_questions';
+  function read(){try{return JSON.parse(localStorage.getItem(USED)||'[]')}catch(e){return[]}}
+  function write(v){try{localStorage.setItem(USED,JSON.stringify(v.slice(-1500)))}catch(e){}}
+  function mark(qs){const a=read(),s=new Set(a);qs.forEach(q=>{if(q?.id&&!s.has(q.id)){a.push(q.id);s.add(q.id)}});write(a)}
+  function freshQuestions(bank){
+    const seen=new Set(read());
+    let fresh=(bank.questions||[]).filter(q=>q?.id&&!seen.has(q.id));
+    if(fresh.length<10){
+      // Reset only this bank's exhausted questions, never the global history.
+      const ids=new Set((bank.questions||[]).map(q=>q.id));
+      const kept=read().filter(id=>!ids.has(id)); write(kept); fresh=(bank.questions||[]).slice();
+    }
+    return fresh.sort(()=>Math.random()-.5).slice(0,10).sort((a,b)=>(a.d||a.difficulty||0)-(b.d||b.difficulty||0));
+  }
+  window.ZIVOZONE_V22_CONTENT={read,write,mark,freshQuestions};
+})();
