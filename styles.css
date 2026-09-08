@@ -219,3 +219,27 @@ body.horror-active{background:#020207!important}.horror-active .topbar,.horror-a
 .v18-difficulty{display:flex;gap:4px;align-items:center}
 .v18-difficulty i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.12)}
 .v18-difficulty i.on{background:#7c6cff;box-shadow:0 0 9px rgba(124,108,255,.55)}
+
+/* ============================================================
+   V19 — DARK ROOM 2.0 VISUAL LAYER
+============================================================ */
+.zivo-dark-v19{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;transition:opacity .8s ease;background:
+ radial-gradient(circle at 50% 48%,rgba(40,40,55,.10),rgba(0,0,0,.98) 72%),#000}
+.zivo-dark-v19.active{opacity:1}
+.z19-noise{position:absolute;inset:-30%;opacity:.055;background-image:radial-gradient(rgba(255,255,255,.7) .6px,transparent .7px);background-size:5px 5px;animation:z19noise .14s steps(2) infinite}
+.z19-vignette{position:absolute;inset:0;box-shadow:inset 0 0 150px 55px #000;animation:z19breath 5s ease-in-out infinite}
+.z19-orb{position:absolute;left:50%;top:50%;width:3px;height:3px;border-radius:50%;background:#eee;box-shadow:0 0 24px 6px rgba(255,255,255,.18);transform:translate(-50%,-50%);animation:z19orb 6s ease-in-out infinite}
+.z19-top{position:absolute;top:28px;left:28px;right:28px;display:flex;justify-content:space-between;color:rgba(255,255,255,.55);font:700 11px/1 system-ui;letter-spacing:3px}
+.z19-count{font-size:14px;color:rgba(255,255,255,.8)}
+.z19-whisper{position:absolute;left:50%;bottom:18%;width:min(680px,82vw);transform:translate(-50%,15px);text-align:center;color:rgba(235,235,240,.72);font:500 16px/1.7 system-ui;letter-spacing:.3px;opacity:0;filter:blur(2px)}
+.z19-whisper.show{animation:z19whisper 4.8s ease forwards}
+.z19-whisper.urgent{color:rgba(255,225,225,.88);text-shadow:0 0 18px rgba(255,0,0,.22)}
+.z19-bottom{position:absolute;bottom:24px;left:0;right:0;text-align:center;pointer-events:auto}
+.z19-exit{pointer-events:auto;border:1px solid rgba(255,255,255,.18);background:rgba(0,0,0,.35);color:rgba(255,255,255,.72);padding:9px 18px;border-radius:999px;cursor:pointer;backdrop-filter:blur(8px)}
+.z19-exit:hover{background:rgba(255,255,255,.08)}
+body.zivo-dark-active{overflow:hidden}
+@keyframes z19noise{0%{transform:translate(0,0)}25%{transform:translate(2%,-1%)}50%{transform:translate(-1%,2%)}75%{transform:translate(-2%,-2%)}100%{transform:translate(1%,1%)}}
+@keyframes z19breath{0%,100%{opacity:.72}50%{opacity:1}}
+@keyframes z19orb{0%,100%{opacity:.3;transform:translate(-50%,-50%) scale(1)}50%{opacity:.8;transform:translate(-50%,-50%) scale(1.7)}}
+@keyframes z19whisper{0%{opacity:0;filter:blur(5px);transform:translate(-50%,15px)}15%{opacity:.8;filter:blur(0);transform:translate(-50%,0)}72%{opacity:.72}100%{opacity:0;filter:blur(3px);transform:translate(-50%,-4px)}}
+@media(prefers-reduced-motion:reduce){.z19-noise,.z19-vignette,.z19-orb{animation:none}}

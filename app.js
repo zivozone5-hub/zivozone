@@ -302,3 +302,133 @@
     {id:'focus',label:'Focus Trap',icon:'🎯'}
   ];
 })();
+
+
+/* ============================================================
+   V19 — DARK ROOM 2.0 / PSYCHOLOGICAL CINEMA ENGINE
+   Additive layer: preserves V18 and Firebase configuration.
+============================================================ */
+(function(){
+  const KEY='zivozone_darkroom_v19';
+  const state={
+    active:false,index:0,answered:0,phase:1,startedAt:0,
+    used:[],audio:null,master:null,ctx:null,osc:[],timer:null
+  };
+  const lines=[
+    "لا تستعجل… أنا أراقب طريقة تفكيرك.",
+    "السؤال القادم أسهل مما تتوقع. أو هكذا أريدك أن تظن.",
+    "اسمع جيدًا… لا يوجد شيء مطلوب منك الآن سوى الاستمرار.",
+    "أنت لم تدخل الغرفة لتفوز فقط.",
+    "الآن بدأت الغرفة تتعرف عليك.",
+    "لا تنظر خلفك. ركّز على السؤال.",
+    "إذا شعرت أن المكان تغيّر… أكمل.",
+    "بقي القليل. هل أنت متأكد أنك تريد الوصول للنهاية؟",
+    "الضوء لا يعني أن الغرفة أصبحت آمنة.",
+    "أنت ما زلت هنا… وهذا هو الجزء الذي يهمني."
+  ];
+  function qs(sel,root=document){return root.querySelector(sel)}
+  function ensureUI(){
+    if(qs('#zivo-dark-v19'))return;
+    const el=document.createElement('div');
+    el.id='zivo-dark-v19';
+    el.className='zivo-dark-v19';
+    el.innerHTML=`
+      <div class="z19-noise"></div><div class="z19-vignette"></div>
+      <div class="z19-orb"></div><div class="z19-whisper" aria-live="polite"></div>
+      <div class="z19-top"><span class="z19-phase">PHASE 01</span><span class="z19-count">01</span></div>
+      <div class="z19-bottom"><button class="z19-exit" type="button">خروج</button></div>`;
+    document.body.appendChild(el);
+    el.querySelector('.z19-exit').addEventListener('click',stop);
+  }
+  function whisper(text,urgent=false){
+    const w=qs('.z19-whisper');
+    if(!w)return;
+    w.textContent=text;
+    w.classList.remove('show','urgent'); void w.offsetWidth;
+    w.classList.add('show'); if(urgent)w.classList.add('urgent');
+  }
+  function phaseFor(n){return n<=10?1:n<=20?2:3}
+  function update(n){
+    ensureUI();
+    const p=phaseFor(n);
+    state.index=n;state.phase=p;
+    const rootEl=qs('#zivo-dark-v19');
+    rootEl.dataset.phase=p;
+    qs('.z19-phase',rootEl).textContent=`PHASE 0${p}`;
+    qs('.z19-count',rootEl).textContent=String(n).padStart(2,'0');
+  }
+  function beep(freq,duration,type='sine',gain=.035){
+    if(!state.ctx||!state.master)return;
+    const o=state.ctx.createOscillator(),g=state.ctx.createGain();
+    o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.0001,state.ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(gain,state.ctx.currentTime+.03);
+    g.gain.exponentialRampToValueAtTime(.0001,state.ctx.currentTime+duration);
+    o.connect(g);g.connect(state.master);o.start();o.stop(state.ctx.currentTime+duration+.05);
+  }
+  function startAudio(){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return;
+      state.ctx=new AC(); state.master=state.ctx.createGain(); state.master.gain.value=.24;
+      state.master.connect(state.ctx.destination);
+      // Continuous low cinematic bed: no copyrighted external asset required.
+      const o=state.ctx.createOscillator(),g=state.ctx.createGain(),l=state.ctx.createOscillator(),lg=state.ctx.createGain();
+      o.type='sine';o.frequency.value=47;g.gain.value=.055;
+      l.type='triangle';l.frequency.value=73;lg.gain.value=.018;
+      o.connect(g);g.connect(state.master);l.connect(lg);lg.connect(state.master);o.start();l.start();
+      state.osc=[o,l];
+      whisper(lines[0]);
+    }catch(e){}
+  }
+  function stopAudio(){
+    try{
+      state.osc.forEach(o=>{try{o.stop()}catch(e){}});
+      if(state.ctx)state.ctx.close();
+    }catch(e){}
+    state.osc=[];state.ctx=null;state.master=null;
+  }
+  function start(){
+    ensureUI();
+    state.active=true;state.index=1;state.answered=0;state.phase=1;state.startedAt=Date.now();
+    qs('#zivo-dark-v19').classList.add('active');
+    document.body.classList.add('zivo-dark-active');
+    update(1); startAudio();
+    try{sessionStorage.setItem(KEY,JSON.stringify({startedAt:state.startedAt}))}catch(e){}
+  }
+  function next(){
+    if(!state.active)return;
+    state.answered++;
+    const n=state.answered+1;
+    if(n>30){
+      whisper("انتهت الجولة… الآن يمكنك الخروج.",true);
+      return;
+    }
+    update(n);
+    if(n===11)whisper(lines[4]);
+    else if(n===21)whisper(lines[7],true);
+    else if(n===28)whisper(lines[8],true);
+    else if(Math.random()<.42)whisper(lines[(n-1)%lines.length],n>=21);
+    if(n>=21)beep(58,.32,'sawtooth',.045);
+    else if(n>=11)beep(72,.22,'triangle',.025);
+    else beep(96,.12,'sine',.018);
+  }
+  function stop(){
+    state.active=false;
+    clearTimeout(state.timer);
+    stopAudio();
+    const el=qs('#zivo-dark-v19'); if(el)el.classList.remove('active');
+    document.body.classList.remove('zivo-dark-active');
+    try{sessionStorage.removeItem(KEY)}catch(e){}
+    // Never leave challenge audio playing on the home page.
+    window.dispatchEvent(new CustomEvent('zivo:darkroom-stopped'));
+  }
+  function bindChallengeEvents(){
+    document.addEventListener('click',e=>{
+      if(!state.active)return;
+      const t=e.target.closest('button,[role="button"],.option,.answer-option');
+      if(t && !t.classList.contains('z19-exit')) setTimeout(next,120);
+    },true);
+  }
+  window.ZIVOZONE_DARKROOM_V19={start,stop,next,isActive:()=>state.active,whisper,update};
+  ensureUI(); bindChallengeEvents();
+})();
