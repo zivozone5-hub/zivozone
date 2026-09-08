@@ -44,7 +44,7 @@
     if(!Number.isInteger(age)||age<5||age>100)throw Error(t('ageError'));
     if(!/^\S+@\S+\.\S+$/.test(email))throw Error(t('emailError'));
     if(password.length<6)throw Error(t('passwordError'));
-    const old=JSON.parse(localStorage.getItem('zivozone_state_v5')||'{}');
+    const old=JSON.parse(localStorage.getItem('zivozone_state_v7')||localStorage.getItem('zivozone_state_v6')||localStorage.getItem('zivozone_state_v5')||'{}');
     if(cloud){
       try{
         const r=await auth.createUserWithEmailAndPassword(email,password),u=r.user;

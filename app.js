@@ -60,31 +60,74 @@
     try{localStorage.setItem(seenKey,JSON.stringify([...seen,...ids].slice(-Math.max(20,pool.length))))}catch(e){}
     return chosen.sort((a,b)=>a.d-b.d || Math.random()-.5);
   }
-  function startGame(id,guest=false){const src=C.get(id);if(!src){toast(t('noData'),'error');return}game={id,questions:prepareQuestions(id),index:0,score:0,answers:[],guest:!A.isLoggedIn()||guest,locked:false};renderQuestion()}
+  function startGame(id,guest=false){const src=C.get(id);if(!src){toast(t('noData'),'error');return}
+    const isHorror=id==='horror';
+    if(isHorror){
+      openModal(`<div class="horror-warning-card"><span class="eyebrow">${t('horrorWarningTitle')}</span><h2>${t('horrorWarningHeadline')}</h2><p>${t('horrorWarningText')}</p><p class="horror-warning">${t('horrorWarningNight')}</p><div class="modal-actions"><button class="btn btn-primary" id="enter-horror">${t('horrorEnter')}</button><button class="btn btn-ghost" data-close>${t('close')}</button></div></div>`,'horror-modal phase-1');
+      $('#enter-horror').onclick=()=>{closeModal();beginGame(id,guest)};return;
+    }
+    beginGame(id,guest)}
+  function beginGame(id,guest=false){const src=C.get(id),isHorror=id==='horror';
+    game={id,questions:isHorror?shuffle(src.questions.map(q=>({...q,a:q.a.map(x=>({...x}))}))):prepareQuestions(id),index:0,score:0,answers:[],guest:!A.isLoggedIn()||guest,locked:false,horrorRounds:0,horrorExited:false};
+    if(isHorror){S().unlock?.();S().startHorror?.();document.body.classList.add('horror-active');}
+    renderQuestion()}
   function currentQ(){return game.questions[game.index]}
   function renderQuestion(){
-    const src=C.get(game.id),q=currentQ();
+    const src=C.get(game.id);
+    if(game.id==='horror' && game.index>=game.questions.length){
+      game.questions.push(...shuffle(src.questions.map(q=>({...q,a:q.a.map(x=>({...x}))}))));
+    }
+    const q=currentQ();
     if(!q){finishGame();return}
     S().question?.(q.d,game.id);
-    if(game.id==='horror' && game.index===0) S().startHorror?.();
-    if(game.id==='horror' && game.index===4) S().phase?.(2);
-    if(game.id==='horror' && game.index===7) S().phase?.(3);
-    if(game.id==='horror' && game.index===6) S().warden?.();
-    const phase=game.id==='horror'?` phase-${game.index<4?1:game.index<7?2:3}`:'';const labels=['A','B','C','D'];
+    if(game.id==='horror'){
+      if(game.index===0) S().startHorror?.();
+      if(game.index>0 && game.index%5===0) S().horrorPulse?.(Math.min(4,1+Math.floor(game.index/5)));
+      if(game.index===6) S().warden?.();
+      if(game.index===10) S().phase?.(2);
+      if(game.index===20) S().phase?.(3);
+    }
+    const phase=game.id==='horror'?` phase-${game.index<10?1:game.index<20?2:3}`:'';
+    const labels=['A','B','C','D'];
     const answers=q.a.map((x,i)=>`<button class="btn btn-ghost answer" data-i="${i}"><span>${labels[i]}</span>${esc(loc(x))}</button>`).join('');
     const warden=game.id==='horror'&&game.index>=6?`<div class="warden">${t('warden')}</div>`:'';
-    const progress=Math.round(((game.index)/game.questions.length)*100);
-    openModal(`<button class="modal-close" data-close>×</button><div class="game-head"><span class="eyebrow">${esc(loc(src.title))}</span><strong>${game.index+1} / ${game.questions.length}</strong></div><div class="question-progress"><span style="width:${progress}%"></span></div>${warden}<h2>${esc(loc(q.q))}</h2><div class="difficulty">${t('difficulty')} ${q.d}/10</div><div class="answers">${answers}</div><div class="game-footer"><span>${game.score} ${t('correct')}</span><button class="btn btn-small btn-ghost" data-action="quit-game">${t('exit')}</button></div>`,game.id==='horror'?`horror-modal${phase}`:'');
-    $$('.answer').forEach(b=>b.onclick=()=>answer(Number(b.dataset.i)));$('#modal-root [data-action="quit-game"]').onclick=()=>{closeModal();S().stopHorror?.();toast(t('exit'))};
+    const progress=game.id==='horror'?((game.index%10)/10)*100:Math.round(((game.index)/game.questions.length)*100);
+    const footer=game.id==='horror'?`<span class="horror-status">${t('horrorQuestion')} ${game.index+1}</span>`:`<span>${game.score} ${t('correct')}</span>`;
+    openModal(`<button class="modal-close" data-close>×</button><div class="game-head"><span class="eyebrow">${esc(loc(src.title))}</span><strong>${game.id==='horror'?`${game.index+1}`:`${game.index+1} / ${game.questions.length}`}</strong></div><div class="question-progress"><span style="width:${progress}%"></span></div>${warden}<h2>${esc(loc(q.q))}</h2><div class="difficulty">${t('difficulty')} ${q.d}/10</div><div class="answers">${answers}</div><div class="game-footer">${footer}<button class="btn btn-small btn-ghost" data-action="quit-game">${t('exit')}</button></div>`,game.id==='horror'?`horror-modal${phase}`:'');
+    $$('.answer').forEach(b=>b.onclick=()=>answer(Number(b.dataset.i)));
+    $('#modal-root [data-action="quit-game"]').onclick=()=>quitGame();
+  }
+  function quitGame(){
+    const wasHorror=game.id==='horror';
+    if(wasHorror){
+      game.horrorExited=true;S().stopHorror?.();document.body.classList.remove('horror-active');
+      const survived=game.index;const xp=Math.max(5,Math.min(250,survived*4));
+      reward(xp,Math.max(1,Math.floor(survived/5)),survived>=10).then(()=>{
+        A.saveResult({challengeId:'horror',score:survived,total:survived,endedByPlayer:true,guest:game.guest,xp,language:lang()});
+        openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('horrorExitTitle')}</span><h2>${t('horrorExitHeadline')}</h2><p>${t('horrorExitText')}</p><p><strong>${survived}</strong> ${t('horrorQuestion')}</p><div class="modal-actions"><button class="btn btn-primary" id="horror-again">${t('again')}</button><button class="btn btn-ghost" data-close>${t('close')}</button></div>`);
+        $('#horror-again').onclick=()=>{closeModal();startGame('horror',game.guest)};
+      });return;
+    }
+    closeModal();toast(t('exit'));game={id:null,questions:[],index:0,score:0,answers:[],guest:true};
+  }
+  function horrorCheckpoint(){
+    const n=game.index+1;if(game.id!=='horror'||n%10!==0)return false;
+    S().checkpoint?.(Math.min(3,Math.floor(n/10)));
+    openModal(`<div class="horror-checkpoint"><span class="eyebrow">${t('horrorCheckpoint')}</span><h2>${t('horrorCheckpointTitle')}</h2><p>${t('horrorCheckpointText')}</p><p class="horror-warning">${t('horrorWarning')}</p><div class="modal-actions"><button class="btn btn-primary" id="horror-continue">${t('horrorContinue')}</button><button class="btn btn-ghost" id="horror-exit">${t('horrorLeave')}</button></div></div>`,'horror-modal phase-3');
+    $('#horror-continue').onclick=()=>{closeModal();renderQuestion()};$('#horror-exit').onclick=()=>{closeModal();quitGame()};return true;
   }
   function answer(i){
-    if(game.locked)return; game.locked=true;
-    const q=currentQ();game.answers.push(i);const ok=i===q.c;if(ok){game.score++;S().correct?.()}else{S().wrong?.()}
+    if(game.locked)return;game.locked=true;const q=currentQ(),ok=i===q.c;game.answers.push(i);
+    if(game.id==='horror'){
+      S().horrorAnswer?.(ok,q.d);
+      setTimeout(()=>{game.index++;game.locked=false;if(horrorCheckpoint())return;renderQuestion()},520);return;
+    }
+    if(ok){game.score++;S().correct?.()}else{S().wrong?.()}
     const buttons=$$('.answer');buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add('answer-correct');if(n===i&&!ok)b.classList.add('answer-wrong')});
     setTimeout(()=>{game.index++;game.locked=false;renderQuestion()},650);
   }
   async function finishGame(){
-    S().stopHorror?.();
+    S().stopHorror?.();document.body.classList.remove('horror-active');
     S().success?.();
     const src=C.get(game.id),score=game.score,total=game.questions.length,xp=Math.max(10,Math.round((score/total)*src.xp)),coins=Math.max(1,Math.ceil(score/2)),win=score>=Math.ceil(total*.5);
     closeModal();await reward(xp,coins,win);
@@ -107,7 +150,6 @@
   function renderChallenges(){
     const today=new Date().toISOString().slice(0,10),done=localStorage.getItem('zivo_daily_'+today);
     $('#challenge-list').innerHTML=C.getAll().map(x=>`<article class="challenge-card"><span class="challenge-icon">${x.icon}</span><div><span class="card-tag">${t('questions10')}</span><h3>${esc(loc(x.title))}</h3><p>${t('questions10')} — ${esc(loc(x.desc))}</p></div><button class="btn btn-primary" data-challenge="${x.id}" ${done&&x.id==='daily'?'disabled':''}>${done&&x.id==='daily'?t('done'):t('start')}</button></article>`).join('')+`<article class="challenge-card special"><span class="challenge-icon">👁️</span><div><span class="card-tag danger">${t('questions10')}</span><h3>${esc(loc(C.horror.title))}</h3><p>${esc(loc(C.horror.desc))}</p></div><button class="btn btn-primary danger-btn" data-challenge="horror">${t('enter')}</button></article>`;
-    $$('[data-challenge]').forEach(b=>b.onclick=()=>{const id=b.dataset.challenge;if(id==='daily'&&done){toast(t('dailyTomorrow'));return}startGame(id,!A.isLoggedIn())});
   }
   const NEWS=[
     {key:'FIFA',url:'https://www.fifa.com/',icon:'🌍',title:{ar:'فيفا',en:'FIFA',zh:'国际足联',hi:'फीफा',es:'FIFA'}},
@@ -121,6 +163,7 @@
   function eventText(e){const home=e.strHomeTeam||e.strHomeTeamShort||'Home',away=e.strAwayTeam||e.strAwayTeamShort||'Away';return {home,away,date:e.dateEvent||'',time:e.strTime||'',league:e.strLeague||e.strSport||'Sport'} }
   async function sports(){
     renderNewsSources();
+    window.ZIVOZONE_NEWS?.load?.($('#news-list'),lang());
     const box=$('#sports-list');box.innerHTML=`<article class="sports-card loading-card"><div class="spinner"></div><h3>${esc(t('sportsTitle'))}</h3><p>${esc(t('loader'))}</p></article>`;
     const teamIds=['133604','133602','133738','133739'];let events=[];
     try{
@@ -143,18 +186,24 @@
     renderChallenges();renderNewsSources();profile();sports();
     const footerSpans=$$('.footer span');if(footerSpans[1])footerSpans[1].textContent=`© 2026 ZIVOZONE`;if(footerSpans[2])footerSpans[2].textContent=t('footerTagline');
   }
+  document.addEventListener('click',e=>{
+    const gameBtn=e.target.closest('[data-game],[data-challenge]');
+    if(gameBtn){e.preventDefault();const id=gameBtn.dataset.game||gameBtn.dataset.challenge;if(id)startGame(id,!A.isLoggedIn());return}
+    const action=e.target.closest('[data-action]')?.dataset.action;
+    if(action==='scroll-games'){e.preventDefault();$('#games')?.scrollIntoView({behavior:'smooth'});return}
+    if(action==='open-identity'){identity();return}
+    if(action==='login'){A.isLoggedIn()?location.hash='#profile':authModal();return}
+    if(action==='logout'){A.logout().then(()=>{state={level:1,xp:0,coins:0,wins:0,gamesPlayed:0,identity:null};saveState();profile();toast(t('logoutDone'))});return}
+    if(action==='refresh-sports'){sports();return}
+    if(action==='ad-info'){toast(t('adText'));return}
+    if(action==='ads-control'){window.ZIVOZONE_ADS?.open?.();return}
+  });
   function bind(){
     const audioBtn=$('#audio-toggle');
     if(audioBtn){audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇';audioBtn.onclick=async()=>{await S().unlock?.();S().toggle?.();audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇';S().click?.()}}
     $('#language-select').value=lang();$('#language-select').onchange=async e=>{I.set(e.target.value);await A.setLanguage(e.target.value);applyLanguage();toast(t('updateDone'),'success')};
     $('#login-btn').onclick=()=>A.isLoggedIn()?location.hash='#profile':authModal();
     $$('[data-action="login"]').forEach(b=>b.onclick=()=>A.isLoggedIn()?location.hash='#profile':authModal());
-    $$('[data-game]').forEach(b=>b.onclick=()=>startGame(b.dataset.game,!A.isLoggedIn()));
-    $$('[data-action="scroll-games"]').forEach(b=>b.onclick=()=>$('#games').scrollIntoView({behavior:'smooth'}));
-    $$('[data-action="open-identity"]').forEach(b=>b.onclick=identity);
-    $$('[data-action="logout"]').forEach(b=>b.onclick=async()=>{await A.logout();state={level:1,xp:0,coins:0,wins:0,gamesPlayed:0,identity:null};saveState();profile();toast(t('logoutDone'))});
-    $$('[data-action="refresh-sports"]').forEach(b=>b.onclick=()=>sports());
-    $$('[data-action="ad-info"]').forEach(b=>b.onclick=()=>toast(t('adText')));
     $('#ai-form').onsubmit=async e=>{e.preventDefault();const input=$('#ai-input'),v=input.value.trim();if(!v)return;const box=$('#ai-messages');const u=document.createElement('div');u.className='ai-message user';u.textContent=v;box.append(u);input.value='';const b=document.createElement('div');b.className='ai-message bot';b.textContent='…';box.append(b);box.scrollTop=box.scrollHeight;b.textContent=await askAI(v);box.scrollTop=box.scrollHeight};
   }
   window.addEventListener('zivozone-auth',(e)=>{syncFromPlayer();profile();const el=$('#firebase-status');if(el){el.textContent=e.detail?.cloud?'●':'○';el.classList.toggle('online',!!e.detail?.cloud);el.title=e.detail?.cloud?'Firebase connected':'Guest/local mode'}});
