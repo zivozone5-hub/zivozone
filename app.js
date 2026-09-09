@@ -1416,3 +1416,59 @@
   window.addEventListener('zivozone-result',e=>{const d=e.detail||{};add(d.xp||0,d.correct||0,d.score||0)});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V36 — SECURE CLOUD SYNC BRIDGE
+   Additive bridge: preserves existing Firebase configuration.
+   No Firebase initialization is duplicated here.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v36_cloud_queue';
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
+  const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v.slice(-50)))}catch(e){}};
+  const uid=()=>{
+    try{
+      const u=window.firebase?.auth?.()?.currentUser;
+      return u?.uid||null;
+    }catch(e){return null}
+  };
+  const enqueue=(type,payload)=>{
+    const q=read();q.push({id:'evt_'+Date.now()+'_'+Math.random().toString(36).slice(2),type,payload,uid:uid(),createdAt:new Date().toISOString()});write(q);
+    window.dispatchEvent(new CustomEvent('zivozone-cloud-queued',{detail:{type}}));
+    flush();return q[q.length-1];
+  };
+  async function flush(){
+    const q=read();if(!q.length)return false;
+    try{
+      const db=window.firebase?.firestore?.();
+      const user=window.firebase?.auth?.()?.currentUser;
+      if(!db||!user)return false;
+      const batch=db.batch();
+      const ref=db.collection('users').doc(user.uid).collection('activity');
+      q.forEach(e=>batch.set(ref.doc(e.id),{...e,serverSync:true},{merge:true}));
+      await batch.commit();write([]);window.dispatchEvent(new CustomEvent('zivozone-cloud-synced'));return true;
+    }catch(e){return false}
+  }
+  function syncResult(d){return enqueue('challenge_result',{score:Number(d.score)||0,correct:Number(d.correct)||0,total:Number(d.total)||0,xp:Number(d.xp)||0,challenge:String(d.challenge||'unknown').slice(0,80)})}
+  window.ZIVOZONE_V36={enqueue,flush,syncResult,pending:()=>read().length};
+  window.addEventListener('zivozone-result',e=>syncResult(e.detail||{}));
+  window.addEventListener('online',flush);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',flush);else flush();
+})();
+
+
+(function(){
+  function mount(){
+    if(document.getElementById('v36-cloud'))return;
+    const x=document.createElement('div');x.id='v36-cloud';x.innerHTML='<i class="v36-dot"></i><span>CLOUD</span>';document.body.appendChild(x);
+    const dot=x.querySelector('.v36-dot');
+    const set=on=>dot.classList.toggle('on',!!on);
+    set(!!navigator.onLine);
+    window.addEventListener('zivozone-cloud-synced',()=>set(true));
+    window.addEventListener('offline',()=>set(false));
+    window.addEventListener('online',()=>set(true));
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
