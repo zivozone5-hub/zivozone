@@ -1664,3 +1664,27 @@
   window.ZIVOZONE_V39={open,render,getChallenges,start};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V40 — RESULT NORMALIZER
+============================================================ */
+(function(){
+  'use strict';
+  window.addEventListener('zivozone-result',function(e){
+    const d=e.detail||{};
+    const payload={
+      challenge:d.challenge||d.gameId||d.id||'unknown',
+      score:Number(d.score)||0,
+      correct:Number(d.correct)||0,
+      total:Number(d.total)||0,
+      xp:Number(d.xp)||Math.max(0,(Number(d.correct)||0)*10)
+    };
+    if(window.ZIVOZONE_V35?.add && !d.__v40processed){
+      window.ZIVOZONE_V35.add(payload.xp,payload.correct,payload.score);
+    }
+    if(window.ZIVOZONE_V36?.syncResult && !d.__v40processed){
+      window.ZIVOZONE_V36.syncResult(payload);
+    }
+  });
+})();
