@@ -440,30 +440,3 @@ body.zivo-dark-active{overflow:hidden}
 .zivo-v44-ready button:hover{transform:translateY(-1px);filter:brightness(1.08)}
 .zivo-v44-ready button.v44-click{transform:scale(.97);filter:brightness(.92)}
 #v43-cloud.v44-visible{opacity:.94}
-
-
-/* ============================================================
-   ZIVOZONE V47 — CHALLENGE CENTER UI HARDENING
-============================================================ */
-.challenge-card-v47{display:grid!important;grid-template-columns:1fr auto;grid-template-rows:auto 1fr auto;gap:10px 16px;min-height:190px!important;padding:20px!important;isolation:isolate}
-.challenge-card-v47 .challenge-card-top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;min-height:34px}
-.challenge-icon-v47{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;border:1px solid rgba(124,60,255,.25);background:linear-gradient(145deg,rgba(124,60,255,.15),rgba(45,220,255,.06));font-size:25px;box-shadow:0 0 28px rgba(124,60,255,.08)}
-.challenge-card-v47 .challenge-card-body{grid-column:1/-1;min-width:0}
-.challenge-card-v47 h3{margin:0 0 7px;font-size:1.2rem;line-height:1.35}
-.challenge-card-v47 p{color:var(--muted);line-height:1.75;min-height:48px}
-.challenge-card-v47 .challenge-card-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;color:#9ba6c9;font-size:.78rem}
-.challenge-card-v47 .challenge-card-meta span{border:1px solid rgba(255,255,255,.07);border-radius:999px;padding:5px 8px;background:rgba(255,255,255,.025)}
-.challenge-start-v47{grid-column:1/-1;width:100%;justify-content:center;min-height:45px}
-.challenge-card-v47 .card-tag{white-space:nowrap}
-.horror-card-v47{border-color:rgba(255,55,100,.22)!important;background:radial-gradient(circle at 80% 10%,rgba(120,0,35,.12),transparent 35%),linear-gradient(145deg,#110a14,#090a12)!important}
-.horror-card-v47 .challenge-icon-v47{border-color:rgba(255,70,110,.3);box-shadow:0 0 30px rgba(170,0,50,.12)}
-@media(min-width:1050px){.challenge-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important}}
-@media(max-width:700px){.challenge-card-v47{min-height:170px!important}}
-
-
-/* V48 boot recovery */
-html.zivo-v48-boot-ready [data-v48-hidden="1"]{
-  display:none !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-}
