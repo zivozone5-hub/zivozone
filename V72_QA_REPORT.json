@@ -1,0 +1,15 @@
+{
+  "version": "V72",
+  "full_site_preserved": true,
+  "news_source": "data/news.json",
+  "sports_rail": "static_github_pages_json",
+  "general_rail": "static_github_pages_json",
+  "arabic_only": true,
+  "tv_style_continuous": true,
+  "speed_calculated_from_content": true,
+  "mobile_responsive": true,
+  "browser_cache_hours": 24,
+  "github_actions_schedule": "daily",
+  "firebase_functions_required_for_news": false,
+  "question_time_seconds": 30
+}

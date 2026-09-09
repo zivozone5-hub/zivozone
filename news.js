@@ -1,105 +1,239 @@
 /* ============================================================
-   ZIVOZONE SPORTS NEWS V8
-   Global feeds + dedicated Jordanian football hub.
-   Primary Jordan source: Jordan Football Association.
+   ZIVOZONE V72 — STATIC ARABIC BROADCAST NEWS ENGINE
+   - Reads the GitHub Actions generated data/news.json
+   - Two independent TV-style rails: Sports + General
+   - Arabic-only visible headlines
+   - Smooth, speed-calculated continuous motion
+   - 24h browser cache + automatic refresh
+   - No Firebase Functions / Blaze required for news
 ============================================================ */
 (() => {
   'use strict';
-  const feeds=[
-    {sport:'soccer',league:'eng.1',icon:'⚽',name:{ar:'الدوري الإنجليزي',en:'Premier League',zh:'英超',hi:'प्रीमियर लीग',es:'Premier League'}},
-    {sport:'soccer',league:'esp.1',icon:'⚽',name:{ar:'الدوري الإسباني',en:'LaLiga',zh:'西甲',hi:'ला लीगा',es:'LaLiga'}},
-    {sport:'basketball',league:'nba',icon:'🏀',name:{ar:'NBA',en:'NBA',zh:'NBA',hi:'NBA',es:'NBA'}},
-    {sport:'tennis',league:'atp',icon:'🎾',name:{ar:'التنس',en:'Tennis',zh:'网球',hi:'टेनिस',es:'Tenis'}}
-  ];
-  const jordanSources=[
-    {title:{ar:'الاتحاد الأردني لكرة القدم',en:'Jordan Football Association',zh:'约旦足协',hi:'जॉर्डन फुटबॉल संघ',es:'Asociación Jordana de Fútbol'},url:'https://www.jfa.jo/',icon:'🇯🇴'},
-    {title:{ar:'بطولات المحترفين',en:'Pro competitions',zh:'职业赛事',hi:'प्रो प्रतियोगिताएं',es:'Competiciones profesionales'},url:'https://www.jfa.jo/category.php?idcat=6&idsubcat=0&po=357&title=Pro-League',icon:'🏆'},
-    {title:{ar:'وكالة الأنباء الأردنية',en:'Jordan News Agency',zh:'约旦通讯社',hi:'जॉर्डन समाचार एजेंसी',es:'Agencia de Noticias de Jordania'},url:'https://petra.gov.jo/',icon:'📰'}
-  ];
-  const esc=s=>{const d=document.createElement('div');d.textContent=String(s??'');return d.innerHTML};
-  const locale=l=>l==='ar'?'ar-JO':l==='zh'?'zh-CN':l==='hi'?'hi-IN':l==='es'?'es-ES':'en-US';
-  const tr=(key,l)=>window.zivoT?.(key,l)||key;
-  async function fetchFeed(f){const url=`https://site.api.espn.com/apis/site/v2/sports/${f.sport}/${f.league}/news`;const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error('news');const d=await r.json();return(d.articles||[]).slice(0,5).map(a=>({headline:a.headline||a.description||'Sports news',description:a.description||'',url:a.links?.web?.href||'https://www.espn.com/',image:a.images?.[0]?.url||'',published:a.published||'',feed:f}))}
-  async function load(box,lang='ar'){if(!box)return;box.innerHTML=`<article class="sports-card loading-card"><div class="spinner"></div><h3>${esc(tr('liveNews',lang))}</h3><p>${esc(tr('loader',lang))}</p></article>`;const results=await Promise.allSettled(feeds.map(fetchFeed));let items=[];results.forEach(r=>{if(r.status==='fulfilled')items.push(...r.value)});items.sort((a,b)=>new Date(b.published)-new Date(a.published));items=items.slice(0,12);if(!items.length){box.innerHTML=`<article class="sports-card"><div class="icon">📡</div><h3>${esc(tr('newsUnavailable',lang))}</h3><p>${esc(tr('newsFallback',lang))}</p></article>`;return}box.innerHTML=items.map(x=>{const when=x.published?new Date(x.published).toLocaleString(locale(lang),{dateStyle:'medium',timeStyle:'short'}):'';return `<article class="sports-card news-live-card"><div class="news-live-top"><span class="match-icon">${x.feed.icon}</span><span class="card-tag live-dot">LIVE</span></div><span class="card-tag">${esc(x.feed.name[lang]||x.feed.name.en)}</span><h3>${esc(x.headline)}</h3><p>${esc(x.description).slice(0,180)}</p><small class="muted">${esc(when)}</small><a class="btn btn-ghost" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(tr('openNews',lang))}</a></article>`}).join('')}
-  async function loadJordan(box,lang='ar'){
-    if(!box)return;
-    box.innerHTML=`<article class="sports-card loading-card"><div class="spinner"></div><h3>🇯🇴 ${esc(tr('jordanFootballNews',lang).replace('🇯🇴 ','').replace('🇯🇴',''))}</h3><p>${esc(tr('loader',lang))}</p></article>`;
-    // IMPORTANT: Google News RSS cannot be fetched directly from GitHub Pages
-    // because the browser blocks it with CORS. Do not fetch it here.
-    // Keep the Jordan hub reliable by using official Jordan sources in-page.
-    // A Google News search link is provided as a navigation fallback.
-    const official=jordanSources.map(x=>({
-      title:x.title[lang]||x.title.en,
-      link:x.url,
-      pub:'',
-      source:'JFA / Petra',
-      icon:x.icon
-    }));
-    const q=encodeURIComponent('كرة القدم الأردنية OR الاتحاد الأردني لكرة القدم');
-    official.push({
-      title: lang==='ar' ? 'آخر أخبار كرة القدم الأردنية' :
-             lang==='zh' ? '约旦足球最新新闻' :
-             lang==='hi' ? 'जॉर्डन फुटबॉल की ताज़ा खबरें' :
-             lang==='es' ? 'Últimas noticias del fútbol jordano' :
-             'Latest Jordanian football news',
-      link:`https://news.google.com/search?q=${q}&hl=ar&gl=JO&ceid=JO%3Aar`,
-      pub:'',
-      source:'Google News',
-      icon:'📰'
-    });
-    let items=official;
-    box.innerHTML=items.map(x=>`<article class="sports-card jordan-news-card"><div class="news-live-top"><span class="match-icon">${x.icon||'🇯🇴'}</span><span class="card-tag">${esc(x.source||'Jordan Football')}</span></div><h3>${esc(x.title)}</h3>${x.pub?`<small class="muted">${esc(new Date(x.pub).toLocaleString(locale(lang),{dateStyle:'medium',timeStyle:'short'}))}</small>`:''}<a class="btn btn-ghost" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">${esc(tr('openNews',lang))}</a></article>`).join('');
-  }
-  window.ZIVOZONE_NEWS={load,loadJordan};
-})();
 
-/* ============================================================
-   ZIVOZONE SPORTS TICKER V65
-   Single home-page ticker. News cache target: 24h.
-   Scores are allowed to refresh more frequently through the backend.
-============================================================ */
-(() => {
-  'use strict';
-  const KEY='zivozone_sports_ticker_v65';
-  const TTL=24*60*60*1000;
-  const esc=s=>{const d=document.createElement('div');d.textContent=String(s??'');return d.innerHTML};
-  function read(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
-  function write(v){try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}}
-  function render(data){
-    const track=document.getElementById('z50track'); if(!track)return;
-    const items=[];
-    (data?.news||[]).forEach(n=>items.push(`<span class="z50i"><b>NEWS</b> ${esc(n.headline||n.title||'')} <span class="z50s">${esc(n.category||'SPORT')}</span></span>`));
-    (data?.matches||[]).forEach(m=>{
-      const c=m.competitors||[];
-      items.push(`<span class="z50i"><b>⚽</b> ${esc(c[0]?.name||'—')} <span class="z50s">${esc(c[0]?.score??'—')} - ${esc(c[1]?.score??'—')}</span> ${esc(c[1]?.name||'—')} <span class="z50s">${esc(m.status||'')}</span></span>`)
+  const DATA_URL = 'data/news.json';
+  const CACHE_KEY = 'zivozone_news_v72';
+  const CACHE_TTL = 24 * 60 * 60 * 1000;
+  const REFRESH_MS = 60 * 60 * 1000;
+
+  const esc = (value) => {
+    const d = document.createElement('div');
+    d.textContent = String(value ?? '');
+    return d.innerHTML;
+  };
+
+  const hasArabic = (value) => /[\u0600-\u06FF]/.test(String(value || ''));
+
+  const clean = (value) => String(value || '')
+    .replace(/\s+/g, ' ')
+    .replace(/^\s*[|•·-]\s*/, '')
+    .trim();
+
+  const normalizeItem = (item, group) => {
+    if (!item || typeof item !== 'object') return null;
+    const headline = clean(item.headline || item.title);
+    if (!headline || !hasArabic(headline)) return null;
+    return {
+      headline,
+      source: clean(item.source || (group === 'sports' ? 'أخبار الرياضة' : 'الأخبار')),
+      url: clean(item.url || ''),
+      published: item.published || ''
+    };
+  };
+
+  const unique = (items) => {
+    const seen = new Set();
+    return items.filter((item) => {
+      const key = clean(item.headline).toLowerCase()
+        .replace(/[^\u0600-\u06FF\w]+/g, '');
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
     });
-    if(!items.length)return;
-    track.innerHTML=items.concat(items).join('');
+  };
+
+  function readCache() {
+    try {
+      const value = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+      return value && value.data ? value : null;
+    } catch (_) {
+      return null;
+    }
   }
-  async function backend(){
-    const f=window.firebase?.functions?.(); if(!f)throw Error('firebase-functions');
-    const fn=f.httpsCallable(window.ZIVOZONE_API?.sportsCallable||'getSportsBroadcast');
-    const r=await fn({}); return r?.data||{};
+
+  function writeCache(data) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        savedAt: Date.now(),
+        data
+      }));
+    } catch (_) {}
   }
-  async function fallback(){
-    const feeds=[
-      ['soccer','eng.1','🌍'],['soccer','esp.1','🇪🇸'],['soccer','uefa.champions','🏆']
-    ];
-    const all=[];
-    for(const [sport,league] of feeds){try{const r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/${sport}/${league}/news`,{cache:'no-store'});if(r.ok){const d=await r.json();(d.articles||[]).slice(0,4).forEach(a=>all.push({headline:a.headline||a.description,category:league,published:a.published}))}}catch(e){}}
-    all.sort((a,b)=>new Date(b.published||0)-new Date(a.published||0));
-    return {news:all.slice(0,10),matches:[]};
+
+  function setStatus(group, text) {
+    const node = document.querySelector(
+      group === 'sports' ? '.zivo-sports-rail .zivo-rail-status' : '.zivo-general-rail .zivo-rail-status'
+    );
+    if (node) node.textContent = text;
   }
-  async function load(force=false){
-    const cached=read();
-    if(!force && cached && Date.now()-cached.savedAt<TTL){render(cached.data);return cached.data;}
-    let data=null;
-    try{data=await backend()}catch(e){try{data=await fallback()}catch(x){data=null}}
-    if(data&&((data.news||[]).length||(data.matches||[]).length)){write({savedAt:Date.now(),data});render(data)}
-    else if(cached)render(cached.data);
-    return data;
+
+  function formatDate(value) {
+    if (!value) return '';
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleString('ar-JO', {
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
-  window.ZIVOZONE_SPORTS_TICKER={refresh:()=>load(true),load};
-  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>load(false),500));
-  setInterval(()=>load(true),TTL);
+
+  function itemHTML(item, group) {
+    const source = esc(item.source || (group === 'sports' ? 'رياضة' : 'أخبار'));
+    const time = formatDate(item.published);
+    const content = `
+      <span class="zivo-news-dot" aria-hidden="true">◆</span>
+      <span class="zivo-news-source">${source}</span>
+      <span class="zivo-news-headline">${esc(item.headline)}</span>
+      ${time ? `<time class="zivo-news-time">${esc(time)}</time>` : ''}
+    `;
+    return item.url
+      ? `<a class="zivo-news-item" href="${esc(item.url)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(item.headline)}">${content}</a>`
+      : `<span class="zivo-news-item">${content}</span>`;
+  }
+
+  function renderRail(group, items) {
+    const rail = document.querySelector(group === 'sports' ? '.zivo-sports-rail' : '.zivo-general-rail');
+    const track = document.getElementById(group === 'sports' ? 'z50track' : 'zivoGeneralTrack');
+    if (!rail || !track) return;
+
+    const list = unique(items.map(x => normalizeItem(x, group)).filter(Boolean)).slice(0, 30);
+
+    if (!list.length) {
+      track.className = 'zivo-rail-track zivo-rail-track-empty';
+      track.innerHTML = `<span class="zivo-news-item"><span class="zivo-news-source">ZIVOZONE</span><span class="zivo-news-headline">${group === 'sports' ? 'لا توجد أخبار رياضية عربية متاحة حاليًا' : 'لا توجد أخبار عامة عربية متاحة حاليًا'}</span></span>`;
+      return;
+    }
+
+    // Two identical sequences create a seamless TV-style loop.
+    const html = list.map(x => itemHTML(x, group)).join('');
+    track.className = 'zivo-rail-track';
+    track.innerHTML = `<div class="zivo-rail-sequence">${html}</div><div class="zivo-rail-sequence" aria-hidden="true">${html}</div>`;
+
+    // Calculate duration from content width so short and long news sets
+    // keep a comfortable reading speed instead of a fixed, fast animation.
+    requestAnimationFrame(() => {
+      const sequence = track.querySelector('.zivo-rail-sequence');
+      if (!sequence) return;
+      const width = Math.max(320, sequence.scrollWidth);
+      const mobile = window.matchMedia('(max-width:700px)').matches;
+      const pxPerSecond = mobile ? 30 : 42;
+      const duration = Math.max(28, Math.min(150, width / pxPerSecond));
+      track.style.setProperty('--zivo-flow-duration', `${duration}s`);
+      track.classList.toggle('zivo-short-feed', width < 700);
+    });
+  }
+
+  function render(data) {
+    const sports = Array.isArray(data?.sports) ? data.sports : [];
+    const general = Array.isArray(data?.general) ? data.general : [];
+    renderRail('sports', sports);
+    renderRail('general', general);
+
+    const updated = data?.updatedAt ? formatDate(data.updatedAt) : '';
+    document.querySelectorAll('.zivo-rail-status').forEach(node => {
+      node.textContent = updated ? `آخر تحديث ${updated}` : 'تحديث تلقائي';
+    });
+
+    window.dispatchEvent(new CustomEvent('zivozone:news-updated', {
+      detail: { sports, general, updatedAt: data?.updatedAt || null }
+    }));
+  }
+
+  async function fetchData() {
+    const response = await fetch(`${DATA_URL}?v=${Date.now()}`, {
+      cache: 'no-store',
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!response.ok) throw new Error(`news.json ${response.status}`);
+    const data = await response.json();
+    return {
+      updatedAt: Number(data.updatedAt) || Date.now(),
+      sports: Array.isArray(data.sports) ? data.sports : [],
+      general: Array.isArray(data.general) ? data.general : []
+    };
+  }
+
+  async function load(force = false) {
+    const cached = readCache();
+
+    if (!force && cached && Date.now() - Number(cached.savedAt || 0) < CACHE_TTL) {
+      render(cached.data);
+      setStatus('sports', 'آخر نسخة محفوظة');
+      setStatus('general', 'آخر نسخة محفوظة');
+      // Validate in the background so the user gets a fresh feed as soon as
+      // GitHub Pages has the newest JSON.
+      fetchData().then(data => {
+        if (JSON.stringify(data) !== JSON.stringify(cached.data)) {
+          writeCache(data);
+          render(data);
+        }
+      }).catch(() => {});
+      return cached.data;
+    }
+
+    try {
+      const data = await fetchData();
+      if (data.sports.length || data.general.length) {
+        writeCache(data);
+        render(data);
+        return data;
+      }
+    } catch (error) {
+      console.warn('ZIVOZONE news feed:', error);
+    }
+
+    if (cached) {
+      render(cached.data);
+      return cached.data;
+    }
+
+    render({ sports: [], general: [], updatedAt: null });
+    return null;
+  }
+
+  function restartAnimations() {
+    const tracks = document.querySelectorAll('.zivo-rail-track');
+    tracks.forEach(track => {
+      const sequence = track.querySelector('.zivo-rail-sequence');
+      if (!sequence) return;
+      const width = Math.max(320, sequence.scrollWidth);
+      const mobile = window.matchMedia('(max-width:700px)').matches;
+      const pxPerSecond = mobile ? 30 : 42;
+      const duration = Math.max(28, Math.min(150, width / pxPerSecond));
+      track.style.setProperty('--zivo-flow-duration', `${duration}s`);
+    });
+  }
+
+  // Compatibility helpers retained for existing site integrations.
+  window.ZIVOZONE_NEWS = {
+    load,
+    loadJordan: async () => load(false),
+    refresh: () => load(true)
+  };
+  window.ZIVOZONE_SPORTS_TICKER = {
+    load,
+    refresh: () => load(true)
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => load(false), 250);
+  });
+
+  window.addEventListener('resize', () => {
+    clearTimeout(window.__zivoNewsResizeTimer);
+    window.__zivoNewsResizeTimer = setTimeout(restartAnimations, 180);
+  });
+
+  setInterval(() => load(true), REFRESH_MS);
 })();
