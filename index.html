@@ -52,6 +52,19 @@
 @media(prefers-reduced-motion:reduce){.zivo-v54-track,.zivo-v54-live{animation:none}}
 </style>
 
+
+<style id="zivo-v55-retention">
+.zivo-v55-dashboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
+.zivo-v55-kpi{border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:10px;background:rgba(255,255,255,.045)}
+.zivo-v55-kpi small{display:block;font-size:9px;opacity:.62}.zivo-v55-kpi b{display:block;font-size:16px;margin-top:3px}
+.zivo-v55-mission{border:1px solid rgba(255,215,70,.20);border-radius:15px;padding:12px;background:linear-gradient(135deg,rgba(255,215,70,.08),rgba(255,255,255,.025));margin:12px 0}
+.zivo-v55-mission-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.zivo-v55-badge{padding:4px 7px;border-radius:999px;background:rgba(255,215,70,.14);font-size:9px;font-weight:1000}
+.zivo-v55-progress{height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:9px}.zivo-v55-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd43d,#76e6ff);transition:width .35s}
+.zivo-v55-ai-panel{display:flex;gap:10px;align-items:center}.zivo-v55-ai-panel .orb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,#7ee7ff 30%,#5267ff 65%,#171b55);font-size:11px;font-weight:1000}
+.zivo-v55-ai-panel p{margin:2px 0 0;font-size:10px;opacity:.72}
+@media(max-width:700px){.zivo-v55-dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -77,6 +90,26 @@
   </div>
 </header>
 <main>
+
+<section id="zivoV55Retention" aria-label="لوحة تقدم اللاعب">
+  <div class="zivo-v55-dashboard">
+    <div class="zivo-v55-kpi"><small>ألعاب مكتملة</small><b data-v55-games>0</b></div>
+    <div class="zivo-v55-kpi"><small>انتصارات</small><b data-v55-wins>0</b></div>
+    <div class="zivo-v55-kpi"><small>سلسلة الأيام</small><b data-v55-streak>0</b></div>
+    <div class="zivo-v55-kpi"><small>الترتيب</small><b data-v55-rank>—</b></div>
+  </div>
+  <div class="zivo-v55-mission">
+    <div class="zivo-v55-mission-head"><strong>🎯 مهمة اليوم</strong><span class="zivo-v55-badge" data-v55-mission-status>جاهزة</span></div>
+    <div style="font-size:11px;margin-top:5px" data-v55-mission-text>أكمل تحديًا واحدًا اليوم</div>
+    <div class="zivo-v55-progress"><i data-v55-progress></i></div>
+  </div>
+  <div class="zivo-v54-card zivo-v55-ai-panel">
+    <div class="orb">AI</div>
+    <div><strong>ZIVO AI — مدربك الرقمي</strong><p data-v55-ai-message>حلّل نتائجك لنقترح عليك التحدي الأنسب.</p></div>
+  </div>
+</section>
+
+
 <section class="zivo-v54-playerbar" id="zivoV54PlayerCenter" aria-label="مركز اللاعب والذكاء الاصطناعي">
   <div class="zivo-v54-card">
     <div class="zivo-v54-id">PLAYER ID</div>
@@ -412,6 +445,54 @@ document.addEventListener('DOMContentLoaded',function(){
       keys.forEach(k=>{if(k in window && typeof window[k]==='number')window[k]=30});
     }catch(e){}
   });
+})();
+</script>
+
+
+<script id="zivo-v55-retention-runtime">
+(function(){
+'use strict';
+const K='zivozone_v55_retention';
+function load(){try{return JSON.parse(localStorage.getItem(K)||'{}')}catch(e){return{}}}
+function save(x){try{localStorage.setItem(K,JSON.stringify(x))}catch(e){}}
+function state(){
+ const p=load();
+ p.games=Number(p.games||0);p.wins=Number(p.wins||0);p.streak=Number(p.streak||0);
+ p.lastDay=p.lastDay||'';p.todayDone=!!p.todayDone;
+ const day=new Date().toISOString().slice(0,10);
+ if(p.lastDay!==day){
+   const prev=new Date();prev.setDate(prev.getDate()-1);
+   const yesterday=prev.toISOString().slice(0,10);
+   p.streak=p.lastDay===yesterday?p.streak:p.streak;
+   p.todayDone=false;
+ }
+ return p;
+}
+function render(){
+ const p=state();
+ document.querySelectorAll('[data-v55-games]').forEach(x=>x.textContent=p.games);
+ document.querySelectorAll('[data-v55-wins]').forEach(x=>x.textContent=p.wins);
+ document.querySelectorAll('[data-v55-streak]').forEach(x=>x.textContent=p.streak);
+ document.querySelectorAll('[data-v55-progress]').forEach(x=>x.style.width=(p.todayDone?'100':'0')+'%');
+ document.querySelectorAll('[data-v55-mission-status]').forEach(x=>x.textContent=p.todayDone?'مكتملة':'جاهزة');
+ document.querySelectorAll('[data-v55-ai-message]').forEach(x=>{
+   x.textContent=p.games===0?'ابدأ بتحدٍ واحد، وسأبدأ ببناء ملفك الذكي.':
+     p.wins>p.games/2?'مستواك جيد. جرّب تحديًا أصعب لرفع XP وZIVO.':
+     'لديك مجال للتحسن. جرّب تحديًا متوسط الصعوبة وراقب تقدمك.';
+ });
+}
+window.ZIVOZONE_RETENTION={
+ recordGame:function(win){
+   const p=state();p.games++;if(win)p.wins++;
+   const today=new Date().toISOString().slice(0,10);
+   if(p.lastDay!==today){p.streak=(p.lastDay?Math.max(1,p.streak+1):1);p.lastDay=today;p.todayDone=true;}
+   save(p);render();
+   if(window.ZIVOZONE&&typeof window.ZIVOZONE.track==='function')
+     window.ZIVOZONE.track('game_completed',{win:!!win,games:p.games,wins:p.wins,streak:p.streak});
+ },
+ get:state,refresh:render
+};
+document.addEventListener('DOMContentLoaded',render);
 })();
 </script>
 
