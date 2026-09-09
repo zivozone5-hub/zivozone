@@ -1353,3 +1353,66 @@
   window.addEventListener('zivozone-progress',e=>completeFromEvent(e.detail||{}));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V35 — PLAYER PROGRESS / LEVEL / DAILY STREAK
+   Additive layer. Existing systems remain untouched.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v35_progress';
+  const DAY=()=>new Date().toISOString().slice(0,10);
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
+  const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+  function state(){
+    let s=read();
+    if(!s.version)s={version:1,xp:0,level:1,played:0,correct:0,streak:0,lastDay:null,bestScore:0,history:[]};
+    return s;
+  }
+  function levelFor(xp){return Math.max(1,Math.floor(Math.sqrt(Math.max(0,xp)/100))+1)}
+  function add(xp,correct=0,score=0){
+    const s=state(),d=DAY();
+    if(s.lastDay!==d){
+      const y=new Date(d+'T00:00:00');y.setUTCDate(y.getUTCDate()-1);
+      const yd=y.toISOString().slice(0,10);
+      s.streak=s.lastDay===yd?s.streak+1:1;s.lastDay=d;
+    }
+    s.xp=Math.max(0,s.xp+Math.max(0,Number(xp)||0));s.played++;s.correct+=Math.max(0,Number(correct)||0);
+    s.bestScore=Math.max(Number(s.bestScore)||0,Number(score)||0);
+    s.level=levelFor(s.xp);s.history=(s.history||[]).slice(-19);s.history.push({date:d,xp:s.xp,level:s.level});
+    write(s);render(s);return s;
+  }
+  function render(s=state()){
+    const o=document.getElementById('v35-progress');if(!o)return;
+    const next=s.level*100,base=(s.level-1)*100,percent=Math.min(100,Math.max(0,(s.xp-base)/(next-base)*100));
+    o.querySelector('[data-lvl]').textContent=s.level;
+    o.querySelector('[data-xp]').textContent=s.xp+' XP';
+    o.querySelector('[data-play]').textContent=s.played;
+    o.querySelector('[data-streak]').textContent=s.streak||0;
+    o.querySelector('[data-best]').textContent=s.bestScore||0;
+    o.querySelector('[data-fill]').style.width=percent+'%';
+    o.querySelector('[data-next]').textContent=`${Math.max(0,next-s.xp)} XP للمستوى التالي`;
+  }
+  function open(){
+    let o=document.getElementById('v35-progress');
+    if(!o){
+      o=document.createElement('div');o.id='v35-progress';o.className='v35-overlay';
+      o.innerHTML=`<div class="v35-card"><button class="v35-close">×</button>
+      <div class="v35-head"><div class="v35-mark">Z</div><div><small>PLAYER PROGRESS</small><h2>مستوى اللاعب</h2><span>كل تحدٍ يترك أثرًا في رحلتك.</span></div></div>
+      <div class="v35-level"><div><small>LEVEL</small><b data-lvl>1</b></div><div class="v35-xp"><span data-xp>0 XP</span><i><em data-fill></em></i><small data-next>100 XP للمستوى التالي</small></div></div>
+      <div class="v35-stats"><div><b data-play>0</b><span>تحديات</span></div><div><b data-streak>0</b><span>Streak</span></div><div><b data-best>0</b><span>أفضل نتيجة</span></div></div>
+      <div class="v35-note">استمر في اللعب بانتظام. المستوى هنا هو سجل تقدم اللاعب، بينما تبقى النتائج التنافسية قابلة للتحقق عبر الخدمة السحابية.</div>
+      </div>`;
+      document.body.appendChild(o);o.querySelector('.v35-close').onclick=()=>o.classList.remove('open');
+    }
+    render();o.classList.add('open');
+  }
+  function mount(){
+    if(document.getElementById('v35-open'))return;
+    const b=document.createElement('button');b.id='v35-open';b.textContent='📈 مستواي';b.onclick=open;document.body.appendChild(b);
+  }
+  window.ZIVOZONE_V35={state,add,open,levelFor};
+  window.addEventListener('zivozone-result',e=>{const d=e.detail||{};add(d.xp||0,d.correct||0,d.score||0)});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
