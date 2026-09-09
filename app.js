@@ -2296,3 +2296,54 @@
   window.ZIVOZONE_V46={submit,flush,pending:()=>readQ().length};
   window.addEventListener('online',()=>flush());
 })();
+
+
+/* ============================================================
+   ZIVOZONE V48 — BOOT / LOADING RECOVERY
+   Fixes a stuck "جاري تجهيز عالمك" screen without bypassing Firebase.
+============================================================ */
+(function(){
+  'use strict';
+  const started=Date.now();
+  const MAX_WAIT=9000;
+
+  function overlays(){
+    return [...document.querySelectorAll(
+      '[id*="load" i],[class*="load" i],[id*="splash" i],[class*="splash" i],[id*="boot" i],[class*="boot" i]'
+    )].filter(el=>{
+      const t=(el.textContent||'').trim();
+      return /جاري\s+تجهيز\s+عالمك|تجهيز\s+عالمك|loading|جار[يٍ]?\s+التحميل/i.test(t);
+    });
+  }
+
+  function appLooksReady(){
+    return !!(
+      document.querySelector('#challenge-center,.challenge-center,[data-page="home"],main') &&
+      (document.querySelector('button') || document.body.children.length>2)
+    );
+  }
+
+  function hide(el){
+    el.setAttribute('data-v48-hidden','1');
+    el.style.setProperty('display','none','important');
+    el.style.setProperty('visibility','hidden','important');
+    el.style.setProperty('pointer-events','none','important');
+  }
+
+  function tick(){
+    const elapsed=Date.now()-started;
+    const ready=appLooksReady();
+    if(ready || elapsed>=MAX_WAIT){
+      overlays().forEach(hide);
+      document.documentElement.classList.add('zivo-v48-boot-ready');
+      return true;
+    }
+    return false;
+  }
+
+  const timer=setInterval(()=>{ if(tick()) clearInterval(timer); },250);
+  if(document.readyState!=='loading') tick();
+  else document.addEventListener('DOMContentLoaded',()=>setTimeout(tick,100),{once:true});
+
+  window.addEventListener('load',()=>setTimeout(tick,150),{once:true});
+})();
