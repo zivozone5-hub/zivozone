@@ -1,0 +1,75 @@
+{
+  "index_exists": true,
+  "app_exists": true,
+  "ticker_present": true,
+  "challenge_center_present": true,
+  "timer_30_in_app": true,
+  "v66_polish_present": true,
+  "javascript_syntax": [
+    {
+      "file": "i18n.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "fixtures.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "challenges.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "challenge_pack.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "v23_smart.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "audio.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "app.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "ads.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "news.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "auth.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "v22_bank.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "functions/index.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "functions/ai.js",
+      "ok": true,
+      "error": ""
+    }
+  ]
+}
