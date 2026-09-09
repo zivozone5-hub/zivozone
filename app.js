@@ -2017,3 +2017,67 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V44 — HOMEPAGE COMMAND LAYER
+   Pre-publication UX hardening. Additive only.
+============================================================ */
+(function(){
+  'use strict';
+
+  const NAV_IDS=['v37-open','v38-open','v39-open'];
+  const state={busy:false};
+
+  function removeDuplicateIds(){
+    NAV_IDS.forEach(id=>{
+      const nodes=[...document.querySelectorAll('#'+CSS.escape(id))];
+      nodes.slice(1).forEach(n=>n.remove());
+    });
+  }
+
+  function repairButtons(){
+    removeDuplicateIds();
+    document.querySelectorAll('button').forEach(btn=>{
+      if(btn.dataset.v44Bound)return;
+      btn.dataset.v44Bound='1';
+      btn.addEventListener('click',()=>{
+        btn.classList.add('v44-click');
+        setTimeout(()=>btn.classList.remove('v44-click'),180);
+      },{passive:true});
+    });
+  }
+
+  function openHome(){
+    const home=document.querySelector('[data-page="home"], #home, .home-page, .page-home');
+    if(home) home.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function showCloud(){
+    const cloud=document.getElementById('v43-cloud');
+    if(cloud) cloud.classList.add('v44-visible');
+  }
+
+  function boot(){
+    repairButtons();
+    showCloud();
+    document.documentElement.classList.add('zivo-v44-ready');
+  }
+
+  window.ZIVOZONE_V44={
+    audit:{
+      duplicateLauncherIds:NAV_IDS.filter(id=>document.querySelectorAll('#'+CSS.escape(id)).length>1),
+      buttonCount:document.querySelectorAll('button').length,
+      scriptCount:document.scripts.length
+    },
+    repairButtons,
+    openHome,
+    state
+  };
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,50));
+  }else setTimeout(boot,50);
+
+  new MutationObserver(()=>repairButtons()).observe(document.documentElement,{subtree:true,childList:true});
+})();
