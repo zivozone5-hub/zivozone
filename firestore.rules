@@ -10,6 +10,16 @@ service cloud.firestore {
       allow update: if request.auth != null && request.auth.uid == userId;
       allow delete: if false;
 
+
+      match /attempts/{attemptId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null
+          && request.auth.uid == userId
+          && request.resource.data.status == 'pending-server-validation'
+          && !request.resource.data.keys().hasAny(['xp','coins','zivo','reward']);
+        allow update, delete: if false;
+      }
+
       match /results/{resultId} {
         allow read: if request.auth != null && request.auth.uid == userId;
         allow create: if request.auth != null && request.auth.uid == userId;

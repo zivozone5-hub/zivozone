@@ -2081,3 +2081,95 @@
 
   new MutationObserver(()=>repairButtons()).observe(document.documentElement,{subtree:true,childList:true});
 })();
+
+
+/* ============================================================
+   ZIVOZONE V45 — PRODUCTION SCORE GATE
+   Server-authoritative-ready bridge. Existing Firebase app is reused.
+   No second Firebase app. No replacement of existing challenge engine.
+============================================================ */
+(function(){
+  'use strict';
+  const ENDPOINT_KEY='zivozone_v45_endpoint';
+  const QUEUE_KEY='zivozone_v45_pending';
+
+  function user(){
+    try{return window.firebase?.auth?.()?.currentUser||null}catch(e){return null}
+  }
+  function queueRead(){try{return JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]')}catch(e){return[]}}
+  function queueWrite(q){try{localStorage.setItem(QUEUE_KEY,JSON.stringify(q.slice(-25)))}catch(e){}}
+
+  function sanitize(x){
+    x=x||{};
+    return {
+      challengeId:String(x.challengeId||x.id||'challenge').slice(0,80),
+      attemptId:String(x.attemptId||crypto?.randomUUID?.()||Date.now()+'-'+Math.random()).slice(0,100),
+      answers:Array.isArray(x.answers)?x.answers.slice(0,100).map(v=>String(v).slice(0,200)):[],
+      total:Math.max(0,Math.min(100,Number(x.total)||0)),
+      clientScore:Math.max(0,Math.min(10000,Number(x.score)||0)),
+      clientCorrect:Math.max(0,Math.min(100,Number(x.correct)||0)),
+      durationMs:Math.max(0,Math.min(3600000,Number(x.durationMs)||0))
+    };
+  }
+
+  async function submit(attempt){
+    const payload=sanitize(attempt);
+    const u=user();
+    if(!u){
+      const q=queueRead();q.push({payload,queuedAt:Date.now()});queueWrite(q);
+      return {accepted:false,queued:true,reason:'not-authenticated'};
+    }
+
+    const endpoint=localStorage.getItem(ENDPOINT_KEY)||window.ZIVOZONE_CONFIG?.scoreEndpoint||'';
+    if(endpoint){
+      try{
+        const token=await u.getIdToken();
+        const res=await fetch(endpoint,{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+          body:JSON.stringify(payload)
+        });
+        if(!res.ok)throw new Error('HTTP '+res.status);
+        const data=await res.json().catch(()=>({}));
+        return {accepted:true,server:true,data};
+      }catch(e){
+        const q=queueRead();q.push({payload,queuedAt:Date.now()});queueWrite(q);
+        return {accepted:false,queued:true,reason:e.message||'endpoint-failed'};
+      }
+    }
+
+    /* Safe fallback: record raw attempt for the existing authenticated
+       player; reward values are deliberately NOT minted here. */
+    try{
+      const db=window.firebase?.firestore?.();
+      await db.collection('players').doc(u.uid).collection('attempts').doc(payload.attemptId).set({
+        ...payload,
+        submittedAt:firebase.firestore.FieldValue.serverTimestamp(),
+        status:'pending-server-validation'
+      });
+      return {accepted:true,server:false,pendingValidation:true};
+    }catch(e){
+      const q=queueRead();q.push({payload,queuedAt:Date.now()});queueWrite(q);
+      return {accepted:false,queued:true,reason:e.code||'cloud-failed'};
+    }
+  }
+
+  async function flush(){
+    const u=user(); if(!u)return {flushed:0};
+    const q=queueRead(); if(!q.length)return {flushed:0};
+    let done=0,keep=[];
+    for(const item of q){
+      const result=await submit(item.payload);
+      if(result.accepted)done++; else keep.push(item);
+    }
+    queueWrite(keep);
+    return {flushed:done,remaining:keep.length};
+  }
+
+  window.ZIVOZONE_V45={submit,flush,configureEndpoint:function(url){
+    if(url)localStorage.setItem(ENDPOINT_KEY,String(url));
+    else localStorage.removeItem(ENDPOINT_KEY);
+  }};
+
+  window.addEventListener('online',()=>flush());
+})();
