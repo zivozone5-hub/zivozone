@@ -130,34 +130,51 @@
 }
 </style>
 
-<style id="zivo-v69-news-network">
-.zivo-news-stack{width:100%;display:grid;gap:8px;margin:14px 0 18px}
-.zivo-news-rail{position:relative;display:flex;align-items:stretch;min-width:0;height:50px;overflow:hidden;border-radius:14px;background:linear-gradient(90deg,#0b101a,#111a28 50%,#0b101a);border:1px solid rgba(255,255,255,.09);box-shadow:0 8px 26px rgba(0,0,0,.16)}
-.zivo-rail-head{z-index:4;flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:0 12px;min-width:235px;background:linear-gradient(135deg,#151f30,#0d1420);border-inline-end:1px solid rgba(255,255,255,.1);white-space:nowrap}
-.zivo-rail-live{padding:4px 8px;border-radius:999px;background:#e53935;color:#fff;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif}
-.zivo-rail-badge{padding:4px 8px;border-radius:999px;background:#ffd54a;color:#2a2100;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif}
-.zivo-rail-title{color:#fff;font:900 14px/1.2 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif}
-.zivo-rail-sub{color:#8fa1b9;font:700 9px/1.2 "Noto Sans Arabic","Tahoma",sans-serif}
+<style id="zivo-v70-news-pro">
+/* ZIVOZONE V70 — premium dual broadcast newsroom */
+.zivo-news-stack{width:100%;display:grid;gap:9px;margin:16px 0 20px;direction:rtl}
+.zivo-news-rail{
+ position:relative;display:flex;align-items:stretch;min-width:0;height:54px;
+ overflow:hidden;border-radius:16px;
+ background:linear-gradient(90deg,#070b12 0%,#101927 52%,#070b12 100%);
+ border:1px solid rgba(255,255,255,.10);
+ box-shadow:0 10px 32px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.zivo-news-rail:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.025),transparent)}
+.zivo-rail-head{
+ z-index:5;flex:0 0 auto;display:flex;align-items:center;gap:9px;min-width:260px;
+ padding:0 14px;background:linear-gradient(135deg,#172235,#0b111b);
+ border-inline-start:1px solid rgba(255,255,255,.07);border-inline-end:1px solid rgba(255,255,255,.12);
+ white-space:nowrap;
+}
+.zivo-rail-live{color:#fff;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif;background:#e31d2f;border-radius:99px;padding:6px 8px;box-shadow:0 0 0 3px rgba(227,29,47,.10)}
+.zivo-rail-badge{color:#111827;background:#f5c84b;border-radius:99px;padding:6px 9px;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif}
+.zivo-rail-title{color:#fff;font:950 14px/1.1 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;letter-spacing:.3px}
+.zivo-rail-sub{color:#8fa4bf;font:700 9px/1.2 "Noto Sans Arabic","Tahoma",sans-serif}
 .zivo-rail-window{position:relative;flex:1;min-width:0;overflow:hidden;display:flex;align-items:center}
-.zivo-rail-window:before,.zivo-rail-window:after{content:"";position:absolute;top:0;bottom:0;width:42px;z-index:3;pointer-events:none}
-.zivo-rail-window:before{right:0;background:linear-gradient(90deg,transparent,#0b101a)}
-.zivo-rail-window:after{left:0;background:linear-gradient(90deg,#0b101a,transparent)}
-.zivo-rail-track{display:inline-flex;align-items:center;gap:34px;width:max-content;direction:rtl;white-space:nowrap;animation:zivoBroadcastFlow 46s linear infinite;will-change:transform}
-.zivo-news-item{display:inline-flex;align-items:center;gap:7px;color:#f3f7ff;font:800 13px/1.8 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;text-decoration:none}
-.zivo-news-item .src{color:#7dd3fc;font-size:10px;font-weight:900}
-.zivo-news-item .dot{color:#64748b;font-size:15px}
+.zivo-rail-window:after{content:"";position:absolute;inset-inline-end:0;top:0;bottom:0;width:70px;z-index:4;pointer-events:none;background:linear-gradient(90deg,transparent,#070b12)}
+.zivo-rail-window:before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:42px;z-index:4;pointer-events:none;background:linear-gradient(90deg,#070b12,transparent)}
+.zivo-rail-track{
+ display:inline-flex;align-items:center;gap:42px;width:max-content;direction:rtl;white-space:nowrap;
+ padding:0 24px;animation:zivoBroadcastFlowV70 48s linear infinite;will-change:transform
+}
+.zivo-general-rail .zivo-rail-track{animation-duration:56s}
+.zivo-news-item{
+ display:inline-flex;align-items:center;gap:9px;color:#f4f7fb;
+ font:800 13px/1.9 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;
+}
+.zivo-news-item .dot{color:#5b6b80;font-size:10px}
+.zivo-news-item .src{color:#78c8ff;font-size:9px;font-weight:900;background:rgba(120,200,255,.08);padding:2px 6px;border-radius:6px}
 .zivo-news-rail:hover .zivo-rail-track{animation-play-state:paused}
-.zivo-sports-rail{border-color:rgba(56,189,248,.16)}
-.zivo-general-rail{background:linear-gradient(90deg,#0c1119,#151923 50%,#0c1119)}
-.zivo-general-rail .zivo-rail-track{animation-duration:52s}
-@keyframes zivoBroadcastFlow{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes zivoBroadcastFlowV70{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(max-width:700px){
- .zivo-news-rail{height:46px;border-radius:11px}
- .zivo-rail-head{min-width:142px;padding:0 8px;gap:5px}
+ .zivo-news-stack{gap:7px;margin:11px 0 15px}
+ .zivo-news-rail{height:48px;border-radius:12px}
+ .zivo-rail-head{min-width:150px;padding:0 8px;gap:6px}
  .zivo-rail-title{font-size:11px}.zivo-rail-sub{display:none}
- .zivo-rail-live,.zivo-rail-badge{font-size:8px;padding:4px 6px}
- .zivo-rail-track{gap:25px;animation-duration:40s}
- .zivo-general-rail .zivo-rail-track{animation-duration:45s}
+ .zivo-rail-live,.zivo-rail-badge{font-size:8px;padding:5px 6px}
+ .zivo-rail-track{gap:28px;padding:0 17px;animation-duration:43s}
+ .zivo-general-rail .zivo-rail-track{animation-duration:49s}
  .zivo-news-item{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.zivo-rail-track{animation:none}}
@@ -228,12 +245,13 @@
 </section>
 
 
-<section class="zivo-news-stack" aria-label="مركز الأخبار">
+
+<section class="zivo-news-stack" aria-label="شبكة أخبار ZIVOZONE">
   <div class="zivo-news-rail zivo-sports-rail" dir="rtl">
     <div class="zivo-rail-head">
-      <span class="zivo-rail-live">مباشر</span>
-      <span class="zivo-rail-title">أخبار الرياضة</span>
-      <span class="zivo-rail-sub">العالمية • العربية • الأردنية</span>
+      <span class="zivo-rail-live">● مباشر</span>
+      <span class="zivo-rail-title">ZIVO SPORTS</span>
+      <span class="zivo-rail-sub">العالمية · العربية · الأردن</span>
     </div>
     <div class="zivo-rail-window">
       <div class="zivo-rail-track" id="z50track">
@@ -241,12 +259,11 @@
       </div>
     </div>
   </div>
-
   <div class="zivo-news-rail zivo-general-rail" dir="rtl">
     <div class="zivo-rail-head">
-      <span class="zivo-rail-badge">الأخبار</span>
+      <span class="zivo-rail-badge">خبر</span>
       <span class="zivo-rail-title">آخر الأخبار</span>
-      <span class="zivo-rail-sub">عربي • دولي • الأردن</span>
+      <span class="zivo-rail-sub">الأردن · العالم العربي · الدولي</span>
     </div>
     <div class="zivo-rail-window">
       <div class="zivo-rail-track" id="zivoGeneralTrack">
