@@ -530,7 +530,7 @@
   function start(id){
     const run=pick(id); if(!run)return;
     const mount=ensureMount();
-    let i=0,score=0,correct=0,streak=0,best=0,timed=0,startAt=0,timer=null;
+    let i=0,score=0,correct=0,streak=0,best=0,timed=0,startAt=0,timer=null,submittedAnswers=[];
     let locked=false;
     function cleanup(){clearInterval(timer);timer=null}
     function close(){
@@ -570,7 +570,7 @@
     function submit(form,q){
       if(locked)return;locked=true;cleanup();
       const value=form?.value!==undefined?form.value:form?.querySelector('input')?.value;
-      const ok=answer(q,value);const elapsed=(performance.now()-startAt)/1000;
+      const ok=answer(q,value); submittedAnswers.push(String(value??'')); const elapsed=(performance.now()-startAt)/1000;
       if(ok){correct++;score+=Math.max(10,50+Math.round((10-Math.min(10,elapsed))*5)+(q.difficulty||1)*5);streak++;best=Math.max(best,streak)}
       else streak=0;
       setTimeout(()=>{i++;render()},300);
@@ -579,6 +579,11 @@
       cleanup();
       if(window.ZIVOZONE_PLAYER?.addProgress){
         window.ZIVOZONE_PLAYER.addProgress({id:run.id,score,bestStreak:best,timedOut:timed,questions:run.questions.length,speedScore:Math.max(0,100-timed*8)});
+      }
+      if(window.ZIVOZONE_V46?.submit && window.ZIVOZONE_AUTH?.isLoggedIn?.()){
+        window.ZIVOZONE_V46.submit({challengeId:run.id,attemptId:(crypto?.randomUUID?.()||('attempt-'+Date.now())),answers:submittedAnswers,total:run.questions.length}).then(r=>{
+          if(r?.data?.verified){ window.ZIVOZONE_AUTH.track?.('challenge_verified',{challengeId:run.id,score:r.data.score,zivo:r.data.zivo,xp:r.data.xp}); window.ZIVOZONE_AUTH.update?.({xp:r.data.totalXp,coins:r.data.totalZivo,level:r.data.level,wins:window.ZIVOZONE_AUTH.getPlayer?.()?.wins||0,gamesPlayed:window.ZIVOZONE_AUTH.getPlayer?.()?.gamesPlayed||0}); }
+        }).catch(()=>{});
       }
       mount.innerHTML=`<div class="v20-result"><div class="v20-result-icon">✓</div><h2>انتهت الجولة</h2><div class="v20-result-score">${correct}/10</div><p>الصحيحة: ${correct} &nbsp; • &nbsp; الخاطئة: ${Math.max(0,10-correct-timed)} &nbsp; • &nbsp; انتهى وقت: ${timed}</p><p>النقاط: <strong>${score}</strong> &nbsp; • &nbsp; أفضل سلسلة: ${best}</p><div><button class="v20-again">جولة جديدة</button><button class="v20-exit">خروج</button></div></div>`;
       $('.v20-again',mount).onclick=()=>start(run.id);

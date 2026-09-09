@@ -74,7 +74,7 @@
   }
   async function update(patch){
     if(!player)return null;player={...player,...patch,language:patch.language||player.language||window.ZIVOZONE_I18N?.get?.()||'ar'};saveLocal();
-    if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({...patch,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch(e){console.warn('Firestore update:',e)}}
+    if(cloud&&db&&!String(player.uid).startsWith('local_')){try{const safe={...patch};['xp','zivo','coins','wins','gamesPlayed','level'].forEach(k=>delete safe[k]);if(Object.keys(safe).length)await db.collection('players').doc(player.uid).set({...safe,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch(e){console.warn('Firestore update:',e)}}
     emit();return player;
   }
   async function saveResult(result){
