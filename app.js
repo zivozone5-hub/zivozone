@@ -14,7 +14,7 @@
   const LS='zivozone_state_v8';
   const API=window.ZIVOZONE_API||{};
   let state={level:1,xp:0,coins:0,wins:0,gamesPlayed:0,bestStreak:0,identity:null};
-  const QUESTION_TIME=10;
+  const QUESTION_TIME=30;
   let questionTimer=null;
   let questionDeadline=0;
   let lastTickSecond=null;
