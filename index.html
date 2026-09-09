@@ -83,16 +83,77 @@ window.ZIVOZONE_API={aiEndpoint:'',sportsNewsEndpoint:''};
 window.ZIVOZONE_GAME_RULES={questionSeconds:10,version:'V16-pressure'};
 window.ZIVOZONE_SECURITY={appCheckSiteKey:''};
 </script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="audio.js?v=48.0"></script>
-<script src="i18n.js?v=48.0"></script>
-<script src="challenges.js?v=48.0"></script>
-<script src="news.js?v=48.0"></script>
-<script src="fixtures.js?v=48.0"></script>
-<script src="ads.js?v=48.0"></script>
-<script src="auth.js?v=48.0"></script>
-<script src="zivo-foundation.js?v=48.0"></script>
+<script src="audio.js?v=47.1"></script>
+<script src="i18n.js?v=47.1"></script>
+<script src="challenges.js?v=47.1"></script>
+<script src="challenge_pack.js?v=47.1"></script>
+<script src="v22_bank.js?v=47.1"></script>
+<script src="news.js?v=47.1"></script>
+<script src="fixtures.js?v=47.1"></script>
+<script src="ads.js?v=47.1"></script>
+<script src="auth.js?v=47.1"></script>
+<script src="app.js?v=47.1"></script>
+<script src="v23_smart.js?v=47.1"></script>
+
+<script>
+document.addEventListener('click',function(e){
+  const b=e.target.closest('[data-challenge],[data-game]');
+  if(!b||!window.ZIVOZONE_V20)return;
+  const id=b.dataset.challenge||b.dataset.game;
+  if(id!=='horror'&&window.ZIVOZONE_V20.findBanks().some(x=>x.id===id||x.id?.startsWith(id+'_v18'))){
+    e.preventDefault();e.stopImmediatePropagation();window.ZIVOZONE_V20.start(id);
+  }
+},true);
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  if(document.getElementById('zivo-v24-balance'))return;
+  const x=document.createElement('div');
+  x.id='zivo-v24-balance';x.className='zivo-v24-balance';
+  x.innerHTML='<span class="z24-mini-coin">Z</span><span><small>ZIVO</small><b data-zivo-balance>0</b></span>';
+  document.body.appendChild(x);
+  setTimeout(()=>window.ZIVOZONE_V24?.refresh?.(),1000);
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  if(document.getElementById('z27-cloud-status'))return;
+  const e=document.createElement('div');e.id='z27-cloud-status';
+  e.innerHTML='☁ <strong>CLOUD READY</strong> · ZIVOZONE';
+  document.body.appendChild(e);
+});
+</script>
+
+
+<script>
+/* ZIVOZONE V47 — runtime guard */
+(function(){
+  function release(){
+    var el=document.getElementById('app-loader');
+    if(el) el.classList.add('hidden');
+  }
+  window.addEventListener('error',function(e){
+    console.error('ZIVOZONE runtime error:',e.error||e.message);
+    release();
+  });
+  window.addEventListener('unhandledrejection',function(e){
+    console.error('ZIVOZONE promise error:',e.reason);
+    release();
+  });
+  setTimeout(release,1800);
+})();
+</script>
+
 </body>
+</html>
+
+<!-- ZIVOZONE V41 DEPLOYMENT MARKER: additive compatibility release -->
+
+<!-- ZIVOZONE V42 DEPLOYMENT MARKER: cloud-ready question history compatibility layer -->
+
+<!-- ZIVOZONE V43 DEPLOYMENT MARKER: real cloud core -->
