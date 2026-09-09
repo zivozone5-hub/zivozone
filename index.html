@@ -65,6 +65,18 @@
 @media(max-width:700px){.zivo-v55-dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
+
+<style id="zivo-v56-unified">
+.zivo-v56-hub{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin:14px 0}
+.zivo-v56-card{border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:14px;background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));box-shadow:0 10px 30px rgba(0,0,0,.14)}
+.zivo-v56-title{font-weight:1000;font-size:16px}.zivo-v56-sub{font-size:10px;opacity:.68;margin-top:3px}
+.zivo-v56-progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:10px 0 7px}.zivo-v56-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd43d,#75e5ff);transition:width .4s}
+.zivo-v56-actions{display:flex;gap:7px;flex-wrap:wrap}.zivo-v56-btn{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:10px;padding:7px 9px;color:inherit;font-weight:900;font-size:10px;cursor:pointer}
+.zivo-v56-ledger{max-height:150px;overflow:auto;margin-top:8px}.zivo-v56-row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:10px}.zivo-v56-row b{color:#ffe06a}
+.zivo-v56-status{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:900}.zivo-v56-dot{width:7px;height:7px;border-radius:50%;background:#71efa0}
+@media(max-width:700px){.zivo-v56-hub{grid-template-columns:1fr}.zivo-v56-card{padding:11px}}
+</style>
+
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -90,6 +102,36 @@
   </div>
 </header>
 <main>
+
+<section class="zivo-v56-hub" id="zivoV56UnifiedHub" aria-label="منظومة اللاعب الموحدة">
+  <div class="zivo-v56-card">
+    <div class="zivo-v56-title">🎮 مسار اللاعب</div>
+    <div class="zivo-v56-sub">كل نشاطك داخل ZIVOZONE يُبنى في ملف لاعب واحد</div>
+    <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:10px;font-weight:900">
+      <span>Level <b data-zivo-level>1</b></span>
+      <span><b data-v56-xp>0</b> XP</span>
+      <span>🪙 <b data-zivo-balance>0</b> ZIVO</span>
+    </div>
+    <div class="zivo-v56-progress"><i data-v56-level-progress></i></div>
+    <div class="zivo-v56-sub">التقدم إلى المستوى التالي</div>
+    <div class="zivo-v56-actions" style="margin-top:10px">
+      <button class="zivo-v56-btn" data-v56-action="sync">☁️ مزامنة الحساب</button>
+      <button class="zivo-v56-btn" data-v56-action="history">📜 سجل النشاط</button>
+      <button class="zivo-v56-btn" data-v56-action="ai">🤖 تحليل ZIVO AI</button>
+    </div>
+  </div>
+  <div class="zivo-v56-card">
+    <div class="zivo-v56-title">☁️ Cloud Player</div>
+    <div class="zivo-v56-sub">حالة الحساب والمزامنة</div>
+    <div class="zivo-v56-status" style="margin-top:11px"><span class="zivo-v56-dot"></span><span data-v56-cloud>متصل</span></div>
+    <div class="zivo-v56-sub" style="margin-top:9px">Player ID</div>
+    <div style="font-size:11px;font-weight:1000;word-break:break-all" data-player-id>—</div>
+    <div class="zivo-v56-sub" style="margin-top:9px">آخر نشاط</div>
+    <div style="font-size:10px" data-v56-last-seen>—</div>
+  </div>
+</section>
+
+
 
 <section id="zivoV55Retention" aria-label="لوحة تقدم اللاعب">
   <div class="zivo-v55-dashboard">
@@ -493,6 +535,101 @@ window.ZIVOZONE_RETENTION={
  get:state,refresh:render
 };
 document.addEventListener('DOMContentLoaded',render);
+})();
+</script>
+
+
+<script id="zivo-v56-unified-runtime">
+(function(){
+'use strict';
+const PLAYER_KEY='zivozone_v54_player';
+const EVENT_KEY='zivozone_v51_events';
+
+function readPlayer(){
+  try{return JSON.parse(localStorage.getItem(PLAYER_KEY)||localStorage.getItem('zivozone_v51_player')||'{}')}catch(e){return{}}
+}
+function writePlayer(p){
+  try{localStorage.setItem(PLAYER_KEY,JSON.stringify(p));localStorage.setItem('zivozone_v51_player',JSON.stringify(p))}catch(e){}
+}
+function events(){
+  try{return JSON.parse(localStorage.getItem(EVENT_KEY)||'[]')}catch(e){return[]}
+}
+function text(sel,val){document.querySelectorAll(sel).forEach(x=>x.textContent=String(val))}
+function render(){
+  const p=readPlayer();
+  const xp=Number(p.xp||0), level=Math.max(1,Number(p.level||Math.floor(xp/100)+1));
+  const base=(level-1)*100, pct=Math.max(0,Math.min(100,((xp-base)/100)*100));
+  text('[data-zivo-level]',level);text('[data-v56-xp]',xp);text('[data-zivo-balance]',Number(p.zivo||0));
+  text('[data-player-id]',p.playerId||'—');
+  text('[data-v56-last-seen]',p.lastSeen?new Date(p.lastSeen).toLocaleString('ar-JO'):'—');
+  document.querySelectorAll('[data-v56-level-progress]').forEach(x=>x.style.width=pct+'%');
+  document.querySelectorAll('[data-v56-cloud]').forEach(x=>x.textContent=navigator.onLine?'متصل — جاهز للمزامنة':'غير متصل — سيُحفظ النشاط مؤقتًا');
+}
+function emit(type,payload){
+  const e={id:'v56_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),type,ts:new Date().toISOString(),payload:payload||{}};
+  try{const a=events();a.push(e);localStorage.setItem(EVENT_KEY,JSON.stringify(a.slice(-250)))}catch(_){}
+  window.dispatchEvent(new CustomEvent('zivozone:event',{detail:e}));
+}
+function syncIdentity(){
+  const p=readPlayer();
+  if(!p.playerId){
+    p.playerId='ZV-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,7).toUpperCase();
+    p.createdAt=new Date().toISOString();p.zivo=Number(p.zivo||0);p.xp=Number(p.xp||0);p.level=Number(p.level||1);
+    emit('player_created',{playerId:p.playerId});
+  }
+  p.lastSeen=new Date().toISOString();writePlayer(p);render();
+}
+function aiSummary(){
+  const p=readPlayer(), a=events();
+  const games=a.filter(x=>x.type==='game_completed').length;
+  let msg=games===0?'ابدأ أول تحدٍ، وسأبني لك ملفًا تحليليًا مع تقدمك.':
+    Number(p.xp||0)>500?'أداؤك يتقدم جيدًا. ZIVO AI يقترح رفع مستوى التحدي تدريجيًا.':
+    'استمر في تنويع التحديات؛ تنوع النشاط يساعد على بناء ملف أقوى.';
+  let box=document.querySelector('[data-v56-ai-result]');
+  if(!box){box=document.createElement('div');box.setAttribute('data-v56-ai-result','');box.style.cssText='position:fixed;left:16px;bottom:82px;z-index:99998;max-width:330px;padding:12px;border-radius:13px;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);box-shadow:0 14px 35px rgba(0,0,0,.35);font-size:11px;font-weight:800';document.body.appendChild(box)}
+  box.textContent='🤖 ZIVO AI: '+msg;setTimeout(()=>box.remove(),4500);
+  emit('ai_requested',{games,xp:Number(p.xp||0),level:Number(p.level||1)});
+}
+function showHistory(){
+  const a=events().slice(-8).reverse();
+  const msg=a.length?a.map(x=>new Date(x.ts).toLocaleTimeString('ar-JO')+' — '+x.type).join(' | '):'لا يوجد نشاط مسجل بعد';
+  alert('سجل نشاط ZIVOZONE\n\n'+msg);
+}
+document.addEventListener('DOMContentLoaded',function(){
+  syncIdentity();
+  document.body.addEventListener('click',function(e){
+    const b=e.target.closest('[data-v56-action]');if(!b)return;
+    const a=b.getAttribute('data-v56-action');
+    if(a==='sync'){syncIdentity();if(window.ZIVOZONE&&window.ZIVOZONE.track)window.ZIVOZONE.track('cloud_sync_requested',{});}
+    if(a==='history')showHistory();
+    if(a==='ai')aiSummary();
+  });
+  window.addEventListener('online',render);window.addEventListener('offline',render);
+});
+})();
+</script>
+
+
+<script id="zivo-v56-game-adapter">
+(function(){
+  window.ZIVOZONE_GAME_ADAPTER = {
+    complete: function(result){
+      result = result || {};
+      const win = !!result.win;
+      if(window.ZIVOZONE_RETENTION && typeof window.ZIVOZONE_RETENTION.recordGame==='function'){
+        window.ZIVOZONE_RETENTION.recordGame(win);
+      }
+      if(window.ZIVOZONE && typeof window.ZIVOZONE.track==='function'){
+        window.ZIVOZONE.track('game_completion_requested',{
+          gameId: result.gameId || 'unknown',
+          score: Number(result.score||0),
+          win: win,
+          duration: Number(result.duration||0)
+        });
+      }
+      window.dispatchEvent(new CustomEvent('zivozone:game-complete',{detail:result}));
+    }
+  };
 })();
 </script>
 
