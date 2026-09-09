@@ -19,7 +19,7 @@
     const now=new Date(); const to=new Date(now.getTime()+days*86400000);
     const fmt=d=>d.toISOString().slice(0,10).replaceAll('-','');
     const url=`https://site.api.espn.com/apis/site/v2/sports/soccer/${l.id}/scoreboard?dates=${fmt(now)}-${fmt(to)}`;
-    const r=await fetch(url,{cache:'no-store'}); if(!r.ok)throw new Error('fixture'); const d=await r.json();
+    const d=await (window.ZIVOZONE_RUNTIME?.fetchJSON?.(url,{timeout:9000,fallback:null})||null); if(!d)throw new Error('fixture');
     return (d.events||[]).map(e=>({id:e.id,name:e.name,date:e.date,status:e.status?.type?.description||'',state:e.status?.type?.state||'',home:e.competitions?.[0]?.competitors?.find(c=>c.homeAway==='home')?.team?.displayName||'',away:e.competitions?.[0]?.competitors?.find(c=>c.homeAway==='away')?.team?.displayName||'',homeScore:e.competitions?.[0]?.competitors?.find(c=>c.homeAway==='home')?.score,awayScore:e.competitions?.[0]?.competitors?.find(c=>c.homeAway==='away')?.score,league:l}));
   }
   async function load(box,lang='ar'){

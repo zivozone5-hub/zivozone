@@ -44,5 +44,5 @@
   function setEnabled(v){enabled=!!v;ensure();if(master)master.gain.setTargetAtTime(enabled?volume:0,ctx.currentTime,.08);if(!enabled)stopChallenge();save()}
   function setVolume(v){volume=clamp(Number(v),.05,1);ensure();if(master)master.gain.setTargetAtTime(enabled?volume:0,ctx.currentTime,.08);save()}
   function narrate(text){if(activeMode!=='horror'||!text||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=(document.documentElement.lang||'ar')==='ar'?'ar-SA':'en-US';u.rate=.78;u.pitch=.48;u.volume=clamp(volume*.72,.15,.8);speechSynthesis.speak(u)}catch(e){}}
-  window.ZIVOZONE_AUDIO={unlock,setEnabled,isEnabled:()=>enabled,toggle:()=>setEnabled(!enabled),setVolume,volume:()=>volume,click,tick,timeout,correct,wrong,success,question,startChallenge,stopChallenge,horrorPulse,phase,checkpoint,narrate,warden,whisper,horrorAnswer,active:()=>started};
+  window.ZIVOZONE_AUDIO={unlock,setEnabled,isEnabled:()=>enabled,toggle:()=>setEnabled(!enabled),setVolume,volume:()=>volume,click,tick,timeout,correct,wrong,success,question,startChallenge,stopChallenge,horrorPulse,phase,checkpoint,narrate,warden,whisper,horrorAnswer,eerieLaugh,distantScream,active:()=>started};
 })();
