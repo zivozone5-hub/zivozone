@@ -7,7 +7,7 @@
 (() => {
   'use strict';
 
-  const VERSION='49.0-production-core';
+  const VERSION='48.0-foundation';
   const $=(s,r=document)=>r.querySelector(s);
   const $$=(s,r=document)=>[...r.querySelectorAll(s)];
   const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -95,24 +95,15 @@
     return banks.find(b=>b.id===id)||banks.find(b=>b.id.startsWith(id+'_'))||null;
   }
 
-  function stableId(seed){
-    let h=2166136261;
-    const str=String(seed??'');
-    for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}
-    return `q_${(h>>>0).toString(36)}`;
-  }
   function bankQuestion(q){
-    const type=q.type||((q.a||q.answers||q.options)?'choice':'text');
-    const rawText=q.q??q.question??q.text??q.ar??'';
-    const text=rawText?.[lang()]||rawText?.ar||rawText?.en||String(rawText||'');
+    const type=q.type||'choice';
+    const text=q.q?.[lang()]||q.q?.ar||q.ar||q.question?.[lang()]||q.question?.ar||q.question||'';
     const opts=q.a||q.answers||q.options||[];
-    const answers=Array.isArray(opts)?opts.map(x=>x?.[lang()]||x?.ar||x?.en||String(x)):[];
+    const answers=opts.map(x=>x?.[lang()]||x?.ar||x?.en||String(x));
     let correct=q.c;
-    let expected=q.answer??q.expected??q.extra?.answer;
-    if(correct===undefined && answers.length && (typeof expected==='number' || /^\d+$/.test(String(expected)))) correct=Number(expected);
+    let expected=q.answer??q.extra?.answer;
     if(Array.isArray(expected))expected=expected[0];
-    const id=String(q.id||stableId(`${text}|${answers.join('¦')}`));
-    return {raw:q,type,text,answers,correct,expected,id};
+    return {raw:q,type,text,answers,correct,expected,id:q.id||crypto.randomUUID?.()||String(Math.random())};
   }
 
   function isCorrect(q,value){
@@ -265,7 +256,6 @@
     const bank=getBank(id);
     if(!bank){toast('التحدي غير متاح حاليًا');return}
     state.challenge=bank;state.questions=chooseQuestions(bank);state.index=0;
-    if(state.questions.length<1){toast('لا توجد أسئلة متاحة حاليًا');state.busy=false;return}
     state.answers=[];state.correct=0;state.timedOut=0;state.startedAt=performance.now();
     state.busy=true;
     try{window.ZIVOZONE_AUDIO?.unlock?.()}catch(e){}
@@ -449,12 +439,7 @@
       closeModal();profile();toast('تم إنشاء الحساب وحفظ تقدمك سحابيًا');
     }catch(err){toast(err?.message||'تعذر إنشاء الحساب')}
   }
-  function closeModal(){
-    const wasChallenge=!!state.challenge;
-    if(wasChallenge) quit();
-    else {const r=$('#modal-root');if(r){r.setAttribute('aria-hidden','true');r.innerHTML=''}}
-    state.identity=null;
-  }
+  function closeModal(){const r=$('#modal-root');if(r){r.setAttribute('aria-hidden','true');r.innerHTML=''}}
 
   async function loginExisting(){
     const root=$('#modal-root');root.innerHTML=`<div class="modal-backdrop"><div class="modal-card">
@@ -513,8 +498,7 @@
   window.ZIVOZONE_FOUNDATION={
     version:VERSION,start,quit,finish,profile,renderSports,
     audit:()=>({version:VERSION,banks:bankList().map(x=>({id:x.id,questions:x.questions.length})),
-      firebase:!!window.firebase?.apps?.length,auth:!!window.ZIVOZONE_AUTH,ads:!!window.ZIVOZONE_ADS,audio:!!window.ZIVOZONE_AUDIO,
-      challengeOpen:!!state.challenge,timed:!!state.timer,questionCount:state.questions.length})
+      firebase:!!window.firebase?.apps?.length,auth:!!window.ZIVOZONE_AUTH,ads:!!window.ZIVOZONE_ADS,audio:!!window.ZIVOZONE_AUDIO})
   };
 
   installGlobalSafety();
