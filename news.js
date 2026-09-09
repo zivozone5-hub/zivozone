@@ -235,5 +235,5 @@
     window.__zivoNewsResizeTimer = setTimeout(restartAnimations, 180);
   });
 
-  setInterval(() => load(true), REFRESH_MS);
+  setInterval(() => load(true),60*60*1000);
 })();
