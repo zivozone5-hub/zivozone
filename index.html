@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=47.1">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -71,7 +71,7 @@
 </section>
 <section id="identity" class="section"><div class="identity-panel"><div><span class="eyebrow" data-i18n="identityEyebrow">من أنا؟</span><h2 data-i18n="identityTitle">اكتشف شخصيتك داخل ZIVOZONE</h2><p data-i18n="identityText">اختبار ترفيهي يحلل نمط اختياراتك، وليس تشخيصًا نفسيًا.</p></div><button class="btn btn-primary btn-lg" data-action="open-identity" data-i18n="identityStart">ابدأ الاختبار</button></div></section>
 <section id="ai" class="section alt"><div class="section-heading"><div><span class="eyebrow" data-i18n="aiEyebrow">ZIVO AI</span><h2 data-i18n="aiTitle">مساعد ZIVO الذكي</h2></div></div><div class="ai-panel"><div id="ai-messages" class="ai-messages"><div class="ai-message bot" data-i18n="aiWelcome">أهلًا بك 🤖 اسألني عن مستواك أو الألعاب أو التحديات أو الرياضة.</div></div><form id="ai-form" class="ai-form"><input id="ai-input" maxlength="1000" required data-i18n-placeholder="aiPlaceholder" placeholder="اكتب سؤالك..."><button class="btn btn-primary" type="submit" data-i18n="send">إرسال</button></form><small class="muted" data-i18n="aiNote">مساعد ZIVO يعمل محليًا الآن، ويمكن ربطه بخدمة ذكاء اصطناعي آمنة عبر Backend.</small></div></section>
-<section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading"><h3 data-i18n="matches">المباريات القادمة</h3></div><div id="sports-list" class="sports-grid"></div><div class="match-alert" id="match-alert" hidden></div><div class="subheading"><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><span class="live-badge">LIVE / UPCOMING</span></div><div id="fixture-list" class="sports-grid"></div></section>
+<section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="sports-filter-bar" role="tablist" aria-label="Sports filters"><button class="sports-filter active" data-sport-filter="all" type="button">الكل</button><button class="sports-filter" data-sport-filter="football" type="button">⚽ كرة القدم</button><button class="sports-filter" data-sport-filter="jordan" type="button">🇯🇴 الأردن</button><button class="sports-filter" data-sport-filter="matches" type="button">🏆 المباريات</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading"><h3 data-i18n="matches">المباريات القادمة</h3></div><div id="sports-list" class="sports-grid"></div><div class="match-alert" id="match-alert" hidden></div><div class="subheading"><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><span class="live-badge">LIVE / UPCOMING</span></div><div id="fixture-list" class="sports-grid"></div></section>
 <section id="profile" class="section alt"><div class="profile-panel"><div class="avatar">Z</div><div class="profile-main"><span class="eyebrow" data-i18n="profileEyebrow">لاعب ZIVO</span><h2 id="profile-name">زائر</h2><p id="profile-email" class="muted">يمكنك اللعب كزائر ثم إنشاء حساب لحفظ تقدمك.</p><div class="progress"><span id="xp-progress"></span></div><div class="profile-stats"><span><span data-i18n="level">المستوى</span> <b id="profile-level">1</b></span><span><span data-i18n="xp">XP</span> <b id="profile-xp">0</b></span><span>🪙 <span data-i18n="coins">ZIVO</span> <b id="profile-coins">0</b></span><span>🏆 <span data-i18n="wins">انتصارات</span> <b id="profile-wins">0</b></span><span>🔥 <span data-i18n="bestStreak">أفضل سلسلة</span> <b id="profile-best-streak">0</b></span></div></div><div class="profile-actions"><button class="btn btn-primary" data-action="login" data-i18n="account">🔐 الحساب</button><button id="logout-btn" class="btn btn-ghost" data-action="logout" hidden data-i18n="logout">تسجيل الخروج</button></div></div><div class="notice" data-i18n="saveHint">الزائر يستطيع اللعب. الحساب المجاني يحفظ تقدمك وXP وZIVO والنتائج.</div></section>
 </main>
 <footer class="footer"><strong>ZIVOZONE</strong><span>© 2026 ZIVOZONE</span><span id="footer-tagline">Built for the next generation.</span></footer>
@@ -86,28 +86,18 @@ window.ZIVOZONE_SECURITY={appCheckSiteKey:''};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="audio.js?v=47.1"></script>
-<script src="i18n.js?v=47.1"></script>
-<script src="challenges.js?v=47.1"></script>
-<script src="challenge_pack.js?v=47.1"></script>
-<script src="v22_bank.js?v=47.1"></script>
-<script src="news.js?v=47.1"></script>
-<script src="fixtures.js?v=47.1"></script>
-<script src="ads.js?v=47.1"></script>
-<script src="auth.js?v=47.1"></script>
-<script src="app.js?v=47.1"></script>
-<script src="v23_smart.js?v=47.1"></script>
+<script src="audio.js"></script>
+<script src="i18n.js"></script>
+<script src="challenges.js"></script>
+<script src="challenge_pack.js"></script>
+<script src="v22_bank.js"></script>
+<script src="news.js"></script>
+<script src="fixtures.js"></script>
+<script src="ads.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script>
 
-<script>
-document.addEventListener('click',function(e){
-  const b=e.target.closest('[data-challenge],[data-game]');
-  if(!b||!window.ZIVOZONE_V20)return;
-  const id=b.dataset.challenge||b.dataset.game;
-  if(id!=='horror'&&window.ZIVOZONE_V20.findBanks().some(x=>x.id===id||x.id?.startsWith(id+'_v18'))){
-    e.preventDefault();e.stopImmediatePropagation();window.ZIVOZONE_V20.start(id);
-  }
-},true);
-</script>
+
 
 <script>
 document.addEventListener('DOMContentLoaded',function(){
@@ -128,27 +118,6 @@ document.addEventListener('DOMContentLoaded',function(){
   document.body.appendChild(e);
 });
 </script>
-
-
-<script>
-/* ZIVOZONE V47 — runtime guard */
-(function(){
-  function release(){
-    var el=document.getElementById('app-loader');
-    if(el) el.classList.add('hidden');
-  }
-  window.addEventListener('error',function(e){
-    console.error('ZIVOZONE runtime error:',e.error||e.message);
-    release();
-  });
-  window.addEventListener('unhandledrejection',function(e){
-    console.error('ZIVOZONE promise error:',e.reason);
-    release();
-  });
-  setTimeout(release,1800);
-})();
-</script>
-
 </body>
 </html>
 
