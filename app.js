@@ -214,6 +214,10 @@
   }
   function bind(){const audioBtn=$('#audio-toggle');if(audioBtn){audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇';audioBtn.onclick=async()=>{await S().unlock?.();S().toggle?.();audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇'}}$('#language-select').value=lang();$('#language-select').onchange=async e=>{I.set(e.target.value);await A.setLanguage(e.target.value);applyLanguage();toast(t('updateDone'),'success')};$('#login-btn').onclick=()=>A.isLoggedIn()?location.hash='#profile':authModal();$$('[data-action="login"]').forEach(b=>b.onclick=()=>A.isLoggedIn()?location.hash='#profile':authModal());$('#ai-form').onsubmit=async e=>{e.preventDefault();const input=$('#ai-input'),v=input.value.trim();if(!v)return;const box=$('#ai-messages');const u=document.createElement('div');u.className='ai-message user';u.textContent=v;box.append(u);input.value='';const b=document.createElement('div');b.className='ai-message bot';b.textContent='…';box.append(b);b.textContent=await askAI(v);box.scrollTop=box.scrollHeight}}
   window.addEventListener('zivozone-auth',e=>{syncFromPlayer();profile();const el=$('#firebase-status');if(el){el.textContent=e.detail?.cloud?'●':'○';el.classList.toggle('online',!!e.detail?.cloud);el.title=e.detail?.cloud?'Firebase connected':'Guest/local mode'}});
+  window.addEventListener('zivozone-auth',()=>{A.touchSession?.();A.flushAttempts?.();});
+  window.addEventListener('hashchange',()=>A.touchSession?.());
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)A.touchSession?.()});
+  setInterval(()=>{if(!document.hidden)A.touchSession?.();},5*60*1000);
   window.addEventListener('zivozone-language',()=>{const sel=$('#language-select');if(sel)sel.value=lang()});
   loadState();document.addEventListener('DOMContentLoaded',()=>{
   try{bind()}catch(e){console.error('ZIVOZONE bind error:',e)}
@@ -544,7 +548,7 @@
       mount.innerHTML=`<div class="v20-shell">
         <div class="v20-head"><button class="v20-exit">خروج</button><span>${escV20(run.icon)} ${escV20(run.title)}</span><b>${i+1}/10</b></div>
         <div class="v20-progress"><i style="width:${((i)/10)*100}%"></i></div>
-        <div class="v20-meta"><span>${phase}</span><strong id="v20-timer">10</strong></div>
+        <div class="v20-meta"><span>${phase}</span><strong id="v20-timer">30</strong></div>
         <article class="v20-question"><div class="v20-qnum">QUESTION ${String(i+1).padStart(2,'0')}</div><h2>${escV20(locV20(q.q||q.question||''))}</h2>
         <div class="v20-answer-area">${answerArea(q)}</div></article>
         <div class="v20-live"><span>🔥 ${streak}</span><span>🏆 ${score}</span></div>
@@ -554,7 +558,7 @@
       form?.addEventListener('submit',e=>{e.preventDefault();submit(form,q)});
       const opts=mount.querySelectorAll('.v20-option');
       opts.forEach(o=>o.onclick=()=>submit({value:o.dataset.value},q));
-      cleanup();let left=10;
+      cleanup();let left=30;
       timer=setInterval(()=>{left--;const t=$('#v20-timer');if(t)t.textContent=left;
         if(left<=0){timed++;streak=0;locked=true;beep();setTimeout(()=>{i++;render()},250)}
       },1000);
@@ -581,11 +585,16 @@
         window.ZIVOZONE_PLAYER.addProgress({id:run.id,score,bestStreak:best,timedOut:timed,questions:run.questions.length,speedScore:Math.max(0,100-timed*8)});
       }
       if(window.ZIVOZONE_V46?.submit && window.ZIVOZONE_AUTH?.isLoggedIn?.()){
-        window.ZIVOZONE_V46.submit({challengeId:run.id,attemptId:(crypto?.randomUUID?.()||('attempt-'+Date.now())),answers:submittedAnswers,total:run.questions.length}).then(r=>{
-          if(r?.data?.verified){ window.ZIVOZONE_AUTH.track?.('challenge_verified',{challengeId:run.id,score:r.data.score,zivo:r.data.zivo,xp:r.data.xp}); window.ZIVOZONE_AUTH.update?.({xp:r.data.totalXp,coins:r.data.totalZivo,level:r.data.level,wins:window.ZIVOZONE_AUTH.getPlayer?.()?.wins||0,gamesPlayed:window.ZIVOZONE_AUTH.getPlayer?.()?.gamesPlayed||0}); }
+        window.ZIVOZONE_V46.submit({challengeId:run.id,attemptId:(crypto?.randomUUID?.()||('attempt-'+Date.now())),answers:submittedAnswers,total:run.questions.length,score:correct,startedAt:new Date(Date.now()-Math.max(0,(performance.now()-startAt))).toISOString()}).then(async r=>{
+          if(r?.data?.ok || r?.data?.verified || r?.accepted){
+            window.ZIVOZONE_AUTH.track?.('challenge_completed',{challengeId:run.id,score:correct,total:run.questions.length,timedOut:timed,server:!!r?.server});
+            try{await window.ZIVOZONE_AUTH.saveResult?.({challengeId:run.id,score:correct,total:run.questions.length,points:score,timedOut:timed,bestStreak:best,guest:false,serverVerified:!!r?.server})}catch(e){}
+          }
+          window.ZIVOZONE_AUTH.flushAttempts?.();
+          window.ZIVOZONE_AUTH.touchSession?.();
         }).catch(()=>{});
       }
-      mount.innerHTML=`<div class="v20-result"><div class="v20-result-icon">✓</div><h2>انتهت الجولة</h2><div class="v20-result-score">${correct}/10</div><p>الصحيحة: ${correct} &nbsp; • &nbsp; الخاطئة: ${Math.max(0,10-correct-timed)} &nbsp; • &nbsp; انتهى وقت: ${timed}</p><p>النقاط: <strong>${score}</strong> &nbsp; • &nbsp; أفضل سلسلة: ${best}</p><div><button class="v20-again">جولة جديدة</button><button class="v20-exit">خروج</button></div></div>`;
+      mount.innerHTML=`<div class="v20-result"><div class="v20-result-icon">✓</div><h2>انتهت الجولة</h2><div class="v20-result-score">${correct}/10</div><p>الصحيحة: ${correct} &nbsp; • &nbsp; الخاطئة: ${Math.max(0,10-correct-timed)} &nbsp; • &nbsp; انتهى وقت: ${timed}</p><p>النقاط: <strong>${score}</strong> &nbsp; • &nbsp; أفضل سلسلة: ${best}</p><p id="v20-cloud-status" class="muted">${window.ZIVOZONE_AUTH?.isLoggedIn?.()?'☁️ تم إرسال النتيجة للحساب':'👤 سجّل حسابًا لحفظ التقدم على السحابة'}</p><div><button class="v20-again">جولة جديدة</button><button class="v20-exit">خروج</button></div></div>`;
       $('.v20-again',mount).onclick=()=>start(run.id);
       $('.v20-exit',mount).onclick=close;
     }
@@ -1214,7 +1223,7 @@
       <div class="v32-hero"><b>تحدٍ جديد كل يوم</b><p>اختر التحدي اليومي، واجعل نتيجتك جزءًا من سجل ZIVOZONE.</p>
       <div class="v32-meta"><span id="v32-ch"></span><span id="v32-state"></span></div></div>
       <button id="v32-play">ابدأ تحدي اليوم</button>
-      <div class="v32-rules"><span>⏱ 10 ثوانٍ لكل سؤال</span><span>🏆 سجّل أفضل نتيجة</span><span>🔥 ابنِ سلسلة لعب</span></div></div>`;
+      <div class="v32-rules"><span>⏱ 30 ثانية لكل سؤال</span><span>🏆 سجّل أفضل نتيجة</span><span>🔥 ابنِ سلسلة لعب</span></div></div>`;
       document.body.appendChild(o);
       o.querySelector('.v32-close').onclick=()=>o.classList.remove('open');
       o.querySelector('#v32-play').onclick=()=>{
@@ -2207,7 +2216,7 @@
 (function(){
   'use strict';
 
-  const FN_NAME='submitChallengeAttempt';
+  const FN_NAME='completeGameAttempt';
   const LOCAL_QUEUE='zivozone_v46_attempt_queue';
 
   function authUser(){

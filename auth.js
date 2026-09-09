@@ -83,8 +83,9 @@
   }
   async function setLanguage(lang){if(player){player.language=lang;saveLocal();if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({language:lang},{merge:true})}catch(e){}}emit()}}
   const isLoggedIn=()=>!!user&&!!player;
-  async function touchSession(){if(user&&cloud&&db&&!String(user.uid).startsWith('local_')){try{await db.collection('players').doc(user.uid).set({lastSeenAt:firebase.firestore.FieldValue.serverTimestamp(),lastSeenPath:location.hash||'#home'},{merge:true});await track('session_start',{path:location.hash||'#home',language:window.ZIVOZONE_I18N?.get?.()||'ar'})}catch(e){}}}
+  async function touchSession(){if(user&&cloud&&db&&!String(user.uid).startsWith('local_')){try{await db.collection('players').doc(user.uid).set({lastSeenAt:firebase.firestore.FieldValue.serverTimestamp(),lastSeenPath:location.hash||'#home'},{merge:true})}catch(e){}}}
+  async function flushAttempts(){try{await window.ZIVOZONE_V46?.flush?.()}catch(e){}}
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
-  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,setLanguage,getUser:()=>user,getPlayer:()=>player,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
