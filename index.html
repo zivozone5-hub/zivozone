@@ -31,7 +31,28 @@
 }
 </style>
 
-<style id="zivo-v53-forensic">.forensic-evidence{margin:10px 0 16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;background:#0b1018}.forensic-evidence img{display:block;width:100%;max-height:210px;object-fit:cover}.forensic-evidence figcaption{padding:7px 10px;font-size:11px;color:#aebbd0;font-weight:800}</style></head>
+<style id="zivo-v53-forensic">.forensic-evidence{margin:10px 0 16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;background:#0b1018}.forensic-evidence img{display:block;width:100%;max-height:210px;object-fit:cover}.forensic-evidence figcaption{padding:7px 10px;font-size:11px;color:#aebbd0;font-weight:800}</style>
+<style id="zivo-v54-platform">
+.zivo-v54-playerbar{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin:14px 0}
+.zivo-v54-card{border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px;background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.025));box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.zivo-v54-id{font-size:10px;opacity:.62}.zivo-v54-name{font-size:18px;font-weight:1000}.zivo-v54-stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.zivo-v54-stat{padding:7px 9px;border-radius:10px;background:rgba(255,255,255,.055);font-size:11px;font-weight:900}
+.zivo-v54-ai{display:flex;align-items:center;gap:11px}.zivo-v54-ai-orb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,#7ee7ff 28%,#5267ff 58%,#171b55);box-shadow:0 0 30px rgba(90,130,255,.35);font-weight:1000}
+.zivo-v54-ai strong{display:block;font-size:14px}.zivo-v54-ai span{font-size:10px;opacity:.7}
+.zivo-v54-ticker2{margin:12px 0 18px;border-radius:15px;overflow:hidden;border:1px solid rgba(255,255,255,.1);background:#0b1220;box-shadow:0 9px 28px rgba(0,0,0,.2)}
+.zivo-v54-ticker2-head{display:flex;justify-content:space-between;align-items:center;padding:7px 11px;background:rgba(255,255,255,.06);font-weight:900;font-size:12px}
+.zivo-v54-live{background:#e53935;color:#fff;border-radius:999px;padding:3px 7px;font-size:10px;animation:z54pulse 1.5s infinite}
+.zivo-v54-window{height:42px;overflow:hidden;position:relative;direction:ltr}
+.zivo-v54-track{position:absolute;left:0;top:0;height:100%;display:flex;align-items:center;gap:34px;white-space:nowrap;animation:z54scroll 38s linear infinite}
+.zivo-v54-news{font-size:13px;font-weight:800;color:#eef4ff}.zivo-v54-news b{color:#76e6ff}.zivo-v54-score{background:rgba(255,255,255,.08);border-radius:7px;padding:3px 7px}
+.zivo-v54-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#76e6ff;margin:0 8px}
+.zivo-v54-empty{opacity:.65}
+@keyframes z54scroll{from{transform:translateX(100vw)}to{transform:translateX(-100%)}}
+@keyframes z54pulse{50%{opacity:.5}}
+@media(max-width:700px){.zivo-v54-playerbar{grid-template-columns:1fr}.zivo-v54-card{padding:11px}.zivo-v54-track{animation-duration:30s}.zivo-v54-window{height:40px}}
+@media(prefers-reduced-motion:reduce){.zivo-v54-track,.zivo-v54-live{animation:none}}
+</style>
+
+</head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
 <header class="topbar">
@@ -56,6 +77,25 @@
   </div>
 </header>
 <main>
+<section class="zivo-v54-playerbar" id="zivoV54PlayerCenter" aria-label="مركز اللاعب والذكاء الاصطناعي">
+  <div class="zivo-v54-card">
+    <div class="zivo-v54-id">PLAYER ID</div>
+    <div class="zivo-v54-name" data-v54-player-name>لاعب ZIVOZONE</div>
+    <div class="zivo-v54-stats">
+      <span class="zivo-v54-stat">🪙 <b data-zivo-balance>0</b> ZIVO</span>
+      <span class="zivo-v54-stat">⚡ Level <b data-zivo-level>1</b></span>
+      <span class="zivo-v54-stat">XP <b data-v54-xp>0</b></span>
+      <span class="zivo-v54-stat">☁️ <b data-v54-sync>جاهز للمزامنة</b></span>
+    </div>
+    <div class="zivo-v54-id" style="margin-top:7px">ID: <b data-player-id>—</b></div>
+  </div>
+  <div class="zivo-v54-card zivo-v54-ai">
+    <div class="zivo-v54-ai-orb">AI</div>
+    <div><strong>ZIVO AI</strong><span>مساعد اللاعب • تحليلات • توصيات • مسار التقدم</span></div>
+  </div>
+</section>
+
+
 <section id="home" class="hero section">
   <div class="hero-copy">
     <span class="eyebrow" data-i18n="heroEyebrow">عالم رقمي • ZIVOZONE</span>
@@ -68,6 +108,18 @@
 </section>
 
 <section class="z50" aria-label="أخبار ونتائج الرياضة"><div class="z50t"><div class="z50h"><span class="z50live">LIVE</span><span class="z50title">أخبار الرياضة والنتائج الجارية</span></div><div class="z50w"><div class="z50track" id="z50track"><span class="z50i"><b>LIVE</b> النتائج الجارية والتحديثات الرياضية</span><span class="z50i">أخبار كرة القدم <span class="z50s">LIVE</span></span><span class="z50i">آخر النتائج الرياضية</span><span class="z50i">تابع تحديات ZIVOZONE</span></div></div></div><aside class="z50z"><span class="z50c">Z</span><h3>ZIVO</h3><p>عملة عالمك داخل ZIVOZONE</p><span class="z50cta">اكسب ZIVO • العب • تحدَّ</span></aside></section><script>(()=>{const e=document.getElementById('z50track');if(e)e.innerHTML+=e.innerHTML})()</script>
+
+<section class="zivo-v54-ticker2" id="zivoV54SportsTicker" aria-label="شريط الأخبار والنتائج الرياضية">
+  <div class="zivo-v54-ticker2-head">
+    <span>📡 ZIVOZONE SPORTS</span><span class="zivo-v54-live">LIVE</span>
+  </div>
+  <div class="zivo-v54-window">
+    <div class="zivo-v54-track" id="zivoV54SportsTrack">
+      <span class="zivo-v54-news zivo-v54-empty">جاري تحميل الأخبار والنتائج الرياضية...</span>
+    </div>
+  </div>
+</section>
+
 <section id="challenges" class="section alt challenge-center-section">
   <div class="section-heading challenge-center-heading">
     <div><span class="eyebrow" data-i18n="challengeEyebrow">مركز التحديات</span><h2 data-i18n="challengeTitle">مركز التحديات</h2><p class="muted" data-i18n="challengeText">كل تحدٍ عالم مستقل؛ اختر واحدًا وابدأ رحلة تتصاعد في الصعوبة.</p></div>
@@ -284,6 +336,85 @@ document.addEventListener('DOMContentLoaded',function(){
   window.ZIVOZONE_SPORTS_BROADCAST={refresh:load};
 })();
 </script>
+
+<script id="zivo-v54-runtime">
+(function(){
+  'use strict';
+  const V54={version:'54.0', timerSeconds:30, playerKey:'zivozone_v54_player'};
+  window.ZIVOZONE_V54=V54;
+
+  function player(){
+    try{return JSON.parse(localStorage.getItem(V54.playerKey)||localStorage.getItem('zivozone_v51_player')||'{}')}catch(e){return{}}
+  }
+  function setText(sel,val){document.querySelectorAll(sel).forEach(x=>x.textContent=val)}
+  function refreshPlayer(){
+    const p=player();
+    setText('[data-zivo-balance]',Number(p.zivo||0));
+    setText('[data-zivo-level]',Number(p.level||1));
+    setText('[data-v54-xp]',Number(p.xp||0));
+    setText('[data-player-id]',p.playerId||'—');
+    setText('[data-v54-player-name]',p.displayName||p.name||'لاعب ZIVOZONE');
+    setText('[data-v54-sync]',navigator.onLine?'متصل':'غير متصل — ستتم المزامنة');
+  }
+
+  // Expose a consistent 30-second timer contract for existing game engines.
+  window.ZIVOZONE_TIMER={seconds:30,questionSeconds:30,getSeconds:()=>30};
+  window.ZIVOZONE_V54.startQuestionTimer=function(onTick,onDone){
+    let left=30; if(typeof onTick==='function')onTick(left);
+    const id=setInterval(()=>{left--;if(typeof onTick==='function')onTick(left);if(left<=0){clearInterval(id);if(typeof onDone==='function')onDone()}},1000);
+    return ()=>clearInterval(id);
+  };
+
+  // Sports feed: use an existing backend endpoint if configured; never fabricate live scores.
+  async function loadSports(){
+    const track=document.getElementById('zivoV54SportsTrack'); if(!track)return;
+    const candidates=[
+      window.ZIVOZONE_SPORTS_ENDPOINT,
+      '/api/sports',
+      '/.netlify/functions/sports',
+      'https://us-central1-zivozone.cloudfunctions.net/getSportsBroadcast'
+    ].filter(Boolean);
+    let data=null;
+    for(const url of candidates){
+      try{
+        const r=await fetch(url,{cache:'no-store'});
+        if(!r.ok)continue;
+        const j=await r.json();
+        if(j){data=j;break}
+      }catch(e){}
+    }
+    const items=Array.isArray(data)?data:(data&&(data.items||data.news||data.events))||[];
+    if(!items.length){
+      track.innerHTML='<span class="zivo-v54-news zivo-v54-empty">📡 لا توجد بيانات رياضية مباشرة متاحة حاليًا — سيتم التحديث تلقائيًا.</span>';
+      return;
+    }
+    const html=items.slice(0,18).map(x=>{
+      const title=x.title||x.headline||x.name||'تحديث رياضي';
+      const home=x.homeTeam||x.home||'', away=x.awayTeam||x.away||'';
+      const score=(x.homeScore!=null&&x.awayScore!=null)?`<span class="zivo-v54-score">${x.homeScore} - ${x.awayScore}</span>`:'';
+      const live=x.status||x.state||'';
+      return `<span class="zivo-v54-news"><span class="zivo-v54-dot"></span><b>${escapeHtml(live||'SPORTS')}</b> ${escapeHtml(title)} ${escapeHtml(home)} ${home&&away?'×':''} ${escapeHtml(away)} ${score}</span>`;
+    }).join('');
+    track.innerHTML=html+html;
+  }
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    refreshPlayer();
+    loadSports();
+    setInterval(loadSports,60000);
+    window.addEventListener('online',refreshPlayer);
+    window.addEventListener('offline',refreshPlayer);
+
+    // Best-effort adaptation of common timer variables/functions in legacy engines.
+    try{
+      const keys=['QUESTION_TIME','questionTime','timePerQuestion','TIMER_SECONDS','QUESTION_SECONDS'];
+      keys.forEach(k=>{if(k in window && typeof window[k]==='number')window[k]=30});
+    }catch(e){}
+  });
+})();
+</script>
+
 </body>
 </html>
 
