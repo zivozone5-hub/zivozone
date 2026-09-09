@@ -1590,3 +1590,77 @@
   window.ZIVOZONE_V38={open,render};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V39 — CHALLENGE COMMAND CENTER
+   Additive discovery layer. Existing challenge engines preserved.
+============================================================ */
+(function(){
+  'use strict';
+  const norm=s=>String(s||'').toLowerCase().replace(/[\s_-]+/g,'');
+  const getChallenges=()=>{
+    try{
+      const b=window.ZIVOZONE_CHALLENGES;
+      if(!b)return[];
+      return Object.keys(b).filter(k=>b[k]&&Array.isArray(b[k].questions)&&!b[k].special)
+        .map(k=>({id:k,title:b[k].title||b[k].name||k,description:b[k].description||'',questions:b[k].questions.length}));
+    }catch(e){return[]}
+  };
+  const icon=id=>{
+    const n=norm(id);
+    if(n.includes('iq')||n.includes('logic'))return'🧠';
+    if(n.includes('memory'))return'🧩';
+    if(n.includes('speed'))return'⚡';
+    if(n.includes('football')||n.includes('sport'))return'⚽';
+    if(n.includes('personality')||n.includes('whoami')||n.includes('me'))return'🪞';
+    if(n.includes('math'))return'🔢';
+    if(n.includes('language'))return'🔤';
+    return'🎯';
+  };
+  function start(id){
+    const b=window.ZIVOZONE_CHALLENGES;
+    if(!b||!b[id])return false;
+    try{
+      if(typeof window.startChallenge==='function'){window.startChallenge(id);return true}
+      if(typeof window.ZIVOZONE_START_CHALLENGE==='function'){window.ZIVOZONE_START_CHALLENGE(id);return true}
+    }catch(e){}
+    return false;
+  }
+  function open(){
+    let o=document.getElementById('v39-center');
+    if(!o){
+      o=document.createElement('div');o.id='v39-center';o.className='v39-overlay';
+      o.innerHTML=`<div class="v39-card"><button class="v39-close">×</button>
+      <div class="v39-title"><div class="v39-orbit">Z</div><div><small>CHALLENGE COMMAND CENTER</small><h2>مركز التحديات</h2><span>اختر اختبارك وابدأ رحلتك</span></div></div>
+      <div class="v39-filter"><input id="v39-search" placeholder="ابحث عن تحدٍ..."><span id="v39-count">0 تحديات</span></div>
+      <div id="v39-grid"></div>
+      <div class="v39-foot">الغرفة المظلمة تبقى تجربة مستقلة ولا تُعامل كتحدٍ عادي.</div>
+      </div>`;
+      document.body.appendChild(o);
+      o.querySelector('.v39-close').onclick=()=>o.classList.remove('open');
+      o.querySelector('#v39-search').oninput=render;
+    }
+    render();o.classList.add('open');
+  }
+  function render(){
+    const o=document.getElementById('v39-center');if(!o)return;
+    const q=(o.querySelector('#v39-search').value||'').trim().toLowerCase();
+    const all=getChallenges(),list=all.filter(x=>(x.title+' '+x.description+' '+x.id).toLowerCase().includes(q));
+    o.querySelector('#v39-count').textContent=`${list.length} تحديات`;
+    const grid=o.querySelector('#v39-grid');grid.innerHTML='';
+    if(!list.length){grid.innerHTML='<div class="v39-empty">لا توجد نتائج بهذا الاسم.</div>';return}
+    list.forEach(x=>{
+      const el=document.createElement('button');el.className='v39-item';
+      el.innerHTML=`<b>${icon(x.id)}</b><strong>${x.title}</strong><span>${x.questions} سؤال</span><em>ابدأ ←</em>`;
+      el.onclick=()=>{if(start(x.id))o.classList.remove('open')};
+      grid.appendChild(el);
+    });
+  }
+  function mount(){
+    if(document.getElementById('v39-open'))return;
+    const b=document.createElement('button');b.id='v39-open';b.textContent='🎮 مركز التحديات';b.onclick=open;document.body.appendChild(b);
+  }
+  window.ZIVOZONE_V39={open,render,getChallenges,start};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
