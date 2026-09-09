@@ -440,3 +440,14 @@ body.zivo-dark-active{overflow:hidden}
 .zivo-v44-ready button:hover{transform:translateY(-1px);filter:brightness(1.08)}
 .zivo-v44-ready button.v44-click{transform:scale(.97);filter:brightness(.92)}
 #v43-cloud.v44-visible{opacity:.94}
+
+
+/* ZIVOZONE V47 — guaranteed boot release */
+#app-loader{
+  animation:zivoLoaderRelease 1.35s ease forwards;
+  animation-delay:.65s;
+}
+@keyframes zivoLoaderRelease{
+  0%{opacity:1;visibility:visible;pointer-events:auto}
+  100%{opacity:0;visibility:hidden;pointer-events:none}
+}
