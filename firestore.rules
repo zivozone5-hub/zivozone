@@ -15,6 +15,13 @@ service cloud.firestore {
         allow create: if request.auth != null && request.auth.uid == userId;
         allow update, delete: if false;
       }
+
+      // Per-player ZIVOZONE state such as question history.
+      match /zivozone/{docId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create, update: if request.auth != null && request.auth.uid == userId;
+        allow delete: if false;
+      }
     }
 
     // Server-managed content. The current static site uses challenges.js.

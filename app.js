@@ -1884,3 +1884,136 @@
 
   window.addEventListener('online',()=>sync());
 })();
+
+
+/* ============================================================
+   ZIVOZONE V43 — REAL CLOUD CORE
+   Firebase/Firestore health + authenticated player sync.
+   Additive: uses the existing Firebase app and Auth.
+============================================================ */
+(function(){
+  'use strict';
+
+  const COLLECTION='players';
+  const HISTORY_DOC='questionHistory';
+  const QUEUE='zivozone_v43_cloud_queue';
+
+  const user=()=>{try{return window.firebase?.auth?.()?.currentUser||null}catch(e){return null}};
+  const db=()=>{try{return window.firebase?.firestore?.()||null}catch(e){return null}};
+  const isCloudReady=()=>!!(user()&&db());
+
+  function queueRead(){try{return JSON.parse(localStorage.getItem(QUEUE)||'[]')}catch(e){return[]}}
+  function queueWrite(v){try{localStorage.setItem(QUEUE,JSON.stringify(v.slice(-50)))}catch(e){}}
+
+  async function health(){
+    const u=user(), d=db();
+    if(!u||!d)return {connected:false,authenticated:!!u,reason:u?'firestore-unavailable':'not-authenticated'};
+    try{
+      await d.collection(COLLECTION).doc(u.uid).get();
+      return {connected:true,authenticated:true,uid:u.uid};
+    }catch(e){
+      return {connected:false,authenticated:true,uid:u.uid,reason:e.code||'firestore-error'};
+    }
+  }
+
+  async function saveChallengeResult(result){
+    const u=user(), d=db();
+    const payload={
+      challengeId:String(result?.challengeId||result?.id||'challenge').slice(0,80),
+      score:Number(result?.score)||0,
+      total:Number(result?.total)||0,
+      correct:Number(result?.correct)||0,
+      xp:Number(result?.xp)||0,
+      coins:Number(result?.coins)||0,
+      pressureScore:Number(result?.pressureScore)||0,
+      timedOut:Number(result?.timedOut)||0,
+      at:new Date().toISOString()
+    };
+    if(!u||!d){
+      const q=queueRead();q.push({type:'result',payload});queueWrite(q);
+      return {saved:false,queued:true};
+    }
+    try{
+      await d.collection(COLLECTION).doc(u.uid).collection('results').add({
+        ...payload,
+        createdAt:firebase.firestore.FieldValue.serverTimestamp()
+      });
+      return {saved:true,queued:false};
+    }catch(e){
+      const q=queueRead();q.push({type:'result',payload});queueWrite(q);
+      return {saved:false,queued:true,error:e.code||'save-failed'};
+    }
+  }
+
+  async function saveQuestionHistory(history){
+    const u=user(), d=db();
+    if(!u||!d)return {saved:false,queued:false};
+    try{
+      await d.collection(COLLECTION).doc(u.uid).collection('zivozone').doc(HISTORY_DOC).set({
+        history:history||{},
+        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+      },{merge:true});
+      return {saved:true};
+    }catch(e){
+      return {saved:false,error:e.code||'history-save-failed'};
+    }
+  }
+
+  async function flushQueue(){
+    const u=user(), d=db();
+    if(!u||!d)return {flushed:0};
+    const q=queueRead();if(!q.length)return {flushed:0};
+    const remaining=[];let flushed=0;
+    for(const item of q){
+      try{
+        if(item.type==='result'){
+          await d.collection(COLLECTION).doc(u.uid).collection('results').add({
+            ...item.payload,
+            createdAt:firebase.firestore.FieldValue.serverTimestamp()
+          });
+          flushed++;
+        }else remaining.push(item);
+      }catch(e){remaining.push(item)}
+    }
+    queueWrite(remaining);
+    if(flushed)window.dispatchEvent(new CustomEvent('zivozone-cloud-synced',{detail:{flushed}}));
+    return {flushed,remaining:remaining.length};
+  }
+
+  async function init(){
+    const h=await health();
+    window.dispatchEvent(new CustomEvent('zivozone-cloud-health',{detail:h}));
+    if(h.connected)await flushQueue();
+    return h;
+  }
+
+  window.ZIVOZONE_V43={health,saveChallengeResult,saveQuestionHistory,flushQueue,init,isCloudReady};
+  window.addEventListener('online',()=>flushQueue());
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,700));
+  else setTimeout(init,700);
+})();
+
+
+/* ============================================================
+   V43 — REAL CLOUD STATUS
+============================================================ */
+(function(){
+  'use strict';
+  function mount(){
+    if(document.getElementById('v43-cloud'))return;
+    const el=document.createElement('div');
+    el.id='v43-cloud';
+    el.innerHTML='<span class="v43-dot"></span><span class="v43-text">Cloud: checking…</span>';
+    document.body.appendChild(el);
+    const render=e=>{
+      const d=e?.detail||{};
+      const ok=!!d.connected;
+      el.classList.toggle('ok',ok);
+      el.querySelector('.v43-text').textContent=ok?'Cloud: connected':(d.authenticated?'Cloud: offline':'Guest / local');
+    };
+    window.addEventListener('zivozone-cloud-health',render);
+    window.addEventListener('zivozone-cloud-synced',()=>{el.classList.add('ok');el.querySelector('.v43-text').textContent='Cloud: synced'});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
