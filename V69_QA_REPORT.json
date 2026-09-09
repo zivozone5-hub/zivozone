@@ -1,0 +1,9 @@
+{
+  "two_rails": true,
+  "callable": true,
+  "rss_sources": 8,
+  "arabic_only_filter": true,
+  "firebase_cache": true,
+  "mobile_css": true,
+  "syntax_errors": []
+}

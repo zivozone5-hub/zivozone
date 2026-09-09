@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=47.1">
-<style id="zivo-v50-broadcast">.z50{display:flex;gap:12px;width:100%;margin:14px 0;direction:ltr}.z50t{flex:1;min-width:0;background:linear-gradient(135deg,#101522,#182235);border:1px solid #ffffff1a;border-radius:14px;overflow:hidden;box-shadow:0 8px 28px #0003}.z50h{display:flex;gap:9px;align-items:center;padding:8px 12px;background:#ffffff0d;direction:rtl}.z50live{background:#e53935;color:#fff;border-radius:999px;padding:4px 8px;font-weight:900;font-size:11px}.z50title{color:#fff;font-weight:900}.z50w{height:43px;overflow:hidden;position:relative;direction:ltr}.z50track{position:absolute;display:flex;align-items:center;gap:32px;height:100%;white-space:nowrap;animation:z50run 32s linear infinite}.z50i{color:#eef4ff;font-size:14px;font-weight:700}.z50i b{color:#6ee7ff}.z50s{background:#ffffff12;color:#fff;padding:3px 7px;border-radius:7px}.z50z{width:230px;flex:0 0 230px;border-radius:16px;padding:12px 14px;color:#fff;background:radial-gradient(circle at 25% 20%,#ffdf4b44,transparent 35%),linear-gradient(135deg,#15100a,#30240a,#17120a);border:1px solid #ffd84d66;box-shadow:0 10px 32px #ffbe001f;direction:rtl}.z50c{float:left;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff2a1,#ffd43d 40%,#a96d00);color:#5b3900;font-size:21px;font-weight:1000;border:3px solid #ffe88a}.z50z h3{margin:0 0 2px;font-size:20px}.z50z p{margin:0;color:#f7e8a5;font-size:11px;font-weight:700}.z50cta{display:inline-block;margin-top:8px;background:#ffd43d;color:#332100;border-radius:8px;padding:5px 9px;font-size:11px;font-weight:1000}@keyframes z50run{from{transform:translateX(100%)}to{transform:translateX(-100%)}}@media(max-width:700px){.z50{display:block}.z50t{border-radius:12px}.z50w{height:38px}.z50i{font-size:11px}.z50track{gap:20px}.z50z{width:auto;margin-top:8px}.z50c{width:38px;height:38px;font-size:17px}}@media(prefers-reduced-motion:reduce){.z50track{animation:none}}</style>
+
 <style id="zivo-v51-core">
 /* V51: ZIVO wallet + player cloud status + mobile action sheet */
 .zivo-v51-wallet{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,#17130a,#30240a);border:1px solid rgba(255,215,70,.32);border-radius:12px;padding:7px 10px;color:#fff;box-shadow:0 7px 22px rgba(255,190,0,.10)}
@@ -69,165 +69,6 @@
 </style>
 
 <style id="zivo-v62-clean">.profile-cloud-note{margin-top:10px;padding:9px 11px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035);font-size:10px}@media(max-width:700px){.profile-cloud-note{font-size:9px;padding:8px 9px}}</style><style id="zivo-v65-integration-css">.challenge-card{align-items:stretch}.challenge-visual{width:92px;height:72px;object-fit:cover;border-radius:11px;flex:0 0 92px;background:rgba(255,255,255,.04);display:grid;place-items:center;font-size:30px}.challenge-visual-fallback{border:1px solid rgba(255,255,255,.08)}.challenge-copy{min-width:0;flex:1}.challenge-copy p{line-height:1.5}@media(max-width:700px){.challenge-card{display:grid;grid-template-columns:64px 1fr;gap:9px}.challenge-visual{width:64px;height:58px}.challenge-card>.btn{grid-column:1/-1;width:100%}}</style>
-<style id="zivo-v66-polish">
-/* ===== ZIVOZONE V66: integrated visual polish ===== */
-:root{--zv66-card-gap:10px}
-#challenges,#challengeCenter,.challenge-center,.challenges-grid,[data-section="challenges"]{scroll-margin-top:10px}
-#challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,.challenges-grid .challenge-card,
-#challenges .game-card,#challengeCenter .game-card,.challenge-center .game-card{
-  min-height:0!important;
-  padding:10px!important;
-  border-radius:14px!important;
-}
-#challenges .challenge-card img,#challengeCenter .challenge-card img,.challenge-center .challenge-card img,
-.challenges-grid .challenge-card img,#challenges .game-card img,#challengeCenter .game-card img{
-  max-height:86px!important; height:86px!important; object-fit:cover!important; border-radius:10px!important;
-}
-#challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-.challenges-grid .challenge-card .icon{
-  width:44px!important;height:44px!important;font-size:24px!important;line-height:44px!important;
-}
-#challenges .challenge-card h3,#challengeCenter .challenge-card h3,.challenge-center .challenge-card h3,
-.challenges-grid .challenge-card h3{font-size:13px!important;line-height:1.35!important;margin:6px 0 3px!important}
-#challenges .challenge-card p,#challengeCenter .challenge-card p,.challenge-center .challenge-card p,
-.challenges-grid .challenge-card p{font-size:9px!important;line-height:1.55!important;margin:0 0 7px!important}
-#challenges .challenge-card button,#challengeCenter .challenge-card button,.challenge-center .challenge-card button,
-.challenges-grid .challenge-card button{min-height:34px!important;padding:7px 10px!important;font-size:10px!important;border-radius:9px!important}
-
-/* prevent oversized generic emoji/icon controls */
-.challenge-icon,.challenge-card .emoji,.challenge-card .game-icon,[class*="challenge"] .icon{
-  max-width:52px!important;max-height:52px!important;
-}
-
-/* ===== Broadcast ticker: slower, readable Arabic ===== */
-.z50-ticker,#z50ticker,.sports-ticker,[class*="ticker"]{
-  font-family:"Noto Sans Arabic","Tahoma","Arial",sans-serif!important;
-}
-#z50track span,#z50track a,.z50-track span,.z50-track a{
-  font-size:14px!important;font-weight:700!important;line-height:1.8!important;
-  letter-spacing:0!important;word-spacing:1px!important;
-}
-#z50track{gap:34px!important}
-.z50-ticker{min-height:48px!important}
-@media(max-width:700px){
-  #z50track span,#z50track a,.z50-track span,.z50-track a{font-size:13px!important}
-  .z50-ticker{min-height:46px!important}
-  #challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,.challenges-grid .challenge-card,
-  #challenges .game-card,#challengeCenter .game-card{padding:9px!important}
-  #challenges .challenge-card img,#challengeCenter .challenge-card img,.challenge-center .challenge-card img,
-  .challenges-grid .challenge-card img{max-height:70px!important;height:70px!important}
-  #challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-  .challenges-grid .challenge-card .icon{width:38px!important;height:38px!important;font-size:20px!important;line-height:38px!important}
-}
-</style>
-
-<style id="zivo-v67-broadcast-design">
-/* ZIVOZONE V67 — TV broadcast ticker + premium challenge styling */
-#z50ticker,#z50track,.z50-ticker{
-  direction:rtl;
-  font-family:"Noto Sans Arabic","Noto Kufi Arabic","Tahoma","Arial",sans-serif!important;
-}
-.z50-ticker{
-  position:relative!important;
-  overflow:hidden!important;
-  min-height:52px!important;
-  display:flex!important;
-  align-items:center!important;
-  border-radius:14px!important;
-  background:linear-gradient(90deg,rgba(8,12,20,.98),rgba(18,24,35,.96),rgba(8,12,20,.98))!important;
-  border:1px solid rgba(255,255,255,.08)!important;
-  box-shadow:0 8px 30px rgba(0,0,0,.20)!important;
-}
-.z50-ticker:before{
-  content:"أخبار الرياضة";
-  flex:0 0 auto;
-  z-index:3;
-  height:100%;
-  min-width:104px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:0 12px;
-  font-family:"Noto Sans Arabic","Tahoma",sans-serif;
-  font-size:12px;
-  font-weight:900;
-  color:#fff;
-  background:linear-gradient(135deg,#111827,#26364d);
-  border-inline-end:1px solid rgba(255,255,255,.12);
-}
-#z50track,.z50-track{
-  display:inline-flex!important;
-  align-items:center!important;
-  white-space:nowrap!important;
-  gap:44px!important;
-  animation: zivoTvMarquee 34s linear infinite!important;
-  will-change:transform;
-  padding:0 28px!important;
-}
-#z50track span,#z50track a,.z50-track span,.z50-track a{
-  font-family:"Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif!important;
-  font-size:14px!important;
-  font-weight:800!important;
-  line-height:1.9!important;
-  letter-spacing:0!important;
-  word-spacing:2px!important;
-  text-decoration:none!important;
-}
-#z50track span:before,.z50-track span:before{
-  content:"•";
-  display:inline-block;
-  margin-inline:12px;
-  opacity:.55;
-}
-@keyframes zivoTvMarquee{
-  from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
-}
-.z50-ticker:hover #z50track,.z50-ticker:hover .z50-track{
-  animation-play-state:paused!important;
-}
-
-/* Premium challenge center */
-#challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,
-.challenges-grid .challenge-card,#challenges .game-card,#challengeCenter .game-card{
-  position:relative!important;
-  overflow:hidden!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018))!important;
-  border:1px solid rgba(255,255,255,.09)!important;
-  box-shadow:0 10px 30px rgba(0,0,0,.14)!important;
-  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important;
-}
-#challenges .challenge-card:after,#challengeCenter .challenge-card:after,.challenge-center .challenge-card:after,
-.challenges-grid .challenge-card:after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:linear-gradient(120deg,transparent 0%,rgba(255,255,255,.045) 45%,transparent 70%);
-  transform:translateX(-100%);
-  transition:transform .45s ease;
-}
-#challenges .challenge-card:hover,#challengeCenter .challenge-card:hover,.challenge-center .challenge-card:hover,
-.challenges-grid .challenge-card:hover{
-  transform:translateY(-3px)!important;
-  border-color:rgba(255,255,255,.18)!important;
-  box-shadow:0 16px 38px rgba(0,0,0,.22)!important;
-}
-#challenges .challenge-card:hover:after,#challengeCenter .challenge-card:hover:after,
-.challenges-grid .challenge-card:hover:after{transform:translateX(100%)}
-#challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-.challenges-grid .challenge-card .icon{
-  border-radius:12px!important;
-  background:rgba(255,255,255,.055)!important;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)!important;
-}
-@media(max-width:700px){
-  .z50-ticker{min-height:48px!important;border-radius:11px!important}
-  .z50-ticker:before{min-width:82px;font-size:10px;padding:0 7px}
-  #z50track,.z50-track{gap:32px!important;padding:0 18px!important;animation-duration:30s!important}
-  #z50track span,#z50track a,.z50-track span,.z50-track a{font-size:12px!important}
-}
-</style>
 
 <style id="zivo-v68-challenge-core">
 /* ZIVOZONE V68 — Challenge Center is the visual heart */
@@ -287,6 +128,39 @@
     max-width:108px!important;
   }
 }
+</style>
+
+<style id="zivo-v69-news-network">
+.zivo-news-stack{width:100%;display:grid;gap:8px;margin:14px 0 18px}
+.zivo-news-rail{position:relative;display:flex;align-items:stretch;min-width:0;height:50px;overflow:hidden;border-radius:14px;background:linear-gradient(90deg,#0b101a,#111a28 50%,#0b101a);border:1px solid rgba(255,255,255,.09);box-shadow:0 8px 26px rgba(0,0,0,.16)}
+.zivo-rail-head{z-index:4;flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:0 12px;min-width:235px;background:linear-gradient(135deg,#151f30,#0d1420);border-inline-end:1px solid rgba(255,255,255,.1);white-space:nowrap}
+.zivo-rail-live{padding:4px 8px;border-radius:999px;background:#e53935;color:#fff;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif}
+.zivo-rail-badge{padding:4px 8px;border-radius:999px;background:#ffd54a;color:#2a2100;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif}
+.zivo-rail-title{color:#fff;font:900 14px/1.2 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif}
+.zivo-rail-sub{color:#8fa1b9;font:700 9px/1.2 "Noto Sans Arabic","Tahoma",sans-serif}
+.zivo-rail-window{position:relative;flex:1;min-width:0;overflow:hidden;display:flex;align-items:center}
+.zivo-rail-window:before,.zivo-rail-window:after{content:"";position:absolute;top:0;bottom:0;width:42px;z-index:3;pointer-events:none}
+.zivo-rail-window:before{right:0;background:linear-gradient(90deg,transparent,#0b101a)}
+.zivo-rail-window:after{left:0;background:linear-gradient(90deg,#0b101a,transparent)}
+.zivo-rail-track{display:inline-flex;align-items:center;gap:34px;width:max-content;direction:rtl;white-space:nowrap;animation:zivoBroadcastFlow 46s linear infinite;will-change:transform}
+.zivo-news-item{display:inline-flex;align-items:center;gap:7px;color:#f3f7ff;font:800 13px/1.8 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;text-decoration:none}
+.zivo-news-item .src{color:#7dd3fc;font-size:10px;font-weight:900}
+.zivo-news-item .dot{color:#64748b;font-size:15px}
+.zivo-news-rail:hover .zivo-rail-track{animation-play-state:paused}
+.zivo-sports-rail{border-color:rgba(56,189,248,.16)}
+.zivo-general-rail{background:linear-gradient(90deg,#0c1119,#151923 50%,#0c1119)}
+.zivo-general-rail .zivo-rail-track{animation-duration:52s}
+@keyframes zivoBroadcastFlow{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:700px){
+ .zivo-news-rail{height:46px;border-radius:11px}
+ .zivo-rail-head{min-width:142px;padding:0 8px;gap:5px}
+ .zivo-rail-title{font-size:11px}.zivo-rail-sub{display:none}
+ .zivo-rail-live,.zivo-rail-badge{font-size:8px;padding:4px 6px}
+ .zivo-rail-track{gap:25px;animation-duration:40s}
+ .zivo-general-rail .zivo-rail-track{animation-duration:45s}
+ .zivo-news-item{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){.zivo-rail-track{animation:none}}
 </style>
 </head>
 <body>
@@ -353,7 +227,35 @@
   <div class="hero-orb-wrap"><div class="hero-orb"><span>Z</span></div><span class="float-tag t1">IQ</span><span class="float-tag t2">AI</span><span class="float-tag t3">HORROR</span><span class="float-tag t4">SPORT</span></div>
 </section>
 
-<section class="z50" aria-label="أخبار ونتائج الرياضة"><div class="z50t"><div class="z50h"><span class="z50live">LIVE</span><span class="z50title">أخبار الرياضة والنتائج الجارية</span></div><div class="z50w"><div class="z50track" id="z50track"><span class="z50i"><b>LIVE</b> جاري تحميل الأخبار والنتائج...</span></div></div></div><aside class="z50z"><span class="z50c">Z</span><h3>ZIVO</h3><p>عملة عالمك داخل ZIVOZONE</p><span class="z50cta">اكسب ZIVO • العب • تحدَّ</span></aside></section>
+
+<section class="zivo-news-stack" aria-label="مركز الأخبار">
+  <div class="zivo-news-rail zivo-sports-rail" dir="rtl">
+    <div class="zivo-rail-head">
+      <span class="zivo-rail-live">مباشر</span>
+      <span class="zivo-rail-title">أخبار الرياضة</span>
+      <span class="zivo-rail-sub">العالمية • العربية • الأردنية</span>
+    </div>
+    <div class="zivo-rail-window">
+      <div class="zivo-rail-track" id="z50track">
+        <span class="zivo-news-item">جاري تحديث الأخبار الرياضية...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="zivo-news-rail zivo-general-rail" dir="rtl">
+    <div class="zivo-rail-head">
+      <span class="zivo-rail-badge">الأخبار</span>
+      <span class="zivo-rail-title">آخر الأخبار</span>
+      <span class="zivo-rail-sub">عربي • دولي • الأردن</span>
+    </div>
+    <div class="zivo-rail-window">
+      <div class="zivo-rail-track" id="zivoGeneralTrack">
+        <span class="zivo-news-item">جاري تحديث الأخبار العامة...</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="challenges" class="section alt challenge-center-section">
   <div class="section-heading challenge-center-heading">
     <div><span class="eyebrow" data-i18n="challengeEyebrow">مركز التحديات</span><h2 data-i18n="challengeTitle">مركز التحديات</h2><p class="muted" data-i18n="challengeText">كل تحدٍ عالم مستقل؛ اختر واحدًا وابدأ رحلة تتصاعد في الصعوبة.</p></div>
@@ -518,42 +420,6 @@ async function complete(raw){
 window.ZIVOZONE_PROGRESSION={complete,load};
 window.addEventListener('zivozone:game-complete',e=>complete(e.detail));
 window.addEventListener('zivozone:challenge-result',e=>complete(e.detail));
-})();
-</script>
-
-
-<script id="zivo-v66-ticker-a11y">
-(function(){
-'use strict';
-document.addEventListener('DOMContentLoaded',function(){
-  const track=document.getElementById('z50track');
-  if(!track)return;
-  track.setAttribute('aria-label','شريط الأخبار والنتائج الرياضية');
-  track.setAttribute('role','marquee');
-  track.addEventListener('mouseenter',function(){track.style.animationPlayState='paused'});
-  track.addEventListener('mouseleave',function(){track.style.animationPlayState='running'});
-  track.addEventListener('focusin',function(){track.style.animationPlayState='paused'});
-  track.addEventListener('focusout',function(){track.style.animationPlayState='running'});
-});
-})();
-</script>
-
-<script id="zivo-v67-arabic-ticker-fallback">
-(function(){
-  document.addEventListener('DOMContentLoaded',function(){
-    const track=document.getElementById('z50track');
-    if(!track)return;
-    const text=(track.textContent||'').trim();
-    if(!text){
-      track.innerHTML=[
-        'آخر أخبار كرة القدم العالمية',
-        'أبرز أخبار الكرة العربية',
-        'آخر أخبار الكرة الأردنية',
-        'نتائج المباريات وتحديثاتها أولاً بأول',
-        'ZIVOZONE — عالم الرياضة في مكان واحد'
-      ].map(x=>'<span>'+x+'</span>').join('');
-    }
-  });
 })();
 </script>
 </body>
