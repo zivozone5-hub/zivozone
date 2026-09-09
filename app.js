@@ -1543,3 +1543,50 @@
   window.ZIVOZONE_V37={open,render};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V38 — EXPERIENCE SHELL
+   Unifies existing systems without replacing their engines.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v38_ui';
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
+  const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+  function open(){
+    let o=document.getElementById('v38-shell');
+    if(!o){
+      o=document.createElement('div');o.id='v38-shell';o.className='v38-overlay';
+      o.innerHTML=`<div class="v38-card"><button class="v38-close">×</button>
+      <div class="v38-brand"><div class="v38-z">Z</div><div><small>ZIVOZONE</small><h2>مركز التجربة</h2><span>كل ما تحتاجه للعب والتطور في مكان واحد</span></div></div>
+      <div class="v38-tiles">
+        <button data-open="hub"><b>👤</b><strong>ملفي</strong><span>المستوى والتقدم</span></button>
+        <button data-open="daily"><b>🔥</b><strong>تحدي اليوم</strong><span>تحدٍ متجدد</span></button>
+        <button data-open="missions"><b>🎯</b><strong>مهامي</strong><span>أهداف اليوم</span></button>
+        <button data-open="competition"><b>🏆</b><strong>المنافسة</strong><span>Streak ومكافآت</span></button>
+      </div>
+      <div class="v38-status"><span><i></i> Cloud</span><span id="v38-online">ONLINE</span><span id="v38-pending">SYNC</span></div>
+      <div class="v38-note">الغرفة المظلمة والتحديات الأساسية تبقى مستقلة؛ هذا المركز يجمع الأنظمة المساندة فقط.</div>
+      </div>`;
+      document.body.appendChild(o);
+      o.querySelector('.v38-close').onclick=()=>o.classList.remove('open');
+      const map={hub:'ZIVOZONE_V37',daily:'ZIVOZONE_V32',missions:'ZIVOZONE_V34',competition:'ZIVOZONE_V33'};
+      o.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>{o.classList.remove('open');window[map[b.dataset.open]]?.open?.()});
+    }
+    render();o.classList.add('open');
+  }
+  function render(){
+    const o=document.getElementById('v38-shell');if(!o)return;
+    o.querySelector('#v38-online').textContent=navigator.onLine?'ONLINE':'OFFLINE';
+    o.querySelector('#v38-pending').textContent=window.ZIVOZONE_V36?`${window.ZIVOZONE_V36.pending()} PENDING`:'SYNC';
+    o.querySelector('.v38-status i').classList.toggle('on',navigator.onLine);
+  }
+  function mount(){
+    if(document.getElementById('v38-open'))return;
+    const b=document.createElement('button');b.id='v38-open';b.textContent='✦ مركز ZIVOZONE';b.onclick=open;document.body.appendChild(b);
+    ['zivozone-result','zivozone-reward','zivozone-cloud-synced','online','offline'].forEach(e=>window.addEventListener(e,render));
+  }
+  window.ZIVOZONE_V38={open,render};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
