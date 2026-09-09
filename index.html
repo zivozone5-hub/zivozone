@@ -826,6 +826,128 @@ window.ZIVOZONE_PLATFORM={
 })();
 </script>
 
+
+<script id="zivo-v59-firebase-loader">
+(function(){
+'use strict';
+window.ZIVOZONE_FIREBASE_READY=false;
+window.ZIVOZONE_FIREBASE={
+  app:null, auth:null, db:null, user:null,
+  async init(config){
+    if(!config || !config.apiKey || !config.projectId) return false;
+    if(!window.firebase) return false;
+    try{
+      if(!window.firebase.apps.length) window.firebase.initializeApp(config);
+      this.app=window.firebase.app();
+      this.auth=window.firebase.auth();
+      this.db=window.firebase.firestore();
+      this.user=this.auth.currentUser||null;
+      this.auth.onAuthStateChanged(u=>{
+        this.user=u||null;
+        window.ZIVOZONE_FIREBASE_READY=!!u;
+        window.dispatchEvent(new CustomEvent('zivozone:auth-changed',{detail:{uid:u&&u.uid||null}}));
+      });
+      window.ZIVOZONE_FIREBASE_READY=true;
+      return true;
+    }catch(e){console.warn('ZIVOZONE Firebase init failed',e);return false}
+  },
+  async signInEmail(email,password){
+    if(!this.auth) throw new Error('Firebase Auth is not initialized');
+    return this.auth.signInWithEmailAndPassword(email,password);
+  },
+  async createEmail(email,password){
+    if(!this.auth) throw new Error('Firebase Auth is not initialized');
+    return this.auth.createUserWithEmailAndPassword(email,password);
+  },
+  async signOut(){if(this.auth)return this.auth.signOut()},
+  uid(){return this.user&&this.user.uid||null}
+};
+})();
+</script>
+
+
+<script id="zivo-v59-cloud-sync">
+(function(){
+'use strict';
+const CONFIG=window.ZIVOZONE_FIREBASE_CONFIG||null;
+const LOCAL='zivozone_v54_player';
+function localPlayer(){try{return JSON.parse(localStorage.getItem(LOCAL)||'{}')}catch(e){return{}}}
+function saveLocal(p){try{localStorage.setItem(LOCAL,JSON.stringify(p))}catch(e){}}
+
+window.ZIVOZONE_PLAYER_CLOUD={
+ async ensureProfile(){
+   const f=window.ZIVOZONE_FIREBASE;
+   const uid=f&&f.uid?f.uid():null;
+   if(!uid || !f.db) return {mode:'local',profile:localPlayer()};
+   const ref=f.db.collection('players').doc(uid);
+   const snap=await ref.get();
+   const base=localPlayer();
+   const profile={
+     uid,
+     displayName:base.displayName||f.user.displayName||'لاعب ZIVOZONE',
+     email:f.user.email||base.email||'',
+     playerId:base.playerId||('ZV-'+uid.slice(0,10).toUpperCase()),
+     createdAt:base.createdAt||new Date().toISOString(),
+     updatedAt:new Date().toISOString()
+   };
+   if(!snap.exists) await ref.set(profile,{merge:true});
+   else await ref.set({updatedAt:profile.updatedAt,displayName:profile.displayName},{merge:true});
+   saveLocal(Object.assign(base,profile));
+   return {mode:'cloud',profile};
+ },
+ async recordAttempt(result){
+   const f=window.ZIVOZONE_FIREBASE, uid=f&&f.uid?f.uid():null;
+   if(!uid || !f.db){
+     if(window.ZIVOZONE_CLOUD&&window.ZIVOZONE_CLOUD.queueEvent)
+       window.ZIVOZONE_CLOUD.queueEvent('game_attempt',result);
+     return {mode:'queued'};
+   }
+   const data={
+     gameId:result.gameId||'unknown',
+     score:Number(result.score||0),
+     win:!!result.win,
+     duration:Number(result.duration||0),
+     clientTime:new Date().toISOString(),
+     verified:false
+   };
+   const ref=f.db.collection('players').doc(uid).collection('gameAttempts').doc();
+   await ref.set(data);
+   return {mode:'cloud',attemptId:ref.id};
+ }
+};
+document.addEventListener('DOMContentLoaded',async function(){
+  if(CONFIG && window.firebase && window.ZIVOZONE_FIREBASE){
+    await window.ZIVOZONE_FIREBASE.init(CONFIG);
+    if(window.ZIVOZONE_FIREBASE_READY) await window.ZIVOZONE_PLAYER_CLOUD.ensureProfile();
+  }
+});
+window.addEventListener('zivozone:auth-changed',async function(){
+  try{await window.ZIVOZONE_PLAYER_CLOUD.ensureProfile()}catch(e){console.warn(e)}
+});
+})();
+</script>
+
+
+<script id="zivo-v59-game-adapter-upgrade">
+(function(){
+'use strict';
+const original=window.ZIVOZONE_GAME_ADAPTER;
+window.ZIVOZONE_GAME_ADAPTER={
+ complete:async function(result){
+   result=result||{};
+   if(original && typeof original.complete==='function'){
+     try{original.complete(result)}catch(e){console.warn(e)}
+   }
+   try{
+     const cloud=window.ZIVOZONE_PLAYER_CLOUD;
+     if(cloud) await cloud.recordAttempt(result);
+   }catch(e){console.warn('Attempt sync pending',e)}
+   window.dispatchEvent(new CustomEvent('zivozone:verified-pipeline-request',{detail:result}));
+ }
+};
+})();
+</script>
+
 </body>
 </html>
 
