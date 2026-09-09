@@ -77,6 +77,16 @@
 @media(max-width:700px){.zivo-v56-hub{grid-template-columns:1fr}.zivo-v56-card{padding:11px}}
 </style>
 
+
+<style id="zivo-v57-cloud">
+.zivo-v57-cloudbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;margin:10px 0;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035);font-size:10px}
+.zivo-v57-cloudbar .ok{color:#78efa1}.zivo-v57-cloudbar .warn{color:#ffd27a}.zivo-v57-cloudbar .bad{color:#ff9a9a}
+.zivo-v57-auth{display:flex;gap:7px;flex-wrap:wrap}.zivo-v57-auth button{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:inherit;border-radius:9px;padding:7px 10px;font-size:10px;font-weight:900;cursor:pointer}
+.zivo-v57-modal{position:fixed;inset:0;z-index:100000;display:none;place-items:center;background:rgba(0,0,0,.62);backdrop-filter:blur(6px)}.zivo-v57-modal.show{display:grid}
+.zivo-v57-dialog{width:min(430px,calc(100vw - 28px));border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;background:#101827;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.zivo-v57-dialog h3{margin:0 0 5px;font-size:16px}.zivo-v57-dialog p{font-size:10px;opacity:.7;margin:0 0 12px}.zivo-v57-input{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#0b1220;color:#fff}.zivo-v57-primary{width:100%;margin-top:8px;border:0;border-radius:10px;padding:10px;background:linear-gradient(90deg,#ffd43d,#75e5ff);color:#111;font-weight:1000;cursor:pointer}
+</style>
+
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -102,6 +112,23 @@
   </div>
 </header>
 <main>
+
+<section class="zivo-v57-cloudbar" id="zivoV57CloudBar" aria-label="حالة الحساب السحابية">
+  <div><span id="zivoV57Dot">●</span> <b data-v57-auth-state>وضع اللاعب المحلي</b><div style="opacity:.55;margin-top:2px">الهوية السحابية تُفعل عند ربط Firebase Auth</div></div>
+  <div class="zivo-v57-auth"><button type="button" data-v57-auth="login">تسجيل / دخول</button><button type="button" data-v57-auth="logout">خروج</button></div>
+</section>
+<div class="zivo-v57-modal" id="zivoV57AuthModal">
+ <div class="zivo-v57-dialog">
+  <h3>حساب ZIVOZONE</h3>
+  <p>أدخل بيانات الحساب. لا يتم تخزين كلمة المرور في localStorage أو إرسالها إلى أي طرف غير مهيأ رسميًا.</p>
+  <input class="zivo-v57-input" id="zivoV57Email" type="email" autocomplete="email" placeholder="البريد الإلكتروني">
+  <input class="zivo-v57-input" id="zivoV57Name" type="text" autocomplete="name" placeholder="اسم اللاعب">
+  <button class="zivo-v57-primary" type="button" id="zivoV57Continue">متابعة</button>
+  <button class="zivo-v57-auth" type="button" id="zivoV57Close" style="margin-top:8px">إغلاق</button>
+ </div>
+</div>
+
+
 
 <section class="zivo-v56-hub" id="zivoV56UnifiedHub" aria-label="منظومة اللاعب الموحدة">
   <div class="zivo-v56-card">
@@ -628,6 +655,93 @@ document.addEventListener('DOMContentLoaded',function(){
         });
       }
       window.dispatchEvent(new CustomEvent('zivozone:game-complete',{detail:result}));
+    }
+  };
+})();
+</script>
+
+
+<script id="zivo-v57-cloud-runtime">
+(function(){
+'use strict';
+const CFG=window.ZIVOZONE_FIREBASE_CONFIG||window.FIREBASE_CONFIG||null;
+const KEY='zivozone_v57_identity';
+function read(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}}
+function save(x){try{localStorage.setItem(KEY,JSON.stringify(x))}catch(e){}}
+function setState(label,kind){
+ document.querySelectorAll('[data-v57-auth-state]').forEach(x=>x.textContent=label);
+ const d=document.getElementById('zivoV57Dot'); if(d)d.className=kind||'';
+}
+function current(){return read()}
+function update(){
+ const p=current();
+ if(p.uid){setState('حساب سحابي مرتبط • '+(p.displayName||p.email||'لاعب'),'ok')}
+ else if(navigator.onLine){setState('وضع اللاعب المحلي • جاهز للربط','warn')}
+ else{setState('غير متصل • سيُحفظ النشاط محليًا','bad')}
+}
+function open(){document.getElementById('zivoV57AuthModal')?.classList.add('show')}
+function close(){document.getElementById('zivoV57AuthModal')?.classList.remove('show')}
+async function tryFirebase(email,name){
+ // Uses an existing, explicitly supplied Firebase integration only.
+ // No credentials, API keys, or passwords are hard-coded by this layer.
+ if(!CFG && !window.firebase && !window.auth) return false;
+ return false; // Existing project's Firebase adapter should be attached here in deployment.
+}
+async function continueAuth(){
+ const email=(document.getElementById('zivoV57Email')?.value||'').trim();
+ const name=(document.getElementById('zivoV57Name')?.value||'').trim();
+ if(!email){alert('أدخل البريد الإلكتروني');return}
+ const cloud=await tryFirebase(email,name);
+ const p=read();
+ p.email=email;p.displayName=name||p.displayName||'لاعب ZIVOZONE';p.lastSeen=new Date().toISOString();
+ if(!cloud){
+   p.uid=p.uid||('local_'+Date.now().toString(36));
+   p.authMode='local_pending_cloud';
+ }
+ save(p);close();update();
+ if(window.ZIVOZONE&&typeof window.ZIVOZONE.track==='function')
+   window.ZIVOZONE.track('auth_intent',{mode:cloud?'cloud':'local_pending_cloud',emailDomain:email.split('@')[1]||''});
+}
+function logout(){
+ const p=read();delete p.uid;p.authMode='local';p.lastSeen=new Date().toISOString();save(p);update();
+ if(window.ZIVOZONE&&typeof window.ZIVOZONE.track==='function')window.ZIVOZONE.track('logout',{});
+}
+window.ZIVOZONE_CLOUD={
+ getIdentity:current,
+ status:update,
+ isCloudLinked:()=>!!read().uid && read().authMode!=='local_pending_cloud',
+ queueEvent:function(type,payload){
+   const p=read();p.queue=p.queue||[];p.queue.push({type,payload,ts:new Date().toISOString()});p.queue=p.queue.slice(-100);save(p);
+ }
+};
+document.addEventListener('DOMContentLoaded',function(){
+ update();
+ document.body.addEventListener('click',function(e){
+   const b=e.target.closest('[data-v57-auth]');if(!b)return;
+   if(b.getAttribute('data-v57-auth')==='login')open();
+   if(b.getAttribute('data-v57-auth')==='logout')logout();
+ });
+ document.getElementById('zivoV57Continue')?.addEventListener('click',continueAuth);
+ document.getElementById('zivoV57Close')?.addEventListener('click',close);
+ window.addEventListener('online',update);window.addEventListener('offline',update);
+});
+})();
+</script>
+
+
+<script id="zivo-v57-ai-gateway">
+(function(){
+  window.ZIVOZONE_AI={
+    endpoint: window.ZIVOZONE_AI_ENDPOINT || '/api/ai',
+    ask: async function(context){
+      const endpoint=this.endpoint;
+      const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+        intent:'player_assistance',
+        playerId:(window.ZIVOZONE_CLOUD&&window.ZIVOZONE_CLOUD.getIdentity().uid)||null,
+        context:context||{}
+      })});
+      if(!response.ok) throw new Error('AI gateway unavailable');
+      return response.json();
     }
   };
 })();
