@@ -1162,3 +1162,194 @@
   window.addEventListener('zivozone-progress',()=>{state()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V32 — DAILY CHALLENGE CENTER
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v32_daily';
+  const today=()=>new Date().toISOString().slice(0,10);
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
+  const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+  function state(){const s=read(); return s.date===today()?s:{date:today(),played:false,challenge:null};}
+  function pick(){
+    const bank=window.ZIVOZONE_CHALLENGES||{};
+    const keys=Object.keys(bank).filter(k=>bank[k]&&bank[k].questions&&!bank[k].special&&!/horror|dark/i.test(k));
+    if(!keys.length)return 'iq';
+    let n=0; for(const ch of today()) n=(n*31+ch.charCodeAt(0))>>>0;
+    return keys[n%keys.length];
+  }
+  function open(){
+    let o=document.getElementById('v32-daily');
+    if(!o){
+      o=document.createElement('div');o.id='v32-daily';o.className='v32-overlay';
+      o.innerHTML=`<div class="v32-card"><button class="v32-close">×</button>
+      <div class="v32-head"><div class="v32-mark">Z</div><div><small>DAILY COMPETITION</small><h2>تحدي اليوم</h2><span id="v32-date"></span></div></div>
+      <div class="v32-hero"><b>تحدٍ جديد كل يوم</b><p>اختر التحدي اليومي، واجعل نتيجتك جزءًا من سجل ZIVOZONE.</p>
+      <div class="v32-meta"><span id="v32-ch"></span><span id="v32-state"></span></div></div>
+      <button id="v32-play">ابدأ تحدي اليوم</button>
+      <div class="v32-rules"><span>⏱ 10 ثوانٍ لكل سؤال</span><span>🏆 سجّل أفضل نتيجة</span><span>🔥 ابنِ سلسلة لعب</span></div></div>`;
+      document.body.appendChild(o);
+      o.querySelector('.v32-close').onclick=()=>o.classList.remove('open');
+      o.querySelector('#v32-play').onclick=()=>{
+        const s=state(),ch=pick();s.played=true;s.challenge=ch;write(s);o.classList.remove('open');
+        if(typeof window.startChallenge==='function') window.startChallenge(ch);
+        else alert('محرك التحديات غير متاح حاليًا');
+      };
+    }
+    const s=state(),ch=pick();
+    o.querySelector('#v32-date').textContent=today();
+    o.querySelector('#v32-ch').textContent='التحدي: '+ch;
+    o.querySelector('#v32-state').textContent=s.played?'لعبته اليوم ✓':'لم تلعبه بعد';
+    o.classList.add('open');
+  }
+  function mount(){
+    if(document.getElementById('v32-open'))return;
+    const b=document.createElement('button');b.id='v32-open';b.textContent='🔥 تحدي اليوم';b.onclick=open;document.body.appendChild(b);
+  }
+  window.ZIVOZONE_V32={open,state,challenge:pick};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
+
+
+/* ============================================================
+   ZIVOZONE V33 — COMPETITION SEASON / STREAK / ZIVO REWARDS
+   Additive layer. Existing Firebase and challenge engines remain.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v33_competition';
+  const DAY=()=>new Date().toISOString().slice(0,10);
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
+  const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+  const prof=()=>window.ZIVOZONE_V30?.get?.()||window.ZIVOZONE_V26?.profile?.()||{};
+  function isoYesterday(d){const x=new Date(d+'T00:00:00');x.setUTCDate(x.getUTCDate()-1);return x.toISOString().slice(0,10)}
+  function state(){let s=read();if(s.date!==DAY())s={date:DAY(),completed:false,days:[],week:{},claimed:false};return s}
+  function ensure(){
+    const s=state(),p=prof(), yesterday=isoYesterday(DAY());
+    s.days=Array.isArray(s.days)?s.days:[];
+    if(s.date===DAY() && !s.completed)return s;
+    if(s.completed)return s;
+    s.streak=s.days.includes(yesterday)?(Number(s.streak)||0)+1:1;
+    if(!s.days.includes(DAY()))s.days.push(DAY());
+    s.days=s.days.slice(-30);
+    s.week=s.week||{};
+    const wk=DAY().slice(0,7);s.week[wk]=(Number(s.week[wk])||0)+1;
+    s.completed=true;s.claimed=false;s.xpReward=25+Math.min((s.streak||1)*5,75);s.zivoReward=1+(s.streak>=7?4:0);
+    write(s);return s;
+  }
+  function claim(){
+    const s=state();if(!s.completed||s.claimed)return s;
+    s.claimed=true;write(s);
+    try{
+      const p=prof();
+      if(window.ZIVOZONE_V26?.addXP) window.ZIVOZONE_V26.addXP(s.xpReward);
+      if(window.ZIVOZONE_V26?.addZIVO) window.ZIVOZONE_V26.addZIVO(s.zivoReward);
+      window.dispatchEvent(new CustomEvent('zivozone-reward',{detail:{xp:s.xpReward,zivo:s.zivoReward,source:'daily'}}));
+    }catch(e){}
+    return s;
+  }
+  function open(){
+    let o=document.getElementById('v33-competition');
+    if(!o){
+      o=document.createElement('div');o.id='v33-competition';o.className='v33-overlay';
+      o.innerHTML=`<div class="v33-card"><button class="v33-close">×</button>
+      <div class="v33-top"><div class="v33-orb">Z</div><div><small>COMPETITION SEASON</small><h2>ساحة المنافسة</h2><span>العودة كل يوم تصنع الفارق.</span></div></div>
+      <div class="v33-grid"><div><small>STREAK</small><b id="v33-streak">0</b><span>يوم متواصل</span></div><div><small>XP REWARD</small><b id="v33-xp">25</b><span>عند إكمال اليوم</span></div><div><small>ZIVO</small><b id="v33-zivo">1</b><span>مكافأة اليوم</span></div></div>
+      <div class="v33-progress"><div class="v33-bar"><i id="v33-fill"></i></div><span id="v33-week">0/7 أيام هذا الأسبوع</span></div>
+      <div class="v33-message" id="v33-message"></div>
+      <button id="v33-claim">استلام مكافأة اليوم</button>
+      </div>`;
+      document.body.appendChild(o);
+      o.querySelector('.v33-close').onclick=()=>o.classList.remove('open');
+      o.querySelector('#v33-claim').onclick=()=>{const s=claim();render(s);};
+    }
+    render();o.classList.add('open');
+  }
+  function render(s=state()){
+    const o=document.getElementById('v33-competition');if(!o)return;
+    const wk=(s.days||[]).filter(d=>d.slice(0,7)===DAY().slice(0,7)).length;
+    o.querySelector('#v33-streak').textContent=s.streak||0;
+    o.querySelector('#v33-xp').textContent=s.completed?s.xpReward||25:25;
+    o.querySelector('#v33-zivo').textContent=s.completed?s.zivoReward||1:1;
+    o.querySelector('#v33-fill').style.width=Math.min(100,wk/7*100)+'%';
+    o.querySelector('#v33-week').textContent=`${wk}/7 أيام هذا الأسبوع`;
+    o.querySelector('#v33-message').textContent=s.claimed?'تم استلام مكافأة اليوم ✓':s.completed?'أكملت تحدي اليوم. المكافأة بانتظارك.':'أكمل تحدي اليوم لتحافظ على سلسلة المنافسة.';
+    const b=o.querySelector('#v33-claim');b.disabled=!s.completed||s.claimed;b.textContent=s.claimed?'تم الاستلام ✓':'استلام مكافأة اليوم';
+  }
+  function mount(){
+    if(document.getElementById('v33-open'))return;
+    const b=document.createElement('button');b.id='v33-open';b.textContent='🏆 المنافسة';b.onclick=open;document.body.appendChild(b);
+  }
+  window.ZIVOZONE_V33={state,complete:ensure,claim,open};
+  window.addEventListener('zivozone-daily-complete',ensure);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
+
+
+/* ============================================================
+   ZIVOZONE V34 — PLAYER MISSION / DAILY OBJECTIVES
+   Additive layer. Existing V33 and Firebase layers preserved.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_v34_missions';
+  const DAY=()=>new Date().toISOString().slice(0,10);
+  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
+  const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+  const profile=()=>window.ZIVOZONE_V30?.get?.()||window.ZIVOZONE_V26?.profile?.()||{};
+  function get(){
+    const s=read();
+    if(s.date!==DAY()) return {date:DAY(),items:{play:{goal:1,value:0},correct:{goal:5,value:0},speed:{goal:3,value:0}},claimed:{}};
+    return s;
+  }
+  function progress(type,n=1){
+    const s=get(),x=s.items[type]; if(!x||x.value>=x.goal)return s;
+    x.value=Math.min(x.goal,x.value+n);write(s);render(s);return s;
+  }
+  function completeFromEvent(d){
+    const total=Number(d.total)||0,correct=Number(d.correct)||0;
+    progress('play',1); if(correct)progress('correct',correct);
+    if(d.fast===true)progress('speed',1);
+  }
+  function claim(type){
+    const s=get(); if(!s.items[type]||s.items[type].value<s.items[type].goal||s.claimed[type])return false;
+    s.claimed[type]=true;write(s);
+    const reward={play:{xp:10,zivo:1},correct:{xp:20,zivo:2},speed:{xp:15,zivo:2}}[type];
+    try{
+      if(window.ZIVOZONE_V26?.addXP)window.ZIVOZONE_V26.addXP(reward.xp);
+      if(window.ZIVOZONE_V26?.addZIVO)window.ZIVOZONE_V26.addZIVO(reward.zivo);
+      window.dispatchEvent(new CustomEvent('zivozone-reward',{detail:{...reward,source:'mission'}}));
+    }catch(e){}
+    render(s);return true;
+  }
+  function render(s=get()){
+    const o=document.getElementById('v34-missions');if(!o)return;
+    const labels={play:'أكمل تحديًا',correct:'أجب 5 إجابات صحيحة',speed:'أجب بسرعة'};
+    const rewards={play:'10 XP · 1 ZIVO',correct:'20 XP · 2 ZIVO',speed:'15 XP · 2 ZIVO'};
+    o.querySelector('.v34-list').innerHTML=Object.entries(s.items).map(([k,v])=>{
+      const done=v.value>=v.goal,claimed=!!s.claimed[k];
+      return `<div class="v34-mission"><div class="v34-icon">${k==='play'?'🎯':k==='correct'?'🧠':'⚡'}</div><div class="v34-copy"><b>${labels[k]}</b><span>${v.value}/${v.goal} · ${rewards[k]}</span><i><em style="width:${Math.min(100,v.value/v.goal*100)}%"></em></i></div><button data-claim="${k}" ${!done||claimed?'disabled':''}>${claimed?'✓': 'استلم'}</button></div>`;
+    }).join('');
+    o.querySelectorAll('[data-claim]').forEach(b=>b.onclick=()=>claim(b.dataset.claim));
+  }
+  function open(){
+    let o=document.getElementById('v34-missions');
+    if(!o){
+      o=document.createElement('div');o.id='v34-missions';o.className='v34-overlay';
+      o.innerHTML=`<div class="v34-card"><button class="v34-close">×</button><div class="v34-head"><div class="v34-mark">Z</div><div><small>PLAYER MISSIONS</small><h2>مهام اليوم</h2><span>أنجزها وارفع مستواك</span></div></div><div class="v34-list"></div><p>المهام اليومية تضيف أهدافًا قصيرة حتى يكون لكل دخول سبب جديد للعب.</p></div>`;
+      document.body.appendChild(o);
+      o.querySelector('.v34-close').onclick=()=>o.classList.remove('open');
+    }
+    render();o.classList.add('open');
+  }
+  function mount(){
+    if(document.getElementById('v34-open'))return;
+    const b=document.createElement('button');b.id='v34-open';b.textContent='🎯 مهامي';b.onclick=open;document.body.appendChild(b);
+  }
+  window.ZIVOZONE_V34={get,progress,claim,open};
+  window.addEventListener('zivozone-progress',e=>completeFromEvent(e.detail||{}));
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
