@@ -52,7 +52,7 @@
         user={uid:u.uid,email,name,age};
         player={...defaultPlayer(user),xp:Number(old.xp)||0,coins:Number(old.coins)||0,wins:Number(old.wins)||0,gamesPlayed:Number(old.gamesPlayed)||0,level:Number(old.level)||1,language:window.ZIVOZONE_I18N?.get?.()||'ar'};
         await db.collection('players').doc(u.uid).set({...player,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-        saveLocal();emit();return player;
+        saveLocal();await track('account_created',{source:'website'});emit();return player;
       }catch(e){throw Error(firebaseMessage(e.code))}
     }
     const accounts=localAccounts();if(accounts[email])throw Error(t('emailUsed'));
@@ -68,6 +68,10 @@
     const old=JSON.parse(localStorage.getItem(KEY)||'null');player=old?.player?.email===email?old.player:defaultPlayer(user);saveLocal();emit();return player;
   }
   async function logout(){if(cloud&&auth){try{await auth.signOut()}catch(e){}}user=null;player=null;localStorage.removeItem(KEY);emit()}
+  async function track(event,meta={}){
+    if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
+    try{await db.collection('players').doc(user.uid).collection('events').add({event:String(event).slice(0,80),meta,createdAt:firebase.firestore.FieldValue.serverTimestamp()});return true}catch(e){console.warn('Event save:',e);return false}
+  }
   async function update(patch){
     if(!player)return null;player={...player,...patch,language:patch.language||player.language||window.ZIVOZONE_I18N?.get?.()||'ar'};saveLocal();
     if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({...patch,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch(e){console.warn('Firestore update:',e)}}
@@ -79,7 +83,8 @@
   }
   async function setLanguage(lang){if(player){player.language=lang;saveLocal();if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({language:lang},{merge:true})}catch(e){}}emit()}}
   const isLoggedIn=()=>!!user&&!!player;
+  async function touchSession(){if(user&&cloud&&db&&!String(user.uid).startsWith('local_')){try{await db.collection('players').doc(user.uid).set({lastSeenAt:firebase.firestore.FieldValue.serverTimestamp(),lastSeenPath:location.hash||'#home'},{merge:true});await track('session_start',{path:location.hash||'#home',language:window.ZIVOZONE_I18N?.get?.()||'ar'})}catch(e){}}}
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
-  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,setLanguage,getUser:()=>user,getPlayer:()=>player,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,setLanguage,getUser:()=>user,getPlayer:()=>player,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();

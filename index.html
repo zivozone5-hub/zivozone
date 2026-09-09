@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=48.0">
+<link rel="stylesheet" href="styles.css?v=47.1">
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -74,6 +74,23 @@
 <section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading"><h3 data-i18n="matches">المباريات القادمة</h3></div><div id="sports-list" class="sports-grid"></div><div class="match-alert" id="match-alert" hidden></div><div class="subheading"><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><span class="live-badge">LIVE / UPCOMING</span></div><div id="fixture-list" class="sports-grid"></div></section>
 <section id="profile" class="section alt"><div class="profile-panel"><div class="avatar">Z</div><div class="profile-main"><span class="eyebrow" data-i18n="profileEyebrow">لاعب ZIVO</span><h2 id="profile-name">زائر</h2><p id="profile-email" class="muted">يمكنك اللعب كزائر ثم إنشاء حساب لحفظ تقدمك.</p><div class="progress"><span id="xp-progress"></span></div><div class="profile-stats"><span><span data-i18n="level">المستوى</span> <b id="profile-level">1</b></span><span><span data-i18n="xp">XP</span> <b id="profile-xp">0</b></span><span>🪙 <span data-i18n="coins">ZIVO</span> <b id="profile-coins">0</b></span><span>🏆 <span data-i18n="wins">انتصارات</span> <b id="profile-wins">0</b></span><span>🔥 <span data-i18n="bestStreak">أفضل سلسلة</span> <b id="profile-best-streak">0</b></span></div></div><div class="profile-actions"><button class="btn btn-primary" data-action="login" data-i18n="account">🔐 الحساب</button><button id="logout-btn" class="btn btn-ghost" data-action="logout" hidden data-i18n="logout">تسجيل الخروج</button></div></div><div class="notice" data-i18n="saveHint">الزائر يستطيع اللعب. الحساب المجاني يحفظ تقدمك وXP وZIVO والنتائج.</div></section>
 </main>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="#home" data-mobile-nav="home">⌂<span data-i18n="home">الرئيسية</span></a>
+  <a href="#challenges" data-mobile-nav="challenges">⚡<span data-i18n="challenges">التحديات</span></a>
+  <a href="#ai" data-mobile-nav="ai">🤖<span>ZIVO AI</span></a>
+  <a href="#sports" data-mobile-nav="sports">⚽<span data-i18n="sports">الرياضة</span></a>
+  <a href="#profile" data-mobile-nav="profile">👤<span data-i18n="profile">ملفي</span></a>
+  <button id="mobile-more" type="button" aria-label="More">☰<span>المزيد</span></button>
+</nav>
+<div id="mobile-tools" class="mobile-tools" hidden aria-hidden="true">
+  <div class="mobile-tools-backdrop" data-mobile-close></div>
+  <section class="mobile-tools-sheet" role="dialog" aria-modal="true" aria-label="ZIVO tools">
+    <button class="mobile-tools-close" type="button" data-mobile-close>×</button>
+    <span class="eyebrow">ZIVOZONE TOOLS</span><h2>كل أدوات ZIVOZONE</h2>
+    <p class="muted">تم جمع الأدوات الجانبية هنا حتى تبقى واجهة الهاتف نظيفة، مع الحفاظ على وظائفها.</p>
+    <div id="mobile-tools-list" class="mobile-tools-list"></div>
+  </section>
+</div>
 <footer class="footer"><strong>ZIVOZONE</strong><span>© 2026 ZIVOZONE</span><span id="footer-tagline">Built for the next generation.</span></footer>
 <div id="modal-root" class="modal-root" aria-hidden="true"></div><div id="toast-container" class="toast-container" aria-live="polite"></div>
 <script>
@@ -86,19 +103,17 @@ window.ZIVOZONE_SECURITY={appCheckSiteKey:''};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
-<script src="audio.js?v=48.0"></script>
-<script src="i18n.js?v=48.0"></script>
-<script src="challenges.js?v=48.0"></script>
-<script src="challenge_pack.js?v=48.0"></script>
-<script src="v22_bank.js?v=48.0"></script>
-<script src="news.js?v=48.0"></script>
-<script src="fixtures.js?v=48.0"></script>
-<script src="ads.js?v=48.0"></script>
-<script src="auth.js?v=48.0"></script>
-<script src="app.js?v=48.0"></script>
-<script src="v23_smart.js?v=48.0"></script>
-<script src="zivo_v48_core.js?v=48.0"></script>
+<script src="audio.js?v=47.1"></script>
+<script src="i18n.js?v=47.1"></script>
+<script src="challenges.js?v=47.1"></script>
+<script src="challenge_pack.js?v=47.1"></script>
+<script src="v22_bank.js?v=47.1"></script>
+<script src="news.js?v=47.1"></script>
+<script src="fixtures.js?v=47.1"></script>
+<script src="ads.js?v=47.1"></script>
+<script src="auth.js?v=47.1"></script>
+<script src="app.js?v=47.1"></script>
+<script src="v23_smart.js?v=47.1"></script>
 
 <script>
 document.addEventListener('click',function(e){

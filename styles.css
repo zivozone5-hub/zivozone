@@ -451,3 +451,48 @@ body.zivo-dark-active{overflow:hidden}
   0%{opacity:1;visibility:visible;pointer-events:auto}
   100%{opacity:0;visibility:hidden;pointer-events:none}
 }
+
+/* ============================================================
+   ZIVOZONE V49 — MOBILE EXPERIENCE LAYER
+   Keeps legacy tools functional while replacing the crowded
+   floating-button stack with one mobile tools drawer.
+============================================================ */
+.mobile-nav{display:none}
+.mobile-tools{display:none}
+@media(max-width:700px){#v28-open,#v29-open,#v30-open,#v31-open,#v32-open,#v33-open,#v34-open,#v35-open,#v37-open,#v38-open,#v39-open{display:none!important}}
+@media(max-width:700px){
+  body{padding-bottom:78px}
+  .topbar{padding:9px 12px;gap:10px;min-height:60px}
+  .brand-mark{width:38px;height:38px}.brand-name{font-size:17px}
+  .top-actions{margin-inline-start:auto;gap:6px}.top-actions .firebase-status{display:none}
+  #language-select{max-width:44px;padding:7px 2px}
+  #login-btn{font-size:11px;padding:8px 10px;max-width:125px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .main-nav{display:none!important}
+  .section{padding:42px 14px}
+  .hero{padding-top:34px}.hero h1{font-size:clamp(2rem,9vw,3.3rem);line-height:1.1}
+  .hero-actions{display:grid;grid-template-columns:1fr;gap:10px}.hero-stats{grid-template-columns:repeat(3,1fr);gap:7px}
+  .hero-orb-wrap{min-height:260px}.hero-orb{width:210px;height:210px}
+  .section-heading{align-items:flex-start;gap:14px}.section-heading h2{font-size:1.65rem}
+  .challenge-center-meta{width:100%;display:grid;grid-template-columns:1fr;gap:7px}.challenge-live-chip{justify-self:start}
+  .premium-challenge-layout{display:block}.ad-column{display:none!important}.ad-top,.ad-bottom{display:none}
+  .challenge-list,.sports-grid{grid-template-columns:1fr!important}.challenge-card{min-width:0}
+  .challenge-toolbar{font-size:.82rem;line-height:1.7;padding:10px}
+  .ai-form{grid-template-columns:1fr}.ai-form .btn{width:100%}
+  .profile-panel,.identity-panel{padding:18px}.profile-stats{grid-template-columns:repeat(2,1fr)}
+  .modal-card{width:min(94vw,720px);max-height:calc(100dvh - 24px);overflow:auto;padding:20px 16px}
+  .answers{grid-template-columns:1fr!important}.answer{min-height:58px;padding:12px}
+  .input-answer-form{grid-template-columns:1fr}.game-footer{flex-wrap:wrap}
+  .footer{padding-bottom:95px}
+
+  .mobile-nav{position:fixed;display:grid;grid-template-columns:repeat(5,1fr);left:8px;right:8px;bottom:8px;z-index:120;padding:7px 5px;border:1px solid rgba(255,255,255,.11);border-radius:20px;background:rgba(8,10,20,.94);backdrop-filter:blur(20px);box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 25px rgba(124,60,255,.08);padding-bottom:max(7px,env(safe-area-inset-bottom))}
+  .mobile-nav a,.mobile-nav button{border:0;background:none;color:#9ca5c5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:52px;font-size:18px;cursor:pointer}
+  .mobile-nav a span,.mobile-nav button span{font-size:9px;font-weight:700;white-space:nowrap}
+  .mobile-nav a.active,.mobile-nav a:hover,.mobile-nav button:hover{color:#fff}
+  .mobile-tools[hidden]{display:none}.mobile-tools{position:fixed;inset:0;z-index:300;display:block}
+  .mobile-tools-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(5px)}
+  .mobile-tools-sheet{position:absolute;left:8px;right:8px;bottom:8px;max-height:82dvh;overflow:auto;padding:22px 16px;border:1px solid rgba(255,255,255,.12);border-radius:24px;background:#0b0e1b;box-shadow:0 -20px 70px rgba(0,0,0,.55)}
+  .mobile-tools-close{position:absolute;top:10px;left:10px;width:38px;height:38px;border:0;border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-size:25px;cursor:pointer}
+  .mobile-tools-list{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+  .mobile-tools-list button{min-height:52px!important;position:static!important;display:block!important;width:auto!important;margin:0!important;transform:none!important}
+}
+@media(max-width:380px){.mobile-tools-list{grid-template-columns:1fr}.brand-name{display:none}.top-actions #language-select{display:none}}

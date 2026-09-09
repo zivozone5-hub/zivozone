@@ -20,6 +20,14 @@ service cloud.firestore {
         allow update, delete: if false;
       }
 
+      match /events/{eventId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow create: if request.auth != null && request.auth.uid == userId
+          && request.resource.data.event is string
+          && request.resource.data.event.size() <= 80;
+        allow update, delete: if false;
+      }
+
       match /results/{resultId} {
         allow read: if request.auth != null && request.auth.uid == userId;
         allow create: if request.auth != null
