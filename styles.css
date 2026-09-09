@@ -442,23 +442,12 @@ body.zivo-dark-active{overflow:hidden}
 #v43-cloud.v44-visible{opacity:.94}
 
 
-/* ============================================================
-   ZIVOZONE V47 — CHALLENGE CENTER UI HARDENING
-============================================================ */
-.challenge-card-v47{display:grid!important;grid-template-columns:1fr auto;grid-template-rows:auto 1fr auto;gap:10px 16px;min-height:190px!important;padding:20px!important;isolation:isolate}
-.challenge-card-v47 .challenge-card-top{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;min-height:34px}
-.challenge-icon-v47{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;border:1px solid rgba(124,60,255,.25);background:linear-gradient(145deg,rgba(124,60,255,.15),rgba(45,220,255,.06));font-size:25px;box-shadow:0 0 28px rgba(124,60,255,.08)}
-.challenge-card-v47 .challenge-card-body{grid-column:1/-1;min-width:0}
-.challenge-card-v47 h3{margin:0 0 7px;font-size:1.2rem;line-height:1.35}
-.challenge-card-v47 p{color:var(--muted);line-height:1.75;min-height:48px}
-.challenge-card-v47 .challenge-card-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;color:#9ba6c9;font-size:.78rem}
-.challenge-card-v47 .challenge-card-meta span{border:1px solid rgba(255,255,255,.07);border-radius:999px;padding:5px 8px;background:rgba(255,255,255,.025)}
-.challenge-start-v47{grid-column:1/-1;width:100%;justify-content:center;min-height:45px}
-.challenge-card-v47 .card-tag{white-space:nowrap}
-.horror-card-v47{border-color:rgba(255,55,100,.22)!important;background:radial-gradient(circle at 80% 10%,rgba(120,0,35,.12),transparent 35%),linear-gradient(145deg,#110a14,#090a12)!important}
-.horror-card-v47 .challenge-icon-v47{border-color:rgba(255,70,110,.3);box-shadow:0 0 30px rgba(170,0,50,.12)}
-@media(min-width:1050px){.challenge-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important}}
-@media(max-width:700px){.challenge-card-v47{min-height:170px!important}}
-
-/* V47.1 global UX polish */
-.sports-filter-bar{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 18px}.sports-filter{appearance:none;border:1px solid #29304a;background:#0b0e1a;color:#cfd6ec;border-radius:999px;padding:9px 15px;font:inherit;font-weight:800;cursor:pointer;transition:.18s}.sports-filter:hover,.sports-filter.active{border-color:#5b67a4;background:#171c31;color:#fff;box-shadow:0 8px 25px #0004}.horror-featured{grid-column:1/-1;min-height:210px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:20px;border-color:rgba(255,55,100,.38)!important;box-shadow:0 20px 70px rgba(100,0,35,.18),inset 0 0 50px rgba(120,0,35,.06)}.horror-featured .challenge-card-top{align-self:start}.horror-featured .challenge-card-body{position:relative;z-index:1}.horror-eye{font-size:38px!important;width:72px!important;height:72px!important}.horror-featured-glow{position:absolute;inset:-40%;background:radial-gradient(circle at 50% 50%,rgba(255,30,90,.10),transparent 45%);animation:horrorBreath 3.5s ease-in-out infinite;pointer-events:none}.horror-eyebrow{color:#ff7d99}.horror-featured .danger-btn{min-width:140px;position:relative;z-index:2}@media(max-width:700px){.horror-featured{grid-template-columns:1fr}.horror-featured .challenge-card-top{display:flex;justify-content:space-between}.horror-eye{width:58px!important;height:58px!important;font-size:30px!important}}
+/* ZIVOZONE V47 — guaranteed boot release */
+#app-loader{
+  animation:zivoLoaderRelease 1.35s ease forwards;
+  animation-delay:.65s;
+}
+@keyframes zivoLoaderRelease{
+  0%{opacity:1;visibility:visible;pointer-events:auto}
+  100%{opacity:0;visibility:hidden;pointer-events:none}
+}

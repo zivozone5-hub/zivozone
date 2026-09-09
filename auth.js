@@ -6,7 +6,7 @@
   'use strict';
   const KEY='zivozone_account_v6';
   const CONFIG=window.ZIVOZONE_FIREBASE_CONFIG;
-  let user=null, player=null, cloud=false, ready=false, auth=null, db=null, initPromise=null;
+  let user=null, player=null, cloud=false, ready=false, auth=null, db=null;
   const t=k=>window.zivoT?window.zivoT(k):k;
   const defaultPlayer=(u)=>({uid:u.uid,name:u.name||'ZIVO Player',age:Number(u.age)||18,email:u.email||'',level:1,xp:0,coins:0,wins:0,losses:0,gamesPlayed:0,streak:0,bestStreak:0,language:window.ZIVOZONE_I18N?.get?.()||'ar'});
   const localAccounts=()=>{try{return JSON.parse(localStorage.getItem('zivozone_accounts')||'{}')}catch(e){return {}}};
@@ -39,7 +39,6 @@
     }catch(e){console.error('ZIVOZONE Firebase init:',e);cloud=false;return false}
   }
   async function register(data){
-    await whenReady();
     const name=String(data.name||'').trim(),email=String(data.email||'').trim().toLowerCase(),password=String(data.password||''),age=Number(data.age);
     if(name.length<2)throw Error(t('nameError'));
     if(!Number.isInteger(age)||age<5||age>100)throw Error(t('ageError'));
@@ -62,7 +61,6 @@
     player={...defaultPlayer(user),xp:Number(old.xp)||0,coins:Number(old.coins)||0,wins:Number(old.wins)||0,gamesPlayed:Number(old.gamesPlayed)||0,level:Number(old.level)||1};saveLocal();emit();return player;
   }
   async function login(email,password){
-    await whenReady();
     email=String(email||'').trim().toLowerCase();password=String(password||'');
     if(cloud){try{await auth.signInWithEmailAndPassword(email,password);return player}catch(e){throw Error(firebaseMessage(e.code))}}
     const a=localAccounts()[email];if(!a||a.password!==password)throw Error(t('badLogin'));
@@ -81,8 +79,7 @@
   }
   async function setLanguage(lang){if(player){player.language=lang;saveLocal();if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({language:lang},{merge:true})}catch(e){}}emit()}}
   const isLoggedIn=()=>!!user&&!!player;
-  async function init(){loadLocal();try{await initFirebase()}finally{ready=true;emit()}return {ready,cloud}}
-  function whenReady(){return initPromise||Promise.resolve({ready,cloud})}
-  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,setLanguage,getUser:()=>user,getPlayer:()=>player,isLoggedIn,init,whenReady,ready:()=>ready,isCloud:()=>cloud};
-  initPromise=init();
+  async function init(){loadLocal();await initFirebase();ready=true;emit()}
+  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,setLanguage,getUser:()=>user,getPlayer:()=>player,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  init();
 })();
