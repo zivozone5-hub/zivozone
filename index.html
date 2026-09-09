@@ -87,6 +87,21 @@
 .zivo-v57-dialog h3{margin:0 0 5px;font-size:16px}.zivo-v57-dialog p{font-size:10px;opacity:.7;margin:0 0 12px}.zivo-v57-input{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#0b1220;color:#fff}.zivo-v57-primary{width:100%;margin-top:8px;border:0;border-radius:10px;padding:10px;background:linear-gradient(90deg,#ffd43d,#75e5ff);color:#111;font-weight:1000;cursor:pointer}
 </style>
 
+
+<style id="zivo-v58-architecture">
+.zivo-v58-shell{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0}
+.zivo-v58-tabs{display:flex;gap:7px;overflow:auto;padding-bottom:2px;scrollbar-width:none}
+.zivo-v58-tabs button{flex:0 0 auto;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.045);color:inherit;border-radius:10px;padding:8px 11px;font-size:10px;font-weight:900;cursor:pointer}
+.zivo-v58-tabs button.active{background:rgba(255,215,70,.13);border-color:rgba(255,215,70,.3)}
+.zivo-v58-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.zivo-v58-card{border:1px solid rgba(255,255,255,.09);border-radius:15px;padding:13px;background:rgba(255,255,255,.035)}
+.zivo-v58-card h4{margin:0;font-size:13px}.zivo-v58-card p{font-size:10px;opacity:.67;margin:4px 0 0}
+.zivo-v58-list{margin-top:8px;max-height:145px;overflow:auto}.zivo-v58-item{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:10px}
+.zivo-v58-item b{font-weight:1000}.zivo-v58-positive{color:#7bf0a1}.zivo-v58-gold{color:#ffe06a}
+.zivo-v58-hidden{display:none!important}
+@media(max-width:700px){.zivo-v58-grid{grid-template-columns:1fr}.zivo-v58-card{padding:11px}}
+</style>
+
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -112,6 +127,30 @@
   </div>
 </header>
 <main>
+
+<section class="zivo-v58-shell" id="zivoV58CommandCenter" aria-label="مركز ZIVOZONE">
+  <nav class="zivo-v58-tabs" aria-label="أقسام اللاعب">
+    <button class="active" type="button" data-v58-tab="overview">نظرة عامة</button>
+    <button type="button" data-v58-tab="wallet">ZIVO Wallet</button>
+    <button type="button" data-v58-tab="games">الألعاب</button>
+    <button type="button" data-v58-tab="achievements">الإنجازات</button>
+    <button type="button" data-v58-tab="leaderboard">المتصدرون</button>
+  </nav>
+  <div data-v58-panel="overview">
+    <div class="zivo-v58-grid">
+      <div class="zivo-v58-card"><h4>🪙 محفظة ZIVO</h4><p>الرصيد الظاهر للاعب</p><div style="font-size:22px;font-weight:1000;margin-top:7px"><span data-zivo-balance>0</span> <span class="zivo-v58-gold">ZIVO</span></div></div>
+      <div class="zivo-v58-card"><h4>⚡ تقدم اللاعب</h4><p>المستوى والخبرة</p><div style="font-size:17px;font-weight:1000;margin-top:7px">Level <span data-zivo-level>1</span> • <span data-v56-xp>0</span> XP</div></div>
+      <div class="zivo-v58-card"><h4>🎮 نشاط الألعاب</h4><p>يتم تحديثه من سجل النشاط</p><div class="zivo-v58-list" data-v58-games-list><div class="zivo-v58-item">لا توجد جلسات مسجلة بعد</div></div></div>
+      <div class="zivo-v58-card"><h4>🏆 الإنجازات</h4><p>إنجازات اللاعب المكتسبة</p><div class="zivo-v58-list" data-v58-achievements-list><div class="zivo-v58-item">ابدأ أول تحدٍ لفتح إنجازاتك</div></div></div>
+    </div>
+  </div>
+  <div class="zivo-v58-card zivo-v58-hidden" data-v58-panel="wallet"><h4>🪙 سجل ZIVO</h4><p>السجل المحلي الحالي للعمليات — المصدر النهائي يجب أن يكون Firestore Ledger.</p><div class="zivo-v58-list" data-v58-wallet-list></div></div>
+  <div class="zivo-v58-card zivo-v58-hidden" data-v58-panel="games"><h4>🎮 سجل الألعاب</h4><p>كل لعبة مكتملة ستدخل هنا بعد ربط المحركات بالعقد الموحد.</p><div class="zivo-v58-list" data-v58-full-games></div></div>
+  <div class="zivo-v58-card zivo-v58-hidden" data-v58-panel="achievements"><h4>🏅 الإنجازات</h4><p>نظام قابل للتوسع للـ badges والمهام المتقدمة.</p><div class="zivo-v58-list" data-v58-full-achievements></div></div>
+  <div class="zivo-v58-card zivo-v58-hidden" data-v58-panel="leaderboard"><h4>🌍 Leaderboard</h4><p>واجهة جاهزة للبيانات السحابية الموثوقة.</p><div class="zivo-v58-list"><div class="zivo-v58-item"><span>حسابك</span><b data-v58-player-rank>—</b></div></div></div>
+</section>
+
+
 
 <section class="zivo-v57-cloudbar" id="zivoV57CloudBar" aria-label="حالة الحساب السحابية">
   <div><span id="zivoV57Dot">●</span> <b data-v57-auth-state>وضع اللاعب المحلي</b><div style="opacity:.55;margin-top:2px">الهوية السحابية تُفعل عند ربط Firebase Auth</div></div>
@@ -744,6 +783,46 @@ document.addEventListener('DOMContentLoaded',function(){
       return response.json();
     }
   };
+})();
+</script>
+
+
+<script id="zivo-v58-architecture-runtime">
+(function(){
+'use strict';
+const EKEY='zivozone_v51_events';
+function ev(){try{return JSON.parse(localStorage.getItem(EKEY)||'[]')}catch(e){return[]}}
+function player(){try{return JSON.parse(localStorage.getItem('zivozone_v54_player')||localStorage.getItem('zivozone_v51_player')||'{}')}catch(e){return{}}}
+function row(a,b,c){return '<div class="zivo-v58-item"><span>'+a+'</span><b>'+b+'</b></div>'}
+function render(){
+ const p=player(), e=ev(), games=e.filter(x=>x.type==='game_completed'||x.type==='game_completion_requested');
+ const earns=e.filter(x=>x.type==='zivo_earned');
+ const gameHtml=games.slice(-10).reverse().map(x=>row(x.payload?.gameId||'تحدي',x.payload?.score??(x.payload?.win?'فوز':'مكتمل'))).join('')||row('لا يوجد','—');
+ const walletHtml=earns.slice(-10).reverse().map(x=>row(x.payload?.reason||'مكافأة','+'+(x.payload?.amount||0)+' ZIVO')).join('')||row('لا توجد عمليات','—');
+ const ach=[];
+ if(games.length>=1)ach.push(['🎯 أول تحدٍ','مكتمل']);
+ if(games.length>=5)ach.push(['🔥 لاعب نشط','5 ألعاب']);
+ if(Number(p.xp||0)>=500)ach.push(['⚡ XP 500','مكتمل']);
+ const achHtml=ach.length?ach.map(x=>row(x[0],x[1])).join(''):row('الإنجاز الأول','أكمل تحديًا');
+ document.querySelectorAll('[data-v58-games-list],[data-v58-full-games]').forEach(x=>x.innerHTML=gameHtml);
+ document.querySelectorAll('[data-v58-wallet-list]').forEach(x=>x.innerHTML=walletHtml);
+ document.querySelectorAll('[data-v58-achievements-list],[data-v58-full-achievements]').forEach(x=>x.innerHTML=achHtml);
+}
+document.addEventListener('DOMContentLoaded',function(){
+ render();
+ document.body.addEventListener('click',function(e){
+   const b=e.target.closest('[data-v58-tab]');if(!b)return;
+   const tab=b.getAttribute('data-v58-tab');
+   document.querySelectorAll('[data-v58-tab]').forEach(x=>x.classList.toggle('active',x===b));
+   document.querySelectorAll('[data-v58-panel]').forEach(x=>x.classList.toggle('zivo-v58-hidden',x.getAttribute('data-v58-panel')!==tab));
+   render();
+ });
+});
+window.ZIVOZONE_PLATFORM={
+ refresh:render,
+ getActivity:ev,
+ getPlayer:player
+};
 })();
 </script>
 
