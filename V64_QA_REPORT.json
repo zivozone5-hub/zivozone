@@ -1,0 +1,77 @@
+{
+  "version": "V64",
+  "challenge_sources_present": [
+    "challenges.js",
+    "v22_bank.js"
+  ],
+  "js_syntax": [
+    {
+      "file": "i18n.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "fixtures.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "challenges.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "challenge_pack.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "v23_smart.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "audio.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "app.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "ads.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "news.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "auth.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "v22_bank.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "functions/index.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "functions/ai.js",
+      "ok": true,
+      "error": ""
+    }
+  ],
+  "question_time_expected": 30,
+  "new_ui_layers_added": 0,
+  "architecture": "existing challenge engine + background progression bridge"
+}

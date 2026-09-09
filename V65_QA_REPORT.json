@@ -1,0 +1,75 @@
+{
+  "version": "V65",
+  "checks": [
+    {
+      "file": "i18n.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "fixtures.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "challenges.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "challenge_pack.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "v23_smart.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "audio.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "app.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "ads.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "news.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "auth.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "v22_bank.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "functions/index.js",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "file": "functions/ai.js",
+      "ok": true,
+      "error": ""
+    }
+  ],
+  "timer_seconds": 30,
+  "ticker_cache_hours": 24,
+  "ai": "server-side OpenAI Responses API",
+  "home_ticker_single_source": true,
+  "player_security": "client cannot update xp/coins/wallet/reward fields"
+}

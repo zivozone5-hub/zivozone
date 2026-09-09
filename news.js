@@ -52,3 +52,54 @@
   }
   window.ZIVOZONE_NEWS={load,loadJordan};
 })();
+
+/* ============================================================
+   ZIVOZONE SPORTS TICKER V65
+   Single home-page ticker. News cache target: 24h.
+   Scores are allowed to refresh more frequently through the backend.
+============================================================ */
+(() => {
+  'use strict';
+  const KEY='zivozone_sports_ticker_v65';
+  const TTL=24*60*60*1000;
+  const esc=s=>{const d=document.createElement('div');d.textContent=String(s??'');return d.innerHTML};
+  function read(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){return null}}
+  function write(v){try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}}
+  function render(data){
+    const track=document.getElementById('z50track'); if(!track)return;
+    const items=[];
+    (data?.news||[]).forEach(n=>items.push(`<span class="z50i"><b>NEWS</b> ${esc(n.headline||n.title||'')} <span class="z50s">${esc(n.category||'SPORT')}</span></span>`));
+    (data?.matches||[]).forEach(m=>{
+      const c=m.competitors||[];
+      items.push(`<span class="z50i"><b>⚽</b> ${esc(c[0]?.name||'—')} <span class="z50s">${esc(c[0]?.score??'—')} - ${esc(c[1]?.score??'—')}</span> ${esc(c[1]?.name||'—')} <span class="z50s">${esc(m.status||'')}</span></span>`)
+    });
+    if(!items.length)return;
+    track.innerHTML=items.concat(items).join('');
+  }
+  async function backend(){
+    const f=window.firebase?.functions?.(); if(!f)throw Error('firebase-functions');
+    const fn=f.httpsCallable(window.ZIVOZONE_API?.sportsCallable||'getSportsBroadcast');
+    const r=await fn({}); return r?.data||{};
+  }
+  async function fallback(){
+    const feeds=[
+      ['soccer','eng.1','🌍'],['soccer','esp.1','🇪🇸'],['soccer','uefa.champions','🏆']
+    ];
+    const all=[];
+    for(const [sport,league] of feeds){try{const r=await fetch(`https://site.api.espn.com/apis/site/v2/sports/${sport}/${league}/news`,{cache:'no-store'});if(r.ok){const d=await r.json();(d.articles||[]).slice(0,4).forEach(a=>all.push({headline:a.headline||a.description,category:league,published:a.published}))}}catch(e){}}
+    all.sort((a,b)=>new Date(b.published||0)-new Date(a.published||0));
+    return {news:all.slice(0,10),matches:[]};
+  }
+  async function load(force=false){
+    const cached=read();
+    if(!force && cached && Date.now()-cached.savedAt<TTL){render(cached.data);return cached.data;}
+    let data=null;
+    try{data=await backend()}catch(e){try{data=await fallback()}catch(x){data=null}}
+    if(data&&((data.news||[]).length||(data.matches||[]).length)){write({savedAt:Date.now(),data});render(data)}
+    else if(cached)render(cached.data);
+    return data;
+  }
+  window.ZIVOZONE_SPORTS_TICKER={refresh:()=>load(true),load};
+  document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>load(false),500));
+  setInterval(()=>load(true),TTL);
+})();
