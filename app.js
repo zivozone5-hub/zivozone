@@ -1472,3 +1472,74 @@
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
+
+
+/* ============================================================
+   ZIVOZONE V37 — PLAYER HUB
+   Unified player dashboard. Additive: prior systems preserved.
+============================================================ */
+(function(){
+  'use strict';
+  function get(key, fallback){
+    try{const v=localStorage.getItem(key);return v?JSON.parse(v):fallback}catch(e){return fallback}
+  }
+  function progress(){
+    const s=get('zivozone_v35_progress',{xp:0,level:1,played:0,correct:0,streak:0,bestScore:0});
+    return s;
+  }
+  function missions(){
+    const s=get('zivozone_v34_missions',{items:{}});
+    return s.items||{};
+  }
+  function competition(){
+    return get('zivozone_v33_competition',{streak:0,days:[]});
+  }
+  function profile(){
+    try{
+      if(window.ZIVOZONE_V30?.get)return window.ZIVOZONE_V30.get()||{};
+      if(window.ZIVOZONE_V26?.profile)return window.ZIVOZONE_V26.profile()||{};
+    }catch(e){}
+    return {};
+  }
+  function open(){
+    let o=document.getElementById('v37-hub');
+    if(!o){
+      o=document.createElement('div');o.id='v37-hub';o.className='v37-overlay';
+      o.innerHTML=`<div class="v37-card"><button class="v37-close">×</button>
+      <div class="v37-cover"><div class="v37-avatar">Z</div><div><small>PLAYER HUB</small><h2 id="v37-name">ZIVOZONE PLAYER</h2><span id="v37-sub">رحلتك، نتائجك، وتقدمك في مكان واحد</span></div><div class="v37-level">LV <b id="v37-level">1</b></div></div>
+      <div class="v37-xp"><div><b id="v37-xp">0 XP</b><span>التقدم للمستوى التالي</span></div><i><em id="v37-fill"></em></i></div>
+      <div class="v37-stats"><div><b id="v37-played">0</b><span>تحديات</span></div><div><b id="v37-correct">0</b><span>إجابات صحيحة</span></div><div><b id="v37-best">0</b><span>أفضل نتيجة</span></div><div><b id="v37-streak">0</b><span>Streak</span></div></div>
+      <div class="v37-panels"><div><small>MISSIONS</small><strong id="v37-missions">0/0</strong><span>مهام مكتملة اليوم</span></div><div><small>COMPETITION</small><strong id="v37-days">0</strong><span>أيام المنافسة</span></div><div><small>CLOUD</small><strong id="v37-cloud">READY</strong><span>مزامنة النشاط</span></div></div>
+      <div class="v37-actions"><button id="v37-challenge">🎯 تحدي اليوم</button><button id="v37-mission">📋 مهامي</button><button id="v37-compete">🏆 المنافسة</button></div>
+      <div class="v37-note">هذه لوحة موحدة لرحلة اللاعب. البيانات التنافسية والعملات النهائية يجب أن تعتمد على التحقق السحابي.</div>
+      </div>`;
+      document.body.appendChild(o);
+      o.querySelector('.v37-close').onclick=()=>o.classList.remove('open');
+      o.querySelector('#v37-challenge').onclick=()=>window.ZIVOZONE_V32?.open?.();
+      o.querySelector('#v37-mission').onclick=()=>window.ZIVOZONE_V34?.open?.();
+      o.querySelector('#v37-compete').onclick=()=>window.ZIVOZONE_V33?.open?.();
+    }
+    render();o.classList.add('open');
+  }
+  function render(){
+    const o=document.getElementById('v37-hub');if(!o)return;
+    const p=progress(),m=missions(),co=competition(),pr=profile();
+    const lvl=Number(p.level)||1,next=lvl*100,base=(lvl-1)*100;
+    const percent=Math.min(100,Math.max(0,((Number(p.xp)||0)-base)/(next-base)*100));
+    const done=Object.values(m).filter(x=>x&&x.value>=x.goal).length,total=Object.keys(m).length;
+    o.querySelector('#v37-name').textContent=pr.name||pr.displayName||'ZIVOZONE PLAYER';
+    o.querySelector('#v37-level').textContent=lvl;o.querySelector('#v37-xp').textContent=(p.xp||0)+' XP';
+    o.querySelector('#v37-fill').style.width=percent+'%';o.querySelector('#v37-played').textContent=p.played||0;
+    o.querySelector('#v37-correct').textContent=p.correct||0;o.querySelector('#v37-best').textContent=p.bestScore||0;
+    o.querySelector('#v37-streak').textContent=p.streak||co.streak||0;o.querySelector('#v37-missions').textContent=`${done}/${total}`;
+    o.querySelector('#v37-days').textContent=(co.days||[]).length;
+    o.querySelector('#v37-cloud').textContent=navigator.onLine?'ONLINE':'OFFLINE';
+  }
+  function mount(){
+    if(document.getElementById('v37-open'))return;
+    const b=document.createElement('button');b.id='v37-open';b.textContent='👤 ملفي';b.onclick=open;document.body.appendChild(b);
+    ['zivozone-result','zivozone-reward','zivozone-cloud-synced'].forEach(ev=>window.addEventListener(ev,render));
+  }
+  window.ZIVOZONE_V37={open,render};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
