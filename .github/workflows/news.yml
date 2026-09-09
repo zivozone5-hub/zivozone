@@ -1,0 +1,28 @@
+name: Update ZIVOZONE News
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update RSS news
+        run: python3 scripts/fetch_news.py
+
+      - name: Commit news data
+        run: |
+          git config user.name "ZIVOZONE News Bot"
+          git config user.email "actions@github.com"
+          git add data/news.json
+          git diff --cached --quiet || git commit -m "chore: update news"
+          git push
