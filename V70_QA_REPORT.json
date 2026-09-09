@@ -1,0 +1,8 @@
+{
+  "news_stack": true,
+  "sports_track": true,
+  "general_track": true,
+  "broadcast_css": true,
+  "news_client": false,
+  "firebase_callable": false
+}

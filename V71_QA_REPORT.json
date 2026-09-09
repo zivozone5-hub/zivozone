@@ -1,0 +1,7 @@
+{
+  "firebase_news_removed_from_client": true,
+  "static_news_json": false,
+  "github_workflow": true,
+  "fetch_script": true,
+  "two_rails": true
+}
