@@ -102,6 +102,14 @@
 @media(max-width:700px){.zivo-v58-grid{grid-template-columns:1fr}.zivo-v58-card{padding:11px}}
 </style>
 
+
+<style id="zivo-v60-challenge-ui">
+.zivo-v60-challenge-tools{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0;padding:9px 11px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035)}
+.zivo-v60-timer{font-size:22px;font-weight:1000;letter-spacing:1px;min-width:42px;text-align:center}.zivo-v60-timer.danger{animation:zv60pulse .6s infinite}
+.zivo-v60-timer-btn{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:inherit;border-radius:9px;padding:7px 9px;font-size:10px;font-weight:900}
+@keyframes zv60pulse{50%{transform:scale(1.08);opacity:.65}}
+</style>
+
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -127,6 +135,14 @@
   </div>
 </header>
 <main>
+
+<div class="zivo-v60-challenge-tools" id="zivoV60ChallengeTimer">
+ <div><b>⏱️ وقت السؤال</b><div style="font-size:9px;opacity:.55">30 ثانية لكل سؤال</div></div>
+ <div class="zivo-v60-timer" data-zivo-timer>30</div>
+ <button class="zivo-v60-timer-btn" type="button" data-v60-timer-start>بدء</button>
+</div>
+
+
 
 <section class="zivo-v58-shell" id="zivoV58CommandCenter" aria-label="مركز ZIVOZONE">
   <nav class="zivo-v58-tabs" aria-label="أقسام اللاعب">
@@ -943,6 +959,97 @@ window.ZIVOZONE_GAME_ADAPTER={
      if(cloud) await cloud.recordAttempt(result);
    }catch(e){console.warn('Attempt sync pending',e)}
    window.dispatchEvent(new CustomEvent('zivozone:verified-pipeline-request',{detail:result}));
+ }
+};
+})();
+</script>
+
+
+<script id="zivo-v60-timer">
+(function(){
+'use strict';
+const DEFAULT=30;
+let handle=null, end=0, remaining=DEFAULT, active=false;
+function emit(type){window.dispatchEvent(new CustomEvent('zivozone:timer',{detail:{type,remaining}}))}
+function paint(){
+ document.querySelectorAll('[data-zivo-timer]').forEach(el=>{
+   el.textContent=String(remaining).padStart(2,'0');
+   el.classList.toggle('danger',remaining<=5);
+ });
+}
+function tick(){
+ remaining=Math.max(0,Math.ceil((end-Date.now())/1000));paint();
+ if(remaining<=0){clearInterval(handle);handle=null;active=false;emit('expired')}
+}
+window.ZIVOZONE_TIMER={
+ start:function(seconds){seconds=Number(seconds)||DEFAULT;this.stop();remaining=seconds;end=Date.now()+seconds*1000;active=true;paint();emit('start');handle=setInterval(tick,100);},
+ stop:function(){if(handle)clearInterval(handle);handle=null;active=false;emit('stop')},
+ reset:function(){this.start(DEFAULT)},
+ get:function(){return remaining},
+ isActive:function(){return active}
+};
+document.addEventListener('DOMContentLoaded',function(){paint()});
+})();
+</script>
+
+
+<script id="zivo-v60-ai">
+(function(){
+'use strict';
+const endpoint=window.ZIVOZONE_AI_ENDPOINT||'/api/ai';
+window.ZIVOZONE_REAL_AI={
+ ask:async function(prompt,context){
+   const identity=window.ZIVOZONE_CLOUD?.getIdentity?.()||{};
+   const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({intent:'zivo_player_assistant',prompt:String(prompt||''),context:context||{},uid:identity.uid||null})});
+   if(!r.ok)throw new Error('AI service unavailable');
+   return r.json();
+ },
+ explainResult:async function(result){
+   return this.ask('حلل نتيجة اللاعب وقدّم نصيحة قصيرة وعملية بالعربية.',{result});
+ }
+};
+})();
+</script>
+
+
+<script id="zivo-v60-challenge-bridge">
+(function(){
+'use strict';
+function start(){if(window.ZIVOZONE_TIMER)window.ZIVOZONE_TIMER.start(30)}
+document.addEventListener('DOMContentLoaded',function(){
+ document.addEventListener('click',function(e){
+   const el=e.target.closest('button,[role="button"],a');
+   if(!el)return;
+   const text=(el.textContent||'').trim();
+   const challengeWord=/تحد|challenge|ابدأ|start|التالي|next/i.test(text);
+   const navWord=/رجوع|عودة|back|close|إغلاق/i.test(text);
+   if(challengeWord&&!navWord) setTimeout(start,0);
+ });
+ document.querySelector('[data-v60-timer-start]')?.addEventListener('click',start);
+});
+window.addEventListener('zivozone:timer',function(e){
+ if(e.detail.type==='expired'){
+   window.dispatchEvent(new CustomEvent('zivozone:question-timeout',{detail:{seconds:30}}));
+ }
+});
+})();
+</script>
+
+
+<script id="zivo-v60-real-player-pipeline">
+(function(){
+'use strict';
+window.ZIVOZONE_V60_PIPELINE={
+ complete:async function(result){
+   result=result||{};
+   if(window.ZIVOZONE_TIMER)window.ZIVOZONE_TIMER.stop();
+   let attempt=null;
+   try{
+     attempt=await window.ZIVOZONE_PLAYER_CLOUD?.recordAttempt?.(result);
+   }catch(e){console.warn(e)}
+   window.dispatchEvent(new CustomEvent('zivozone:attempt-created',{detail:{result,attempt}}));
+   return attempt;
  }
 };
 })();
