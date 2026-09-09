@@ -414,3 +414,8 @@ body.zivo-dark-active{overflow:hidden}
 
 /* V40 — Challenge bank visual identity */
 .v40-pack-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:8px;background:rgba(255,255,255,.05);font-size:7px;color:#8b93a7}
+
+/* ============================================================
+   V41 — SMART CHALLENGE POLISH
+============================================================ */
+.v41-smart-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:9px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);color:#9aa1b5;font-size:7px;font-weight:900;letter-spacing:.5px}
