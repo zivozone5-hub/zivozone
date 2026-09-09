@@ -189,10 +189,40 @@
       startIdentityTimer();
     };step();
   }
-  function renderChallenges(){const today=new Date().toISOString().slice(0,10),done=localStorage.getItem('zivo_daily_'+today);const raw=C.getAll();const seenIds=new Set();const list=raw.filter(x=>x&&x.id&&!seenIds.has(x.id)&&seenIds.add(x.id));$('#challenge-list').innerHTML=list.map(x=>`<article class="challenge-card"><span class="challenge-icon">${x.icon}</span><div><span class="card-tag">${t('questions10')}</span><h3>${esc(loc(x.title))}</h3><p>${esc(loc(x.desc))}</p></div><button class="btn btn-primary" data-challenge="${x.id}" ${done&&x.id==='daily'?'disabled':''}>${done&&x.id==='daily'?t('done'):t('start')}</button></article>`).join('')+`<article class="challenge-card special"><span class="challenge-icon">👁️</span><div><span class="card-tag danger">∞</span><h3>${esc(loc(C.horror.title))}</h3><p>${esc(loc(C.horror.desc))}</p></div><button class="btn btn-primary danger-btn" data-challenge="horror">${t('enter')}</button></article>`}
-  const NEWS=[{key:'FIFA',url:'https://www.fifa.com/',icon:'🌍',title:O('فيفا','FIFA')},{key:'AFC',url:'https://www.the-afc.com/',icon:'🏆',title:O('الاتحاد الآسيوي','AFC')},{key:'UEFA',url:'https://www.uefa.com/',icon:'⭐',title:O('يويفا','UEFA')},{key:'ESPN',url:'https://www.espn.com/',icon:'📰',title:O('ESPN','ESPN')}];
-  function renderNewsSources(){const box=$('#news-list');if(!box)return;box.innerHTML=NEWS.map(n=>`<article class="sports-card"><div class="icon">${n.icon}</div><span class="card-tag">${n.key}</span><h3>${esc(loc(n.title))}</h3><p>${esc(t('sportsIntro'))}</p><a class="btn btn-ghost" href="${n.url}" target="_blank" rel="noopener noreferrer">${t('openNews')}</a></article>`).join('')}
-  async function sports(){renderNewsSources();window.ZIVOZONE_NEWS?.load?.($('#news-list'),lang());window.ZIVOZONE_NEWS?.loadJordan?.($('#jordan-news-list'),lang());window.ZIVOZONE_FIXTURES?.load?.($('#fixture-list'),lang());const box=$('#sports-list');if(!box)return;box.innerHTML=`<article class="sports-card loading-card"><div class="spinner"></div><h3>${esc(t('sportsTitle'))}</h3><p>${esc(t('loader'))}</p></article>`;const teamIds=['133604','133602','133738','133739'];let events=[];try{const data=await Promise.all(teamIds.map(id=>fetch(`https://www.thesportsdb.com/api/v1/json/123/eventsnext.php?id=${id}`).then(r=>r.ok?r.json():null).catch(()=>null)));data.forEach(d=>{if(d?.events)events.push(...d.events)})}catch(e){}const seen=new Set();events=events.filter(e=>{const k=e.idEvent||`${e.strEvent}-${e.dateEvent}`;if(seen.has(k))return false;seen.add(k);return true}).slice(0,8);if(!events.length){box.innerHTML=`<article class="sports-card"><div class="icon">📡</div><h3>${esc(t('noData'))}</h3><p>${esc(t('newsUnavailable'))}</p></article>`;return}box.innerHTML=events.map(e=>`<article class="sports-card"><div class="match-icon">⚽</div><span class="card-tag">${esc(e.strLeague||e.strSport||'Sport')}</span><h3>${esc(e.strHomeTeam||'Home')} <span class="versus">VS</span> ${esc(e.strAwayTeam||'Away')}</h3><p>${esc(e.dateEvent||'')} ${esc(e.strTime||'')}</p><a class="btn btn-ghost" href="https://www.thesportsdb.com/" target="_blank" rel="noopener noreferrer">${t('open')}</a></article>`).join('')}
+  function normalizeChallengeCard(x,index=0){
+    const id=String(x?.id||x?.key||`challenge-${index+1}`);
+    const iconMap={iq:'🧠',science:'🔬',daily:'⚡',math:'🔢',memory:'🧩',logic:'♟️',logic_extreme:'♟️',memory_focus:'🧩',football_intelligence:'⚽',football:'⚽',reaction:'⚡',strategy:'♟️',language:'🔤',speed:'⚡',probabilities:'🎲',probability:'🎲',attention:'👁️'};
+    const titleRaw=x?.title??x?.name??id, descRaw=x?.desc??x?.description??'';
+    return {
+      id,
+      title:loc(titleRaw)||String(titleRaw)||id,
+      desc:loc(descRaw)||String(descRaw)||t('challengeText'),
+      icon:String(x?.icon||iconMap[id]||iconMap[id.split('_')[0]]||'🎯'),
+      questionCount:Number(x?.questionCount||x?.questions?.length||10),
+      xp:Math.max(0,Number(x?.xp)||0)
+    };
+  }
+  function renderChallenges(){
+    const today=new Date().toISOString().slice(0,10),done=localStorage.getItem('zivo_daily_'+today);
+    const raw=C.getAll?C.getAll():[],seenIds=new Set();
+    const list=raw.map((x,i)=>normalizeChallengeCard(x,i)).filter(x=>x.id!=='horror'&&!seenIds.has(x.id)&&seenIds.add(x.id));
+    const container=$('#challenge-list'); if(!container)return;
+    container.innerHTML=list.map((x,i)=>`
+      <article class="challenge-card challenge-card-v47" data-challenge-card="${esc(x.id)}" style="--card-index:${i}">
+        <div class="challenge-card-top"><span class="challenge-icon-v47" aria-hidden="true">${esc(x.icon)}</span><span class="card-tag">${esc(String(x.questionCount))} ${esc(t('questionsLabel')||'أسئلة')}</span></div>
+        <div class="challenge-card-body"><h3>${esc(x.title)}</h3><p>${esc(x.desc)}</p>
+          <div class="challenge-card-meta"><span>⏱ 10s</span>${x.xp?`<span>⚡ ${x.xp} XP</span>`:''}</div>
+        </div>
+        <button class="btn btn-primary challenge-start-v47" data-challenge="${esc(x.id)}">${esc(t('start'))} <span aria-hidden="true">←</span></button>
+      </article>`).join('')+
+      `<article class="challenge-card special challenge-card-v47 horror-card-v47" data-challenge-card="horror">
+        <div class="challenge-card-top"><span class="challenge-icon-v47" aria-hidden="true">👁️</span><span class="card-tag danger">∞</span></div>
+        <div class="challenge-card-body"><h3>${esc(loc(C.horror?.title)||'الغرفة المظلمة')}</h3><p>${esc(loc(C.horror?.desc)||'تجربة نفسية مستقلة. لا تدخلها وحدك.')}</p>
+          <div class="challenge-card-meta horror-meta"><span>🌑 تجربة مستقلة</span><span>⚠️</span></div>
+        </div>
+        <button class="btn btn-primary danger-btn challenge-start-v47" data-challenge="horror">${esc(t('enter'))} <span aria-hidden="true">←</span></button>
+      </article>`;
+  }
   function localAIReply(q){const x=q.toLowerCase();if(x.includes('مستوى')||x.includes('level')||x.includes('等级')||x.includes('nivel'))return`${t('level')} ${state.level} — ${state.xp} XP, ${state.coins} ZIVO.`;if(x.includes('تحد')||x.includes('challenge')||x.includes('挑战')||x.includes('desaf'))return t('challengeText');if(x.includes('رياض')||x.includes('sport')||x.includes('体育')||x.includes('deporte'))return t('sportsIntro');return t('aiWelcome')}
   async function askAI(message){if(API.aiEndpoint){try{const r=await fetch(API.aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,language:lang(),player:{level:state.level,xp:state.xp,gamesPlayed:state.gamesPlayed}})});if(r.ok){const d=await r.json();if(d.reply)return d.reply}}catch(e){}}return localAIReply(message)}
   function applyLanguage(){const l=lang();document.documentElement.lang=l;document.documentElement.dir=I.dir[l];$$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I.T[l]?.[k]!==undefined)el.textContent=t(k)});$$('[data-i18n-placeholder]').forEach(el=>el.placeholder=t(el.dataset.i18nPlaceholder));renderChallenges();renderNewsSources();profile();sports();$('#footer-tagline')?.replaceChildren(document.createTextNode(t('footerTagline')))}
