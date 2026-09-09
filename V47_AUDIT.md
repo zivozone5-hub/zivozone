@@ -1,10 +1,11 @@
-# ZIVOZONE V47 — Challenge Center UI Hardening
+# ZIVOZONE V47
 
-The supplied screenshot showed literal `undefined` inside challenge cards. The issue came from mixed
-challenge schemas: newer V40 packs use `description` and omit `icon`, while the main renderer expected
-`desc` and `icon`.
+Incremental release built from V46 Server Engine.
 
-V47 adds a normalization layer, safe icons, safe localized title/description handling, question counts,
-deduplication, and a consistent responsive card layout. The Dark Room remains a separate special experience.
-
-All previous challenge banks and Firebase/cloud/server layers are preserved.
+- Fixed undefined challenge descriptions.
+- Added local original challenge illustrations.
+- Result now clearly shows score, percentage, correct, wrong and timed-out answers.
+- Added a dedicated Today Matches section separate from Challenge Center.
+- Arabic team names for the featured 9 Sep 2026 fixtures.
+- Preserved Firebase, server engine, audio, horror, ads, ZIVO and existing dynamic fixture/news systems.
+- All JS files pass syntax validation.
