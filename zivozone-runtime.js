@@ -1028,7 +1028,8 @@ window.ZIVOZONE_V18 = {
   }
   function horrorCheckpoint(){openModal(`<div class="horror-checkpoint"><span class="eyebrow">${t('horrorCheckpoint')}</span><h2>${t('horrorCheckpointTitle')}</h2><p>${t('horrorCheckpointText')}</p><p class="horror-warning">${t('horrorWarning')}</p><div class="modal-actions"><button class="btn btn-primary" id="horror-continue">${t('horrorContinue')}</button><button class="btn btn-ghost" id="horror-exit">${t('horrorLeave')}</button></div></div>`,'horror-modal phase-3');$('#horror-continue').onclick=()=>{closeModal();renderQuestion()};$('#horror-exit').onclick=()=>{closeModal();quitGame()}}
   async function quitGame(){clearQuestionTimer();clearIdentityTimer();const wasHorror=game.id==='horror';const survived=game.index;S().stopChallenge?.();document.body.classList.remove('horror-active');if(wasHorror){const xp=Math.max(5,survived*7);await reward(xp,Math.max(1,Math.floor(survived/4)),survived>=10);await A.saveResult({challengeId:'horror',score:survived,total:survived,questionsSurvived:survived,endedByPlayer:true,guest:game.guest,xp,pressureScore:game.pressureScore,bestStreak:game.bestStreak,timedOut:game.timedOut,language:lang()});openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('horrorExitTitle')}</span><h2>${t('horrorExitHeadline')}</h2><p>${t('horrorExitText')}</p><p><strong>${survived}</strong> ${t('horrorQuestion')}</p><div class="modal-actions"><button class="btn btn-primary" id="horror-again">${t('again')}</button>${game.guest?`<button class="btn btn-ghost" id="register-result">${t('saveProgress')}</button>`:''}<button class="btn btn-ghost" data-action="return-challenges">${t('close')}</button></div>`);$('#horror-again').onclick=()=>{closeModal();startGame('horror')};$('#register-result')?.addEventListener('click',()=>authModal(()=>{toast(t('success'),'success');profile()}));return}closeModal()}
-  async function finishGame(){clearQuestionTimer();clearIdentityTimer();S().stopChallenge?.();document.body.classList.remove('horror-active');S().success?.();const src=C.get(game.id),score=game.score,total=game.questions.length,perfect=total>0&&score===total&&Number(game.timedOut||0)===0,pressure=Math.min(100,Math.round(game.pressureScore/Math.max(1,total))),performance=Math.min(100,Math.round((score/Math.max(1,total))*75+pressure*.25)),xp=Math.max(10,Math.round(performance/100*src.xp)),coins=perfect?10:0,win=score>=Math.ceil(total*.5);await reward(xp,0,win);window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{challenge:game.id,gameId:game.id,score,total,perfect,xp,coins,zivoReward:coins,eventId:(window.crypto?.randomUUID?.()||('game_'+Date.now()+'_'+Math.random().toString(36).slice(2)))}}));state.bestStreak=Math.max(Number(state.bestStreak)||0,game.bestStreak||0);saveState();if(A.isLoggedIn())await A.update({bestStreak:state.bestStreak});profile();if(game.id==='daily')localStorage.setItem('zivo_daily_'+new Date().toISOString().slice(0,10),'1');await A.saveResult({challengeId:game.id,score,total,xp,coins,pressureScore:game.pressureScore,bestStreak:game.bestStreak,timedOut:game.timedOut,guest:game.guest,language:lang()});openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('result')}</span><h2>${win?t('excellent'):t('roundEnded')}</h2><p>${t('score')}: <strong>${score}/${total}</strong> — <strong>${Math.round((score/Math.max(1,total))*100)}%</strong></p><p>✅ ${t('correct')}: <strong>${score}</strong> &nbsp; ❌ ${t('wrong')}: <strong>${Math.max(0,total-score-game.timedOut)}</strong> &nbsp; ⏱ <strong>${game.timedOut}</strong></p><p>⚡ ${t('pressure')}: <strong>${game.pressureScore}</strong> &nbsp; 🔥 ${t('bestStreak')}: <strong>${game.bestStreak}</strong></p><p>+${xp} XP &nbsp; ${perfect?`+${coins} 🪙 ZIVO — علامة كاملة 🎯`:'0 🪙 ZIVO — العملة للتحديات ذات العلامة الكاملة فقط'}</p>${game.guest?`<div class="save-call"><strong>${t('guestSave')}</strong></div>`:''}<div class="modal-actions"><button class="btn btn-primary" id="again">${t('again')}</button>${game.guest?`<button class="btn btn-ghost" id="register-result">${t('saveProgress')}</button>`:''}<button class="btn btn-ghost" data-action="return-challenges">${t('close')}</button></div>`);$('#again').onclick=()=>{closeModal();startGame(game.id)};$('#register-result')?.addEventListener('click',()=>authModal(()=>{toast(t('success'),'success');profile()}))}
+  async function finishGame(){clearQuestionTimer();clearIdentityTimer();S().stopChallenge?.();document.body.classList.remove('horror-active');S().success?.();const src=C.get(game.id),score=game.score,total=game.questions.length,perfect=total>0&&score===total&&Number(game.timedOut||0)===0,pressure=Math.min(100,Math.round(game.pressureScore/Math.max(1,total))),performance=Math.min(100,Math.round((score/Math.max(1,total))*75+pressure*.25)),xp=Math.max(10,Math.round(performance/100*src.xp)),coins=perfect?10:0,win=score>=Math.ceil(total*.5);await reward(xp,0,win);window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{challenge:game.id,gameId:game.id,score,total,perfect,xp,coins,zivoReward:coins,eventId:(window.crypto?.randomUUID?.()||('game_'+Date.now()+'_'+Math.random().toString(36).slice(2)))}}));
+      try{await window.ZIVOZONE_ECONOMY?.rewardPerfect?.({challenge:game.id,gameId:game.id,score,total,perfect,xp,coins,zivoReward:coins,eventId:(window.crypto?.randomUUID?.()||('game_'+Date.now()+'_'+Math.random().toString(36).slice(2)))},'main');}catch(e){console.warn('ZIVO main direct reward:',e)}state.bestStreak=Math.max(Number(state.bestStreak)||0,game.bestStreak||0);saveState();if(A.isLoggedIn())await A.update({bestStreak:state.bestStreak});profile();if(game.id==='daily')localStorage.setItem('zivo_daily_'+new Date().toISOString().slice(0,10),'1');await A.saveResult({challengeId:game.id,score,total,xp,coins,pressureScore:game.pressureScore,bestStreak:game.bestStreak,timedOut:game.timedOut,guest:game.guest,language:lang()});openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('result')}</span><h2>${win?t('excellent'):t('roundEnded')}</h2><p>${t('score')}: <strong>${score}/${total}</strong> — <strong>${Math.round((score/Math.max(1,total))*100)}%</strong></p><p>✅ ${t('correct')}: <strong>${score}</strong> &nbsp; ❌ ${t('wrong')}: <strong>${Math.max(0,total-score-game.timedOut)}</strong> &nbsp; ⏱ <strong>${game.timedOut}</strong></p><p>⚡ ${t('pressure')}: <strong>${game.pressureScore}</strong> &nbsp; 🔥 ${t('bestStreak')}: <strong>${game.bestStreak}</strong></p><p>+${xp} XP &nbsp; ${perfect?`+${coins} 🪙 ZIVO — علامة كاملة 🎯`:'0 🪙 ZIVO — العملة للتحديات ذات العلامة الكاملة فقط'}</p>${game.guest?`<div class="save-call"><strong>${t('guestSave')}</strong></div>`:''}<div class="modal-actions"><button class="btn btn-primary" id="again">${t('again')}</button>${game.guest?`<button class="btn btn-ghost" id="register-result">${t('saveProgress')}</button>`:''}<button class="btn btn-ghost" data-action="return-challenges">${t('close')}</button></div>`);$('#again').onclick=()=>{closeModal();startGame(game.id)};$('#register-result')?.addEventListener('click',()=>authModal(()=>{toast(t('success'),'success');profile()}))}
   function identity(){
     const qs=[
       ['عندما تبدأ مشروعًا جديدًا، ما أول شيء تفعله؟','When starting a new project, what do you do first?',['أضع خطة واضحة','أبدأ بالتجربة','أجمع الناس حول الفكرة','أبحث عن فرصة مختلفة'],['Make a clear plan','Start experimenting','Bring people around the idea','Look for a different opportunity']],
@@ -1468,6 +1469,7 @@ window.ZIVOZONE_V18 = {
         } catch(e) { console.warn('ZIVO V20 player progress:', e); }
       }
       window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{challenge:run.id,gameId:run.id,score:correct,total:run.questions.length,perfect,xp:0,coins:zivoReward,zivoReward,eventId:(window.crypto?.randomUUID?.()||('v20_'+Date.now()+'_'+Math.random().toString(36).slice(2)))} }));
+      try{await window.ZIVOZONE_ECONOMY?.rewardPerfect?.({challenge:run.id,gameId:run.id,score:correct,total:run.questions.length,perfect,xp:0,coins:zivoReward,zivoReward},'v20-direct');}catch(e){console.warn('ZIVO V20 direct reward:',e)}
       if(window.ZIVOZONE_V46?.submit && window.ZIVOZONE_AUTH?.isLoggedIn?.()){
         window.ZIVOZONE_V46.submit({challengeId:run.id,attemptId:(crypto?.randomUUID?.()||('attempt-'+Date.now())),answers:submittedAnswers,total:run.questions.length,correct,score:Math.round(correct/run.questions.length*100),startedAt:new Date(Date.now()-Math.max(0,(performance.now()-startAt))).toISOString()}).then(async r=>{
           if(r?.data?.ok || r?.data?.verified || r?.accepted){
@@ -3220,8 +3222,10 @@ window.ZIVOZONE_V18 = {
     xp_boost:{price:100,label:'دفعة خبرة'}
   };
   let wallet={zivo:0,ledger:[],uid:null};
-  const uid=()=>auth()?.currentUser?.uid||window.ZIVOZONE_AUTH?.getUser?.()?.uid||null;
-  const logged=()=>!!uid();
+  const currentAuthUser=()=>auth()?.currentUser||null;
+  const currentPlatformUser=()=>window.ZIVOZONE_AUTH?.getUser?.()||null;
+  const uid=()=>currentAuthUser()?.uid||currentPlatformUser()?.uid||window.ZIVOZONE_AUTH?.getPlayer?.()?.uid||null;
+  const logged=()=>!!uid() && !!(currentAuthUser()||currentPlatformUser()||window.ZIVOZONE_AUTH?.getPlayer?.());
   const stampMs=v=>v?.toMillis?.()||Number(v)||0;
   const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const keyFor=u=>`${KEY}:${u}`;
@@ -3288,10 +3292,12 @@ window.ZIVOZONE_V18 = {
     const lref=wref.collection('ledger').doc(eventId);
     try{
       await d.runTransaction(async tx=>{
-        const [ws,ls]=await Promise.all([tx.get(wref),tx.get(lref)]); if(ls.exists)return;
+        const ws=await tx.get(wref);
+        const ls=await tx.get(lref);
+        if(ls.exists)return;
         const current=Number(ws.data()?.zivo)||0,next=current+amount;
         const userRef=d.collection('users').doc(u),playerRef=d.collection('players').doc(u);
-        tx.set(wref,{zivo:next,updatedAt:F.firestore.FieldValue.serverTimestamp(),mode:'spark-internal-v87'},{merge:true});
+        tx.set(wref,{zivo:next,updatedAt:F.firestore.FieldValue.serverTimestamp(),mode:'spark-internal-v88'},{merge:true});
         tx.set(userRef,{zivo:next,coins:next,updatedAt:F.firestore.FieldValue.serverTimestamp()},{merge:true});
         tx.set(playerRef,{zivo:next,coins:next,updatedAt:F.firestore.FieldValue.serverTimestamp()},{merge:true});
         tx.set(lref,{type:String(type||'reward').slice(0,40),label:String(label||'مكافأة').slice(0,120),amount,eventId,meta,createdAt:F.firestore.FieldValue.serverTimestamp()});
@@ -3321,7 +3327,7 @@ window.ZIVOZONE_V18 = {
   function toast(msg){let x=document.getElementById('zivo-v85-toast');if(!x){x=document.createElement('div');x.id='zivo-v85-toast';x.className='zivo-v85-toast';document.body.appendChild(x)}x.textContent=msg;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2400)}
 
   function open(){
-    if(!logged()){window.dispatchEvent(new CustomEvent('zivozone:request-login'));return;}
+    if(!logged()){window.dispatchEvent(new CustomEvent('zivozone:request-login'));setTimeout(()=>refresh(),700);return;}
     let o=document.getElementById('zivo-v85-economy');
     if(!o){
       o=document.createElement('div');o.id='zivo-v85-economy';o.className='zivo-v85-overlay';
@@ -3334,7 +3340,11 @@ window.ZIVOZONE_V18 = {
 
   const processed=new Set();
   async function rewardPerfect(d,source){
-    if(!logged()||!d)return false;
+    if(!d)return false;
+    if(!logged()){
+      await new Promise(r=>setTimeout(r,500));
+      if(!logged())return false;
+    }
     const total=Math.max(0,Number(d.total)||Number(d.questions)||10);
     const correct=Math.max(0,Number(d.correct??d.score)||0);
     const timed=Number(d.timedOut)||0;
@@ -3347,6 +3357,7 @@ window.ZIVOZONE_V18 = {
     const amount=Math.min(20,10+bonus);
     const ok=await credit(amount,'challenge_reward',`مكافأة العلامة الكاملة — ${challenge}`,{eventId,perfect:true,challenge,activeMinutes:window.ZIVOZONE_ENGAGEMENT?.activeMinutes?.()||0,bonus});
     if(ok){window.ZIVOZONE_ENGAGEMENT?.markBonusClaimed?.(bonus);toast(`مبروك! +${amount} ZIVO 🪙`);}
+    else {processed.delete(eventId);}
     return ok;
   }
   function onResult(e){rewardPerfect(e?.detail||{},'result')}
