@@ -1,13 +1,21 @@
 {
-  "functions": {
-    "source": "functions"
-  },
   "hosting": {
     "public": ".",
     "ignore": [
       "firebase.json",
+      ".firebaserc",
+      "firestore.rules",
+      "README_V82_FREE_PRODUCTION.md",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "scripts/**",
+      ".github/**",
+      "*.bat",
+      "*.cmd",
+      "*.exe",
+      "*.ps1",
+      "*.sh",
+      "*.com"
     ]
   },
   "firestore": {
