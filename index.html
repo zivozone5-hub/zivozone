@@ -3,24 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="ZIVOZONE — عالم رقمي للألعاب والتحديات والذكاء والرعب والرياضة واكتشاف الذات، مع شبكة أخبار رياضية وعامة تتجدد كل ساعة.">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<meta name="author" content="ZIVOZONE">
-<link rel="canonical" href="https://zivozone.com/">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://zivozone.com/">
-<meta property="og:title" content="ZIVOZONE | عالمك يبدأ من هنا">
-<meta property="og:description" content="ZIVOZONE — ألعاب، تحديات، ذكاء، رياضة، رعب، اكتشاف ذات وأخبار تتجدد كل ساعة.">
-<meta property="og:site_name" content="ZIVOZONE">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ZIVOZONE | عالمك يبدأ من هنا">
-<meta name="twitter:description" content="عالم ZIVOZONE الرقمي — تحديات وألعاب ورياضة وأخبار تتجدد كل ساعة.">
+<meta name="description" content="ZIVOZONE — عالم رقمي للألعاب والتحديات والذكاء والرعب والرياضة واكتشاف الذات.">
 <meta name="theme-color" content="#05060b">
 <title>ZIVOZONE | عالمك يبدأ من هنا</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=74.1">
+<link rel="stylesheet" href="styles.css?v=47.1">
 
 <style id="zivo-v51-core">
 /* V51: ZIVO wallet + player cloud status + mobile action sheet */
@@ -513,3 +502,10 @@ window.addEventListener('zivozone:challenge-result',e=>complete(e.detail));
 <!-- ZIVOZONE V42 DEPLOYMENT MARKER: cloud-ready question history compatibility layer -->
 
 <!-- ZIVOZONE V43 DEPLOYMENT MARKER: real cloud core -->
+<style id="zivo-v75-admin-style">
+.z75-overlay{position:fixed;inset:0;z-index:99999;background:rgba(2,4,10,.82);backdrop-filter:blur(18px);padding:22px;overflow:auto}.z75-card{max-width:1100px;margin:3vh auto;background:#0c101a;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:24px;box-shadow:0 25px 80px rgba(0,0,0,.45)}.z75-x{float:right;background:rgba(255,255,255,.08);color:#fff;border:0;border-radius:10px;font-size:24px;width:40px;height:40px}.z75-head{display:flex;gap:14px;align-items:center}.z75-logo{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#fff,#777);color:#05060a;font-size:28px;font-weight:1000}.z75-head small{opacity:.6;font-weight:900}.z75-head h2{margin:3px 0}.z75-head span{opacity:.7}.z75-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:22px 0}.z75-grid>div{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);padding:15px;border-radius:15px}.z75-grid b{display:block;font-size:24px}.z75-grid span{opacity:.65;font-size:12px}.z75-status{padding:14px;border-radius:14px;background:rgba(255,255,255,.04);margin-bottom:20px}.z75-table{overflow:auto}.z75-row{display:grid;grid-template-columns:1.2fr 1.7fr .6fr .8fr 1.3fr;gap:8px;padding:11px;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px}.z75-note{opacity:.55;font-size:12px;margin-top:20px}@media(max-width:800px){.z75-grid{grid-template-columns:repeat(2,1fr)}.z75-row{min-width:700px}}
+</style>
+<script src="admin-monitor.js?v=75.0"></script>
+<script>
+(function(){window.addEventListener('zivozone:progress-updated',function(){try{window.firebase?.firestore?.()?.doc('siteStats/days/'+new Date().toISOString().slice(0,10)).set({games:firebase.firestore.FieldValue.increment(1)},{merge:true})}catch(e){}})})();
+</script>

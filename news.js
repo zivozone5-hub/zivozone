@@ -1,5 +1,5 @@
 /* ============================================================
-   ZIVOZONE V74 — HOURLY ARABIC BROADCAST NEWS ENGINE
+   ZIVOZONE V72 — STATIC ARABIC BROADCAST NEWS ENGINE
    - Reads the GitHub Actions generated data/news.json
    - Two independent TV-style rails: Sports + General
    - Arabic-only visible headlines
@@ -11,8 +11,8 @@
   'use strict';
 
   const DATA_URL = 'data/news.json';
-  const CACHE_KEY = 'zivozone_news_v74';
-  const CACHE_TTL = 60 * 60 * 1000;
+  const CACHE_KEY = 'zivozone_news_v72';
+  const CACHE_TTL = 24 * 60 * 60 * 1000;
   const REFRESH_MS = 60 * 60 * 1000;
 
   const esc = (value) => {
