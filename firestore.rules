@@ -1,113 +1,56 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-
     function isOwner() {
       return request.auth != null
         && request.auth.uid == 'rBlzUigQ6DhgD4CK6VX3tS43PS43'
         && request.auth.token.email == 'raefalbtish@gmail.com';
     }
-
-    function isSelf(userId) {
-      return request.auth != null && request.auth.uid == userId;
-    }
+    function isSelf(id) { return request.auth != null && request.auth.uid == id; }
 
     match /users/{userId} {
-      allow read, create, update: if isOwner() || isSelf(userId);
+      allow read: if isOwner() || isSelf(userId);
+      allow create: if isOwner() || (isSelf(userId) && request.resource.data.uid == userId);
+      allow update: if isOwner() || (isSelf(userId)
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['zivo','coins','role','xp','wins','losses','gamesPlayed','level','bestStreak']));
       allow delete: if false;
-
-      match /activity/{eventId} {
-        allow read, create: if isOwner() || isSelf(userId);
-        allow update, delete: if false;
-      }
-
+      match /activity/{eventId} { allow read: if isOwner() || isSelf(userId); allow create: if isSelf(userId); allow update,delete: if false; }
       match /zivozone/{docId} {
-        allow read, create, update: if isOwner() || isSelf(userId);
+        allow read: if isOwner() || isSelf(userId);
+        allow create,update: if isOwner() || (isSelf(userId) && docId != 'wallet');
         allow delete: if false;
-      }
-
-      match /zivozone/{docId}/ledger/{entryId} {
-        allow read, create: if isOwner() || isSelf(userId);
-        allow update, delete: if false;
+        match /ledger/{entryId} { allow read: if isOwner() || isSelf(userId); allow create: if isOwner() || isSelf(userId); allow update,delete: if false; }
+        match /wallet/{docId} {
+          allow read: if isOwner() || isSelf(userId);
+          allow create: if isSelf(userId) && request.resource.data.zivo >= 0 && request.resource.data.zivo <= 20;
+          allow update: if isOwner() || (isSelf(userId)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['zivo','updatedAt','mode'])
+            && request.resource.data.zivo >= 0
+            && request.resource.data.zivo <= resource.data.zivo + 20);
+          allow delete: if false;
+        }
       }
     }
 
     match /players/{uid} {
       allow read: if isOwner() || isSelf(uid);
       allow create: if isSelf(uid);
-      allow update: if isOwner() || (
-        isSelf(uid)
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(
-          ['xp','coins','zivo','wins','losses','gamesPlayed','level','bestStreak','wallet','verified','verifiedScore']
-        )
-      );
-
-      match /gameAttempts/{attemptId} {
-        allow read, create: if isOwner() || isSelf(uid);
-        allow update: if false;
-      }
-
-      match /wallet/{doc} {
-        allow read: if isOwner() || isSelf(uid);
-        allow write: if false;
-      }
-
-      match /events/{eventId} {
-        allow read, create: if isOwner() || isSelf(uid);
-        allow update, delete: if false;
-      }
-
-      match /results/{resultId} {
-        allow read, create: if isOwner() || isSelf(uid);
-        allow update, delete: if false;
-      }
+      allow update: if isOwner() || (isSelf(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['xp','coins','zivo','wins','losses','gamesPlayed','level','bestStreak','wallet','verified','verifiedScore']));
+      match /gameAttempts/{attemptId} { allow read,create: if isOwner() || isSelf(uid); allow update,delete: if false; }
+      match /wallet/{doc} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
+      match /events/{eventId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
+      match /results/{resultId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
+      match /attempts/{attemptId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
     }
 
-    match /questions/{questionId} {
-      allow read: if request.auth != null;
-      allow write: if false;
-    }
-
-    match /dailyChallenges/{challengeId} {
-      allow read: if request.auth != null;
-      allow write: if false;
-    }
-
-    match /results/{resultId} {
-      allow read, create: if request.auth != null;
-      allow update, delete: if false;
-    }
-
-    match /wallets/{userId} {
-      allow read: if isOwner() || isSelf(userId);
-      allow write: if false;
-    }
-
-    match /leaderboard/{playerId} {
-      allow read: if true;
-      allow write: if false;
-    }
-
-    match /admins/{userId} {
-      allow read: if isOwner() && request.auth.uid == userId;
-      allow write: if false;
-    }
-
-    match /siteStats/visitors/{day}/{visitorId} {
-      allow create, update: if request.auth != null;
-      allow read: if isOwner();
-      allow delete: if false;
-    }
-
-    match /siteStats/{document=**} {
-      allow read: if isOwner();
-      allow write: if false;
-    }
-
-    match /public/{document=**} {
-      allow read: if true;
-      allow write: if false;
-    }
+    match /questions/{id} { allow read: if request.auth != null; allow write: if false; }
+    match /dailyChallenges/{id} { allow read: if request.auth != null; allow write: if false; }
+    match /results/{id} { allow read,create: if request.auth != null; allow update,delete: if false; }
+    match /wallets/{uid} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
+    match /leaderboard/{id} { allow read: if true; allow write: if false; }
+    match /admins/{uid} { allow read: if isOwner() && request.auth.uid == uid; allow write: if false; }
+    match /siteStats/visitors/{day}/{visitorId} { allow read: if isOwner(); allow create,update: if isSelf(visitorId); allow delete: if false; }
+    match /siteStats/{document=**} { allow read: if isOwner(); allow write: if false; }
+    match /public/{document=**} { allow read: if true; allow write: if false; }
   }
 }

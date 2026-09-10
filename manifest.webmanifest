@@ -1,0 +1,11 @@
+{
+  "name": "ZIVOZONE",
+  "short_name": "ZIVOZONE",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05060b",
+  "theme_color": "#05060b",
+  "lang": "ar",
+  "dir": "rtl",
+  "description": "ZIVOZONE — منصة ألعاب وتحديات ورياضة وأخبار وتجارب رقمية."
+}
