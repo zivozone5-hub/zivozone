@@ -1,0 +1,10 @@
+{
+  "workflow_hourly": true,
+  "news_js_exists": true,
+  "full_index": true,
+  "domain": "zivozone.com",
+  "custom_domain_file": true,
+  "seo_metadata": true,
+  "hourly_news_browser_cache": true,
+  "sports_global_arab_jordan_sources": true
+}
