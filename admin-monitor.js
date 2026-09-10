@@ -1,100 +1,39 @@
-/* ZIVOZONE V78 — OWNER ADMIN MONITOR
-   Works directly from GitHub Pages + Firebase client SDK.
-   No Cloud Functions deployment is required for the admin dashboard.
-*/
+/* ZIVOZONE V80 — OWNER ADMIN COMMAND CENTER */
 (function(){'use strict';
-  const OWNER_UID='rBlzUigQ6DhgD4CK6VX3tS43PS43';
-  const OWNER_EMAIL='raefalbtish@gmail.com';
-  const db=()=>window.firebase?.firestore?.();
-  const auth=()=>window.firebase?.auth?.();
-  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const visitorKey='zivozone_visitor_id_v78';
-  function visitorId(){
-    let v=localStorage.getItem(visitorKey);
-    if(!v){v=crypto?.randomUUID?.()||('v_'+Math.random().toString(36).slice(2)+Date.now());localStorage.setItem(visitorKey,v)}
-    return v;
-  }
-  function isOwner(){
-    const u=auth()?.currentUser;
-    return !!u && u.uid===OWNER_UID && String(u.email||'').toLowerCase()===OWNER_EMAIL;
-  }
-  async function heartbeat(){
-    try{
-      const d=db(),u=auth()?.currentUser;
-      if(!d)return;
-      const vid=visitorId(), day=new Date().toISOString().slice(0,10);
-      await d.collection('siteStats').doc('visitors').collection(day).doc(vid).set({
-        lastSeen:firebase.firestore.FieldValue.serverTimestamp(),
-        path:location.pathname+location.hash,
-        uid:u?.uid||null,
-        email:u?.email||null
-      },{merge:true});
-      if(u){
-        await d.collection('players').doc(u.uid).set({
-          lastSeen:firebase.firestore.FieldValue.serverTimestamp(),
-          lastSeenAt:firebase.firestore.FieldValue.serverTimestamp(),
-          lastSeenPath:location.hash||'#home'
-        },{merge:true});
-      }
-    }catch(e){console.warn('ZIVOZONE heartbeat:',e)}
-  }
-  async function adminData(){
-    const d=db(),u=auth()?.currentUser;
-    if(!d||!u)throw new Error('Login required');
-    if(!isOwner())throw new Error('Admin access required');
-    const [ps,vs]=await Promise.all([
-      d.collection('players').limit(500).get(),
-      d.collection('siteStats').doc('visitors').collection(new Date().toISOString().slice(0,10)).limit(1000).get().catch(()=>({docs:[]}))
-    ]);
-    const players=ps.docs.map(x=>({uid:x.id,...x.data()})).sort((a,b)=>{
-      const ad=a.lastSeenAt?.toMillis?.()||a.lastSeen?.toMillis?.()||0;
-      const bd=b.lastSeenAt?.toMillis?.()||b.lastSeen?.toMillis?.()||0; return bd-ad;
-    });
-    const now=Date.now();
-    const active=players.filter(p=>{
-      const t=p.lastSeenAt?.toMillis?.()||p.lastSeen?.toMillis?.()||0; return t && now-t<15*60*1000;
-    }).length;
-    const visitors=vs.docs.length;
-    return {stats:{
-      totalUsers:players.length,totalPlayers:players.length,todayVisitors:visitors,
-      todayLogins:players.filter(p=>{const t=p.lastSeenAt?.toMillis?.()||0;return t && new Date(t).toDateString()===new Date().toDateString()}).length,
-      todayGames:players.reduce((n,p)=>n+(Number(p.gamesPlayed)||0),0),
-      activeNow:active,firebase:'CONNECTED',news:'LIVE'
-    },players:players.slice(0,100).map(p=>({
-      uid:p.uid,name:p.name||'ZIVO Player',email:p.email||'',level:Number(p.level)||1,
-      gamesPlayed:Number(p.gamesPlayed)||0,
-      lastSeen:(p.lastSeenAt||p.lastSeen)?.toDate?.()?.toISOString?.()||null
-    }))};
-  }
-  function panel(data){
-    let o=document.getElementById('zivo-v75-admin');
-    if(!o){o=document.createElement('div');o.id='zivo-v75-admin';o.className='z75-overlay';document.body.appendChild(o)}
-    const s=data.stats||{},players=data.players||[];
-    o.innerHTML=`<div class="z75-card"><button class="z75-x">×</button>
-    <div class="z75-head"><div class="z75-logo">Z</div><div><small>ADMIN COMMAND</small><h2>مركز إدارة ZIVOZONE</h2><span>المستخدمون · اللاعبون · النشاط · صحة المنصة</span></div></div>
-    <div class="z75-grid">
-      <div><b>${s.totalUsers||0}</b><span>حسابات مسجلة</span></div>
-      <div><b>${s.todayVisitors||0}</b><span>زوار اليوم</span></div>
-      <div><b>${s.todayLogins||0}</b><span>دخول اليوم</span></div>
-      <div><b>${s.activeNow||0}</b><span>نشط الآن</span></div>
-      <div><b>${s.totalPlayers||0}</b><span>لاعبون</span></div>
-      <div><b>${s.todayGames||0}</b><span>إجمالي الألعاب</span></div>
-    </div>
-    <div class="z75-status"><b>🟢 الموقع:</b> ONLINE · <b>🔒 HTTPS:</b> ACTIVE · <b>☁ Firebase:</b> ${esc(s.firebase||'UNKNOWN')} · <b>📰 الأخبار:</b> ${esc(s.news||'UNKNOWN')}</div>
-    <h3>آخر اللاعبين والمستخدمين</h3>
-    <div class="z75-table">${players.length?players.map(p=>`<div class="z75-row"><b>${esc(p.name)}</b><span>${esc(p.email)}</span><span>Lv ${p.level}</span><span>${p.gamesPlayed} لعبة</span><span>${p.lastSeen?new Date(p.lastSeen).toLocaleString('ar-JO'):'—'}</span></div>`).join(''):'<p>لا توجد حسابات بعد.</p>'}</div>
-    <p class="z75-note">هذه اللوحة متاحة فقط للحساب المالك المحدد في إعدادات ZIVOZONE. البيانات تُقرأ مباشرة من Firebase بدون الحاجة إلى نشر Cloud Functions.</p>
-    </div>`;
-    o.querySelector('.z75-x').onclick=()=>o.remove();
-  }
-  async function open(){
-    try{
-      if(!auth()?.currentUser){alert('سجّل الدخول أولًا بحساب الأدمن.');return}
-      if(!isOwner()){alert('هذا الحساب ليس حساب إدارة ZIVOZONE.');return}
-      panel(await adminData());
-    }catch(e){console.error(e);alert('تعذر تحميل بيانات الإدارة. تأكد من نشر Firestore Rules ثم أعد تحميل الصفحة.')}
-  }
-  window.ZIVOZONE_MONITOR={heartbeat,open,adminData};
-  window.addEventListener('load',()=>setTimeout(heartbeat,1200));
-  if(location.hash==='#admin') setTimeout(open,1800);
+ const OWNER_UID='rBlzUigQ6DhgD4CK6VX3tS43PS43',OWNER_EMAIL='raefalbtish@gmail.com';
+ const auth=()=>window.firebase?.auth?.(),db=()=>window.firebase?.firestore?.(),fn=()=>window.firebase?.functions?.();
+ const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+ function owner(){const u=auth()?.currentUser;return !!u&&u.uid===OWNER_UID&&String(u.email||'').toLowerCase()===OWNER_EMAIL}
+ async function bootstrap(){
+   if(!owner())throw new Error('هذا الحساب ليس مالك ZIVOZONE');
+   try{const r=await fn().httpsCallable('zivoBootstrapAdmin')({}); if(r?.data?.ok){await auth().currentUser.getIdToken(true);return true}}catch(e){console.warn('admin bootstrap',e)}
+   return false;
+ }
+ async function heartbeat(){
+   try{if(fn())await fn().httpsCallable('zivoHeartbeat')({path:location.pathname+location.hash});}catch(e){console.warn('heartbeat',e)}
+ }
+ async function data(){
+   if(!owner())throw new Error('Admin access required');
+   try{const r=await fn().httpsCallable('zivoAdminOverview')({});return r.data}catch(e){
+     const d=db();
+     const ps=await d.collection('players').limit(500).get();
+     const players=ps.docs.map(x=>({uid:x.id,...x.data()}));
+     const now=Date.now();
+     return {stats:{totalUsers:players.length,totalPlayers:players.length,todayVisitors:0,todayLogins:0,todayGames:players.reduce((n,p)=>n+(Number(p.gamesPlayed)||0),0),activeNow:players.filter(p=>{const t=p.lastSeenAt?.toMillis?.()||p.lastSeen?.toMillis?.()||0;return t&&now-t<15*60*1000}).length,firebase:'CONNECTED',news:'LIVE'},players:players.slice(0,100).map(p=>({uid:p.uid,name:p.name||'ZIVO Player',email:p.email||'',level:Number(p.level)||1,gamesPlayed:Number(p.gamesPlayed)||0,zivo:Number(p.coins)||0,lastSeen:(p.lastSeenAt||p.lastSeen)?.toDate?.()?.toISOString?.()||null}))};
+   }
+ }
+ function render(x){
+   let o=document.getElementById('zivo-v80-admin');if(!o){o=document.createElement('div');o.id='zivo-v80-admin';o.className='z80-overlay';document.body.appendChild(o)}
+   const s=x.stats||{},p=x.players||[];
+   o.innerHTML=`<div class="z80-card"><button class="z80-x">×</button><div class="z80-head"><div class="z80-logo">Z</div><div><small>OWNER COMMAND CENTER</small><h2>مركز إدارة ZIVOZONE</h2><span>المستخدمون · النشاط · الألعاب · الاقتصاد · صحة المنصة</span></div></div><div class="z80-grid">${[['حسابات',s.totalUsers],['لاعبون',s.totalPlayers],['زوار اليوم',s.todayVisitors],['دخول اليوم',s.todayLogins],['نشط الآن',s.activeNow],['ألعاب اليوم',s.todayGames]].map(a=>`<div><b>${Number(a[1])||0}</b><span>${a[0]}</span></div>`).join('')}</div><div class="z80-status">🟢 الموقع ONLINE · ☁️ Firebase ${esc(s.firebase||'UNKNOWN')} · 📰 الأخبار ${esc(s.news||'UNKNOWN')} · 🔐 OWNER VERIFIED</div><h3>المستخدمون واللاعبون</h3><div class="z80-table">${p.length?p.map(a=>`<div class="z80-row"><b>${esc(a.name)}</b><span>${esc(a.email)}</span><span>Lv ${a.level}</span><span>🪙 ${Number(a.zivo)||0}</span><span>${Number(a.gamesPlayed)||0} لعبة</span><span>${a.lastSeen?new Date(a.lastSeen).toLocaleString('ar-JO'):'—'}</span></div>`).join(''):'<p>لا توجد حسابات بعد.</p>'}</div><p class="z80-note">لوحة المالك تعتمد على صلاحية الخادم. الرصيد ZIVO والمكافآت تُدار من الخادم وليس من المتصفح.</p></div>`;
+   o.querySelector('.z80-x').onclick=()=>o.remove();
+ }
+ async function open(){
+   try{if(!auth()?.currentUser){alert('سجّل الدخول أولًا بحساب المالك.');return}if(!owner()){alert('هذا الحساب ليس حساب إدارة ZIVOZONE.');return}await bootstrap();render(await data())}catch(e){console.error(e);alert('تعذر تحميل لوحة الإدارة. يجب نشر Firebase Functions ثم إعادة تحميل الموقع.')}
+ }
+ function mount(){if(!owner())return;if(!document.getElementById('z80-admin-open')){const b=document.createElement('button');b.id='z80-admin-open';b.className='z80-admin-open';b.textContent='👑 الإدارة';b.onclick=open;document.body.appendChild(b)}}
+ window.ZIVOZONE_MONITOR={open,heartbeat,adminData:data};
+ window.addEventListener('load',()=>setTimeout(()=>{heartbeat();mount()},1200));
+ window.addEventListener('zivozone-auth',()=>setTimeout(()=>{heartbeat();mount()},500));
+ if(location.hash==='#admin')setTimeout(open,2200);
 })();
