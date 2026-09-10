@@ -1458,11 +1458,22 @@ window.ZIVOZONE_V18 = {
       else streak=0;
       setTimeout(()=>{i++;render()},300);
     }
-    function finish(){
+    async function finish(){
       cleanup();
+      const zivoReward = Math.max(0, Number(correct)||0);
       if(window.ZIVOZONE_PLAYER?.addProgress){
-        window.ZIVOZONE_PLAYER.addProgress({id:run.id,score,bestStreak:best,timedOut:timed,questions:run.questions.length,speedScore:Math.max(0,100-timed*8)});
+        try {
+          await window.ZIVOZONE_PLAYER.addProgress({id:run.id,score,bestStreak:best,timedOut:timed,questions:run.questions.length,speedScore:Math.max(0,100-timed*8)});
+        } catch(e) { console.warn('ZIVO V20 player progress:', e); }
       }
+      if(window.ZIVOZONE_AUTH?.isLoggedIn?.() && zivoReward > 0){
+        try {
+          const current = window.ZIVOZONE_AUTH.getPlayer?.() || {};
+          const nextCoins = Math.max(0, Number(current.coins)||0) + zivoReward;
+          await window.ZIVOZONE_AUTH.update?.({coins: nextCoins, gamesPlayed: (Number(current.gamesPlayed)||0) + 1});
+        } catch(e) { console.warn('ZIVO V20 coin sync:', e); }
+      }
+      window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{challenge:run.id,gameId:run.id,score:correct,total:run.questions.length,xp:0,coins:zivoReward,zivoReward,eventId:(window.crypto?.randomUUID?.()||('v20_'+Date.now()+'_'+Math.random().toString(36).slice(2)))} }));
       if(window.ZIVOZONE_V46?.submit && window.ZIVOZONE_AUTH?.isLoggedIn?.()){
         window.ZIVOZONE_V46.submit({challengeId:run.id,attemptId:(crypto?.randomUUID?.()||('attempt-'+Date.now())),answers:submittedAnswers,total:run.questions.length,correct,score:Math.round(correct/run.questions.length*100),startedAt:new Date(Date.now()-Math.max(0,(performance.now()-startAt))).toISOString()}).then(async r=>{
           if(r?.data?.ok || r?.data?.verified || r?.accepted){
@@ -3259,7 +3270,9 @@ window.ZIVOZONE_V18 = {
       const [wSnap,lSnap]=await Promise.all([tx.get(walletRef),tx.get(ledgerRef)]);
       if(lSnap.exists)return;
       const current=Number(wSnap.data()?.zivo)||0;
-      tx.set(walletRef,{zivo:current+amount,updatedAt:F.firestore.FieldValue.serverTimestamp(),mode:'spark-internal'},{merge:true});
+      const next=current+amount;
+      tx.set(walletRef,{zivo:next,updatedAt:F.firestore.FieldValue.serverTimestamp(),mode:'spark-internal'},{merge:true});
+      tx.set(d.collection('users').doc(u),{zivo:next,coins:next,updatedAt:F.firestore.FieldValue.serverTimestamp()},{merge:true});
       tx.set(ledgerRef,{type:String(type||'reward').slice(0,40),label:String(label||'مكافأة').slice(0,120),amount,eventId,meta,createdAt:F.firestore.FieldValue.serverTimestamp()});
     });
     return refresh();
@@ -3291,7 +3304,9 @@ window.ZIVOZONE_V18 = {
     await d.runTransaction(async tx=>{
       const s=await tx.get(walletRef);const current=Number(s.data()?.zivo)||0;
       if(current<price)throw new Error('رصيد ZIVO غير كافٍ');
-      tx.update(walletRef,{zivo:current-price,updatedAt:F.firestore.FieldValue.serverTimestamp()});
+      const next=current-price;
+      tx.update(walletRef,{zivo:next,updatedAt:F.firestore.FieldValue.serverTimestamp()});
+      tx.set(d.collection('users').doc(u),{zivo:next,coins:next,updatedAt:F.firestore.FieldValue.serverTimestamp()},{merge:true});
       tx.set(ledgerRef,{type:'spend',label:`شراء ${String(itemId||'عنصر').slice(0,80)}`,amount:-price,itemId:String(itemId||'').slice(0,80),createdAt:F.firestore.FieldValue.serverTimestamp()});
     });
     return refresh();
