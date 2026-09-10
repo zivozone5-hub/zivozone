@@ -1,6 +1,42 @@
 {
-  "updatedAt": 1789063489637,
+  "updatedAt": 1789064888871,
   "sports": [
+    {
+      "headline": "\"الحرب بدأت\" و\"دعاء بالدمار\".. هذا ما جرى في محاكمة شقيقة إسماعيل هنية بإسرائيل",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/10/%d8%a7%d9%84%d8%ad%d8%b1%d8%a8-%d8%a8%d8%af%d8%a3%d8%aa-%d9%88%d8%af%d8%b9%d8%a7%d8%a1-%d8%a8%d8%a7%d9%84%d8%af%d9%85%d8%a7%d8%b1-%d9%87%d8%b0%d8%a7-%d9%85%d8%a7-%d8%ac%d8%b1%d9%89?traffic_source=rss",
+      "published": "Thu, 10 Sep 2026 18:13:47 +0300"
+    },
+    {
+      "headline": "بعد 45 عاما على رحيله.. كيف صمدت ألحان رياض السنباطي أمام زمن الأغنية القصيرة؟",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/arts/2026/9/10/%d8%a8%d8%b9%d8%af-45-%d8%b9%d8%a7%d9%85%d8%a7-%d8%b9%d9%84%d9%89-%d8%b1%d8%ad%d9%8a%d9%84%d9%87-%d9%87%d9%84-%d8%aa%d8%b5%d9%85%d8%af-%d8%a3%d9%84%d8%ad%d8%a7%d9%86-%d8%b1%d9%8a%d8%a7%d8%b6?traffic_source=rss",
+      "published": "Thu, 10 Sep 2026 17:59:19 +0300"
+    },
+    {
+      "headline": "عشرات الملايين على المحك وأندية البريميرليغ في خطر.. بريطانيا تستهدف شركات القمار غير المرخصة",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/sport/2026/9/10/%d8%b9%d8%b4%d8%b1%d8%a7%d8%aa-%d8%a7%d9%84%d9%85%d9%84%d8%a7%d9%8a%d9%8a%d9%86-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d9%85%d8%ad%d9%83-%d9%88%d8%a3%d9%86%d8%af%d9%8a%d8%a9?traffic_source=rss",
+      "published": "Thu, 10 Sep 2026 17:55:05 +0300"
+    },
+    {
+      "headline": "سلاح الشتاء وحرب الاستخبارات.. هل يُفخخ الدعم البريطاني لأوكرانيا مسارات التسوية؟",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/politics/2026/9/10/%d8%b3%d9%84%d8%a7%d8%ad-%d8%a7%d9%84%d8%b4%d8%aa%d8%a7%d8%a1-%d9%88%d8%ad%d8%b1%d8%a8-%d8%a7%d9%84%d8%a7%d8%b3%d8%aa%d8%ae%d8%a8%d8%a7%d8%b1%d8%a7%d8%aa-%d9%87%d9%84-%d9%8a%d9%81%d8%ae%d8%ae?traffic_source=rss",
+      "published": "Thu, 10 Sep 2026 17:55:01 +0300"
+    },
+    {
+      "headline": "العفو الدولية تطالب بالإفراج الفوري عن الغنوشي وتندد باعتقاله \"التعسفي\"",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/10/%d8%a7%d9%84%d8%b9%d9%81%d9%88-%d8%a7%d9%84%d8%af%d9%88%d9%84%d9%8a%d8%a9-%d8%aa%d8%b7%d8%a7%d9%84%d8%a8-%d8%a8%d8%a7%d9%84%d8%a5%d9%81%d8%b1%d8%a7%d8%ac-%d8%a7%d9%84%d9%81%d9%88%d8%b1%d9%8a?traffic_source=rss",
+      "published": "Thu, 10 Sep 2026 17:53:12 +0300"
+    },
+    {
+      "headline": "النفط فوق 107 دولارات مع تصاعد الحرب",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/ebusiness/2026/9/10/oil-war-fronts-widen?traffic_source=rss",
+      "published": "Thu, 10 Sep 2026 17:44:27 +0300"
+    },
     {
       "headline": "رويترز تكشف مواجهة سرية بين روسيا والناتو في أعماق القطب الشمالي",
       "source": "الجزيرة",
@@ -56,42 +92,6 @@
       "published": "Thu, 10 Sep 2026 16:57:23 +0300"
     },
     {
-      "headline": "من الحلبة إلى الملعب.. كيف جعلت الملاكمة ريان شرقي كابوسا للمدافعين؟",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/sport/2026/9/10/%d8%b1%d9%8a%d8%a7%d9%86-%d8%b4%d8%b1%d9%82%d9%8a-%d9%85%d8%a7%d9%86%d8%b4%d8%b3%d8%aa%d8%b1-%d8%b3%d9%8a%d8%aa%d9%8a-%d9%85%d9%84%d8%a7%d9%83%d9%85%d8%a9?traffic_source=rss",
-      "published": "Thu, 10 Sep 2026 16:54:15 +0300"
-    },
-    {
-      "headline": "بينهم سعودي ويمني.. 7 لاعبين عرب سبقوا زياش إلى البرازيل",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/sport/2026/9/10/%d8%a8%d9%8a%d9%86%d9%87%d9%85-%d8%b3%d8%b9%d9%88%d8%af%d9%8a-%d9%88%d9%8a%d9%85%d9%86%d9%8a-7-%d9%84%d8%a7%d8%b9%d8%a8%d9%8a%d9%86-%d8%b9%d8%b1%d8%a8-%d8%b3%d8%a8%d9%82%d9%88%d8%a7?traffic_source=rss",
-      "published": "Thu, 10 Sep 2026 16:49:53 +0300"
-    },
-    {
-      "headline": "بمستهل عام جديد.. عنف المستوطنين يرهب أطفال المدارس بالضفة",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/9/10/%d8%a7%d9%84%d9%85%d8%af%d8%a7%d8%b1%d8%b3?traffic_source=rss",
-      "published": "Thu, 10 Sep 2026 16:49:15 +0300"
-    },
-    {
-      "headline": "بوتافوغو البرازيلي يعلن ضم حكيم زياش حتى عام 2028",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/sport/2026/9/10/%d8%a8%d9%88%d8%aa%d8%a7%d9%81%d9%88%d8%ba%d9%88-%d8%a7%d9%84%d8%a8%d8%b1%d8%a7%d8%b2%d9%8a%d9%84%d9%8a-%d9%8a%d8%b9%d9%84%d9%86-%d8%b6%d9%85-%d8%ad%d9%83%d9%8a%d9%85-%d8%b2%d9%8a%d8%a7%d8%b4?traffic_source=rss",
-      "published": "Thu, 10 Sep 2026 16:48:24 +0300"
-    },
-    {
-      "headline": "قوة عظمى بلا جيش.. هل يفقد البشر السيطرة على الحقيقة والعالم؟",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/tech/2026/9/10/%d9%82%d9%88%d8%a9-%d8%b9%d8%b8%d9%85%d9%89-%d8%a8%d9%84%d8%a7-%d8%ac%d9%8a%d8%b4-%d9%87%d9%84-%d9%8a%d9%81%d9%82%d8%af-%d8%a7%d9%84%d8%a8%d8%b4%d8%b1-%d8%a7%d9%84%d8%b3%d9%8a%d8%b7%d8%b1%d8%a9?traffic_source=rss",
-      "published": "Thu, 10 Sep 2026 16:48:03 +0300"
-    },
-    {
-      "headline": "جمهور مهرجان تورنتو السينمائي يرسم الطريق للأوسكار",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/arts/2026/9/10/%d8%ac%d9%85%d9%87%d9%88%d8%b1-%d9%85%d9%87%d8%b1%d8%ac%d8%a7%d9%86-%d8%aa%d9%88%d8%b1%d9%86%d8%aa%d9%88-%d8%a7%d9%84%d8%b3%d9%8a%d9%86%d9%85%d8%a7%d8%a6%d9%8a-%d9%8a%d8%b1%d8%b3%d9%85?traffic_source=rss",
-      "published": "Thu, 10 Sep 2026 16:44:05 +0300"
-    },
-    {
       "headline": "مدرب الأردن يترقب «مواجهة ميسي» بالمونديال - الشرق الأوسط",
       "source": "الأردن",
       "url": "https://news.google.com/rss/articles/CBMi6wNBVV95cUxQQ3Vab1hDVnNiVjNoN2M0UVFBWGJsUEVWTC1ncHpRcWRfeEFGeE1NNHZBaUpwUTh2T1k4dWxxbk02Q1dFSzhpX3FxRDdYUHVWdmdEOWhDSkprZ01TbVFheTRKOWJieHgzMGhMRC0ySWVnOF8wSHVTYTM1S1FYbzBjUmJpRVo0dlc3OGgwTWFmMFkyejMwTlRBNkNuUDEtZ2tWemlCeFNNbXVpMENuekhGZ2R3TjNFcUd1TUtuOGlFNFAyNVpBNWVxY01aekowNUhrdy13bUZpbXFmZjJwNldfUDlCV1Y3MGZSWldKWWN6QVNVYUpZcTB5bFo4M20wdENVQXA5X05QSW44bnhLUE9LWW9wZGtQZXFQUDNjcHlvTmozN1JseGRmQk9fcm1NcTE5VVFEWG9GNUpBODE0c2sxek5yWEpzSkRSZ2M4a2N5UXhGQUJJU1gzWGVveUNGdXM1WEdNRjRDS1E5bHZHUEl4b3ZrUkJfYUVTbGdFZnNJSWpZTUptZW5ORE1qSkN3WGYweWg2SE5ZYWxGT1lFNmdSeHZZalRNemJsME11ZHJqYjlxZjI4Z25QY2ZNVWpBczhsTjlBZUc2eVVraTduOGpaYk9Jc0V3U0ZyZ3FoYWszakJTOS10U053bmllQQ?oc=5",
@@ -102,6 +102,12 @@
       "source": "الأردن",
       "url": "https://news.google.com/rss/articles/CBMiugJBVV95cUxQc2hESXV5d1RCM0NmT25lRV9zRjd3ZXk2TUJCYWI0b0tKVmh2Nm5KQ1htTzgxNGZQRGZybUcwY3puampSekxyUnVSZTNxWGJqVWVQRGJzLWhIbXBNSjJ6WkJQb3lIdk5DNnVUS21tM2NxUHZhYm94djBVME1YMG9leDY3QnRURm1sWGRpZ2duYVhleXl0N3BfeUpndXFxaXBPZDZqeFdvdDZ6TWJZbGFhbWY5b05peThMaFd5WVdNa3N2ZVZJYWJLTmx4VHJUaHFTUDZadmh5bUZEeUdCTDhtdGJKaVNsbEI0Rm1KX01rajBtV0NUS1NJM0xVcEV3TGRPanZ3aUxUUElXWGp1RUVfbEdsRHptZnc3SjV6ZEdSSElYdWhZaUVPSUM4SWdTdVJwenJ4anhzVUV1d9IBvwJBVV95cUxNZDkwZjFoMWVmcjBlNERSWmUxS1FhU05qNW16U2lXT0tOWk5HelVPTEZ2U3h2YXBiUkZVMHpBWFN3eXpXTV8xZFFqNGdfcXc1TmxqUmxsTXczaHZiaUp6dGRzdjV0TWlEeWYtanVyWTE5YzNmbXFYLVdzWnB5bVhNQThNLXh5Nm1xaEdwRlBaZXVyQmcybXduZ0d5aU9sTnJRZWp5SFBYV2tGaXdsa1pIOTJ6M0hMdzZOTFllWHlaOHVsZm1GYURLLWxGRHNoUEx0Z0pkVUNwNTZNWFV1MXo1eFdxYkJERXdDUmJkZnpmVUs2TU51X2xnQ1FWeU0zcmlDc1praGFjTWhEUWFNdDdWek10cS0tNGxFVVVMbTJsLXlpTjdsMnBaZ2dINWRjekRlWkdVcG0wazk0T29iZy1V?oc=5",
       "published": "Wed, 09 Sep 2026 19:15:44 GMT"
+    },
+    {
+      "headline": "أبوغوش يشتكي شباب الأردن ويطالب بفسخ عقده... - جريدة الغد",
+      "source": "الأردن",
+      "url": "https://news.google.com/rss/articles/CBMiqgNBVV95cUxOSDJmc0dGaXJIdGNpVG5WbmVycXF2LUVoOXZVYWo2cElOcEk5WldNM2xVOExqQmQwTWFDZTlwcE1kZC11X1VpTGpjV0wwREpxQWFYejRPaHB0SFVZUUpiWUR6aHU2NUhJTmFaX3RmWl9ab2l0TFdoVW1zV2RhWC14MUQxZ1BaUE9LMmdYVkI2WkJzVDNEdlQzcGUxcXVpQ05oYVpxRXJxVGdFRU1UZTBvM01KLTJ2VXZ6X0MwX25wMXc4b1pBaGZ1UGJ3WWZvUDZ4ZHFBTjlhR25tcG40dUtfN0hnUjhzdkxSZEVaa3ZnTmxrQUNVUnFLSDdmc1lqaW9laXF0REJaZ0RRU2l5aFBXb1RwelYxWkpMRUJRS2lfX0N1dGtjNmNSSThIZm9NX3BBdTJRWWl6TjBCUEpPTFhFTng2bmJVZmNHR1lyREtja3NfTHVUT2xXRlRpMTZwLWVLRlp2Q2xsWkMzNnZ5VjZBNzVJa3g1Vk9uVzREVnNfM2hGY2lnMnNrWjUzQjVldm9WS0tfZk1iLUhnQTlqdzNNcUkyNkxJNjYzMFE?oc=5",
+      "published": "Thu, 10 Sep 2026 18:22:30 GMT"
     },
     {
       "headline": "إعلان الاتحاد الأردني لكرة القدم Google Gemini الراعي التقني للذكاء الاصطناعي - blog.google",
@@ -128,12 +134,6 @@
       "published": "Wed, 09 Sep 2026 11:28:51 GMT"
     },
     {
-      "headline": "اتحاد الكرة يصدر جدول الجولات الثلاث الأولى بدوري المحترفين... - جريدة الغد",
-      "source": "الأردن",
-      "url": "https://news.google.com/rss/articles/CBMitgRBVV95cUxPOXdKc0FfOERCLU1LaFZZbWNXa3lUTlVyVEZadDVUSjZUdnRDVkh6QTVXT2ZTcTA4WUsxbnQwdGR0Y0VjQzgteWtrNEhfLVRWdHBzVDRuc1dYTHZsbGkzUkNTZEhtTk1nNDFfeW4yTlpKVEZfQk9TM1BmS0E5UEVJb1YzUUdIWE1yVE8zekt1cVltOEt0ZTVrcG9Cd2tSNk1QTHA2aDQ5ZXVMdTUtNW1FSHJyS1FyVjU3cHB6bkhDajZEQWFzQmdXMlFJblkzRVVKNm9MbjJhV0daU013NmNRMEFOcDJZZXoyTC1oMDlNa0dMS25hdFZwZDFMcXZXWXNieTZESTBMTFY4Vjh3OHlKNEM2Mk5BeUlNWFk2dDVxUlBpSWk0VnEyR1V2YW9XREVpOWdMNVl2bGxJSmJwMFMzTkx2VGdJVEU0dG1UdFFpZGo4RWFiSUp0SGpwSVliVXZfVWlSeE10VFNDSDB2WmFIWkQ4RlIweUdvd2w5QkdKV2lQcG5nbTNwc05oLUJ4ZG9hNkc2Z1ViMXpLblVMcmg5bFo1WVlsTnVqc2E0c09hcDhTX2FUeFdES3A0ZzlZZ3hMY21RM2N0OWI3VFN3dUVMM2hjNVhNUDdkTVhvSjNUODZYYzlyaUJVeUxvdGtWUkFmOVFxS2VZZjFnMlNrcmdsZEpseU8yNHhHalBKYXRpX3BCVmlRTDBrdW9HdjhMeE1ZR093MWV3Z1I1azRuMjBXUE9fR2E4QQ?oc=5",
-      "published": "Sat, 29 Aug 2026 07:00:00 GMT"
-    },
-    {
       "headline": "الجزيرة يطمح لتعزيز صدارته في دوري المحترفين الاردني امام شباب الاردن - الوقائع الإخبارية",
       "source": "الأردن",
       "url": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5GN0xaTGNBbGxSUFBYMlliMmVmZ1M5dy1iNFNCOHNKZG9wN0NOWnQtQkxmMXV3UnJCdmNhZEtQZDBkWnZrMUV4MFoyUQ?oc=5",
@@ -152,16 +152,16 @@
       "published": "Tue, 04 Aug 2026 07:00:00 GMT"
     },
     {
-      "headline": "شراكة أردنية نرويجية للارتقاء بمدربات الكرة النسوية - رؤيا الإخباري",
-      "source": "الأردن",
-      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9uRWQ4X1RnRVA5TmdhbVJDRDN2NFlLT1RpYkFXMVZvLV9TajBOS0pXMWExVm5NcFluV3JldldjTVdsYmJ6U3c?oc=5",
-      "published": "Thu, 10 Sep 2026 15:25:18 GMT"
-    },
-    {
       "headline": "الفيفا يسلم مكافآت متأخرة بعد اتهام رئيس الاتحاد الأردني له \"بالابتزاز\" | رويترز - Reuters",
       "source": "الأردن",
       "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE9KNHFkTnRzZFpuNWZlbmJaVnJWZHpmSW9GZjllQnNKekVEeG9LRVQ1MnpHckU3U3VVdXBrZHd3dW1qUEF1Qkhnd0tPNUdSYlNxdjJRVUNkblB3bm1oTW5vY3laQkNzYlhwN0NCV0xXZlN5Q01YLU9RZWI2WjU?oc=5",
       "published": "Thu, 06 Aug 2026 07:00:00 GMT"
+    },
+    {
+      "headline": "شراكة أردنية نرويجية للارتقاء بمدربات الكرة النسوية - رؤيا الإخباري",
+      "source": "الأردن",
+      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE9uRWQ4X1RnRVA5TmdhbVJDRDN2NFlLT1RpYkFXMVZvLV9TajBOS0pXMWExVm5NcFluV3JldldjTVdsYmJ6U3c?oc=5",
+      "published": "Thu, 10 Sep 2026 15:25:18 GMT"
     },
     {
       "headline": "\"لا يبتسم للرغيف الساخن\".. هل تعلم الأهلي من التجربة الأردنية للتعاقد مع عموتة؟ - يلاكورة",
@@ -176,18 +176,18 @@
       "published": "Tue, 04 Aug 2026 07:00:00 GMT"
     },
     {
-      "headline": "الأردن.. الأمير علي يدعو لاتخاذ خطوة فورية بانتخابات رئاسة الفيفا مؤكدا: كرة القدم العالمية تواجه أزمة قيادة واضحة - CNN Arabic",
+      "headline": "الروابدة لاعب الأردن بعد الخسارة من النمسا: كسرنا حاجز الخوف - الشرق الأوسط",
       "source": "الأردن",
-      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxPVFNZcWZ2TEE4dF9zdU1kd3J0bTRWRXhKOVJVTGlhYWpjQ3R4SzdTeDhpWEdZUjJjeldxV0hIMUNfOWJMUEZwbEp3Zk85TXlmTkJJV0hWMnhjYUo3TGwtZW04OHI4Z2hmdGwzS0dGZXRQLUU0dmY1c2RCSmJSVUZ0cncwLUZZczRrLUtYdXlaZnpWNGZpYlY5MnEyU2d4ZFZ2RG9J?oc=5",
-      "published": "Sat, 01 Aug 2026 07:00:00 GMT"
+      "url": "https://news.google.com/rss/articles/CBMi8ARBVV95cUxQUGlpdnA1Q0FKOXhXc1FNQ1FGRXFycWc1Sk1reEowVVkyTnVEWGZNLTFra0pFQS1pQnJDd0JTTmZPLVFzcGxJWTZyNmVHem16VU1zejljZmhCbFZjNVNDdVFDUTlaU09Ra1dfa2o4Tnd2c01DMEdIcHRlN3V1a18tNWlFU1BDU0xMTFpMbmVNdjZtTW8yVUF1RTYzQ2FrQ1dPMnYzR3NsUnVZVXQ3X1VHdjhkSE1lTDdLWHVLSDhMUkowUDI0b0pKWmJSNTFPUVI2TzFMUHFyMkE0UldpYjJ3N2pwM1l0UmlwVDV5MDBwaUNqMEdEQVFEUW9kcm02YjlraTFWR3dQYmdPS2FGMkZ3VldBNnlWbVViWlhZNzVkQTJheFJGWWRPWlBSQXVzQkxkNVJYbEIxaHRxdTl1em80RTNUNEhXZTRrUkxhYVM5d1pLQXhMSjJmbkJkbmRjMl9TQjhMMm45d1pmckZ4NldBZVBPT1NPcjhlNXEwSnhCNzkzZm15UFVINjg1RjA0bXByTHYwSlZBa0NZclVyTUI4SmM0bDZONG5FYUlMd1VoLTF2Yi0yb1RvRGEyOU1vN1JNZG8wZkxmVmFwUk9JdXhzalhIX1R3dm5Rc1BweE10VjBvd2V3N0g1QjRrNlRBUkhSRVJoRGJodV9YYjNncHRLOUlrVmQtRGR1MFFkeWlNWVBJSnJLWTZYZmRPQWZuR011SHhEQW5qYXZkbXpBTUlQMFh2UnlpV0dpLTRLZTNMem9jQTlVY2M2eVZydF9vSFRmUkN1RDNJc1MtOENuNjhFZmhwc2VHYnVZbFB2bVRRa0c?oc=5",
+      "published": "Mon, 07 Sep 2026 22:17:10 GMT"
     }
   ],
   "general": [
     {
-      "headline": "الجزائر تقطع علاقاتها مع الإمارات وتتّهمها بتصرفات \"استفزازية وعدائية\"",
+      "headline": "الجزائر تقطع علاقاتها مع الإمارات، والخارجية الإماراتية تأمل أن يكون القرار مؤقتاً",
       "source": "BBC عربي",
       "url": "https://www.bbc.com/arabic/articles/cvgyr59r494o?at_medium=RSS&at_campaign=rss",
-      "published": "Thu, 10 Sep 2026 14:51:12 GMT"
+      "published": "Thu, 10 Sep 2026 18:11:23 GMT"
     },
     {
       "headline": "ترامب: الحرب مع إيران قد تتجاوز الانتخابات النصفية، وطهران تستهدف سفناً قرب هرمز وتُوسّع \"منطقة الحظر\"",
@@ -310,7 +310,7 @@
       "published": "Thu, 10 Sep 2026 17:53:38 GMT"
     },
     {
-      "headline": "عباس يتلقى دعوة أردنية للمشاركة في مؤتمر حول حماية المدنيين زمن الحرب - i24NEWS",
+      "headline": "عباس يتلقى دعوة أردنية للمشاركة في مؤتمر حول حماية المدنيين زمن الحرب - i24news.tv",
       "source": "أخبار الأردن",
       "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOSUNXS1NPa0hLOEpwYklkVmE4dXdUNzVuYWtTYlFrSGRjbmRfN09FN24tN0habzNONU4tbzBmdHNrU3BudlpGc2FUa0p3c1RGMzl3eDY5VUlPalhxemNwY2ZCS1hieHd0Wk83N3RJX0liVGtSVm1LTGVQLWpaWnRSSFBkTXpTdlFRbUE?oc=5",
       "published": "Thu, 10 Sep 2026 14:02:05 GMT"
@@ -328,16 +328,16 @@
       "published": "Tue, 08 Sep 2026 23:41:01 GMT"
     },
     {
+      "headline": "الخارجية تدين هجمات استهدفت الأردن وتحذر من عدم الاستقرار بالمنطقة - اليوم السابع",
+      "source": "أخبار الأردن",
+      "url": "https://news.google.com/rss/articles/CBMirARBVV95cUxPRG1OTDY0MkpxM3cxb2hsWE03cTdBck5jbzJJU09iblM0RThsWWdJZS1YOWcyeno0TXNjUWx3aEZWMVR6Mlo4cVQxbTdfLVBCWkszaTViWkg3bHc2OXBFSENGQms1a0R4bTZJX1F1dTZwc3FRYW9GdWxDekhIOWhvWWpWUUF2Nnlqd1hCS21rTFM0NVVna1NiYkxYT2pnX0M3bVJaYzR5Szl1ZUU3bUpiN2JaRXJ3VGd5NDE0bXZ1eGI1S2FfWVJyaTFNWUhPWTRmRzlNcXlMS0ZPeFFfQ1Rkdzc2U2I4MWJ5a0EyeHZuY3hhODR2MmtPZjVfZ1BvZW5OZU90NEJCc0tFXy0xSHpNeXN5Mjk3azF1X3BHOU1tdERUUk5tdGNHeW8ybjdIQTVBNnRuUWNiUmE2SUh4VzlZN1J5cU53Z2xpN0RxY096MGhlS21ZX25lcWVrMU1MMUlzVVdBSlJLLVMyTW5tMVU5U3Y3VkJOSG1rQ1FjVzZKQUtLbkRwUnM5cjlDaGU4dzZtaWEyUWFwUmxZcGdvYVN6WVNvdVRKWGZndm5idmRBS0o1QnlCNlFhdDYweE4wNlAyT2tzaXlzQ3NodGxxaXlRX21Oa2J5MVZCSjJqaU8ydGJfRzZjQjdMN0xtZER4N3BIeVIyTEZSUzFkOEo0Uy1xT19ZTUVZUEtGczdFWHFYbWlBRWVMOFhXWkNGY0hUeTlON0pabXVfTVNjWEts0gGnBEFVX3lxTFBfZjItdlRLaGYyWlJZN3dHdlpQRGNNRE9YcnJzNDVfYU9Sa2xxWmdNN0ZQMHB4YUpHSnhHUGhWN3hpTnE4X3k4bWxjYTRnSnBWMGRMbVIxdXZpaFVhMmw5cklNQ2ZVbGVXLVcyMUJOQVVfY2NFcDZGNGdhZXNnbnRDZlY2aWc1NWNLUjY4SGoyeTl0SHlUbnh1RFZOaDBEd0ltZDZrcUZzd0hSVVZLMVdfWFZmcjhuZDBCcFNEZkh4UGUtMTVCaU5SV2Y2d3BjSGp2NnhvVEdsTU9lb3pUbWdkWW9hMTNacGc1U1FFWVFjZzVnSm4xVzA0YnVHSUhfamZacjhKamVLaGdjb05BZ21ELU9iWlA5bFpMTDRhQ3hzZWx6V3dFTmo1UlBHc1JiLU5lemRBS2R3NElFOHVfaG1sNVRHeXplSDkzYXk1VmNSb0FGVUFQakQwZUZsbFU1MDhnYXNiTE9teTdZMHFIQjVyTUMzVzhIa2Q5QmlGWGRfVHZUMFVwVm54d0doMmJRZ1FkdWxMdFJVcHo1LTFGVVp6bWNSSFF1Zkl6MjZaU1RKMGlpSXYxRlBmLTVONmU3VFo3TzhSdE9hdnFtN0RMQ1FvakZtTmEyeVQ2V1VvSnZMbzJPRVlnalliQUg2VlRlWkFKWVJUQUJRemxJbXJ5UGVWLXZBUmZJNXpaMUhQQjExYjVDcGFrb1hlWW5HY1BLVVBpTXU0dDJr?oc=5",
+      "published": "Wed, 09 Sep 2026 09:11:00 GMT"
+    },
+    {
       "headline": "قطر والكويت والأردن تدين بشدة انتهاك نتنياهو لسيادة سوريا - الجزيرة نت",
       "source": "أخبار الأردن",
       "url": "https://news.google.com/rss/articles/CBMiqgJBVV95cUxPdmNSaUxiMVhsazZ6U19GWW5abWNpN19haEpkLXdrNHRNaW96TloxRWRvdDllcmhfU3VRc0lyZ0dGVEUxSng3YUdNSGFmRFd3MkRoNlZhRlE4VDViNndCTmRaSy1XLUR3Zk91YmFnZjZ1dWhpenRIb3ZWb0dSbTI4VDQ0Ti1qNkR4ckxzVEd0Q3BpejZ1M3N3WWM4dTRQUTJ2N20wanNCc3NVNFhaSlk0OWtScE43aEszQ29ZcUxaZE9sREpMUnEwUUdfMzhXZ25JeExvNkRKMmZCbVEyUFg0bEJtVHRyeTRkaWdyV0hXQU5FRVFQUTdqMkR5S19rbTdRMUc4LTByLUc3LV90aHZfQVNhaDUzMGw4WDd4TTJZMzlxMmdFTkVnSzZR0gGvAkFVX3lxTFBDeERDOEYwaG9LR29DaHI1V3ZkWlVCTGgwMWZjREtDbWtkVHZEYUVPbVJfNUhsVHZfSG1BYlJXNDl5QTltZlM0MnBUWEl1VlVCN20tOTRNcWR5UjRnUTlRS1JLRmJ5REZJWW41UVpnckZoU3lHV3IxaFdCVGNOLWFwRmpETGFUaWZLZG5KMUpZczNCUTJqNlZjY0xLZHRzZ1NXN2JaRlJ4OVV0ZTBpTUtwNHpUS3dKTVpaMVBSN1dBTDMzZFJUc0JCMENSZFNPYnlmVHlJTUNJQkRXNXpWb1NiYzRwZTVTeW5DYnhHLUtzbTY3WndNcUhYY0pFeTRCd2p0NmJNazFuYnNrZnpPdTB5bVYzcm5oSTlKbV9YcWZEU2J4d2kzOWpBd2hlb1Q2QQ?oc=5",
       "published": "Thu, 10 Sep 2026 11:45:18 GMT"
-    },
-    {
-      "headline": "ادعيا إخراج المساجين بالجن.. كيف قادت حيلة غريبة زوجين أردنيين إلى الحبس؟ - Masrawy",
-      "source": "أخبار الأردن",
-      "url": "https://news.google.com/rss/articles/CBMi5wRBVV95cUxQX1F5bGQycFA5NjdPel93a2s1ZTNKRkNPcVoxZE4tV2didFhIZTJpTlAyQWN5dTUzTVVibF9NSHdDUXJGbWdMVUtBM1FxdFQ4S3MzalNxS1VrWS1jYkp6R2RvdnhjTnZCai1KX1hacXJMMHMtaGdfTVVkMWR1eFZnZEpubDEtdHk4Q3JCMjVlYW16OVMxeFUtOFUwTFhlTDBGTzVJZWtfT3YxVFdOOVhELTN2Y21jNWozbk13Nk9TYmNXd3g5bDk3WjVMTEtIbkdHWUdoYkY1Q3NOaWdZclBqU3VLeHlmeHJZRUx5VVRqdTBjb2NjSjRmb0d4VEFyODc0S3ZQSG9GN0IxeEg3UWNqQTdmM2JXanN5Z1pVRkdxM013U0dRckk1S19EZXpVMEwzOXR1YWd1WXJRa0hsTjA4VmpzYlo0RG5Sa3FEVjJld2ljZEFyVW1vMTBWb2JsaGRiVExyRk5mOFEtekJtVThYSHQ5VEFzOEJkcl8zUm5CR3pPMDlVTGo1bHpQcFd4TDZOdlBycW1yQ3JWazZpVUQxd25zajhjcFNFNWtFLUtPNnM2QmRRNzV0ZHhlTGM4aTdfdGFFZm9acWppRjRXWG9hc0VRVDkxclhqV1BzOTVweXZmVzBQNkg4UVNOb1FQYU5kZy1SN29fdVJNT3d6QUVrM1p1ZDFaR0pvNXU1X2l5Y2tzdFF3R2FFa0ZKZGF4Mk9hUTJ3d2ExVWhNZFY1dGQ0T05IbjgxS01GVFVnYkFqYUpnVmZZYWI1TjQxZnpudWtlZl9yM1h0LVVQaGlickI0RTVfZS01MWPSAewEQVVfeXFMT3d2YXhPTzAwVHJpaUdESkZEU1o4d0FQdHN5Q2x0ZFBVeE05YmswdnBPSWF0Rk5MMWVBNk81d3J3eHNsdU9sM2pOelE5NlNIWk5IdXFaUm5ycld3b3NxeGFhUE56RWxRVGhTUGdraTZ4SE5LZzNNVThnZWowRjVaZlJKVUM4cGpzaUE2ektBelpieHdobHhrdDNFMGRKY3I5eVYta2NHdC1JdmI2RDcxQl9kN2xGeTNCVUw0TkcxdFQzVzB4UFdTNXBnV3dBeXVxWncxVEhKMF8xb0tkblNRbGFlZ0tZMzhaN0FfbUsxUEx3MFRSeVppMWo5MFF3UUZyMUhOQWhGbF9zUkdjMkVNYVMxMlFLeFlwN0hKQzFhSjgxZGFpV09taWpDdGxjYmxKZWQtVkVuXzFKWHRkSW5xMUYwUHh6aXRZSW1qRkhfMEIya1VNTGZrUnExYVJFbzNQNDNIMHBycjBELW9SOF83RnJ1bmJZcUlGNTUtM0VOLTBPN21TbnBVOVctcjJNRWNNd1p2NUdUZW8xbzFfLVI4cjM1RXJFM2locm9EZDVZcHdHbEJfRnlHdjRxaFAtTDFESG41ZTNrSG9VU0h0TURUeDN1RWFrZTVKVjNNNTloZVRuMHBxdnZYTHdEcGlzejg1T3ZOM0lwcnhHS2VpSTlCaFVnaUt5Z3lVbktocHhwcHZmQnJmeF9na21fb3Nzd180ZXpuU2N3Z0tqVVVrVlpkd0NSU1JkRUNSc0VFMTZNMWhaZnhmQUlIaEZRQ19YVkxPbTBPY1ZDM0N2SERGSHh1Wi01WW40akRoX0ZkbGY?oc=5",
-      "published": "Thu, 10 Sep 2026 16:26:14 GMT"
     },
     {
       "headline": "قطر تدين الهجوم الإيراني على الأردن وتدعو لوقف التصعيد في المنطقة - الجزيرة نت",
@@ -352,16 +352,16 @@
       "published": "Sun, 06 Sep 2026 18:14:20 GMT"
     },
     {
-      "headline": "الخارجية تدين هجمات استهدفت الأردن وتحذر من عدم الاستقرار بالمنطقة - youm7.com",
-      "source": "أخبار الأردن",
-      "url": "https://news.google.com/rss/articles/CBMirARBVV95cUxPRG1OTDY0MkpxM3cxb2hsWE03cTdBck5jbzJJU09iblM0RThsWWdJZS1YOWcyeno0TXNjUWx3aEZWMVR6Mlo4cVQxbTdfLVBCWkszaTViWkg3bHc2OXBFSENGQms1a0R4bTZJX1F1dTZwc3FRYW9GdWxDekhIOWhvWWpWUUF2Nnlqd1hCS21rTFM0NVVna1NiYkxYT2pnX0M3bVJaYzR5Szl1ZUU3bUpiN2JaRXJ3VGd5NDE0bXZ1eGI1S2FfWVJyaTFNWUhPWTRmRzlNcXlMS0ZPeFFfQ1Rkdzc2U2I4MWJ5a0EyeHZuY3hhODR2MmtPZjVfZ1BvZW5OZU90NEJCc0tFXy0xSHpNeXN5Mjk3azF1X3BHOU1tdERUUk5tdGNHeW8ybjdIQTVBNnRuUWNiUmE2SUh4VzlZN1J5cU53Z2xpN0RxY096MGhlS21ZX25lcWVrMU1MMUlzVVdBSlJLLVMyTW5tMVU5U3Y3VkJOSG1rQ1FjVzZKQUtLbkRwUnM5cjlDaGU4dzZtaWEyUWFwUmxZcGdvYVN6WVNvdVRKWGZndm5idmRBS0o1QnlCNlFhdDYweE4wNlAyT2tzaXlzQ3NodGxxaXlRX21Oa2J5MVZCSjJqaU8ydGJfRzZjQjdMN0xtZER4N3BIeVIyTEZSUzFkOEo0Uy1xT19ZTUVZUEtGczdFWHFYbWlBRWVMOFhXWkNGY0hUeTlON0pabXVfTVNjWEts0gGnBEFVX3lxTFBfZjItdlRLaGYyWlJZN3dHdlpQRGNNRE9YcnJzNDVfYU9Sa2xxWmdNN0ZQMHB4YUpHSnhHUGhWN3hpTnE4X3k4bWxjYTRnSnBWMGRMbVIxdXZpaFVhMmw5cklNQ2ZVbGVXLVcyMUJOQVVfY2NFcDZGNGdhZXNnbnRDZlY2aWc1NWNLUjY4SGoyeTl0SHlUbnh1RFZOaDBEd0ltZDZrcUZzd0hSVVZLMVdfWFZmcjhuZDBCcFNEZkh4UGUtMTVCaU5SV2Y2d3BjSGp2NnhvVEdsTU9lb3pUbWdkWW9hMTNacGc1U1FFWVFjZzVnSm4xVzA0YnVHSUhfamZacjhKamVLaGdjb05BZ21ELU9iWlA5bFpMTDRhQ3hzZWx6V3dFTmo1UlBHc1JiLU5lemRBS2R3NElFOHVfaG1sNVRHeXplSDkzYXk1VmNSb0FGVUFQakQwZUZsbFU1MDhnYXNiTE9teTdZMHFIQjVyTUMzVzhIa2Q5QmlGWGRfVHZUMFVwVm54d0doMmJRZ1FkdWxMdFJVcHo1LTFGVVp6bWNSSFF1Zkl6MjZaU1RKMGlpSXYxRlBmLTVONmU3VFo3TzhSdE9hdnFtN0RMQ1FvakZtTmEyeVQ2V1VvSnZMbzJPRVlnalliQUg2VlRlWkFKWVJUQUJRemxJbXJ5UGVWLXZBUmZJNXpaMUhQQjExYjVDcGFrb1hlWW5HY1BLVVBpTXU0dDJr?oc=5",
-      "published": "Wed, 09 Sep 2026 09:11:00 GMT"
-    },
-    {
       "headline": "تضرر طائرات حربية أميركية في الأردن.. ماذا كشف مسؤول أميركي؟ | التلفزيون العربي - التلفزيون العربي",
       "source": "أخبار الأردن",
       "url": "https://news.google.com/rss/articles/CBMizwNBVV95cUxOV0VzU0k3Z3ZjUnVuSUJGYkNUOGozVkF5Z2xrSGpqeWhKZ05fTS0xc29qX1lFWjlXbFRwOHpTcmZNLU1hNjhUUzFoZEhtdEZuZ25OTUd0U05PTXRyTW4yRHdZVmVESGpoUVk3c242T3luNFlIVDNLZl9YREZlYnpQdUxCaW1uLWk3YU94VnVEcDNyY1dTUmRGQTJ1bFRWdVY1Wk5SZmlwZjNZa3h6ekZEMVZzZDRtck1tdVJrSnpGbEx6bzk5cWFQMWZzTzA0Qmo4Vk44Tkp4QUZIT05KV05KUEVnaXdSZGp4UHdROHZsbXJNYUZ3dXdmSzFUQmNiX0hEcV9rQjlqMXUxdEx1VFJWSTVJRjk1Q1lSRTNCYm81d1VOY2tCeU1fOUplWk5ZRG92cXQtc0k4anF2bmtqNWVWZ3d3eTNVV2xJNEFNSXZBdFNubVo5UDU2SDRIMEV4cUxrTnNXWUtVbUFNSkc0QkNIZllTZHhodmVPMXc3REhKSzUzVFQwdTVKdW1uTW4tWU1BQ1czM1FaRTlVTkhrNGd6WWlOT0x6d1RwcFc2aW5sRkpza0pVYmJGMEItOWJ5WnppcFpyLUN4TGw3ajFuZ0Jn0gHUA0FVX3lxTE5acVlhcmZzcWZTSE11bXlKLXhxbzRnVG1GbWhTQy1rWkFKOFA0SjgxVmg1ckVVdTNCYlRGZ28yamJHdW5NeW5zaTVENVh6RHNMUFdWQTRqaHJPNU9sMzF6eDBPQXdZNUtfTnY4a090TGhRc250b281ZThSVktmcEVRMGxFS1VNdmxKaXl3MHdVaWs3cHQxWk9LNDFoTDJzYmVqWERjT1dRakRPWnMtcWNQcmRvQzEzRU43UWZLWkt1R1JndlJFSER4XzVVNlVwT3YzWk1seENXZDd6Vk9FRHpWTHo5QUFWaDE0ZWhJS2tVYkNEY2oxWnBYN0stV2VOS1d4VG9QMU4yX3dDQm5PcW1pTXhMNEd0ZE83WGNtT0xvMzdTWE1nX0R6VGR0eVdYcmlPUU5BWF9fb1h3ZU9aVjlBcFhKcDJLXzFDT2paQ2xYbUFYMDlFc3cyUG1xanVnWVhFTDlCRmYyOEhFaU5QZmJFREtZYW9pTDhLdVB3Rmc3c0F0Q3BnY3BGeEhQMFVPMWVmcmhMMGJtcjNGZUlGOGpoMG9sVF9sV2EwdmZxemp3ZjRSU0R2c250MnAxWVNMOTlwX19HUG9UZDRnTjlVQmRMX3NCRg?oc=5",
       "published": "Thu, 10 Sep 2026 13:50:53 GMT"
+    },
+    {
+      "headline": "\"سي بي أس\": تضرر مقاتلات أميركية في هجمات إيرانية على الأردن - العربي الجديد",
+      "source": "أخبار الأردن",
+      "url": "https://news.google.com/rss/articles/CBMi0ANBVV95cUxQTTBieWdYM3JERGNDZ1JzNmwyMU5UakRCT1BYTmpHa3NnSmJaVktTYkFWdy1wSkFlT3dzeGxNZXczY0Fya3lxZ29JWnIxQ0NIS3h5cjRqSUxQdV9tQ09NUWlPV0VzWFpsYl9Hdk00VUNYZ280dlZFLXFXNE50UFBfZlVLZUVCUGNTY1ZtWHhpbG5IeGtWUGdyRmNxUExQZG50ejAxazdzdm9MUERINkZtTXBNc2ZnVk1KbFJOaEVhNmd5a0VWa28yLTd3MF9fSFhhYUZoem52VEVzNzJ6WEx0V21lV2JFb2xJQ29WNi05b1JBbmprT1k0eTVkcURzX1FSYm5KSnh2RWkwa3lPQmhnWHVnTmxMY0w1VFNfaDFQOFR4QkNjMVFOVjZqSHVfSXAwUWJTQTJZQWtUSHdKMkJReWVGdllqV2d2WlBGSmRXcWhZa2k1ZTZJamZudGFMcndmZ2NsTW1PSXNpSktSMXF6RGt2Uy1jQ2xGRGlsVjVXTUhMWEo3X3BYTmpQQ3J6SzlYb3NwRVk3VVpKZjhVQ21NZlRTR1k4SXh5VnZoQWY0ME5iWldiVDFHekg4azJkZ1hhSU5Hd2pjbFRkQk4zU0hNZdIB1gNBVV95cUxPVkhUY3d4ZDdNLVZhWjQ5cjliT3VheWJ3Y0lBM09RbFhZdlZjMm45LXk3TzJ5cGNzRXFuNkM0V2F5aUVVVVlmTmJYZlNIbG5hUDNHbi1xNWo5bHBON01hQ3l4UmRXdHFJaGZ0dmk2NVQ2MDBHX2NSUUwzMXhncWlCSDQ1Q3B5aklxNmplM2swZDVfVEstNHZfMi1NZktQQVQ4cTdBbllaMGxRY291cDBWckZwTEpkMDZWUWt5YlVUWUtzNTlLMFpOWVhzMGFaZFItd29jNXpONTZTbFRtYXN6UGJVRjc3aWpycllVSmNXNHFpSW9Kam1GeGRVRzZaaEdPNlNrUGNJX2kxZ3NIeGE5TzJKajNzUDZNdHhNSFRoWURsQWZ1Zm42X2M4SzVCLTZCd1ZfbFV1TkJhcW00ZUdsY0syYl9HaDB0UFEwNldpMVhqZmV1WHlHWExVOGVZSnhpWjhzY2gyZDZaM2lObkVQMXhYUEZlbE9RckVQdWVQbVQ3U2RSeEg4U1Bpc3NuMlFaZXNYN2stNkdWZTdWbkdPbHZnZFJua1NKNzZSbVd1bTMwUTZPeWctUjRJeXhiQm9PeFFaMmhDRXNCU3p2NVQ2U2p4dHZ0UQ?oc=5",
+      "published": "Thu, 10 Sep 2026 06:48:14 GMT"
     }
   ]
 }
