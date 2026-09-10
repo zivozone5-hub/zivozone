@@ -525,3 +525,18 @@ body.zivo-dark-active{overflow:hidden}
 
 /* V84: faster TV-news motion; hover still pauses. */
 .zivo-rail-track{animation-timing-function:linear!important}
+
+/* ============================================================
+   ZIVOZONE V87 — PROFESSIONAL QUICK ACCESS DOCK
+============================================================ */
+.zivo-v87-quickdock{position:fixed;left:16px;top:160px;z-index:9400;width:190px;padding:10px;border:1px solid rgba(124,108,255,.22);border-radius:20px;background:linear-gradient(180deg,rgba(8,10,18,.94),rgba(10,12,23,.86));backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.36),0 0 25px rgba(124,108,255,.08);transition:.25s ease}
+.zivo-v87-brand{display:flex;align-items:center;gap:9px;padding:5px 5px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+.zivo-v87-brand>span{width:33px;height:33px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#7c6cff,#32d7ff);color:#fff;font-weight:1000;box-shadow:0 0 22px rgba(124,108,255,.22)}
+.zivo-v87-brand div{min-width:0;flex:1}.zivo-v87-brand b{display:block;font-size:10px;letter-spacing:.8px}.zivo-v87-brand small{display:block;color:#8f97b7;font-size:8px;margin-top:2px}
+.zivo-v87-collapse{width:26px;height:26px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#c8cce0;font-size:16px;cursor:pointer}
+.zivo-v87-list{display:grid;gap:6px;margin-top:9px}
+.zivo-v87-list button{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:7px 9px;border-radius:11px;border:1px solid rgba(255,255,255,.065);background:rgba(255,255,255,.025);color:#e8ebf8;text-align:right;cursor:pointer;font:800 11px/1.2 "Noto Sans Arabic","Tahoma",sans-serif;transition:.18s ease}
+.zivo-v87-list button:hover{transform:translateX(3px);border-color:rgba(124,108,255,.28);background:rgba(124,108,255,.08);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.z87-ic{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:rgba(255,255,255,.045);font-size:14px;flex:0 0 auto}.z87-tx{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zivo-v87-quickdock.collapsed{width:50px;padding:8px}.zivo-v87-quickdock.collapsed .zivo-v87-brand div,.zivo-v87-quickdock.collapsed .zivo-v87-list .z87-tx{display:none}.zivo-v87-quickdock.collapsed .zivo-v87-brand{justify-content:center;border-bottom:0;padding-bottom:4px}.zivo-v87-quickdock.collapsed .zivo-v87-collapse{transform:rotate(180deg)}
+@media(max-width:900px){.zivo-v87-quickdock{left:8px;top:auto;bottom:76px;width:calc(100vw - 16px);max-width:420px;padding:8px;border-radius:18px}.zivo-v87-brand{padding-bottom:7px}.zivo-v87-list{grid-template-columns:repeat(4,1fr);gap:5px}.zivo-v87-list button{justify-content:center;flex-direction:column;gap:3px;min-height:54px;padding:6px 4px;font-size:8px}.z87-ic{width:24px;height:24px}.z87-tx{display:block}.zivo-v87-collapse{margin-left:auto}.zivo-v87-quickdock.collapsed{width:48px;left:8px}.zivo-v87-quickdock.collapsed .zivo-v87-list{display:none}}
