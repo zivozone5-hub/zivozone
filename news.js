@@ -12,7 +12,7 @@
 
   const DATA_URL = 'data/news.json';
   const CACHE_KEY = 'zivozone_news_v72';
-  const CACHE_TTL = 24 * 60 * 60 * 1000;
+  const CACHE_TTL = 60 * 60 * 1000;
   const REFRESH_MS = 60 * 60 * 1000;
 
   const esc = (value) => {
