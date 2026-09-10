@@ -3214,7 +3214,9 @@ window.ZIVOZONE_V18 = {
    Spark-compatible internal economy. No Cloud Functions required.
 ============================================================ */
 (function(){'use strict';
-  const F=()=>window.firebase, db=()=>F?.firestore?.(), auth=()=>F?.auth?.();
+  const F=()=>window.firebase;
+  const db=()=>{try{return F?.firestore?.()||null}catch(e){return null}};
+  const auth=()=>{try{return F?.auth?.()||null}catch(e){return null}};
   const KEY='zivozone_global_wallet_v91';
   const CATALOG={
     extra_attempt:{price:30,label:'محاولة إضافية'},
@@ -3223,23 +3225,29 @@ window.ZIVOZONE_V18 = {
   };
   let wallet={zivo:0,ledger:[],uid:null};
   const currentAuthUser=()=>{try{return auth()?.currentUser||null}catch(e){return null}};
+  const firebaseSignedIn=()=>!!currentAuthUser();
   const currentPlatformUser=()=>{try{return window.ZIVOZONE_AUTH?.getUser?.()||null}catch(e){return null}};
   const currentPlayer=()=>{try{return window.ZIVOZONE_AUTH?.getPlayer?.()||null}catch(e){return null}};
   const uid=()=>currentAuthUser()?.uid||currentPlatformUser()?.uid||currentPlayer()?.uid||null;
-  const logged=()=>Boolean(uid());
-  async function waitForAuth(maxMs=6000){
-    if(logged()) return true;
+  const logged=()=>firebaseSignedIn() || Boolean(currentPlatformUser()?.uid || currentPlayer()?.uid);
+  const cloudUser=()=>currentAuthUser();
+  async function waitForAuth(maxMs=7000){
+    if(firebaseSignedIn()) return true;
     const started=Date.now();
     return await new Promise(resolve=>{
-      let done=false;
-      const finish=ok=>{if(done)return;done=true;window.removeEventListener('zivozone-auth',onAuth);clearInterval(timer);resolve(ok)};
-      const onAuth=()=>{if(logged())finish(true)};
-      window.addEventListener('zivozone-auth',onAuth);
+      let done=false, unsub=null;
+      const finish=ok=>{if(done)return;done=true;try{unsub?.()}catch(e){};window.removeEventListener('zivozone-auth',onCustomAuth);clearInterval(timer);resolve(ok)};
+      const onCustomAuth=()=>{if(firebaseSignedIn())finish(true)};
+      window.addEventListener('zivozone-auth',onCustomAuth);
+      try{
+        const a=auth();
+        if(a?.onAuthStateChanged) unsub=a.onAuthStateChanged(u=>{if(u)finish(true)});
+      }catch(e){}
       const timer=setInterval(()=>{
-        if(logged()) finish(true);
+        if(firebaseSignedIn()) finish(true);
         else if(Date.now()-started>=maxMs) finish(false);
       },150);
-      onAuth();
+      onCustomAuth();
     });
   }
   const stampMs=v=>v?.toMillis?.()||Number(v)||0;
@@ -3294,15 +3302,17 @@ window.ZIVOZONE_V18 = {
   }
 
   async function refresh(){
-    if(!logged()) await waitForAuth(2500);
-    if(!logged()){wallet={zivo:0,ledger:[],uid:null};renderMini();render();return wallet;}
+    if(!firebaseSignedIn()) await waitForAuth(2500);
+    if(!firebaseSignedIn()){wallet={zivo:0,ledger:[],uid:null};renderMini();render();return wallet;}
     try{await ensure();await ledger();render();}catch(e){console.warn('ZIVO refresh:',e)}
     return wallet;
   }
 
   async function credit(amount,type,label,meta={}){
     if(!logged()) await waitForAuth(6000);
-    const u=uid(),d=db(); amount=Math.max(0,Math.floor(Number(amount)||0));
+    const u=cloudUser()?.uid;
+    const d=db();
+    amount=Math.max(0,Math.floor(Number(amount)||0));
     if(!u||!d||amount<=0)return false;
     amount=Math.min(amount,20); await ensure();
     const eventId=String(meta.eventId||`evt_${Date.now()}_${Math.random().toString(36).slice(2,8)}`).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,90);
@@ -3328,7 +3338,9 @@ window.ZIVOZONE_V18 = {
 
   async function spend(itemId){
     if(!logged()) await waitForAuth(6000);
-    const u=uid(),d=db(); if(!u||!d)throw Error('يجب تسجيل الدخول أولًا.');
+    const u=cloudUser()?.uid, d=db();
+    if(!u) throw Error('يجب تسجيل الدخول بحساب ZIVOZONE أولًا.');
+    if(!d) throw Error('خدمة المحفظة السحابية غير متاحة حاليًا. حاول تحديث الصفحة.');
     const item=CATALOG[String(itemId||'')];if(!item)throw Error('العنصر غير متاح');
     await ensure();const wref=d.collection('users').doc(u).collection('zivozone').doc('wallet');
     const lid=`spend_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
@@ -3346,8 +3358,8 @@ window.ZIVOZONE_V18 = {
   function toast(msg){let x=document.getElementById('zivo-v85-toast');if(!x){x=document.createElement('div');x.id='zivo-v85-toast';x.className='zivo-v85-toast';document.body.appendChild(x)}x.textContent=msg;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),2400)}
 
   async function open(){
-    if(!logged()){
-      const ok=await waitForAuth(5000);
+    if(!firebaseSignedIn()){
+      const ok=await waitForAuth(7000);
       if(!ok){window.dispatchEvent(new CustomEvent('zivozone:request-login'));return;}
     }
     let o=document.getElementById('zivo-v85-economy');
@@ -3363,7 +3375,7 @@ window.ZIVOZONE_V18 = {
   const processed=new Set();
   async function rewardPerfect(d,source){
     if(!d)return false;
-    if(!logged()){
+    if(!firebaseSignedIn()){
       const ok=await waitForAuth(7000);
       if(!ok)return false;
     }
@@ -3395,6 +3407,7 @@ window.ZIVOZONE_V18 = {
   window.ZIVOZONE_V26=Object.assign(window.ZIVOZONE_V26||{}, {open,buy:async id=>{try{await spend(id);return true}catch(e){return false}},claimDaily:()=>credit(3,'daily_claim','مكافأة دخول يومية'),profile:()=>({balance:Number(wallet.zivo)||0,xp:Number(window.ZIVOZONE_V30?.get?.()?.xp)||0})});
   window.addEventListener('zivozone:request-login',()=>{const b=document.querySelector('#login-btn,[data-action="login"]');if(b)b.click()});
   window.addEventListener('zivozone-auth',()=>setTimeout(mount,200));
+  try{ auth()?.onAuthStateChanged?.(()=>setTimeout(()=>{refresh();renderMini();},150)); }catch(e){}
   // Reward bridge: the main challenge engine emits these exact event names.
   // Keep both event families for compatibility with older challenge layers.
 
