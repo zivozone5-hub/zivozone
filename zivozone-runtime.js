@@ -3237,7 +3237,7 @@ window.ZIVOZONE_V18 = {
     return await new Promise(resolve=>{
       let done=false, unsub=null;
       const finish=ok=>{if(done)return;done=true;try{unsub?.()}catch(e){};window.removeEventListener('zivozone-auth',onCustomAuth);clearInterval(timer);resolve(ok)};
-      const onCustomAuth=()=>{if(firebaseSignedIn())finish(true)};
+      const onCustomAuth=()=>{if(firebaseSignedIn() || currentPlatformUser()?.uid)finish(true)};
       window.addEventListener('zivozone-auth',onCustomAuth);
       try{
         const a=auth();
@@ -3245,7 +3245,7 @@ window.ZIVOZONE_V18 = {
       }catch(e){}
       const timer=setInterval(()=>{
         if(firebaseSignedIn()) finish(true);
-        else if(Date.now()-started>=maxMs) finish(false);
+        else if((firebaseSignedIn() || currentPlatformUser()?.uid) || Date.now()-started>=maxMs) finish(firebaseSignedIn() || !!currentPlatformUser()?.uid);
       },150);
       onCustomAuth();
     });
@@ -3359,8 +3359,8 @@ window.ZIVOZONE_V18 = {
 
   async function open(){
     if(!firebaseSignedIn()){
-      const ok=await waitForAuth(7000);
-      if(!ok){window.dispatchEvent(new CustomEvent('zivozone:request-login'));return;}
+      await waitForAuth(7000);
+      if(!firebaseSignedIn()){window.dispatchEvent(new CustomEvent('zivozone:request-login'));return;}
     }
     let o=document.getElementById('zivo-v85-economy');
     if(!o){
@@ -3406,8 +3406,10 @@ window.ZIVOZONE_V18 = {
   window.ZIVOZONE_ECONOMY={refresh,spend,open,getWallet:()=>wallet,credit, rewardPerfect};
   window.ZIVOZONE_V26=Object.assign(window.ZIVOZONE_V26||{}, {open,buy:async id=>{try{await spend(id);return true}catch(e){return false}},claimDaily:()=>credit(3,'daily_claim','مكافأة دخول يومية'),profile:()=>({balance:Number(wallet.zivo)||0,xp:Number(window.ZIVOZONE_V30?.get?.()?.xp)||0})});
   window.addEventListener('zivozone:request-login',()=>{const b=document.querySelector('#login-btn,[data-action="login"]');if(b)b.click()});
-  window.addEventListener('zivozone-auth',()=>setTimeout(mount,200));
-  try{ auth()?.onAuthStateChanged?.(()=>setTimeout(()=>{refresh();renderMini();},150)); }catch(e){}
+  window.addEventListener('zivozone-auth',()=>setTimeout(mount,50));
+  document.addEventListener('DOMContentLoaded',()=>{setTimeout(mount,50);setTimeout(refresh,350);});
+  setTimeout(mount,500);
+  try{ auth()?.onAuthStateChanged?.(()=>setTimeout(()=>{mount();refresh();renderMini();},50)); }catch(e){}
   // Reward bridge: the main challenge engine emits these exact event names.
   // Keep both event families for compatibility with older challenge layers.
 
