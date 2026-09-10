@@ -496,3 +496,32 @@ body.zivo-dark-active{overflow:hidden}
   .mobile-tools-list button{min-height:52px!important;position:static!important;display:block!important;width:auto!important;margin:0!important;transform:none!important}
 }
 @media(max-width:380px){.mobile-tools-list{grid-template-columns:1fr}.brand-name{display:none}.top-actions #language-select{display:none}}
+
+
+/* ============================================================
+   ZIVOZONE V84 — UNIFIED GOLD ZIVO LAUNCHER
+============================================================ */
+.zivo-v81-open{
+  position:fixed;right:18px;bottom:18px;z-index:9405;
+  display:flex;align-items:center;gap:8px;
+  min-height:48px;padding:6px 12px 6px 7px;
+  border:1px solid rgba(244,201,78,.72);border-radius:16px;
+  background:linear-gradient(135deg,rgba(42,31,4,.96),rgba(12,12,16,.96));
+  color:#f7f7fb;cursor:pointer;font:900 12px/1 "Noto Sans Arabic","Tahoma",sans-serif;
+  box-shadow:0 12px 38px rgba(0,0,0,.42),0 0 25px rgba(244,201,78,.10);
+  backdrop-filter:blur(14px);
+}
+.zivo-v81-gold-coin{
+  display:grid;place-items:center;width:34px;height:34px;border-radius:50%;
+  color:#4b3200;font-size:15px;font-weight:1000;
+  background:radial-gradient(circle at 35% 28%,#fff3a6 0%,#f4c94e 45%,#c98d12 78%,#7f5600 100%);
+  border:1px solid rgba(255,246,184,.9);
+  box-shadow:inset 0 2px 5px rgba(255,255,255,.55),inset 0 -3px 7px rgba(70,40,0,.28),0 0 16px rgba(244,201,78,.24);
+}
+.zivo-v81-gold-text{color:#f4c94e;letter-spacing:.5px}
+.zivo-v81-open>b{min-width:20px;text-align:center;color:#fff}
+.zivo-v81-open:hover{transform:translateY(-1px)}
+@media(max-width:600px){.zivo-v81-open{right:9px;bottom:9px}}
+
+/* V84: faster TV-news motion; hover still pauses. */
+.zivo-rail-track{animation-timing-function:linear!important}

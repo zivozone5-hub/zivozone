@@ -399,17 +399,6 @@ document.addEventListener('click',function(e){
 
 <script>
 document.addEventListener('DOMContentLoaded',function(){
-  if(document.getElementById('zivo-v24-balance'))return;
-  const x=document.createElement('div');
-  x.id='zivo-v24-balance';x.className='zivo-v24-balance';
-  x.innerHTML='<span class="z24-mini-coin">Z</span><span><small>ZIVO</small><b data-zivo-balance>0</b></span>';
-  document.body.appendChild(x);
-  setTimeout(()=>window.ZIVOZONE_V24?.refresh?.(),1000);
-});
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded',function(){
   if(document.getElementById('z27-cloud-status'))return;
   const e=document.createElement('div');e.id='z27-cloud-status';
   e.innerHTML='☁ <strong>CLOUD READY</strong> · ZIVOZONE';
