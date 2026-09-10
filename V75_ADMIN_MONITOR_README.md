@@ -21,3 +21,11 @@ GitHub Pages هو استضافة static. لا يمكن للواجهة وحدها
 
 ## صلاحية admin
 يجب تعيين custom claim على حساب المالك من بيئة موثوقة باستخدام Firebase Admin SDK. لا تضع كلمة سر الإدارة أو service account داخل الموقع.
+
+
+## V75.1 — owner bootstrap
+The monitor now includes a one-time `zivoBootstrapAdmin` callable. It only succeeds when the signed-in Firebase Auth account has the owner UID `rBlzUigQ6DhgD4CK6VX3tS43PS43` and email `raefalbtish@gmail.com`. It sets the server-side custom claim `admin: true`, refreshes the token, and keeps the `/admins/{uid}` Firestore record synchronized.
+
+Deploy from the project root with:
+`firebase deploy --only functions,firestore:rules,hosting`
+Then sign in with `raefalbtish@gmail.com` and open `https://zivozone.com/#admin`.

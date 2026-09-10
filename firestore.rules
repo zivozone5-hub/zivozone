@@ -1,21 +1,85 @@
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Current ZIVOZONE user profiles
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    // Project player profiles (used by the current web app)
     match /players/{uid} {
       allow read: if request.auth != null && request.auth.uid == uid;
       allow create: if request.auth != null && request.auth.uid == uid;
       allow update: if request.auth != null && request.auth.uid == uid
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['xp','coins','zivo','wins','losses','gamesPlayed','level','bestStreak','wallet','verified','verifiedScore']);
+
       match /gameAttempts/{attemptId} {
         allow read: if request.auth != null && request.auth.uid == uid;
         allow create: if request.auth != null && request.auth.uid == uid;
-        allow update: if false; // Cloud Function only
+        allow update: if false;
       }
       match /wallet/{doc} {
         allow read: if request.auth != null && request.auth.uid == uid;
-        allow write: if false; // Cloud Function only
+        allow write: if false;
       }
+      match /events/{eventId} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow create: if request.auth != null && request.auth.uid == uid;
+        allow update, delete: if false;
+      }
+      match /results/{resultId} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+        allow create: if request.auth != null && request.auth.uid == uid;
+        allow update, delete: if false;
+      }
+    }
+
+    // Public/read-only content
+    match /questions/{questionId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /dailyChallenges/{challengeId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /results/{resultId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    match /wallets/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /leaderboard/{playerId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Admin identity document: owner can read only their own admin record.
+    // The actual admin dashboard is protected by the server-side custom claim.
+    match /admins/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    // Server-written monitoring counters.
+    match /siteStats/{document=**} {
+      allow read, write: if false;
+    }
+
+    match /public/{document=**} {
+      allow read: if true;
+      allow write: if false;
     }
   }
 }

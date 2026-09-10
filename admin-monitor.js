@@ -13,10 +13,29 @@
     }catch(e){console.warn('zivoHeartbeat',e)}
     return null;
   }
+  async function ensureAdmin(){
+    const f=window.firebase?.functions?.();
+    const u=window.firebase?.auth?.()?.currentUser;
+    if(!f||!u) throw new Error('Login required');
+    // Bootstrap the owner account once, then force a fresh ID token so the
+    // admin custom claim is available to zivoAdminOverview immediately.
+    const bootstrap=f.httpsCallable('zivoBootstrapAdmin');
+    await bootstrap({});
+    await u.getIdToken(true);
+  }
   async function adminData(){
-    const fn=window.firebase?.functions?.().httpsCallable('zivoAdminOverview');
-    if(!fn) throw new Error('Cloud Functions unavailable');
-    return (await fn({})).data;
+    const f=window.firebase?.functions?.();
+    if(!f) throw new Error('Cloud Functions unavailable');
+    const fn=f.httpsCallable('zivoAdminOverview');
+    try{
+      return (await fn({})).data;
+    }catch(e){
+      if(e?.code==='functions/permission-denied' || e?.code==='permission-denied'){
+        await ensureAdmin();
+        return (await fn({})).data;
+      }
+      throw e;
+    }
   }
   function panel(data){
     let o=document.getElementById('zivo-v75-admin');
