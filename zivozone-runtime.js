@@ -3388,7 +3388,7 @@ window.ZIVOZONE_V18 = {
     const eventId=String(d.eventId||`${source}_${challenge}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,90);
     if(processed.has(eventId))return false;processed.add(eventId);
     const bonus=Math.max(0,Math.min(10,Number(window.ZIVOZONE_ENGAGEMENT?.claimableBonus?.()||0)));
-    const amount=Math.min(20,10+bonus);
+    const amount=perfect ? 10 : 0;
     const ok=await credit(amount,'challenge_reward',`مكافأة العلامة الكاملة — ${challenge}`,{eventId,perfect:true,challenge,activeMinutes:window.ZIVOZONE_ENGAGEMENT?.activeMinutes?.()||0,bonus});
     if(ok){window.ZIVOZONE_ENGAGEMENT?.markBonusClaimed?.(bonus);toast(`مبروك! +${amount} ZIVO 🪙`);}
     else {processed.delete(eventId);}

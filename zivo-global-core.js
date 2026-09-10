@@ -1,4 +1,4 @@
-/* ZIVOZONE V94 — SINGLE WALLET + AUTH GATE + PERFECT CHALLENGE REWARDS
+/* ZIVOZONE V95 — SINGLE WALLET + AUTH GATE + PERFECT CHALLENGE REWARDS
    Free/Spark compatible. Client-side internal currency only.
 */
 (() => {
@@ -95,7 +95,7 @@
       }else state.zivo=money(snap.data()?.zivo);
       const ls=await wref.collection(LEDGER).orderBy('createdAt','desc').limit(50).get().catch(()=>null);
       state.ledger=ls?ls.docs.map(x=>({id:x.id,...x.data()})):[];
-    }catch(e){ console.warn('V94 wallet read',e); }
+    }catch(e){ console.warn('V95 wallet read',e); }
     syncUI(); return state;
   }
 
@@ -150,8 +150,8 @@
         if(ls.exists) return;
         const current=money(ws.exists?ws.data()?.zivo:0);
         // Engagement bonus is intentionally earned only when the player gets a perfect run.
-        const bonus=Math.max(0,Math.min(10,Math.floor(Number(window.ZIVOZONE_ENGAGEMENT?.activeSeconds?.()||0)/600) - Number(window.__zivoV94ClaimedTiers||0)));
-        awarded=Math.min(20,10+bonus);
+        const bonus=0;
+        awarded=10;
         const next=current+awarded;
         tx.set(wref,{zivo:next,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),mode:'v94-spark-single-wallet'},{merge:true});
         tx.set(d.collection('users').doc(u.uid),{uid:u.uid,email:u.email||'',zivo:next,coins:next,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
@@ -159,12 +159,12 @@
         tx.set(lref,{type:'challenge_reward',label:`مكافأة العلامة الكاملة — ${challenge}`,amount:awarded,challenge,eventId,source,score:correct,total,perfect:true,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
       });
       if(awarded>0){
-        const bonus=Math.max(0,awarded-10); window.__zivoV94ClaimedTiers=(Number(window.__zivoV94ClaimedTiers)||0)+bonus;
+        const bonus=0; window.__zivoV95ClaimedTiers=Number(window.__zivoV95ClaimedTiers)||0;
         await readWallet(); syncUI(); toast(`مبروك! +${awarded} ZIVO 🪙`); window.dispatchEvent(new CustomEvent('zivozone-reward',{detail:{amount:awarded,challenge,eventId}}));
         return true;
       }
       return false;
-    }catch(e){ console.warn('V94 perfect reward failed',e); return false; }
+    }catch(e){ console.warn('V95 perfect reward failed',e); return false; }
   }
 
   // Route every known challenge result family into one reward gate.
