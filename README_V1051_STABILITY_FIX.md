@@ -1,0 +1,1 @@
+V105.1 stability patch: V105 visual CSS retained; V105 interaction shim disabled to prevent boot regression; index loader watchdog and no-cache added.
