@@ -58,11 +58,11 @@ service cloud.firestore {
           allow read: if isOwner() || isSelf(userId);
           allow create: if isSelf(userId) && validMiningKeys()
             && request.resource.data.amount == 0.5
-            && request.resource.data.nextMiningAt >= request.time + duration.value(86400, 's');
+            && request.resource.data.nextMiningAt >= request.time + duration.value(86340, 's');
           allow update: if isSelf(userId) && validMiningKeys()
             && resource.data.nextMiningAt <= request.time
             && request.resource.data.amount == 0.5
-            && request.resource.data.nextMiningAt >= request.time + duration.value(86400, 's');
+            && request.resource.data.nextMiningAt >= request.time + duration.value(86340, 's');
           allow delete: if false;
         }
 
