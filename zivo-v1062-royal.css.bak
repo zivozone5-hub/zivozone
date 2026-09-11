@@ -1,0 +1,254 @@
+
+/* ============================================================
+   ZIVOZONE V1062 — ROYAL 4D CHALLENGE CINEMA / MOBILE FIRST
+============================================================ */
+:root{
+ --z1062-bg:#020711;--z1062-panel:#06111d;--z1062-blue:#08aaff;
+ --z1062-cyan:#1ee7ff;--z1062-gold:#ffd34f;--z1062-red:#ff2038;
+}
+html,body{overflow-x:hidden}
+.topbar{
+ position:sticky!important;top:0;z-index:12000!important;
+ min-height:76px!important;padding:8px 18px!important;
+ background:linear-gradient(180deg,rgba(3,8,18,.98),rgba(3,9,18,.92))!important;
+ border-bottom:1px solid rgba(55,174,255,.20)!important;
+ box-shadow:0 10px 35px rgba(0,0,0,.30)!important;
+ display:grid!important;grid-template-columns:auto 1fr auto!important;
+ align-items:center!important;gap:18px!important;direction:ltr!important;
+ backdrop-filter:blur(18px);
+}
+.topbar .brand{direction:ltr!important;display:flex!important;align-items:center;gap:9px;text-decoration:none}
+.topbar .brand-mark{
+ width:45px!important;height:45px!important;border-radius:13px!important;
+ display:grid!important;place-items:center!important;
+ background:linear-gradient(145deg,#ffffff,#3aaeff 42%,#3048ff)!important;
+ color:#fff!important;font-size:28px!important;font-weight:1000!important;
+ box-shadow:0 0 24px rgba(50,140,255,.45),inset 0 1px 0 #fff8!important;
+}
+.topbar .brand-name{
+ font-size:24px!important;font-weight:1000!important;letter-spacing:.4px;
+ background:linear-gradient(90deg,#fff,#3dbfff 55%,#6b7dff);
+ -webkit-background-clip:text;background-clip:text;color:transparent!important;
+}
+.topbar .main-nav{display:flex!important;justify-content:center!important;align-items:center;gap:5px!important;direction:rtl!important}
+.topbar .main-nav a{
+ min-height:48px;padding:0 14px!important;border-radius:12px;
+ display:flex!important;align-items:center;justify-content:center;
+ color:#d9e8f8!important;font-weight:900!important;font-size:12px!important;
+ border:1px solid transparent;transition:.2s;
+}
+.topbar .main-nav a:hover,.topbar .main-nav a.active{
+ color:#fff!important;background:linear-gradient(180deg,rgba(25,120,255,.18),rgba(25,120,255,.06));
+ border-color:rgba(31,169,255,.35);box-shadow:0 0 18px rgba(0,160,255,.12);
+}
+.top-actions{
+ display:flex!important;align-items:center!important;justify-content:flex-end!important;
+ gap:8px!important;direction:rtl!important;min-width:0;
+}
+.top-actions .icon-btn,.top-actions #audio-toggle{
+ width:42px!important;height:42px!important;border-radius:12px!important;
+ border:1px solid rgba(75,180,255,.25)!important;background:#071322!important;
+}
+.top-actions #language-select{height:42px!important;border-radius:12px!important;background:#071322!important}
+.top-actions #login-btn{
+ min-height:42px!important;padding:0 15px!important;border-radius:12px!important;
+ background:linear-gradient(135deg,#071321,#101f34)!important;
+ border:1px solid rgba(255,211,79,.55)!important;color:#ffe27a!important;
+ box-shadow:0 0 20px rgba(255,195,45,.10)!important;
+}
+#zivo-v101-economy{
+ margin:0!important;padding:0!important;border:0!important;background:none!important;
+ display:flex!important;gap:8px!important;align-items:center!important;flex:0 0 auto;
+ order:-1;
+}
+#zivo-v101-economy .z101-card{
+ min-width:126px!important;height:50px!important;padding:6px 9px!important;
+ border-radius:13px!important;background:linear-gradient(145deg,#161104,#080b11)!important;
+ border:1px solid rgba(255,210,65,.42)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 0 20px rgba(255,190,30,.08)!important;
+}
+#zivo-v101-economy .z101-wallet{display:flex!important;align-items:center;gap:7px!important}
+#zivo-v101-economy .z101-coin{
+ width:30px!important;height:30px!important;flex:0 0 30px!important;
+ border-radius:50%!important;display:grid!important;place-items:center!important;
+ background:radial-gradient(circle at 32% 28%,#fff7bb,#ffd338 48%,#a96800)!important;
+ color:#5a3800!important;border:2px solid #ffe88c!important;font-weight:1000!important;
+}
+#zivo-v101-economy .z101-label{font-size:7px!important;color:#a9b2c2!important}
+#zivo-v101-economy .z101-balance{font-size:14px!important;color:#ffe06a!important;font-weight:1000!important}
+#zivo-v101-economy .z101-sub{font-size:7px!important;max-width:105px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#zivo-v101-economy .z101-mining{display:flex!important;align-items:center!important;gap:7px!important}
+#zivo-v101-economy .z101-mining-icon{font-size:20px!important}
+#zivo-v101-economy .z101-mining h3{font-size:9px!important;margin:0!important;color:#fff!important}
+#zivo-v101-economy .z101-mining p{display:none!important}
+#zivo-v101-economy .z101-countdown{font-size:13px!important;color:#ffe06a!important;font-weight:1000!important}
+#zivo-v101-economy .z101-mine-action{margin-inline-start:auto!important}
+#zivo-v101-economy .z101-btn{font-size:8px!important;padding:6px 8px!important;border-radius:8px!important}
+#zivo-v101-economy .z101-mine-action .primary{
+ background:linear-gradient(135deg,#ffd84f,#a76d00)!important;color:#1b1200!important;
+}
+
+#challenges.challenge-center-section{padding-top:20px!important}
+#challenge-list{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:14px!important;
+}
+#challenge-list .challenge-card.z1062-card{
+ position:relative!important;display:flex!important;flex-direction:column!important;
+ min-height:390px!important;padding:0!important;overflow:hidden!important;
+ border-radius:21px!important;background:#020710!important;
+ border:1px solid rgba(32,190,255,.68)!important;
+ box-shadow:0 15px 50px rgba(0,0,0,.40),0 0 0 1px rgba(255,255,255,.025) inset!important;
+ cursor:pointer!important;isolation:isolate;transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease!important;
+}
+#challenge-list .challenge-card.z1062-card:before{
+ content:"";position:absolute;inset:-30%;z-index:0;pointer-events:none;
+ background:radial-gradient(circle at 50% 15%,var(--z1062-accent,#16cfff) 0,transparent 33%);
+ opacity:.18;filter:blur(20px);transition:.3s;
+}
+#challenge-list .challenge-card.z1062-card:hover{
+ transform:translateY(-7px) rotateX(1.5deg)!important;
+ border-color:var(--z1062-accent,#16cfff)!important;
+ box-shadow:0 25px 65px rgba(0,0,0,.55),0 0 35px color-mix(in srgb,var(--z1062-accent,#16cfff) 28%,transparent)!important;
+}
+.z1062-visual{
+ position:relative!important;z-index:1!important;flex:0 0 235px!important;
+ width:100%!important;height:235px!important;overflow:hidden!important;
+ background:#06101d!important;
+}
+.z1062-visual img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important}
+.z1062-visual:after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(180deg,rgba(0,0,0,.08),transparent 48%,rgba(0,0,0,.96) 100%);
+}
+.z1062-copy{
+ position:relative!important;z-index:2!important;margin-top:-58px!important;
+ padding:0 17px 17px!important;display:flex!important;flex-direction:column!important;
+ flex:1!important;justify-content:flex-end!important;text-align:right!important;
+ background:linear-gradient(180deg,transparent 0,#030711 30%,#030711 100%)!important;
+}
+.z1062-badges{display:flex;justify-content:space-between;gap:7px;margin-bottom:8px;direction:rtl}
+.z1062-badge{
+ padding:7px 10px;border-radius:999px;background:rgba(3,12,22,.84);
+ border:1px solid rgba(69,190,255,.5);backdrop-filter:blur(8px);
+ color:#eef9ff;font-size:9px;font-weight:1000;white-space:nowrap;
+}
+.z1062-title{margin:0!important;color:#fff!important;font-size:21px!important;font-weight:1000!important;line-height:1.25!important;text-shadow:0 2px 12px #000}
+.z1062-desc{margin:6px 0 0!important;color:#c0cad8!important;font-size:10px!important;line-height:1.8!important}
+.z1062-card[data-challenge="horror"]{display:none!important}
+.z1062-card[data-challenge*="logic"]{--z1062-accent:#a15cff}
+.z1062-card[data-challenge*="memory"]{--z1062-accent:#ee54ff}
+.z1062-card[data-challenge*="football"]{--z1062-accent:#00bfff}
+.z1062-card[data-challenge*="science"]{--z1062-accent:#21d9ff}
+.z1062-card[data-challenge*="math"]{--z1062-accent:#ffd13f}
+.z1062-card[data-challenge*="reaction"]{--z1062-accent:#27ffa5}
+.z1062-card[data-challenge*="pattern"]{--z1062-accent:#835cff}
+.z1062-card[data-challenge*="focus"]{--z1062-accent:#00c8ff}
+.z1062-card[data-challenge*="forensic"]{--z1062-accent:#00a8ff}
+.z1062-card[data-challenge*="daily"]{--z1062-accent:#ff3d73}
+
+#zivo-dark-room{
+ margin:24px 0 0!important;padding:14px!important;border-radius:24px!important;
+ border:1px solid rgba(255,30,55,.65)!important;
+ background:radial-gradient(circle at 50% 20%,rgba(255,20,40,.16),transparent 42%),linear-gradient(145deg,#100208,#030308 65%)!important;
+ box-shadow:0 0 55px rgba(255,20,40,.10),inset 0 0 55px rgba(255,0,25,.06)!important;
+}
+.z1062-horror-card{
+ position:relative;min-height:380px;border-radius:19px;overflow:hidden;cursor:pointer;
+ border:1px solid #ff263c;background:#050207;
+ box-shadow:0 0 40px rgba(255,0,30,.16),inset 0 0 80px rgba(255,0,25,.12);
+ transition:.35s;
+}
+.z1062-horror-card:hover{transform:translateY(-5px) scale(1.005);box-shadow:0 0 65px rgba(255,0,30,.28)}
+.z1062-horror-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.z1062-horror-card:after{
+ content:"";position:absolute;inset:0;
+ background:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.15) 35%,rgba(0,0,0,.96) 100%);
+}
+.z1062-horror-content{position:absolute;z-index:2;inset:auto 24px 23px;direction:rtl}
+.z1062-horror-kicker{color:#ff3a4c;font-size:10px;font-weight:1000;letter-spacing:1.5px}
+.z1062-horror-title{margin:5px 0;color:#ff2b3f;font-size:31px;font-weight:1000;text-shadow:0 0 18px rgba(255,0,35,.45)}
+.z1062-horror-text{color:#e2cdd0;font-size:12px;max-width:620px;line-height:1.9}
+.z1062-horror-enter{
+ display:inline-flex;margin-top:12px;padding:10px 17px;border-radius:11px;
+ border:1px solid rgba(255,45,60,.7);background:rgba(45,3,9,.78);color:#fff;
+ font-weight:1000;font-size:10px;
+}
+.z1062-horror-card:before{
+ content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+ background:repeating-linear-gradient(0deg,transparent 0,transparent 4px,rgba(255,0,30,.035) 5px,transparent 6px);
+ mix-blend-mode:screen;
+}
+@keyframes z1062-flicker{0%,100%{opacity:1}48%{opacity:.98}50%{opacity:.72}52%{opacity:1}}
+#zivo-dark-room .z1062-horror-card{animation:z1062-flicker 5.8s infinite}
+#zivo-dark-room .z1062-horror-card .z1062-horror-enter{animation:pulse 2.2s infinite}
+
+@media(max-width:900px){
+ .topbar{grid-template-columns:auto 1fr auto!important;gap:8px!important;padding:7px 10px!important}
+ .topbar .main-nav{gap:1px!important}.topbar .main-nav a{padding:0 7px!important;font-size:9px!important}
+ #zivo-v101-economy .z101-card{min-width:110px!important}
+ #challenge-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #challenge-list .challenge-card.z1062-card{min-height:350px!important}
+ .z1062-visual{flex-basis:205px!important;height:205px!important}
+}
+@media(max-width:700px){
+ .topbar{position:sticky!important;min-height:58px!important;padding:6px 8px!important;grid-template-columns:auto 1fr auto!important}
+ .topbar .brand-mark{width:36px!important;height:36px!important;border-radius:10px!important;font-size:22px!important}
+ .topbar .brand-name{font-size:17px!important}
+ .topbar .main-nav{display:none!important}
+ .top-actions{gap:4px!important}
+ .top-actions #audio-toggle,.top-actions #language-select{display:none!important}
+ .top-actions #login-btn{font-size:9px!important;min-height:36px!important;padding:0 9px!important;max-width:82px!important}
+ #zivo-v101-economy{
+  position:relative!important;grid-column:1/-1!important;width:100%!important;
+  display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;
+  order:3!important;padding:5px 0 0!important;
+ }
+ #zivo-v101-economy .z101-card{min-width:0!important;width:100%!important;height:45px!important;padding:5px 7px!important}
+ #zivo-v101-economy .z101-balance{font-size:12px!important}
+ #zivo-v101-economy .z101-countdown{font-size:11px!important}
+ #zivo-v101-economy .z101-btn{display:none!important}
+ #challenge-list{grid-template-columns:1fr 1fr!important;gap:8px!important}
+ #challenge-list .challenge-card.z1062-card{min-height:250px!important;border-radius:15px!important}
+ .z1062-visual{flex-basis:145px!important;height:145px!important}
+ .z1062-copy{margin-top:-45px!important;padding:0 10px 11px!important}
+ .z1062-badge{font-size:7px!important;padding:5px 6px!important}
+ .z1062-title{font-size:14px!important}
+ .z1062-desc{font-size:8px!important;line-height:1.55!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+ #zivo-dark-room{padding:8px!important;margin-top:15px!important;border-radius:18px!important}
+ .z1062-horror-card{min-height:270px!important;border-radius:14px!important}
+ .z1062-horror-content{inset:auto 13px 14px!important}
+ .z1062-horror-title{font-size:22px!important}
+ .z1062-horror-text{font-size:9px!important;line-height:1.7!important}
+ .z1062-horror-enter{font-size:8px!important;padding:8px 11px!important}
+}
+@media(max-width:390px){
+ #challenge-list{gap:6px!important}
+ .z1062-visual{flex-basis:130px!important;height:130px!important}
+ .z1062-title{font-size:12px!important}
+ .z1062-desc{font-size:7px!important}
+ .z1062-badges{margin-bottom:5px}
+ .z1062-badge{font-size:6.5px!important;padding:4px 5px!important}
+}
+
+.z1062-menu{display:none;border:1px solid rgba(70,180,255,.35);background:#071321;color:#fff;border-radius:10px;width:40px;height:40px;font-size:22px;cursor:pointer}
+@media(max-width:700px){
+ .z1062-menu{display:grid;place-items:center}
+ .topbar .main-nav.z1062-mobile-open{
+   display:flex!important;position:absolute;top:calc(100% + 5px);right:7px;left:7px;
+   padding:8px;background:rgba(4,11,20,.98);border:1px solid rgba(45,180,255,.25);
+   border-radius:14px;box-shadow:0 20px 45px rgba(0,0,0,.5);z-index:20000;flex-wrap:wrap;
+ }
+ .topbar .main-nav.z1062-mobile-open a{flex:1 1 30%;min-height:40px}
+}
+
+/* Header icon language — mirrors the reference hierarchy without changing routes */
+.topbar .main-nav a:before{display:inline-block;margin-inline-end:6px;font-size:15px;opacity:.9}
+.topbar .main-nav a:nth-child(1):before{content:"⌂"}
+.topbar .main-nav a:nth-child(2):before{content:"♜"}
+.topbar .main-nav a:nth-child(3):before{content:"◈"}
+.topbar .main-nav a:nth-child(4):before{content:"◉"}
+.topbar .main-nav a:nth-child(5):before{content:"▤"}
+.topbar .main-nav a:nth-child(6):before{content:"◌"}
+.topbar .brand-mark{font-size:0!important}
+.topbar .brand-mark:after{content:"♛";font-size:27px;color:#fff;text-shadow:0 0 13px #6fd8ff}
