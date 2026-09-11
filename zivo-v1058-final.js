@@ -54,21 +54,47 @@
     };
   }
 
-  /* 2) Challenge cards: whole card is the hit target. */
+  /* 2) Challenge cards: the complete visual card is the primary action. */
   function bindChallengeCards(){
     document.querySelectorAll('#challenge-list .challenge-card').forEach(card=>{
-      if(card.dataset.v1058Click)return;
+      if(card.dataset.v1058CardReady)return;
       const trigger=card.querySelector('[data-challenge],[data-game]');
+      const id=trigger?.dataset.challenge||trigger?.dataset.game||'';
       if(!trigger)return;
-      card.dataset.v1058Click='1';
+      card.dataset.v1058CardReady='1';
+      if(id){
+        card.dataset.challenge=id;
+        card.classList.add('z58-theme-'+String(id).replace(/[^a-z0-9_-]/gi,''));
+      }
       card.setAttribute('role','button');
       card.setAttribute('tabindex','0');
-      const go=()=>{try{trigger.click()}catch(e){}};
+      card.setAttribute('aria-label',(card.querySelector('h3')?.textContent||'تحدي')+' — اضغط للبدء');
+      /* The old button remains in the DOM for compatibility, but the user no longer
+         has to find a specific blue button. The card itself is the launch surface. */
+      trigger.classList.add('z58-hidden-launcher');
+      trigger.setAttribute('aria-hidden','true');
+      trigger.tabIndex=-1;
+      const go=()=>{
+        try{
+          if(window.ZIVOZONE_V20?.start) window.ZIVOZONE_V20.start(id);
+          else trigger.click();
+        }catch(e){try{trigger.click()}catch(_){}}
+      };
       card.addEventListener('click',e=>{
-        if(e.target.closest('button,a,input,select,textarea,label'))return;
+        if(e.target.closest('a,input,select,textarea,label,.z58-hidden-launcher'))return;
         go();
       });
-      card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}});
+      card.addEventListener('keydown',e=>{
+        if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}
+      });
+    });
+  }
+
+  /* Full-card launch also covers challenge tiles rendered by older layers. */
+  function promoteChallengeTiles(){
+    document.querySelectorAll('[data-challenge],[data-game]').forEach(node=>{
+      const card=node.closest('.challenge-card');
+      if(card&&!card.dataset.v1058CardReady){bindChallengeCards();}
     });
   }
 
@@ -101,7 +127,7 @@
   }
 
   function boot(){
-    bindMining();bindChallengeCards();hardenRunner();compactNews();adminPolish();
+    bindMining();bindChallengeCards();promoteChallengeTiles();hardenRunner();compactNews();adminPolish();
   }
   document.addEventListener('DOMContentLoaded',boot);
   window.addEventListener('zivozone-auth',()=>setTimeout(boot,250));
