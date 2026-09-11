@@ -47,9 +47,11 @@
     root.querySelector('#z101-mine').onclick=mine;
   }
 
-  async function callable(name,data){
-    const f=F()?.functions?.(); if(!f)throw new Error('Firebase Functions غير متاحة');
-    const fn=f.httpsCallable(name); const r=await fn(data||{}); return r?.data||{};
+  async function ensureWalletForUser(u){
+    const d=db(); if(!u||!d)return;
+    const ref=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
+    const snap=await ref.get();
+    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'spark-client-rules'},{merge:false});
   }
 
   async function refresh(){
@@ -83,35 +85,64 @@
   function formatMs(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
 
   async function mine(){
-    const u=user();
+    const u=user(),d=db();
     if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return}
     if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
     const b=document.getElementById('z101-mine');if(b)b.disabled=true;
     try{
-      const r=await callable('claimDailyMining',{});
-      state.zivo=num(r.balance); state.nextMiningAt=num(r.nextMiningAt); syncUI();
-      toast(`تم التعدين بنجاح! +${Number(r.amount||0.5).toFixed(2)} ZIVO ⛏️`);
+      const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
+      const mining=d.collection('users').doc(u.uid).collection('zivozone').doc('mining');
+      const ledger=wallet.collection('ledger').doc('mining_'+new Date().toISOString().slice(0,10));
+      await d.runTransaction(async tx=>{
+        const [ws,ms,ls]=await Promise.all([tx.get(wallet),tx.get(mining),tx.get(ledger)]);
+        const now=Date.now(), previous=ms.exists?(ms.data()?.nextMiningAt):null, prevMs=previous?.toMillis?.()||Number(previous)||0;
+        if(prevMs>now)throw new Error('التعدين غير متاح بعد.');
+        if(ls.exists)throw new Error('تم احتساب تعدين اليوم بالفعل.');
+        const current=num(ws.data()?.zivo);
+        const fv=F().firestore.FieldValue;
+        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
+        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000),amount:0.5,version:'spark-v1057'},{merge:true});
+        tx.set(ledger,{type:'daily_mining',label:'التعدين اليومي',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'client-rules'});
+      });
       await refresh();
+      toast('تم التعدين بنجاح! +0.50 ZIVO ⛏️');
     }catch(e){console.warn('ZIVO mining:',e);toast(e?.message||'تعذر تفعيل التعدين الآن.');await refresh()}
   }
 
   async function reward(amount,type,label,meta={}){ return false; }
 
   async function rewardChallenge(d={}){
-    const u=user(); if(!u)return false;
+    const u=user(),fire=db(); if(!u||!fire)return false;
     const total=Math.max(1,Math.min(100,Number(d.total??d.questions??10)||10));
     const correct=Math.max(0,Math.min(total,Number(d.correct??d.score??0)||0));
     const timed=Number(d.timedOut)||0;
     if(total!==10||correct!==10||timed!==0)return false;
+    if(u.email?.toLowerCase()==='raefalbtish@gmail.com')return false;
     const challenge=String(d.challenge||d.gameId||d.challengeId||'challenge').slice(0,80);
     const attemptId=String(d.attemptId||d.eventId||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100);
     if(!attemptId)return false;
     try{
-      const r=await callable('rewardChallenge',{challenge,total,correct,timedOut:0,attemptId,source:'challenge-perfect-only'});
-      if(r?.credited){state.zivo=num(r.balance);syncUI();toast('علامة كاملة 10/10 — تمت إضافة +10 ZIVO إلى المحفظة 🪙');return true}
-      if(r?.reason==='already_credited'){await refresh();return true}
-    }catch(e){console.warn('ZIVO challenge reward',e)}
-    return false;
+      const root=fire.collection('users').doc(u.uid).collection('zivozone');
+      const wallet=root.doc('wallet'), claim=root.doc('rewardClaim');
+      const ledger=wallet.collection('ledger').doc(('challenge_perfect_'+attemptId).slice(0,100));
+      const result=fire.collection('players').doc(u.uid).collection('results').doc(attemptId.slice(0,100));
+      await fire.runTransaction(async tx=>{
+        const [ws,ls,cs]=await Promise.all([tx.get(wallet),tx.get(ledger),tx.get(claim)]);
+        if(ls.exists)throw new Error('تم احتساب هذه المحاولة مسبقًا.');
+        const current=num(ws.data()?.zivo);
+        const fv=F().firestore.FieldValue;
+        tx.set(claim,{claimId:attemptId,challenge,total,correct,timedOut:0,amount:10,consumedAt:fv.serverTimestamp(),createdAt:fv.serverTimestamp(),status:'consumed',policy:'10_of_10_only'},{merge:true});
+        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
+        tx.set(ledger,{type:'challenge_reward',label:`مكافأة تحدي كامل — ${challenge}`,amount:10,eventId:ledger.id,attemptId,challenge,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'client-rules',policy:'10_of_10_only'});
+      });
+      await refresh();
+      toast('علامة كاملة 10/10 — تمت إضافة +10 ZIVO إلى المحفظة 🪙');
+      return true;
+    }catch(e){
+      console.warn('ZIVO challenge reward',e);
+      if(String(e?.message||'').includes('مسبقًا')){await refresh();return true}
+      return false;
+    }
   }
 
   async function openWallet(){

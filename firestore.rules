@@ -1,27 +1,91 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function isOwner() {
-      return request.auth != null
-        && request.auth.token.email == 'raefalbtish@gmail.com';
+    function signedIn() { return request.auth != null; }
+    function isOwner() { return signedIn() && request.auth.token.email == 'raefalbtish@gmail.com'; }
+    function isSelf(id) { return signedIn() && request.auth.uid == id; }
+    function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode']); }
+    function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
+    function perfectClaim() {
+      return request.resource.data.amount == 10
+        && request.resource.data.total == 10
+        && request.resource.data.correct == 10
+        && request.resource.data.timedOut == 0
+        && request.resource.data.status == 'consumed'
+        && request.resource.data.policy == '10_of_10_only';
     }
-    function isSelf(id) { return request.auth != null && request.auth.uid == id; }
 
     match /users/{userId} {
       allow read: if isOwner() || isSelf(userId);
       allow create: if isOwner() || (isSelf(userId) && request.resource.data.keys().hasOnly(['uid','email','name','role','createdAt','updatedAt','language','age','lastSeenAt','lastSeenPath','engagement','termsAcceptedAt','termsVersion']));
       allow update: if isOwner() || (isSelf(userId) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role','zivo','coins']));
       allow delete: if false;
-      match /activity/{eventId} { allow read: if isOwner() || isSelf(userId); allow create: if isSelf(userId); allow update,delete: if false; }
-      match /zivozone/{docId} {
-        // Wallet, mining state and ledger are server-authoritative.
+
+      match /activity/{eventId} {
         allow read: if isOwner() || isSelf(userId);
-        // Player question history is allowed; it is not currency.
-        allow create,update: if isSelf(userId) && docId == 'questionHistory';
+        allow create: if isSelf(userId);
+        allow update,delete: if false;
+      }
+
+      match /zivozone/{docId} {
+        allow read: if isOwner() || isSelf(userId);
+
+        // Wallet can only move by the two defined economy actions.
+        // Mining: +0.50 together with a fresh 24h mining state.
+        // Challenge: +10 only with a fresh perfect 10/10 claim in the same atomic write.
+        allow create: if isSelf(userId) && validWalletKeys() && (
+          (request.resource.data.zivo == 0) ||
+          (request.resource.data.zivo == 0.5 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')) ||
+          (request.resource.data.zivo == 10 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.amount == 10 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.status == 'consumed' &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.consumedAt == request.time)
+        );
+        allow update: if isOwner() || (isSelf(userId) && validWalletKeys() && (
+          (request.resource.data.zivo == resource.data.zivo + 0.5 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')) ||
+          (request.resource.data.zivo == resource.data.zivo + 10 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.amount == 10 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.status == 'consumed' &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.consumedAt == request.time)
+        ));
         allow delete: if false;
+
+        match /mining {
+          allow read: if isOwner() || isSelf(userId);
+          allow create: if isSelf(userId) && validMiningKeys()
+            && request.resource.data.amount == 0.5
+            && request.resource.data.nextMiningAt >= request.time + duration.value(86400, 's');
+          allow update: if isSelf(userId) && validMiningKeys()
+            && resource.data.nextMiningAt <= request.time
+            && request.resource.data.amount == 0.5
+            && request.resource.data.nextMiningAt >= request.time + duration.value(86400, 's');
+          allow delete: if false;
+        }
+
+        match /rewardClaim {
+          allow read: if isOwner() || isSelf(userId);
+          allow create: if isSelf(userId) && perfectClaim()
+            && request.resource.data.consumedAt == request.time;
+          allow update: if isSelf(userId) && perfectClaim()
+            && request.resource.data.consumedAt == request.time;
+          allow delete: if false;
+        }
+
+        match /questionHistory {
+          allow create,update: if isSelf(userId);
+          allow delete: if false;
+        }
+
         match /ledger/{entryId} {
           allow read: if isOwner() || isSelf(userId);
-          allow create,update,delete: if false;
+          allow create: if isSelf(userId)
+            && request.resource.data.amount in [0.5, 10]
+            && request.resource.data.type in ['daily_mining','challenge_reward'];
+          allow update,delete: if false;
         }
       }
     }
@@ -37,9 +101,9 @@ service cloud.firestore {
       match /wallet/{doc} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
     }
 
-    match /questions/{id} { allow read: if request.auth != null; allow write: if false; }
-    match /dailyChallenges/{id} { allow read: if request.auth != null; allow write: if false; }
-    match /results/{id} { allow read,create: if request.auth != null; allow update,delete: if false; }
+    match /questions/{id} { allow read: if signedIn(); allow write: if false; }
+    match /dailyChallenges/{id} { allow read: if signedIn(); allow write: if false; }
+    match /results/{id} { allow read,create: if signedIn(); allow update,delete: if false; }
     match /wallets/{uid} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
     match /leaderboard/{id} { allow read: if true; allow write: if false; }
     match /admins/{uid} { allow read: if isOwner() && request.auth.uid == uid; allow write: if false; }
