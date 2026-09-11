@@ -60,3 +60,8 @@ html{background:#02050b}body{background:radial-gradient(circle at 50% -5%,rgba(2
 @media(max-width:900px){.hero-orb-wrap{min-height:260px!important;order:-1!important}.hero-orb{width:235px!important;height:235px!important}.hero-orb span{font-size:105px!important}}
 @media(max-width:700px){.brand-mark{width:34px!important;height:34px!important;font-size:20px!important}.hero-orb-wrap{min-height:210px!important;margin:0!important}.hero-orb{width:190px!important;height:190px!important}.hero-orb span{font-size:82px!important}.hero-orb:before{inset:-10px!important}.hero-orb:after{inset:-20px!important}}
 
+
+/* ZIVOZONE V1055 — single ADMIN entry point + mobile luxury polish */
+#z81-admin-open,#zivo-admin-identity,#z80-admin-open{display:none!important}
+#login-btn.z104-admin-name{min-width:82px!important;max-width:112px!important;text-align:center!important;border-radius:12px!important;box-shadow:0 0 22px rgba(255,216,74,.12),inset 0 1px 0 rgba(255,255,255,.08)!important}
+@media(max-width:700px){#login-btn.z104-admin-name{min-width:72px!important;max-width:82px!important;padding:8px 8px!important;font-size:9px!important}.z104-head{position:sticky;top:0}.z104-body{padding-bottom:24px}}

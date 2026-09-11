@@ -3387,10 +3387,10 @@ window.ZIVOZONE_V18 = {
   }
 
   function mount(){
-    if(!isOwner()) return;
-    if(!document.getElementById('z81-admin-open')){
-      const b=document.createElement('button');b.id='z81-admin-open';b.className='z81-admin-open';b.textContent='👑 ADMIN';b.onclick=open;document.body.appendChild(b);
-    }
+    // V1055: the top header ADMIN button is the single admin entry point.
+    // Never create floating/duplicate admin controls.
+    document.getElementById('z81-admin-open')?.remove();
+    document.getElementById('zivo-admin-identity')?.remove();
   }
 
   function syncAdminHeader(){
@@ -3400,11 +3400,11 @@ window.ZIVOZONE_V18 = {
     if(b){b.textContent=owner?'👑 ADMIN':'🔐 إنشاء حساب / دخول';b.title=owner?'غرفة إدارة ZIVOZONE':'الحساب';}
     if(owner){
       document.body.classList.add('zivo-admin-mode');
-      let tag=document.getElementById('zivo-admin-identity');
-      if(!tag){tag=document.createElement('div');tag.id='zivo-admin-identity';tag.className='zivo-admin-identity';document.body.appendChild(tag)}
-      tag.innerHTML='<span>👑</span><b>ADMIN</b><small>رائف البطوش</small>';tag.onclick=open;
       mount();
-    }else{document.body.classList.remove('zivo-admin-mode');document.getElementById('zivo-admin-identity')?.remove();document.getElementById('z81-admin-open')?.remove();}
+    }else{
+      document.body.classList.remove('zivo-admin-mode');
+      mount();
+    }
   }
 
   window.ZIVOZONE_MONITOR={open,heartbeat,adminData:data};

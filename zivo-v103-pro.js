@@ -53,12 +53,10 @@
   }
 
   function bindAdmin(){
-    const btn=document.getElementById('login-btn');
-    if(owner()){
-      if(btn){btn.classList.add('z103-admin-btn');btn.textContent='👑 ADMIN';btn.title='فتح غرفة إدارة ZIVOZONE';}
-      document.getElementById('z81-admin-open')?.remove();document.getElementById('zivo-admin-identity')?.remove();
-      if(btn&&!btn.dataset.z103Bound){btn.dataset.z103Bound='1';btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openAdmin()},true)}
-    }
+    // V1055: ADMIN has one entry point only — the top header #login-btn.
+    // V104 owns the click handler so multiple admin engines cannot compete.
+    document.getElementById('z81-admin-open')?.remove();
+    document.getElementById('zivo-admin-identity')?.remove();
   }
 
   function consentUX(){

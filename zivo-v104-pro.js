@@ -28,19 +28,19 @@ function beautifyChallenges(){
 
 async function getUsers(){
  const d=db();if(!d||!owner())throw Error('غير مصرح');
- const [us,ps]=await Promise.all([d.collection('users').limit(500).get(),d.collection('players').limit(500).get()]);
+ const [us,ps]=await Promise.all([d.collection('users').limit(250).get(),d.collection('players').limit(250).get()]);
  const users=us.docs.map(x=>({uid:x.id,...x.data()})).filter(u=>String(u.email||'').toLowerCase()!==ADMIN);
  const players=ps.docs.map(x=>({uid:x.id,...x.data()})).filter(p=>String(p.email||'').toLowerCase()!==ADMIN);
  const pm=new Map(players.map(p=>[p.uid,p]));
  const rows=users.map(u=>{const p=pm.get(u.uid)||{};return {uid:u.uid,name:u.name||p.name||'ZIVO Player',email:u.email||p.email||'',level:Number(p.level??u.level??1),xp:Number(p.xp??u.xp??0),zivo:Number(u.zivo??p.zivo??u.coins??p.coins??0),games:Number(p.gamesPlayed??u.gamesPlayed??0),last:ms(u.lastSeenAt||p.lastSeenAt||u.updatedAt||p.updatedAt),path:u.lastSeenPath||p.lastSeenPath||'#home',created:ms(u.createdAt||p.createdAt),terms:u.termsVersion||'—'}});
  let activities=[], miningTotal=0, miningCount=0, challengeCount=0;
- await Promise.all(rows.slice(0,120).map(async r=>{
+ await Promise.all(rows.slice(0,40).map(async r=>{
    try{
     const [ac,wl,mi,lg,res]=await Promise.all([
-      d.collection('users').doc(r.uid).collection('activity').limit(15).get(),
+      d.collection('users').doc(r.uid).collection('activity').limit(8).get(),
       d.collection('users').doc(r.uid).collection('zivozone').doc('wallet').get(),
       d.collection('users').doc(r.uid).collection('zivozone').doc('mining').get(),
-      d.collection('users').doc(r.uid).collection('zivozone').collection('ledger').limit(50).get(),
+      d.collection('users').doc(r.uid).collection('zivozone').doc('wallet').collection('ledger').limit(25).get(),
       d.collection('players').doc(r.uid).collection('results').limit(30).get()
     ]);
     ac.docs.forEach(x=>activities.push({uid:r.uid,name:r.name,...x.data(),time:ms(x.data()?.createdAt)}));
@@ -66,7 +66,7 @@ function renderAdmin(data){
  const acts=a.length?a.map(x=>`<div class="z104-act"><b>${esc(x.name||'مستخدم')}</b><span>${esc(x.event||x.type||'نشاط داخل المنصة')}</span><small>${esc(x.meta?.path||x.path||'')} · ${fmt(x.time)}</small></div>`).join(''):`<div class="z104-act">لا يوجد نشاط مسجل.</div>`;
  const max=Math.max(1,s.users,s.games,s.miningCount,s.challengeCount);
  o.innerHTML=`<div class="z104-admin-shell" dir="rtl">
-  <header class="z104-head"><div class="z104-mark">Z</div><div><small>PRIVATE OWNER COMMAND CENTER</small><h2>غرفة إدارة ZIVOZONE</h2><p>رائف البطوش · ${ADMIN}</p></div><div class="z104-live"><i></i> LIVE MONITORING</div><button class="z104-close" aria-label="إغلاق">×</button></header>
+  <header class="z104-head"><div class="z104-mark">Z</div><div><small>PRIVATE OWNER COMMAND CENTER</small><h2>غرفة إدارة ZIVOZONE</h2><p>المالك والمدير: رائف البطوش · ${ADMIN}</p></div><div class="z104-live"><i></i> LIVE MONITORING</div><button class="z104-close" aria-label="إغلاق">×</button></header>
   <main class="z104-body">
    <section class="z104-kpis">${k(s.users,'المستخدمون','حسابات اللاعبين فقط')}${k(s.active,'نشط الآن','آخر 10 دقائق')}${k(s.today,'دخلوا اليوم','آخر ظهور')}${k(s.games,'إجمالي الألعاب','كل الحسابات')}${k(s.zivo.toFixed(2),'إجمالي ZIVO','رصيد افتراضي')}${k(s.challengeCount,'محاولات التحديات','نتائج محفوظة')}</section>
    <section class="z104-grid">
@@ -94,7 +94,7 @@ let bootBound=false;
 function bind(){
  const btn=$('#login-btn');
  if(owner()&&btn){
-   btn.textContent='👑 رائف البطوش · ADMIN';btn.classList.add('z104-admin-name');
+   btn.textContent='👑 ADMIN';btn.classList.add('z104-admin-name');btn.setAttribute('aria-label','غرفة إدارة ZIVOZONE');
  }
  beautifyChallenges();
  if(bootBound)return;
@@ -103,7 +103,7 @@ function bind(){
  if(firebaseAuth?.onAuthStateChanged){
    firebaseAuth.onAuthStateChanged(()=>setTimeout(()=>{
      const b=$('#login-btn');
-     if(owner()&&b){b.textContent='👑 رائف البطوش · ADMIN';b.classList.add('z104-admin-name');}
+     if(owner()&&b){b.textContent='👑 ADMIN';b.classList.add('z104-admin-name');b.setAttribute('aria-label','غرفة إدارة ZIVOZONE');}
    },100));
  }
 }
