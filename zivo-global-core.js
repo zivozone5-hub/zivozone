@@ -86,8 +86,8 @@
 
   async function mine(){
     const u=user(),d=db();
-    if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return false}
-    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return false}
+    if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return}
+    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
     const b=document.getElementById('z101-mine');if(b)b.disabled=true;
     try{
       const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
@@ -106,8 +106,7 @@
       });
       await refresh();
       toast('تم التعدين بنجاح! +0.50 ZIVO ⛏️');
-      return true;
-    }catch(e){console.warn('ZIVO mining:',e);toast(e?.message||'تعذر تفعيل التعدين الآن.');await refresh();return false}
+    }catch(e){console.warn('ZIVO mining:',e);toast(e?.message||'تعذر تفعيل التعدين الآن.');await refresh()}
   }
 
   async function reward(amount,type,label,meta={}){ return false; }
