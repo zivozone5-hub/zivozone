@@ -90,18 +90,31 @@ function renderAdmin(data){
 
 async function openAdmin(){if(!owner())return;try{renderAdmin(await getUsers())}catch(e){console.error(e);alert('تعذر تحميل بيانات الإدارة. تحقق من اتصال Firebase وقواعد Firestore.')}}
 
+let bootBound=false;
 function bind(){
  const btn=$('#login-btn');
  if(owner()&&btn){
    btn.textContent='👑 رائف البطوش · ADMIN';btn.classList.add('z104-admin-name');
  }
  beautifyChallenges();
+ if(bootBound)return;
+ bootBound=true;
+ const firebaseAuth=auth();
+ if(firebaseAuth?.onAuthStateChanged){
+   firebaseAuth.onAuthStateChanged(()=>setTimeout(()=>{
+     const b=$('#login-btn');
+     if(owner()&&b){b.textContent='👑 رائف البطوش · ADMIN';b.classList.add('z104-admin-name');}
+   },100));
+ }
 }
 document.addEventListener('click',e=>{
  const b=e.target.closest('#login-btn');
  if(b&&owner()){e.preventDefault();e.stopImmediatePropagation();openAdmin();return;}
 },true);
-const mo=new MutationObserver(bind);mo.observe(document.body,{childList:true,subtree:true});
+// V105.2 stability: do not attach a MutationObserver here. The previous observer
+// repeatedly re-ran bind(), which created new Firebase auth listeners and timers
+// whenever challenge cards/news/UI were rendered. That could saturate the main
+// thread and make Chrome report "Page Unresponsive".
 window.addEventListener('zivozone-auth',()=>setTimeout(bind,300));
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
 window.ZIVOZONE_V104={openAdmin};
