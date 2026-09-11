@@ -53,7 +53,7 @@
   }
 
   function bindAdmin(){
-    // V1055: ADMIN has one entry point only — the top header #login-btn.
+    // V1056: ADMIN has one entry point only — the top header #login-btn.
     // V104 owns the click handler so multiple admin engines cannot compete.
     document.getElementById('z81-admin-open')?.remove();
     document.getElementById('zivo-admin-identity')?.remove();

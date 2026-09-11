@@ -83,59 +83,34 @@
   function formatMs(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
 
   async function mine(){
-    const u=user();if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return} if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
+    const u=user();
+    if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return}
+    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
     const b=document.getElementById('z101-mine');if(b)b.disabled=true;
     try{
-      let r=null;
-      try{ r=await callable('claimDailyMining',{}); }catch(fnErr){
-        console.warn('Cloud Function mining unavailable; using secured Firestore transaction.',fnErr);
-        const d=db(); if(!d) throw fnErr;
-        const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
-        const mining=d.collection('users').doc(u.uid).collection('zivozone').doc('mining');
-        const dayKey=new Date().toISOString().slice(0,10);
-        const ledger=wallet.collection('ledger').doc(`mining_${dayKey}`);
-        const now=Date.now(), nextMs=now+24*60*60*1000;
-        r=await d.runTransaction(async tx=>{
-          const [ws,ms,ls]=await Promise.all([tx.get(wallet),tx.get(mining),tx.get(ledger)]);
-          const current=num(ws.data()?.zivo);
-          const next=ms.data()?.nextMiningAt;
-          const nextValue=next?.toMillis?next.toMillis():num(next);
-          if(nextValue>now) throw new Error('التعدين غير متاح بعد.');
-          if(ls.exists) throw new Error('تم احتساب تعدين اليوم بالفعل.');
-          const balance=current+0.5;
-          tx.set(wallet,{zivo:balance,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),mode:'v101-secured-client-fallback'},{merge:true});
-          tx.set(mining,{lastMiningAt:firebase.firestore.FieldValue.serverTimestamp(),nextMiningAt:firebase.firestore.Timestamp.fromMillis(nextMs),amount:0.5,version:'v101-spark'},{merge:true});
-          tx.set(ledger,{type:'daily_mining',label:'التعدين اليومي',amount:0.5,eventId:`mining_${dayKey}`,createdAt:firebase.firestore.FieldValue.serverTimestamp(),source:'secured-firestore'});
-          return {amount:0.5,balance,nextMiningAt:nextMs};
-        });
-      }
-      state.zivo=num(r.balance);state.nextMiningAt=num(r.nextMiningAt);syncUI();
+      const r=await callable('claimDailyMining',{});
+      state.zivo=num(r.balance); state.nextMiningAt=num(r.nextMiningAt); syncUI();
       toast(`تم التعدين بنجاح! +${Number(r.amount||0.5).toFixed(2)} ZIVO ⛏️`);
       await refresh();
-    }catch(e){console.warn(e);toast(e?.message||'تعذر تفعيل التعدين. حاول مرة أخرى.');await refresh()}
+    }catch(e){console.warn('ZIVO mining:',e);toast(e?.message||'تعذر تفعيل التعدين الآن.');await refresh()}
   }
 
-  async function reward(amount,type,label,meta={}){
-    if(!user())return false;
-    amount=Math.max(0,Math.min(20,Number(amount)||0));if(amount<=0)return false;
-    try{
-      const r=await callable('rewardZivo',{amount,type:String(type||'reward').slice(0,40),label:String(label||'مكافأة').slice(0,120),meta:{...meta,eventId:String(meta.eventId||'')}});
-      if(r?.credited){state.zivo=num(r.balance);syncUI();window.dispatchEvent(new CustomEvent('zivozone-reward',{detail:{amount:r.amount||amount,type,eventId:r.eventId}}));return true}
-    }catch(e){console.warn('ZIVO V101 reward',e)}
-    return false;
-  }
+  async function reward(amount,type,label,meta={}){ return false; }
 
   async function rewardChallenge(d={}){
-    if(!user())return false;
+    const u=user(); if(!u)return false;
     const total=Math.max(1,Math.min(100,Number(d.total??d.questions??10)||10));
     const correct=Math.max(0,Math.min(total,Number(d.correct??d.score??0)||0));
     const timed=Number(d.timedOut)||0;
+    if(total!==10||correct!==10||timed!==0)return false;
     const challenge=String(d.challenge||d.gameId||d.challengeId||'challenge').slice(0,80);
-    const eventId=String(d.eventId||`challenge_${challenge}_${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100);
+    const attemptId=String(d.attemptId||d.eventId||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100);
+    if(!attemptId)return false;
     try{
-      const r=await callable('rewardChallenge',{challenge,total,correct,timedOut:timed,eventId,source:'challenge'});
-      if(r?.credited){state.zivo=num(r.balance);syncUI();toast(`مكافأة التحدي: +${Number(r.amount).toFixed(2)} ZIVO 🪙`);return true}
-    }catch(e){console.warn('ZIVO V101 challenge reward',e)}
+      const r=await callable('rewardChallenge',{challenge,total,correct,timedOut:0,attemptId,source:'challenge-perfect-only'});
+      if(r?.credited){state.zivo=num(r.balance);syncUI();toast('علامة كاملة 10/10 — تمت إضافة +10 ZIVO إلى المحفظة 🪙');return true}
+      if(r?.reason==='already_credited'){await refresh();return true}
+    }catch(e){console.warn('ZIVO challenge reward',e)}
     return false;
   }
 
@@ -164,7 +139,12 @@
   }
 
   const processed=new Set();
-  function onChallenge(e){const d=e?.detail||{};const k=String(d.eventId||`${d.challenge||d.gameId||d.challengeId||'x'}:${d.correct??d.score}:${d.total??d.questions}`);if(processed.has(k))return;processed.add(k);rewardChallenge(d)}
+  function onChallenge(e){
+    const d=e?.detail||{}; const total=Number(d.total??d.questions)||0; const correct=Number(d.correct??d.score)||0;
+    if(!user()||total!==10||correct!==10||Number(d.timedOut||0)!==0||d.perfect!==true)return;
+    const eventId=String(d.eventId||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100); if(!eventId||processed.has(eventId))return;
+    processed.add(eventId); rewardChallenge({...d,total:10,correct:10,timedOut:0,attemptId:eventId,eventId});
+  }
   ['zivozone-result','zivozone-progress','zivozone:game-complete','zivozone:challenge-result','zivozone:progress-updated'].forEach(n=>addEventListener(n,onChallenge,true));
 
   window.ZIVOZONE_ECONOMY={open:openWallet,refresh,rewardPerfect:rewardChallenge,credit:reward,getWallet:()=>({...state}),mine};

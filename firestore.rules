@@ -14,38 +14,16 @@ service cloud.firestore {
       allow delete: if false;
       match /activity/{eventId} { allow read: if isOwner() || isSelf(userId); allow create: if isSelf(userId); allow update,delete: if false; }
       match /zivozone/{docId} {
+        // Wallet, mining state and ledger are server-authoritative.
         allow read: if isOwner() || isSelf(userId);
-        allow create,update: if isOwner() && docId != 'wallet' && docId != 'mining';
-        // Player daily mining is secured by an atomic client transaction + rules.
-        allow create: if isSelf(userId) && docId == 'mining'
-          && request.resource.data.amount == 0.5
-          && request.resource.data.nextMiningAt > request.time
-          && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/wallet).data.zivo == 0.5;
-        allow update: if isSelf(userId) && docId == 'mining'
-          && request.resource.data.amount == 0.5
-          && request.resource.data.nextMiningAt > request.time
-          && resource.data.nextMiningAt <= request.time
-          && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/wallet).data.zivo
-             == get(/databases/$(database)/documents/users/$(userId)/zivozone/wallet).data.zivo + 0.5;
-        allow create: if isSelf(userId) && docId == 'wallet'
-          && request.resource.data.zivo == 0.5
-          && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt > request.time;
-        allow update: if isSelf(userId) && docId == 'wallet'
-          && request.resource.data.zivo == resource.data.zivo + 0.5
-          && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt > request.time
-          && get(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt <= request.time;
+        // Player question history is allowed; it is not currency.
+        allow create,update: if isSelf(userId) && docId == 'questionHistory';
         allow delete: if false;
-        match /questionHistory { allow read: if isOwner() || isSelf(userId); allow create,update: if isSelf(userId); allow delete: if false; }
         match /ledger/{entryId} {
           allow read: if isOwner() || isSelf(userId);
-          allow create: if isSelf(userId)
-            && request.resource.data.type == 'daily_mining'
-            && request.resource.data.amount == 0.5
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt > request.time;
-          allow update,delete: if false;
+          allow create,update,delete: if false;
         }
       }
-    }
 
     match /players/{uid} {
       allow read: if isOwner() || isSelf(uid);
