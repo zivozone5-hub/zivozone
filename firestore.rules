@@ -35,6 +35,7 @@ service cloud.firestore {
           && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt > request.time
           && get(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt <= request.time;
         allow delete: if false;
+        match /questionHistory { allow read: if isOwner() || isSelf(userId); allow create,update: if isSelf(userId); allow delete: if false; }
         match /ledger/{entryId} {
           allow read: if isOwner() || isSelf(userId);
           allow create: if isSelf(userId)

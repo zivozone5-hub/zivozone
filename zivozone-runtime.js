@@ -1020,7 +1020,7 @@ window.ZIVOZONE_V18 = {
   function openModal(html,cls=''){const r=$('#modal-root');r.innerHTML=`<div class="modal-backdrop"><div class="modal-card ${cls}" role="dialog" aria-modal="true">${html}</div></div>`;r.setAttribute('aria-hidden','false');r.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);const bg=r.querySelector('.modal-backdrop');if(bg)bg.onclick=e=>{if(e.target===bg)closeModal()}}
   function openTerms(){let o=document.getElementById('zivo-terms-modal');if(!o){o=document.createElement('div');o.id='zivo-terms-modal';o.className='zivo-legal-overlay';o.innerHTML=`<div class="zivo-legal-card" dir="rtl"><button class="zivo-legal-close">×</button><span class="eyebrow">ZIVOZONE · TERMS</span><h2>شروط استخدام ZIVOZONE</h2><p>آخر تحديث: 11 سبتمبر 2026 · الإصدار: ZIVO-TERMS-2026.09</p><div class="zivo-legal-body"><h3>1. قبول الشروط</h3><p>بإنشاء حساب أو استخدام المنصة، يقر المستخدم بأنه قرأ هذه الشروط ووافق عليها. إذا لم يوافق عليها، فلا يجوز له إنشاء حساب أو استخدام الميزات التي تتطلب حسابًا.</p><h3>2. طبيعة ZIVO</h3><p><b>ZIVO هي وحدة افتراضية داخل منصة ZIVOZONE فقط.</b> لا تمثل عملة قانونية أو وديعة أو سهمًا أو استثمارًا أو ضمانًا ماليًا، ولا يوجد بموجب هذه الشروط حق تلقائي في استبدالها نقدًا أو تحويلها إلى أموال أو عملات خارجية. لا يجوز بيعها أو شراؤها أو تداولها خارج الأنظمة التي تعتمدها ZIVOZONE رسميًا.</p><h3>3. التعدين والمكافآت</h3><p>مكافآت التعدين والتحديات تخضع لقواعد المنصة وحدودها، ويمكن لـ ZIVOZONE تعديل معدلات المكافآت أو إيقافها أو تعليق الحسابات المخالفة لحماية المنصة والمستخدمين. الرصيد المعروض داخل الحساب هو رصيد افتراضي للمنصة.</p><h3>4. الحساب والأمان</h3><p>المستخدم مسؤول عن بيانات تسجيل الدخول وعن الأنشطة التي تتم من حسابه. يمنع إنشاء حسابات أو استخدام أدوات آلية بقصد التلاعب بالمكافآت أو الترتيب أو البيانات.</p><h3>5. الاستخدام المقبول</h3><p>يمنع الاحتيال، واستغلال الثغرات، والهجمات الآلية، وإساءة استخدام المحتوى أو الخدمات، وانتحال صفة المدير أو أي مستخدم آخر، ومحاولة الوصول إلى بيانات غير مصرح بها.</p><h3>6. المحتوى والخدمات</h3><p>قد تتغير الألعاب والتحديات والأخبار والميزات بمرور الوقت. لا نضمن توفر كل خدمة دون انقطاع، ونبذل جهودًا معقولة للحفاظ على استقرار المنصة.</p><h3>7. الأخبار والروابط الخارجية</h3><p>الأخبار والروابط الخارجية مقدمة للعرض والمعلومات، وتخضع للمصادر الخارجية وشروطها. لا تتحمل ZIVOZONE مسؤولية محتوى المواقع الخارجية.</p><h3>8. الخصوصية</h3><p>تُستخدم بيانات الحساب واللعب اللازمة لتشغيل المنصة وحفظ التقدم والأمان والتحليلات التشغيلية وفق سياسة الخصوصية التي تعتمدها ZIVOZONE.</p><h3>9. التعديلات والإنهاء</h3><p>يجوز تحديث الشروط أو تعديل الميزات عند الحاجة. استمرار الاستخدام بعد نشر التحديث يعني قبول الشروط المعدلة ضمن الحدود التي يسمح بها القانون المعمول به.</p><h3>10. القانون والحقوق</h3><p>تُطبَّق هذه الشروط بما لا يخالف القوانين الإلزامية المعمول بها. هذه صياغة تشغيلية عامة وليست بديلاً عن مراجعة محامٍ قبل الإطلاق التجاري أو تقديم خدمات مالية.</p></div><div class="zivo-legal-actions"><button class="btn btn-primary zivo-legal-close">فهمت</button></div></div>`;document.body.appendChild(o);o.querySelectorAll('.zivo-legal-close').forEach(b=>b.onclick=()=>o.remove());o.onclick=e=>{if(e.target===o)o.remove()}}else{o.style.display='grid'}}
   window.ZIVOZONE_OPEN_TERMS=openTerms;
-  function authModal(after){let mode='register';const render=()=>{openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('account')}</span><h2>${mode==='register'?t('register'):t('welcomeBack')}</h2><p class="muted">${mode==='register'?t('registerHint'):t('loginHint')}</p><div class="auth-tabs"><button id="tab-register" class="btn ${mode==='register'?'btn-primary':''}">${t('register')}</button><button id="tab-login" class="btn ${mode==='login'?'btn-primary':''}">${t('signIn')}</button></div><form id="auth-form">${mode==='register'?`<div><label>${t('playerName')}</label><input id="auth-name" minlength="2" required placeholder="${esc(t('yourName'))}"></div><div><label>${t('age')}</label><input id="auth-age" type="number" min="5" max="100" required value="18"></div>`:''}<div><label>${t('email')}</label><input id="auth-email" type="email" required placeholder="${esc(t('emailPlaceholder'))}"></div><div><label>${t('password')}</label><input id="auth-pass" type="password" minlength="6" required placeholder="${esc(t('passwordPlaceholder'))}"></div>${mode==='register'?`<label class="zivo-terms-check"><input id="auth-terms" type="checkbox" required><span>أوافق على <button type="button" id="open-terms" class="zivo-inline-link">شروط استخدام ZIVOZONE</button> وأفهم أن ZIVO عملة افتراضية داخل المنصة فقط وليست نقودًا.</span></label>`:''}<button class="btn btn-primary full" type="submit">${mode==='register'?t('createAccount'):t('signIn')}</button></form></div>`);$('#tab-register').onclick=()=>{mode='register';render()};$('#tab-login').onclick=()=>{mode='login';render()};$('#open-terms')?.addEventListener('click',openTerms);$('#auth-form').onsubmit=async e=>{e.preventDefault();try{if(mode==='register')await A.register({name:$('#auth-name').value,age:$('#auth-age').value,email:$('#auth-email').value,password:$('#auth-pass').value,termsAccepted:$('#auth-terms')?.checked===true});else await A.login($('#auth-email').value,$('#auth-pass').value);await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after()}catch(err){toast(err.message||t('firebaseError'),'error')}}};render()}
+  function authModal(after){let mode='register';const render=()=>{openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('account')}</span><h2>${mode==='register'?t('register'):t('welcomeBack')}</h2><p class="muted">${mode==='register'?t('registerHint'):t('loginHint')}</p><div class="auth-tabs"><button id="tab-register" class="btn ${mode==='register'?'btn-primary':''}">${t('register')}</button><button id="tab-login" class="btn ${mode==='login'?'btn-primary':''}">${t('signIn')}</button></div><form id="auth-form">${mode==='register'?`<div><label>${t('playerName')}</label><input id="auth-name" minlength="2" required placeholder="${esc(t('yourName'))}"></div><div><label>${t('age')}</label><input id="auth-age" type="number" min="5" max="100" required value="18"></div>`:''}<div><label>${t('email')}</label><input id="auth-email" type="email" required placeholder="${esc(t('emailPlaceholder'))}"></div><div><label>${t('password')}</label><input id="auth-pass" type="password" minlength="6" required placeholder="${esc(t('passwordPlaceholder'))}"></div>${mode==='register'?`<label class="zivo-terms-check"><input id="auth-terms" type="checkbox" required><span>أوافق على <button type="button" id="open-terms" class="zivo-inline-link">شروط استخدام ZIVOZONE</button> وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط وليس نقودًا أو استثمارًا.</span></label>`:''}<button class="btn btn-primary full" type="submit">${mode==='register'?t('createAccount'):t('signIn')}</button></form></div>`);$('#tab-register').onclick=()=>{mode='register';render()};$('#tab-login').onclick=()=>{mode='login';render()};$('#open-terms')?.addEventListener('click',openTerms);$('#auth-form').onsubmit=async e=>{e.preventDefault();try{if(mode==='register')await A.register({name:$('#auth-name').value,age:$('#auth-age').value,email:$('#auth-email').value,password:$('#auth-pass').value,termsAccepted:$('#auth-terms')?.checked===true});else await A.login($('#auth-email').value,$('#auth-pass').value);await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after()}catch(err){toast(err.message||t('firebaseError'),'error')}}};render()}
   function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
   function prepareQuestions(id){const src=C.get(id);if(!src)return[];const pool=src.questions||[];const key=`zivo_seen_${id}_v8`;let seen=[];try{seen=JSON.parse(localStorage.getItem(key)||'[]')}catch(e){}let fresh=pool.filter(q=>!seen.includes(q.id));if(fresh.length<10){seen=[];fresh=pool.slice()}const byD=d=>fresh.filter(q=>q.d===d);let chosen=[];for(let d=1;d<=10;d++){const same=byD(d);if(same.length)chosen.push(same[Math.floor(Math.random()*same.length)])}if(chosen.length<10){chosen=[...shuffle(fresh).slice(0,10)];chosen.sort((a,b)=>a.d-b.d)}try{localStorage.setItem(key,JSON.stringify([...seen,...chosen.map(q=>q.id)].slice(-Math.max(30,pool.length))))}catch(e){}return chosen}
   function guestGate(id){openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('guestMode')}</span><h2>${t('guest')}</h2><p>${t('guestText')}</p><div class="modal-actions"><button class="btn btn-primary" id="continue-guest">${t('continueGuest')}</button><button class="btn btn-ghost" id="create-now">${t('createNow')}</button></div>`);$('#continue-guest').onclick=()=>{closeModal();beginGame(id,true)};$('#create-now').onclick=()=>authModal(()=>beginGame(id,false))}
@@ -1396,11 +1396,15 @@ window.ZIVOZONE_V18 = {
     // to the player's current level and recent performance.
     const p=window.ZIVOZONE_V21?.get?.()||window.ZIVOZONE_PLAYER?.get?.()||{};
     const level=Math.max(1,Number(p.level)||1);
-    const history=Array.isArray(p.history)?p.history.slice(-5):[];
+    const history=Array.isArray(p.history)?p.history.slice(-8):[];
     const recentAvg=history.length?history.reduce((n,x)=>n+(Number(x.score)||0),0)/history.length:50;
+    const repeatKey='zivozone_adaptive_runs_v102:'+id;
+    let attempts=0,perfectRuns=0;
+    try{const ah=JSON.parse(localStorage.getItem(repeatKey)||'{}');attempts=Number(ah.attempts)||0;perfectRuns=Number(ah.perfectRuns)||0}catch(e){}
     let shift=level>=20?1:level>=8?0.5:0;
     if(recentAvg>=80)shift+=0.5;
     if(recentAvg<45)shift-=0.5;
+    shift+=Math.min(3,perfectRuns*0.8);
     const target=[1,2,3,4,5,6,7,8,9,10].map((d,i)=>Math.max(1,Math.min(10,Math.round(d+shift*(i/9)))));
     const remaining=fresh.slice();
     const run=[];
@@ -1450,7 +1454,7 @@ window.ZIVOZONE_V18 = {
         <div class="v20-progress"><i style="width:${((i)/10)*100}%"></i></div>
         <div class="v20-meta"><span>${phase}</span><strong id="v20-timer">30</strong></div>
         <article class="v20-question"><div class="v20-qnum">QUESTION ${String(i+1).padStart(2,'0')}</div><h2>${escV20(locV20(q.q||q.question||''))}</h2>
-        <div class="v20-answer-area">${answerArea(q)}</div></article>
+        <div class="v20-answer-area">${answerArea(q)}</div><div class="v20-feedback" aria-live="polite"></div></article>
         <div class="v20-live"><span>🔥 ${streak}</span><span>🏆 ${score}</span></div>
       </div>`;
       $('.v20-exit',mount).onclick=close;
@@ -1477,12 +1481,15 @@ window.ZIVOZONE_V18 = {
       const ok=answer(q,value); submittedAnswers.push(String(value??'')); const elapsed=(performance.now()-startAt)/1000;
       if(ok){correct++;score+=Math.max(10,50+Math.round((10-Math.min(10,elapsed))*5)+(q.difficulty||1)*5);streak++;best=Math.max(best,streak)}
       else streak=0;
-      setTimeout(()=>{i++;render()},300);
+      const feedback=mount.querySelector('.v20-feedback'); if(feedback) feedback.textContent=ok?'✓ إجابة صحيحة':'✕ الإجابة غير صحيحة';
+      setTimeout(()=>{i++;render()},420);
     }
     async function finish(){
       cleanup();
       const perfect = run.questions.length > 0 && correct === run.questions.length && Number(timed||0) === 0;
       const zivoReward = perfect ? 10 : 0;
+      try{const key='zivozone_adaptive_runs_v102:'+run.id;const ah=JSON.parse(localStorage.getItem(key)||'{}');ah.attempts=(Number(ah.attempts)||0)+1;ah.perfectRuns=(Number(ah.perfectRuns)||0)+(perfect?1:0);ah.lastScore=correct;ah.lastAt=Date.now();localStorage.setItem(key,JSON.stringify(ah))}catch(e){}
+      const nextDifficulty=perfect?'تم رفع مستوى الصعوبة للجولة التالية.':'ستتكيّف الجولة التالية مع نتيجتك الأخيرة.';
       if(window.ZIVOZONE_PLAYER?.addProgress){
         try {
           await window.ZIVOZONE_PLAYER.addProgress({id:run.id,score,bestStreak:best,timedOut:timed,questions:run.questions.length,speedScore:Math.max(0,100-timed*8)});
@@ -1500,7 +1507,7 @@ window.ZIVOZONE_V18 = {
           window.ZIVOZONE_AUTH.touchSession?.();
         }).catch(()=>{});
       }
-      mount.innerHTML=`<div class="v20-result"><div class="v20-result-icon">✓</div><h2>انتهت الجولة</h2><div class="v20-result-score">${correct}/10</div><p>الصحيحة: ${correct} &nbsp; • &nbsp; الخاطئة: ${Math.max(0,10-correct-timed)} &nbsp; • &nbsp; انتهى وقت: ${timed}</p><p>النقاط: <strong>${score}</strong> &nbsp; • &nbsp; أفضل سلسلة: ${best}</p><p id="v20-cloud-status" class="muted">${window.ZIVOZONE_AUTH?.isLoggedIn?.()?'☁️ تم إرسال النتيجة للحساب':'👤 سجّل حسابًا لحفظ التقدم على السحابة'}</p><div><button class="v20-again">جولة جديدة</button><button class="v20-exit">خروج</button></div></div>`;
+      mount.innerHTML=`<div class="v20-result"><div class="v20-result-icon">✓</div><h2>انتهت الجولة</h2><div class="v20-result-score">${correct}/10</div><p>الصحيحة: ${correct} &nbsp; • &nbsp; الخاطئة: ${Math.max(0,10-correct-timed)} &nbsp; • &nbsp; انتهى وقت: ${timed}</p><p>النقاط: <strong>${score}</strong> &nbsp; • &nbsp; أفضل سلسلة: ${best}</p><p class="v20-adaptive-note">🧠 ${nextDifficulty}</p><p id="v20-cloud-status" class="muted">${window.ZIVOZONE_AUTH?.isLoggedIn?.()?'☁️ تم إرسال النتيجة للحساب':'👤 سجّل حسابًا لحفظ التقدم على السحابة'}</p><div><button class="v20-again">جولة جديدة</button><button class="v20-exit">خروج</button></div></div>`;
       $('.v20-again',mount).onclick=()=>start(run.id);
       $('.v20-exit',mount).onclick=close;
     }
@@ -3305,67 +3312,30 @@ window.ZIVOZONE_V18 = {
     }catch(e){return [];}
   }
 
+  async function safeCollection(name, limit=500){
+    try{return await readCollection(name,limit)}catch(e){console.warn('Admin read',name,e);return []}
+  }
   async function data(){
     if(!isOwner()) throw new Error('Admin access required');
     const [users,players,visitors]=await Promise.all([
-      readCollection('users'),
-      readCollection('players'),
-      getVisitorsToday()
+      safeCollection('users'),safeCollection('players'),getVisitorsToday()
     ]);
-
     const now=Date.now();
     const start=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Amman'})); start.setHours(0,0,0,0);
     const startMs=start.getTime();
-
     const byUid=new Map();
     users.filter(u=>String(u.email||'').trim().toLowerCase()!==OWNER_EMAIL).forEach(u=>byUid.set(u.id,{uid:u.id,...u}));
-    players.forEach(p=>{
-      const old=byUid.get(p.id)||{};
-      byUid.set(p.id,{...old,uid:p.id,player:p});
-    });
-
+    players.forEach(p=>{const old=byUid.get(p.id)||{};byUid.set(p.id,{...old,uid:p.id,player:p})});
     const rows=[...byUid.values()].map(x=>{
       const p=x.player||{};
       const last=tsMillis(x.lastSeenAt||p.lastSeenAt||x.updatedAt||p.updatedAt);
-      const zivo=Number(x.zivo ?? x.coins ?? p.zivo ?? p.coins ?? 0)||0;
-      return {
-        uid:x.uid,
-        name:x.name||p.name||'ZIVO Player',
-        email:x.email||p.email||'',
-        role:x.role||p.role||'player',
-        level:Number(p.level??x.level??1)||1,
-        xp:Number(p.xp??x.xp??0)||0,
-        zivo,
-        gamesPlayed:Number(p.gamesPlayed??x.gamesPlayed??0)||0,
-        wins:Number(p.wins??x.wins??0)||0,
-        lastSeen:last,
-        path:x.lastSeenPath||p.lastSeenPath||'',
-        activeMinutes:Number(x.engagement?.activeMinutes??p.activeMinutes??0)||0
-      };
+      return {uid:x.uid,name:x.name||p.name||'ZIVO Player',email:x.email||p.email||'',role:x.role||p.role||'player',level:Number(p.level??x.level??1)||1,xp:Number(p.xp??x.xp??0)||0,zivo:Number(x.zivo??x.coins??p.zivo??p.coins??0)||0,gamesPlayed:Number(p.gamesPlayed??x.gamesPlayed??0)||0,wins:Number(p.wins??x.wins??0)||0,lastSeen:last,path:x.lastSeenPath||p.lastSeenPath||'',activeMinutes:Number(x.engagement?.activeMinutes??p.activeMinutes??0)||0};
     }).sort((a,b)=>b.lastSeen-a.lastSeen);
-
-    const activeNow=rows.filter(r=>r.lastSeen && now-r.lastSeen<=10*60*1000).length;
+    const activeNow=rows.filter(r=>r.lastSeen&&now-r.lastSeen<=10*60*1000).length;
     const todayLogins=rows.filter(r=>r.lastSeen>=startMs).length;
     const todayGames=players.reduce((n,p)=>n+(Number(p.todayGames)||0),0);
     const totalGames=players.reduce((n,p)=>n+(Number(p.gamesPlayed)||0),0);
-    const firebaseState=db()?'CONNECTED':'OFFLINE';
-
-    return {
-      stats:{
-        totalUsers:users.filter(u=>String(u.email||'').trim().toLowerCase()!==OWNER_EMAIL).length,
-        totalPlayers:players.length,
-        todayVisitors:visitors.length,
-        todayLogins,
-        activeNow,
-        todayGames,
-        totalGames,
-        firebase:firebaseState,
-        hosting:navigator.onLine?'ONLINE':'OFFLINE',
-        domain:location.hostname,
-        refreshedAt:Date.now()
-      },
-      players:rows.slice(0,200)
-    };
+    return {stats:{totalUsers:users.filter(u=>String(u.email||'').trim().toLowerCase()!==OWNER_EMAIL).length,totalPlayers:players.length,todayVisitors:visitors.length,todayLogins,activeNow,todayGames,totalGames,firebase:db()?'CONNECTED':'OFFLINE',hosting:navigator.onLine?'ONLINE':'OFFLINE',domain:location.hostname,refreshedAt:Date.now()},players:rows.slice(0,300)};
   }
 
   function fmtTime(ms){return ms?new Date(ms).toLocaleString('ar-JO'):'—';}
@@ -3376,31 +3346,15 @@ window.ZIVOZONE_V18 = {
     const s=x.stats||{},p=x.players||[];
     o.innerHTML=`<div class="z81-card" dir="rtl">
       <button class="z81-x" aria-label="إغلاق">×</button>
-      <div class="z81-head">
-        <div class="z81-logo">Z</div>
-        <div><small>PRIVATE ADMIN CONSOLE</small><h2>غرفة إدارة ZIVOZONE</h2><span>هذه الغرفة خاصة بالمدير فقط · ${esc(OWNER_EMAIL)}</span></div>
-      </div>
-      <div class="z81-grid">
-        ${[
-          ['الحسابات',s.totalUsers],['اللاعبون',s.totalPlayers],['زوار اليوم',s.todayVisitors],
-          ['جلسات اليوم',s.todayLogins],['نشط الآن',s.activeNow],['ألعاب اليوم',s.todayGames],['إجمالي الألعاب',s.totalGames]
-        ].map(a=>`<div><b>${Number(a[1])||0}</b><span>${a[0]}</span></div>`).join('')}
-      </div>
-      <div class="z81-status">
-        <span>🟢 Hosting: <b>${esc(s.hosting||'UNKNOWN')}</b></span>
-        <span>☁️ Firebase: <b>${esc(s.firebase||'UNKNOWN')}</b></span>
-        <span>🌐 ${esc(s.domain||'')}</span>
-        <span>🎮 إجمالي الألعاب: <b>${Number(s.totalGames)||0}</b></span>
-      </div>
-      <div class="z81-toolbar"><h3>المستخدمون واللاعبون</h3><button id="z81-refresh">↻ تحديث</button></div>
-      <div class="z81-table">
-        <div class="z81-row z81-th"><b>الاسم</b><span>البريد</span><span>الدور</span><span>المستوى</span><span>ZIVO</span><span>الألعاب</span><span>الوقت النشط</span><span>آخر نشاط</span></div>
-        ${p.length?p.map(a=>`<div class="z81-row"><b>${esc(a.name)}</b><span>${esc(a.email)}</span><span>${esc(a.role)}</span><span>Lv ${a.level} · ${a.xp} XP</span><span>🪙 ${a.zivo}</span><span>${a.gamesPlayed}</span><span>${a.activeMinutes} د</span><span>${fmtTime(a.lastSeen)}</span></div>`).join(''):'<p class="z81-empty">لا توجد بيانات لاعبين بعد.</p>'}
-      </div>
-      <div class="z81-foot">آخر تحديث: ${fmtTime(s.refreshedAt)} · <b>ADMIN ONLY</b><br>حساب المدير لا يُنشأ له ملف لاعب ولا يدخل ضمن إحصاءات اللاعبين.</div>
+      <div class="z81-head"><div class="z81-logo">Z</div><div><small>PRIVATE ADMIN CONSOLE</small><h2>غرفة إدارة ZIVOZONE</h2><span>المدير: رائف البطوش · ${esc(OWNER_EMAIL)}</span></div><div class="z81-live">● LIVE</div></div>
+      <div class="z81-grid">${[['الحسابات',s.totalUsers],['اللاعبون',s.totalPlayers],['زوار اليوم',s.todayVisitors],['جلسات اليوم',s.todayLogins],['نشط الآن',s.activeNow],['ألعاب اليوم',s.todayGames],['إجمالي الألعاب',s.totalGames]].map(a=>`<div><b>${Number(a[1])||0}</b><span>${a[0]}</span></div>`).join('')}</div>
+      <div class="z81-status"><span>🟢 Hosting: <b>${esc(s.hosting||'UNKNOWN')}</b></span><span>☁️ Firebase: <b>${esc(s.firebase||'UNKNOWN')}</b></span><span>🌐 ${esc(s.domain||'')}</span><span>🕒 ${fmtTime(s.refreshedAt)}</span></div>
+      <div class="z81-toolbar"><h3>مراقبة المستخدمين والنشاط</h3><button id="z81-refresh">↻ تحديث البيانات</button></div>
+      <div class="z81-table"><div class="z81-row z81-th"><b>الاسم</b><span>البريد</span><span>الدور</span><span>المستوى / XP</span><span>ZIVO</span><span>الألعاب</span><span>نشاط</span><span>آخر ظهور</span></div>${p.length?p.map(a=>`<div class="z81-row"><b>${esc(a.name)}</b><span>${esc(a.email)}</span><span>${esc(a.role)}</span><span>Lv ${a.level} · ${a.xp}</span><span>🪙 ${a.zivo.toFixed(2)}</span><span>${a.gamesPlayed}</span><span>${a.activeMinutes} د</span><span>${fmtTime(a.lastSeen)}</span></div>`).join(''):'<p class="z81-empty">لا توجد حسابات لاعب حتى الآن.</p>'}</div>
+      <div class="z81-foot">الحساب الإداري لا يُنشأ له Player Profile ولا يدخل في التعدين أو إحصاءات اللاعبين. · ADMIN ONLY</div>
     </div>`;
     o.querySelector('.z81-x').onclick=()=>o.remove();
-    o.querySelector('#z81-refresh').onclick=async()=>{const b=o.querySelector('#z81-refresh');b.disabled=true;b.textContent='...';try{render(await data())}catch(e){alert('تعذر تحديث لوحة الإدارة.')}finally{b.disabled=false;}};
+    o.querySelector('#z81-refresh').onclick=async()=>{const b=o.querySelector('#z81-refresh');b.disabled=true;b.textContent='جارٍ التحديث…';try{render(await data())}catch(e){alert('تعذر تحديث لوحة الإدارة.')}finally{b.disabled=false}};
   }
 
   async function open(){
@@ -3418,7 +3372,21 @@ window.ZIVOZONE_V18 = {
     }
   }
 
+  function syncAdminHeader(){
+    const b=document.getElementById('login-btn');
+    const u=auth()?.currentUser;
+    const owner=isOwner();
+    if(b){b.textContent=owner?'👑 ADMIN':'🔐 إنشاء حساب / دخول';b.title=owner?'غرفة إدارة ZIVOZONE':'الحساب';}
+    if(owner){
+      document.body.classList.add('zivo-admin-mode');
+      let tag=document.getElementById('zivo-admin-identity');
+      if(!tag){tag=document.createElement('div');tag.id='zivo-admin-identity';tag.className='zivo-admin-identity';document.body.appendChild(tag)}
+      tag.innerHTML='<span>👑</span><b>ADMIN</b><small>رائف البطوش</small>';tag.onclick=open;
+      mount();
+    }else{document.body.classList.remove('zivo-admin-mode');document.getElementById('zivo-admin-identity')?.remove();document.getElementById('z81-admin-open')?.remove();}
+  }
+
   window.ZIVOZONE_MONITOR={open,heartbeat,adminData:data};
-  window.addEventListener('load',()=>setTimeout(()=>{heartbeat();mount();if(location.hash==='#admin')open()},900));
-  window.addEventListener('zivozone-auth',()=>setTimeout(()=>{heartbeat();mount();if(location.hash==='#admin')open()},500));
+  window.addEventListener('load',()=>setTimeout(()=>{heartbeat();syncAdminHeader();if(location.hash==='#admin')open()},900));
+  window.addEventListener('zivozone-auth',()=>setTimeout(()=>{heartbeat();syncAdminHeader();if(location.hash==='#admin')open()},500));
 })();
