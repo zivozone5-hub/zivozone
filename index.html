@@ -260,7 +260,6 @@ button, a, input, select, textarea { touch-action: manipulation; }
 
 <style id="zivo-v105-loader-guard">#app-loader{transition:opacity .25s ease,visibility .25s ease}.zivo-loader-released{opacity:0!important;visibility:hidden!important;pointer-events:none!important}</style>
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="zivo-v1061-royal-ui.css?v=1061"><script src="zivo-v1061-royal-ui.js?v=1061"></script>
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -377,7 +376,6 @@ button, a, input, select, textarea { touch-action: manipulation; }
   </div>
   <div class="ad-slot ad-bottom" data-ad-slot="bottom"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
 </section>
-<section id="dark-room" aria-label="الغرفة المظلمة المستقلة"><div id="dark-room-launcher"></div></section>
 <section id="identity" class="section"><div class="identity-panel"><div><span class="eyebrow" data-i18n="identityEyebrow">من أنا؟</span><h2 data-i18n="identityTitle">اكتشف شخصيتك داخل ZIVOZONE</h2><p data-i18n="identityText">اختبار ترفيهي يحلل نمط اختياراتك، وليس تشخيصًا نفسيًا.</p></div><button class="btn btn-primary btn-lg" data-action="open-identity" data-i18n="identityStart">ابدأ الاختبار</button></div></section>
 <section id="ai" class="section alt"><div class="section-heading"><div><span class="eyebrow" data-i18n="aiEyebrow">ZIVO AI</span><h2 data-i18n="aiTitle">مساعد ZIVO الذكي</h2></div></div><div class="ai-panel"><div id="ai-messages" class="ai-messages"><div class="ai-message bot" data-i18n="aiWelcome">أهلًا بك 🤖 اسألني عن مستواك أو الألعاب أو التحديات أو الرياضة.</div></div><form id="ai-form" class="ai-form"><input id="ai-input" maxlength="1000" required data-i18n-placeholder="aiPlaceholder" placeholder="اكتب سؤالك..."><button class="btn btn-primary" type="submit" data-i18n="send">إرسال</button></form><small class="muted" data-i18n="aiNote">مساعد ZIVO داخل المنصة. عند تفعيل Backend الآمن يستخدم بيانات اللاعب المصرّح بها لتقديم تحليلات وتوصيات شخصية.</small></div></section>
 <section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading"><h3 data-i18n="matches">المباريات القادمة</h3></div><div id="sports-list" class="sports-grid"></div><div class="match-alert" id="match-alert" hidden></div><div class="subheading"><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><span class="live-badge">LIVE / UPCOMING</span></div><div id="fixture-list" class="sports-grid"></div></section>
@@ -408,7 +406,6 @@ window.ZIVOZONE_SECURITY={appCheckSiteKey:''};
 document.addEventListener('click',function(e){
   const b=e.target.closest('[data-challenge],[data-game]');
   if(!b||!window.ZIVOZONE_V20)return;
-  if(b.closest('#challenge-list .challenge-card') && b.closest('#challenge-list .challenge-card').dataset.v1060) return;
   const id=b.dataset.challenge||b.dataset.game;
   if(id!=='horror'&&window.ZIVOZONE_V20.findBanks().some(x=>x.id===id||x.id?.startsWith(id+'_v18'))){
     e.preventDefault();e.stopImmediatePropagation();window.ZIVOZONE_V20.start(id);
@@ -444,9 +441,9 @@ document.addEventListener('DOMContentLoaded',function(){
   setTimeout(release,1800);
 })();
 </script>
-<script src="zivozone-runtime.js?v=105.9"></script>
-<script src="zivo-global-core.js?v=105.9"></script>
-<link rel="stylesheet" href="zivo-v103-pro.css?v=105.9"><script src="zivo-v103-pro.js?v=105.9"></script><link rel="stylesheet" href="zivo-v104-pro.css?v=105.9"><script src="zivo-v104-pro.js?v=105.9"></script><link rel="stylesheet" href="zivo-v105-luxury.css?v=105.9"><link rel="stylesheet" href="zivo-v1058-final.css?v=105.9"><link rel="stylesheet" href="zivo-challenge-images.css?v=1060"><script src="zivo-v1058-final.js?v=105.9"></script><script src="zivo-v1060-challenge.js?v=1060"></script><script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
+<script src="zivozone-runtime.js?v=105.6"></script>
+<script src="zivo-global-core.js?v=105.7"></script>
+<link rel="stylesheet" href="zivo-v103-pro.css?v=105.6"><script src="zivo-v103-pro.js?v=105.6"></script><link rel="stylesheet" href="zivo-v104-pro.css?v=105.6"><script src="zivo-v104-pro.js?v=105.6"></script><link rel="stylesheet" href="zivo-v105-luxury.css?v=105.6"><script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
 
 <!-- ZIVO V101 UNIFIED MOBILE-FIRST ECONOMY
      Single responsive codebase: mobile is the primary UX target.
