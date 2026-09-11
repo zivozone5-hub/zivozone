@@ -1,196 +1,174 @@
-/* ZIVOZONE V95 — SINGLE WALLET + AUTH GATE + PERFECT CHALLENGE REWARDS
-   Free/Spark compatible. Client-side internal currency only.
+/* ZIVOZONE V101 — UNIFIED MOBILE-FIRST ECONOMY CORE
+   Single wallet + server-authoritative ZIVO + 24h daily mining + unified rewards.
 */
 (() => {
   'use strict';
+  const F=()=>window.firebase;
+  const auth=()=>{try{return F()?.auth?.()||null}catch(_){return null}};
+  const db=()=>{try{return F()?.firestore?.()||null}catch(_){return null}};
+  const user=()=>auth()?.currentUser||null;
+  const state={uid:null,zivo:0,ledger:[],nextMiningAt:0,loading:false};
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const num=v=>Math.max(0,Number(v)||0);
+  const toast=(msg)=>{let x=document.getElementById('zivo-v101-toast');if(!x){x=document.createElement('div');x.id='zivo-v101-toast';x.className='z101-toast';document.body.appendChild(x)}x.textContent=msg;x.classList.add('show');clearTimeout(x._t);x._t=setTimeout(()=>x.classList.remove('show'),2600)};
 
-  const OWNER_UID = 'rBlzUigQ6DhgD4CK6VX3tS43PS43';
-  const FIRESTORE_PATH = ['users'];
-  const WALLET_DOC = 'wallet';
-  const LEDGER = 'ledger';
-  const WALLET_BUTTON_ID = 'zivo-global-wallet';
-  const WALLET_OVERLAY_ID = 'zivo-global-wallet-overlay';
-  const CLEAN_IDS = [
-    'zivo-v85-open','zivo-v85-economy','zivo-v81-open','zivo-v81-economy',
-    'v26-open','zivo-v24-balance','z25-wallet-btn','zivo-v80-open',
-    'zivo-v81-admin','z80-admin-open','z75-admin-open'
-  ];
-
-  const firebaseApp = () => window.firebase;
-  const auth = () => { try { return firebaseApp()?.auth?.() || null; } catch (_) { return null; } };
-  const db = () => { try { return firebaseApp()?.firestore?.() || null; } catch (_) { return null; } };
-  const currentUser = () => { try { return auth()?.currentUser || null; } catch (_) { return null; } };
-  const currentUid = () => currentUser()?.uid || null;
-
-  const state = { ready:false, user:null, zivo:0, ledger:[] };
-
-  function money(v){ return Math.max(0, Math.floor(Number(v)||0)); }
-  function escapeHtml(v){ return String(v ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function toast(msg){
-    let n=document.getElementById('zivo-global-toast');
-    if(!n){ n=document.createElement('div'); n.id='zivo-global-toast'; n.className='zivo-global-toast'; document.body.appendChild(n); }
-    n.textContent=msg; n.classList.add('show'); clearTimeout(n._t); n._t=setTimeout(()=>n.classList.remove('show'),2600);
+  function injectStyle(){
+    if(document.getElementById('zivo-v101-style'))return;
+    const s=document.createElement('style');s.id='zivo-v101-style';s.textContent=`
+      :root{--z-gold:#ffd43d;--z-gold2:#ffe889;--z-bg:#090d14;--z-panel:#101722}
+      .z101-economy{width:min(1180px,calc(100% - 28px));margin:8px auto 2px;display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:3}
+      .z101-card{border:1px solid rgba(255,215,70,.16);border-radius:14px;background:linear-gradient(145deg,rgba(255,215,70,.07),rgba(255,255,255,.02));box-shadow:0 8px 24px rgba(0,0,0,.16);padding:9px 11px}
+      .z101-wallet{display:flex;align-items:center;gap:9px;min-height:58px}.z101-coin{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#fff7bd,#ffd43d 44%,#9c6700);border:2px solid #ffe889;color:#5b3900;font-weight:1000;font-size:18px;box-shadow:inset 0 2px 5px rgba(255,255,255,.55)}
+      .z101-label{font-size:10px;opacity:.62;font-weight:900}.z101-balance{font-size:18px;font-weight:1000;color:#ffe06a;line-height:1.1;margin-top:4px}.z101-sub{font-size:10px;opacity:.62;margin-top:5px}.z101-wallet-actions{margin-inline-start:auto}.z101-btn{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;border-radius:11px;padding:9px 12px;font-weight:950;cursor:pointer}.z101-btn.primary{background:linear-gradient(90deg,#ffd43d,#ffed8a);color:#17120a;border-color:#ffd43d}.z101-btn:disabled{opacity:.5;cursor:not-allowed}
+      .z101-mining{display:flex;align-items:center;gap:8px;min-height:58px}.z101-mining-icon{font-size:21px}.z101-mining h3{margin:0;font-size:12px}.z101-mining p{margin:2px 0 0;font-size:8px;opacity:.65}.z101-mine-action{margin-inline-start:auto;min-width:132px}.z101-countdown{font-size:13px;font-weight:1000;color:#ffe06a;margin-top:5px;letter-spacing:.5px}.z101-ready{color:#7df0a4}.z101-ledger{margin-top:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px}.z101-ledger-title{font-size:10px;opacity:.6;font-weight:900}.z101-ledger-list{max-height:110px;overflow:auto}.z101-ledger-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px}.z101-ledger-row b{color:#ffe06a}.z101-ledger-row small{grid-column:1/-1;opacity:.45}.z101-note{font-size:9px;opacity:.55;margin-top:9px;line-height:1.5}
+      .z101-overlay{position:fixed;inset:0;z-index:120000;display:none;place-items:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}.z101-overlay.open{display:grid}.z101-modal{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto;background:#0d141f;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px}.z101-modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.z101-modal-close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}.z101-modal h2{margin:0}.z101-modal p{font-size:11px;opacity:.68}.z101-modal-balance{font-size:34px;color:#ffe06a;font-weight:1000;margin:16px 0}.z101-toast{position:fixed;left:16px;bottom:84px;z-index:130000;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 13px;font-weight:900;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}.z101-toast.show{opacity:1;transform:none}
+      /* remove old floating economy / quick docks so there is exactly one wallet */
+      #zivo-global-wallet,#zivo-v85-open,#zivo-v85-economy,#zivo-v81-open,#zivo-v81-economy,#zivo-v80-open,#z80-admin-open,#zivo-v87-quickdock,#v26-open,#zivo-v24-balance,#z25-wallet-btn{display:none!important} #z81-admin-open{display:flex!important}
+      @media(max-width:760px){.z101-economy{grid-template-columns:1fr 1fr;width:calc(100% - 14px);margin-top:5px;gap:6px}.z101-card{padding:8px;border-radius:13px}.z101-wallet{min-height:52px}.z101-coin{width:34px;height:34px;flex-basis:34px;font-size:16px}.z101-balance{font-size:16px}.z101-label{font-size:8px}.z101-sub{font-size:7px}.z101-wallet-actions{display:none}.z101-mining{align-items:center;min-height:52px}.z101-mining-icon{font-size:18px}.z101-mining p{display:none}.z101-mine-action{min-width:82px}.z101-btn{padding:7px 7px;font-size:9px}.z101-countdown{font-size:11px}.z101-mining h3{font-size:10px}}
+    `;document.head.appendChild(s);
   }
 
-  function authReady(maxMs=10000){
-    const u=currentUser();
-    if(u) return Promise.resolve(u);
-    return new Promise(resolve=>{
-      let done=false, unsub=null;
-      const finish=(user)=>{ if(done)return; done=true; try{unsub?.()}catch(_){}; window.removeEventListener('zivozone-auth', custom); clearTimeout(timer); resolve(user||null); };
-      const custom=()=>{ const user=currentUser(); if(user) finish(user); };
-      window.addEventListener('zivozone-auth', custom);
-      try { const a=auth(); if(a?.onAuthStateChanged) unsub=a.onAuthStateChanged(u=>{ if(u) finish(u); }); } catch(_){}
-      const timer=setTimeout(()=>finish(currentUser()), maxMs);
-      custom();
-    });
+  function mountHub(){
+    injectStyle();
+    if(document.getElementById('zivo-v101-economy'))return;
+    const h=document.querySelector('header.topbar');if(!h)return;
+    const root=document.createElement('section');root.id='zivo-v101-economy';root.className='z101-economy';root.setAttribute('aria-label','ZIVO Economy');
+    root.innerHTML=`
+      <article class="z101-card z101-wallet">
+        <div class="z101-coin">Z</div><div><div class="z101-label">ZIVO WALLET</div><div id="z101-balance" class="z101-balance">0 ZIVO</div><div id="z101-wallet-status" class="z101-sub">سجّل الدخول لحفظ رصيدك ومكافآتك.</div></div>
+        <div class="z101-wallet-actions"><button id="z101-wallet-open" class="z101-btn">المحفظة</button></div>
+      </article>
+      <article class="z101-card z101-mining">
+        <div class="z101-mining-icon">⛏️</div><div><h3>التعدين اليومي</h3><p>فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.</p><div id="z101-countdown" class="z101-countdown">—</div></div>
+        <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary">بدء التعدين +0.50</button></div>
+      </article>`;
+    h.insertAdjacentElement('afterend',root);
+    root.querySelector('#z101-wallet-open').onclick=openWallet;
+    root.querySelector('#z101-mine').onclick=mine;
   }
 
-  function removeLegacy(){ CLEAN_IDS.forEach(id=>document.getElementById(id)?.remove()); document.querySelectorAll('[data-zivo-master-balance]').forEach(n=>{ if(n.closest('#zivo-global-wallet')) return; }); }
-
-  function style(){
-    if(document.getElementById('zivo-v94-style')) return;
-    const s=document.createElement('style'); s.id='zivo-v94-style'; s.textContent=`
-      #${WALLET_BUTTON_ID}{position:fixed;right:18px;bottom:116px;z-index:110000;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,215,70,.42);border-radius:999px;padding:7px 12px 7px 9px;background:linear-gradient(135deg,rgba(26,20,6,.98),rgba(10,11,16,.98));color:#ffe06a;font-weight:1000;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.03);backdrop-filter:blur(10px)}
-      #${WALLET_BUTTON_ID} .z94-coin{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff8bd,#ffd43d 45%,#a36d00);color:#5b3900;border:2px solid #ffeb8a;font-weight:1000;box-shadow:inset 0 2px 4px rgba(255,255,255,.6)}
-      #${WALLET_BUTTON_ID} .z94-text{font-size:12px}.z94-balance{font-size:14px;margin-right:2px}
-      .zivo-global-overlay{position:fixed;inset:0;z-index:110001;display:none;place-items:center;padding:18px;background:rgba(1,3,8,.78);backdrop-filter:blur(14px)}
-      .zivo-global-overlay.open{display:grid}.zivo-global-card{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto;background:#0c121c;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:22px;box-shadow:0 30px 100px rgba(0,0,0,.55)}
-      .zivo-global-head{display:flex;align-items:center;gap:14px}.zivo-global-head h2{margin:3px 0;font-size:20px}.zivo-global-head p{margin:0;opacity:.65;font-size:11px}.zivo-global-coin{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff8bd,#ffd43d 45%,#a36d00);color:#5b3900;border:2px solid #ffeb8a;font-weight:1000;font-size:28px}
-      .zivo-global-close{float:left;border:0;background:rgba(255,255,255,.08);color:#fff;width:40px;height:40px;border-radius:10px;font-size:24px;cursor:pointer}.zivo-global-balance{margin:18px 0;padding:18px;border-radius:16px;background:linear-gradient(135deg,rgba(255,215,70,.14),rgba(117,229,255,.06));border:1px solid rgba(255,215,70,.22)}
-      .zivo-global-balance small{display:block;opacity:.65}.zivo-global-balance b{display:block;margin-top:5px;font-size:34px;color:#ffe06a}.zivo-global-status{font-size:11px;opacity:.72;margin:8px 0}.zivo-global-list{display:grid;gap:8px}.zivo-global-row{display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:11px}.zivo-global-row b{color:#ffe06a}.zivo-global-note{margin-top:16px;padding:10px;border-radius:12px;background:rgba(255,255,255,.04);font-size:10px;line-height:1.6;opacity:.7}.zivo-global-toast{position:fixed;left:18px;bottom:82px;z-index:110005;padding:11px 14px;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;font-weight:900;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}.zivo-global-toast.show{opacity:1;transform:none}
-      @media(max-width:700px){#${WALLET_BUTTON_ID}{right:12px;bottom:104px}.zivo-global-card{padding:16px}.zivo-global-row{grid-template-columns:1fr auto}.zivo-global-row small{grid-column:1/-1}}
-    `; document.head.appendChild(s);
+  async function callable(name,data){
+    const f=F()?.functions?.(); if(!f)throw new Error('Firebase Functions غير متاحة');
+    const fn=f.httpsCallable(name); const r=await fn(data||{}); return r?.data||{};
   }
 
-  function ensureButton(){
-    style(); removeLegacy();
-    let b=document.getElementById(WALLET_BUTTON_ID);
-    if(!b){
-      b=document.createElement('button'); b.id=WALLET_BUTTON_ID; b.type='button'; b.title='ZIVO';
-      b.innerHTML='<span class="z94-coin">Z</span><span class="z94-text">ZIVO</span><b class="z94-balance" data-v94-balance>0</b>';
-      document.body.appendChild(b);
-    }
-    b.onclick=(e)=>{ e.preventDefault(); e.stopPropagation(); openWallet(); };
-    return b;
-  }
-
-  async function readWallet(){
-    const u=currentUser(), d=db();
-    if(!u || !d){ state.user=null; state.zivo=0; state.ledger=[]; syncUI(); return state; }
-    state.user=u;
-    const wref=d.collection('users').doc(u.uid).collection('zivozone').doc(WALLET_DOC);
+  async function refresh(){
+    const u=user(),d=db(); state.uid=u?.uid||null; if(u?.email?.toLowerCase()==='raefalbtish@gmail.com'){state.zivo=0;state.ledger=[];state.nextMiningAt=0;syncUI();return state;}
+    if(!u||!d){state.zivo=0;state.ledger=[];state.nextMiningAt=0;syncUI();return state;}
     try{
-      const snap=await wref.get();
-      if(!snap.exists){
-        // Preserve existing balance from user/player records when wallet is first created.
-        let seed=0;
-        const [ud,pd]=await Promise.all([
-          d.collection('users').doc(u.uid).get().catch(()=>null),
-          d.collection('players').doc(u.uid).get().catch(()=>null)
-        ]);
-        seed=Math.max(Number(ud?.data()?.zivo ?? ud?.data()?.coins ?? 0)||0, Number(pd?.data()?.zivo ?? pd?.data()?.coins ?? 0)||0);
-        await wref.set({zivo:seed,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),mode:'v94-spark-single-wallet'},{merge:true});
-        state.zivo=seed;
-      }else state.zivo=money(snap.data()?.zivo);
-      const ls=await wref.collection(LEDGER).orderBy('createdAt','desc').limit(50).get().catch(()=>null);
-      state.ledger=ls?ls.docs.map(x=>({id:x.id,...x.data()})):[];
-    }catch(e){ console.warn('V95 wallet read',e); }
-    syncUI(); return state;
+      const w=await d.collection('users').doc(u.uid).collection('zivozone').doc('wallet').get();
+      state.zivo=num(w.data()?.zivo);
+      const l=await d.collection('users').doc(u.uid).collection('zivozone').doc('wallet').collection('ledger').orderBy('createdAt','desc').limit(25).get().catch(()=>null);
+      state.ledger=l?l.docs.map(x=>({id:x.id,...x.data()})):[];
+      const m=await d.collection('users').doc(u.uid).collection('zivozone').doc('mining').get().catch(()=>null);
+      const ts=m?.data()?.nextMiningAt;state.nextMiningAt=ts?.toMillis?ts.toMillis():num(ts);
+    }catch(e){console.warn('ZIVO V101 refresh',e)}
+    syncUI();return state;
   }
 
   function syncUI(){
-    const n=String(money(state.zivo));
-    document.querySelectorAll('[data-v94-balance]').forEach(x=>x.textContent=n);
-    const legacy=document.querySelector('#profile-coins'); if(legacy) legacy.textContent=n;
-    const b=document.querySelector('#zivo-global-balance'); if(b)b.textContent=`${n} ZIVO`;
+    const bal=`${Number(state.zivo).toFixed(state.zivo%1?2:0)} ZIVO`;
+    document.querySelectorAll('#z101-balance,[data-v101-balance]').forEach(x=>x.textContent=bal);
+    const p=document.getElementById('profile-coins');if(p)p.textContent=String(state.zivo);
+    const status=document.getElementById('z101-wallet-status');if(status)status.textContent=user()?`الحساب: ${user().email||'مستخدم ZIVOZONE'}`:'سجّل الدخول لحفظ رصيدك ومكافآتك.';
+    updateMiningUI();
+  }
+  function updateMiningUI(){
+    const b=document.getElementById('z101-mine'),c=document.getElementById('z101-countdown');if(!b||!c)return;
+    if(!user()){b.textContent='تسجيل الدخول للتعدين';b.disabled=false;c.textContent='الحساب مطلوب';return;} if(user().email?.toLowerCase()==='raefalbtish@gmail.com'){b.textContent='حساب الإدارة';b.disabled=true;c.textContent='ADMIN';return;}
+    const left=Math.max(0,(state.nextMiningAt||0)-Date.now());
+    if(left<=0){b.textContent='بدء التعدين +0.50';b.disabled=false;c.textContent='متاح الآن';c.classList.add('z101-ready')}
+    else{b.textContent='التعدين مفعّل';b.disabled=true;c.classList.remove('z101-ready');c.textContent=formatMs(left)}
+  }
+  function formatMs(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
+
+  async function mine(){
+    const u=user();if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return} if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
+    const b=document.getElementById('z101-mine');if(b)b.disabled=true;
+    try{
+      let r=null;
+      try{ r=await callable('claimDailyMining',{}); }catch(fnErr){
+        console.warn('Cloud Function mining unavailable; using secured Firestore transaction.',fnErr);
+        const d=db(); if(!d) throw fnErr;
+        const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
+        const mining=d.collection('users').doc(u.uid).collection('zivozone').doc('mining');
+        const dayKey=new Date().toISOString().slice(0,10);
+        const ledger=wallet.collection('ledger').doc(`mining_${dayKey}`);
+        const now=Date.now(), nextMs=now+24*60*60*1000;
+        r=await d.runTransaction(async tx=>{
+          const [ws,ms,ls]=await Promise.all([tx.get(wallet),tx.get(mining),tx.get(ledger)]);
+          const current=num(ws.data()?.zivo);
+          const next=ms.data()?.nextMiningAt;
+          const nextValue=next?.toMillis?next.toMillis():num(next);
+          if(nextValue>now) throw new Error('التعدين غير متاح بعد.');
+          if(ls.exists) throw new Error('تم احتساب تعدين اليوم بالفعل.');
+          const balance=current+0.5;
+          tx.set(wallet,{zivo:balance,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),mode:'v101-secured-client-fallback'},{merge:true});
+          tx.set(mining,{lastMiningAt:firebase.firestore.FieldValue.serverTimestamp(),nextMiningAt:firebase.firestore.Timestamp.fromMillis(nextMs),amount:0.5,version:'v101-spark'},{merge:true});
+          tx.set(ledger,{type:'daily_mining',label:'التعدين اليومي',amount:0.5,eventId:`mining_${dayKey}`,createdAt:firebase.firestore.FieldValue.serverTimestamp(),source:'secured-firestore'});
+          return {amount:0.5,balance,nextMiningAt:nextMs};
+        });
+      }
+      state.zivo=num(r.balance);state.nextMiningAt=num(r.nextMiningAt);syncUI();
+      toast(`تم التعدين بنجاح! +${Number(r.amount||0.5).toFixed(2)} ZIVO ⛏️`);
+      await refresh();
+    }catch(e){console.warn(e);toast(e?.message||'تعذر تفعيل التعدين. حاول مرة أخرى.');await refresh()}
   }
 
-  async function renderWallet(){
-    let o=document.getElementById(WALLET_OVERLAY_ID);
-    if(!o){
-      o=document.createElement('div'); o.id=WALLET_OVERLAY_ID; o.className='zivo-global-overlay';
-      o.innerHTML=`<div class="zivo-global-card" dir="rtl"><button class="zivo-global-close" type="button">×</button><div class="zivo-global-head"><div class="zivo-global-coin">Z</div><div><small>ZIVOZONE GLOBAL ECONOMY</small><h2>محفظة ZIVO</h2><p>رصيد داخلي تجريبي للمنصة.</p></div></div><div class="zivo-global-balance"><small>رصيدك الذهبي</small><b id="zivo-global-balance">0 ZIVO</b></div><div class="zivo-global-status" id="zivo-global-status"></div><h3>آخر المعاملات</h3><div class="zivo-global-list" id="zivo-global-ledger"></div><div class="zivo-global-note">ZIVO حاليًا رصيد داخلي للمنصة فقط. إصدار العملة من جهة العميل ليس مناسبًا لقيمة مالية أو تداول خارجي قبل إضافة Backend موثوق.</div></div>`;
-      document.body.appendChild(o);
-      o.querySelector('.zivo-global-close').onclick=()=>o.classList.remove('open');
-      o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')});
-    }
-    o.classList.add('open');
-    await readWallet();
-    const status=o.querySelector('#zivo-global-status');
-    status.textContent=currentUser()?`مسجل الدخول: ${currentUser().email||''}`:'يرجى تسجيل الدخول.';
-    const list=o.querySelector('#zivo-global-ledger');
-    list.innerHTML=state.ledger.length?state.ledger.map(x=>`<div class="zivo-global-row"><span>${escapeHtml(x.label||x.type||'معاملة')}</span><b>${Number(x.amount)>0?'+':''}${Number(x.amount)||0}</b><small>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleString('ar-JO'):''}</small></div>`).join(''):'<p style="opacity:.6;font-size:11px">لا توجد معاملات بعد.</p>';
-    syncUI();
+  async function reward(amount,type,label,meta={}){
+    if(!user())return false;
+    amount=Math.max(0,Math.min(20,Number(amount)||0));if(amount<=0)return false;
+    try{
+      const r=await callable('rewardZivo',{amount,type:String(type||'reward').slice(0,40),label:String(label||'مكافأة').slice(0,120),meta:{...meta,eventId:String(meta.eventId||'')}});
+      if(r?.credited){state.zivo=num(r.balance);syncUI();window.dispatchEvent(new CustomEvent('zivozone-reward',{detail:{amount:r.amount||amount,type,eventId:r.eventId}}));return true}
+    }catch(e){console.warn('ZIVO V101 reward',e)}
+    return false;
+  }
+
+  async function rewardChallenge(d={}){
+    if(!user())return false;
+    const total=Math.max(1,Math.min(100,Number(d.total??d.questions??10)||10));
+    const correct=Math.max(0,Math.min(total,Number(d.correct??d.score??0)||0));
+    const timed=Number(d.timedOut)||0;
+    const challenge=String(d.challenge||d.gameId||d.challengeId||'challenge').slice(0,80);
+    const eventId=String(d.eventId||`challenge_${challenge}_${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100);
+    try{
+      const r=await callable('rewardChallenge',{challenge,total,correct,timedOut:timed,eventId,source:'challenge'});
+      if(r?.credited){state.zivo=num(r.balance);syncUI();toast(`مكافأة التحدي: +${Number(r.amount).toFixed(2)} ZIVO 🪙`);return true}
+    }catch(e){console.warn('ZIVO V101 challenge reward',e)}
+    return false;
   }
 
   async function openWallet(){
-    ensureButton();
-    const u=await authReady(10000);
-    if(!u){ toast('سجّل الدخول أولًا من زر الحساب.'); const login=document.querySelector('#login-btn,[data-action="login"]'); login?.click(); return; }
-    await renderWallet();
+    if(!user()){document.querySelector('#login-btn,[data-action="login"]')?.click();return}
+    await refresh();
+    let o=document.getElementById('z101-wallet-modal');
+    if(!o){
+      o=document.createElement('div');o.id='z101-wallet-modal';o.className='z101-overlay';
+      o.innerHTML=`<div class="z101-modal" dir="rtl"><div class="z101-modal-head"><div><div class="z101-label">ZIVOZONE ECONOMY</div><h2>محفظة ZIVO</h2></div><button class="z101-modal-close">×</button></div><div id="z101-modal-balance" class="z101-modal-balance">0 ZIVO</div><p>رصيد ZIVO داخل المنصة. كل إضافة تمر عبر خادم ZIVOZONE وتظهر في سجل المعاملات.</p><div class="z101-ledger"><div class="z101-ledger-title">آخر المعاملات</div><div id="z101-modal-ledger" class="z101-ledger-list"></div></div><div class="z101-note">XP منفصل عن ZIVO. وZIVO منفصل عن Tickets. هذه العملة حاليًا عملة افتراضية داخل المنصة وليست أموالًا نقدية.</div></div>`;
+      document.body.appendChild(o);o.querySelector('.z101-modal-close').onclick=()=>o.classList.remove('open');o.onclick=e=>{if(e.target===o)o.classList.remove('open')};
+    }
+    o.classList.add('open');
+    o.querySelector('#z101-modal-balance').textContent=`${Number(state.zivo).toFixed(state.zivo%1?2:0)} ZIVO`;
+    const list=o.querySelector('#z101-modal-ledger');
+    list.innerHTML=state.ledger.length?state.ledger.map(x=>`<div class="z101-ledger-row"><span>${esc(x.label||x.type||'معاملة')}</span><b>${Number(x.amount)>0?'+':''}${Number(x.amount)||0}</b><small>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleString('ar-JO'):'—'}</small></div>`).join(''):'<p>لا توجد معاملات بعد.</p>';
   }
 
-  async function creditPerfect(detail, source='challenge'){
-    const u=await authReady(5000); if(!u) return false;
-    const total=Math.max(1,Number(detail?.total ?? detail?.questions ?? 10));
-    const correct=Math.max(0,Number(detail?.correct ?? detail?.score ?? 0));
-    const timed=Number(detail?.timedOut || 0);
-    const perfect=detail?.perfect===true || correct===total;
-    if(!perfect || correct!==total || timed>0) return false;
-    const d=db(); if(!d)return false;
-    const challenge=String(detail?.challenge || detail?.gameId || detail?.challengeId || 'challenge').slice(0,80);
-    const eventId=String(detail?.eventId || `${source}_${challenge}_${detail?.attemptId||Date.now()}`).replace(/[^a-zA-Z0-9_-]/g,'').slice(0,120);
-    const wref=d.collection('users').doc(u.uid).collection('zivozone').doc(WALLET_DOC);
-    const lref=wref.collection(LEDGER).doc(`reward_${eventId}`);
-    try{
-      let awarded=0;
-      await d.runTransaction(async tx=>{
-        const [ws,ls]=await Promise.all([tx.get(wref),tx.get(lref)]);
-        if(ls.exists) return;
-        const current=money(ws.exists?ws.data()?.zivo:0);
-        // Engagement bonus is intentionally earned only when the player gets a perfect run.
-        const bonus=0;
-        awarded=10;
-        const next=current+awarded;
-        tx.set(wref,{zivo:next,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),mode:'v94-spark-single-wallet'},{merge:true});
-        tx.set(d.collection('users').doc(u.uid),{uid:u.uid,email:u.email||'',zivo:next,coins:next,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-        tx.set(d.collection('players').doc(u.uid),{zivo:next,coins:next,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-        tx.set(lref,{type:'challenge_reward',label:`مكافأة العلامة الكاملة — ${challenge}`,amount:awarded,challenge,eventId,source,score:correct,total,perfect:true,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-      });
-      if(awarded>0){
-        const bonus=0; window.__zivoV95ClaimedTiers=Number(window.__zivoV95ClaimedTiers)||0;
-        await readWallet(); syncUI(); toast(`مبروك! +${awarded} ZIVO 🪙`); window.dispatchEvent(new CustomEvent('zivozone-reward',{detail:{amount:awarded,challenge,eventId}}));
-        return true;
-      }
-      return false;
-    }catch(e){ console.warn('V95 perfect reward failed',e); return false; }
+  function bind(){
+    mountHub();
+    document.querySelectorAll('#mobile-more,[data-mobile-more]').forEach(x=>x.remove());
+    const sheet=document.getElementById('mobile-tools');if(sheet)sheet.remove();
+    const legacy=['zivo-v85-open','zivo-v85-economy','zivo-v81-open','zivo-v81-economy','zivo-v80-open','zivo-v87-quickdock','z80-admin-open'];legacy.forEach(id=>document.getElementById(id)?.remove());
+    auth()?.onAuthStateChanged?.(()=>setTimeout(refresh,100));
+    refresh();setInterval(()=>{if(document.visibilityState==='visible')refresh()},30000);setInterval(updateMiningUI,1000);
   }
 
-  // Route every known challenge result family into one reward gate.
-  const onceKey=new Set();
-  function onResult(e){
-    const d=e?.detail||{};
-    const k=String(d.eventId||`${d.challenge||d.gameId||d.challengeId||'challenge'}:${d.correct??d.score}:${d.total??d.questions}`);
-    if(onceKey.has(k))return; onceKey.add(k);
-    creditPerfect(d,'event');
-  }
-  ['zivozone-result','zivozone-progress','zivozone:game-complete','zivozone:challenge-result','zivozone:progress-updated'].forEach(name=>window.addEventListener(name,onResult,true));
+  const processed=new Set();
+  function onChallenge(e){const d=e?.detail||{};const k=String(d.eventId||`${d.challenge||d.gameId||d.challengeId||'x'}:${d.correct??d.score}:${d.total??d.questions}`);if(processed.has(k))return;processed.add(k);rewardChallenge(d)}
+  ['zivozone-result','zivozone-progress','zivozone:game-complete','zivozone:challenge-result','zivozone:progress-updated'].forEach(n=>addEventListener(n,onChallenge,true));
 
-  // Override public economy bridge so all existing challenge engines use this single wallet.
-  window.ZIVOZONE_ECONOMY=window.ZIVOZONE_ECONOMY||{};
-  window.ZIVOZONE_ECONOMY.open=openWallet;
-  window.ZIVOZONE_ECONOMY.refresh=readWallet;
-  window.ZIVOZONE_ECONOMY.credit=async(amount,type,label,meta)=>{
-    if(type==='challenge_reward' || meta?.perfect) return creditPerfect({total:meta?.total||10,correct:meta?.correct||10,perfect:true,challenge:meta?.challenge,eventId:meta?.eventId,timedOut:meta?.timedOut},'bridge');
-    return false;
-  };
-  window.ZIVOZONE_ECONOMY.rewardPerfect=creditPerfect;
-  window.ZIVOZONE_ECONOMY.getWallet=()=>({...state});
-
-  // Robust mounting: static DOM + load + auth + retries. One button only.
-  function boot(){ ensureButton(); auth()?.onAuthStateChanged?.(()=>{ setTimeout(()=>{ensureButton(); readWallet();},100); }); setTimeout(()=>readWallet(),800); }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
-  window.addEventListener('load',()=>setTimeout(boot,250));
-  setInterval(()=>{ if(document.visibilityState==='visible') readWallet(); },60000);
+  window.ZIVOZONE_ECONOMY={open:openWallet,refresh,rewardPerfect:rewardChallenge,credit:reward,getWallet:()=>({...state}),mine};
+  window.ZIVOZONE_ZIVO={wallet:state,refresh,reward,mine,rewardChallenge};
+  window.addEventListener('zivozone-auth',()=>setTimeout(refresh,150));
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(bind,50));else setTimeout(bind,50);
 })();
