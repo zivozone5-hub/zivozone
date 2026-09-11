@@ -24,6 +24,7 @@ service cloud.firestore {
           allow create,update,delete: if false;
         }
       }
+    }
 
     match /players/{uid} {
       allow read: if isOwner() || isSelf(uid);
