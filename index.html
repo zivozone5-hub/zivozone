@@ -404,8 +404,9 @@ window.ZIVOZONE_SECURITY={appCheckSiteKey:''};
 
 <script>
 document.addEventListener('click',function(e){
-  const b=e.target.closest('button[data-challenge],button[data-game]');
+  const b=e.target.closest('[data-challenge],[data-game]');
   if(!b||!window.ZIVOZONE_V20)return;
+  if(b.closest('#challenge-list .challenge-card') && b.closest('#challenge-list .challenge-card').dataset.v1060) return;
   const id=b.dataset.challenge||b.dataset.game;
   if(id!=='horror'&&window.ZIVOZONE_V20.findBanks().some(x=>x.id===id||x.id?.startsWith(id+'_v18'))){
     e.preventDefault();e.stopImmediatePropagation();window.ZIVOZONE_V20.start(id);
@@ -443,7 +444,7 @@ document.addEventListener('DOMContentLoaded',function(){
 </script>
 <script src="zivozone-runtime.js?v=105.9"></script>
 <script src="zivo-global-core.js?v=105.9"></script>
-<link rel="stylesheet" href="zivo-v103-pro.css?v=105.9"><script src="zivo-v103-pro.js?v=105.9"></script><link rel="stylesheet" href="zivo-v104-pro.css?v=105.9"><script src="zivo-v104-pro.js?v=105.9"></script><link rel="stylesheet" href="zivo-v105-luxury.css?v=105.9"><link rel="stylesheet" href="zivo-v1058-final.css?v=105.9"><script src="zivo-v1058-final.js?v=105.9"></script><script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
+<link rel="stylesheet" href="zivo-v103-pro.css?v=105.9"><script src="zivo-v103-pro.js?v=105.9"></script><link rel="stylesheet" href="zivo-v104-pro.css?v=105.9"><script src="zivo-v104-pro.js?v=105.9"></script><link rel="stylesheet" href="zivo-v105-luxury.css?v=105.9"><link rel="stylesheet" href="zivo-v1058-final.css?v=105.9"><link rel="stylesheet" href="zivo-challenge-images.css?v=1060"><script src="zivo-v1058-final.js?v=105.9"></script><script src="zivo-v1060-challenge.js?v=1060"></script><script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
 
 <!-- ZIVO V101 UNIFIED MOBILE-FIRST ECONOMY
      Single responsive codebase: mobile is the primary UX target.

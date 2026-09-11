@@ -1,0 +1,20 @@
+/* ZIVOZONE Challenge Cinema — image-first challenge tiles */
+#challenge-list{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px!important}
+#challenge-list .challenge-card{position:relative!important;min-height:300px!important;padding:0!important;display:block!important;overflow:hidden!important;border-radius:18px!important;background:#06101b!important;border:1px solid rgba(38,180,255,.48)!important;cursor:pointer!important;isolation:isolate!important;box-shadow:0 14px 38px rgba(0,0,0,.35),inset 0 0 30px rgba(20,150,255,.05)!important;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important}
+#challenge-list .challenge-card:hover{transform:translateY(-3px)!important;border-color:#27c8ff!important;box-shadow:0 18px 42px rgba(0,0,0,.45),0 0 22px rgba(20,190,255,.14)!important}
+#challenge-list .challenge-card:active{transform:scale(.985)!important}
+#challenge-list .challenge-card::before{content:"";position:absolute;inset:0;z-index:0;background-image:var(--challenge-bg);background-size:cover;background-position:center;transform:scale(1.01);transition:transform .35s ease,filter .35s ease;filter:saturate(1.08)}
+#challenge-list .challenge-card:hover::before{transform:scale(1.045);filter:saturate(1.18) brightness(1.06)}
+#challenge-list .challenge-card::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(2,7,14,.03) 0%,rgba(2,7,14,.05) 35%,rgba(2,5,10,.32) 52%,rgba(2,4,8,.93) 88%,rgba(2,4,8,1) 100%);pointer-events:none}
+#challenge-list .challenge-card>*{position:relative!important;z-index:2!important}
+#challenge-list .challenge-card .challenge-visual,#challenge-list .challenge-card .z104-challenge-icon,#challenge-list .challenge-card .icon{display:none!important}
+#challenge-list .challenge-card .challenge-copy{position:absolute!important;left:0;right:0;bottom:0;width:100%!important;padding:15px 16px 16px!important;min-height:122px!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;text-align:center!important}
+#challenge-list .challenge-card .card-tag{align-self:center!important;width:max-content!important;max-width:100%;margin:0 0 7px!important;padding:5px 10px!important;border-radius:999px!important;background:rgba(3,12,24,.72)!important;border:1px solid rgba(93,210,255,.55)!important;color:#dff8ff!important;font-size:10px!important;font-weight:900!important;backdrop-filter:blur(7px)!important}
+#challenge-list .challenge-card h3{margin:0!important;font-size:22px!important;line-height:1.2!important;color:#fff!important;font-weight:950!important;text-shadow:0 2px 16px #000,0 0 8px rgba(0,0,0,.75)!important}
+#challenge-list .challenge-card p{margin:6px 0 0!important;font-size:12px!important;line-height:1.65!important;color:rgba(245,250,255,.82)!important;text-shadow:0 1px 8px #000!important}
+#challenge-list .challenge-card .z58-hidden-launcher,#challenge-list .challenge-card .btn{display:none!important}
+#challenge-list .z58-theme-horror{border-color:rgba(255,34,55,.92)!important;box-shadow:0 0 0 1px rgba(255,20,35,.12),0 18px 44px rgba(0,0,0,.48),0 0 28px rgba(255,20,35,.16)!important}
+#challenge-list .z58-theme-horror::after{background:linear-gradient(180deg,rgba(20,0,2,.05),rgba(40,0,3,.12) 35%,rgba(18,0,2,.45) 55%,rgba(8,0,1,.95) 90%,#030001 100%),radial-gradient(circle at 50% 42%,rgba(255,0,24,.18),transparent 36%)!important}
+#challenge-list .z58-theme-horror h3{color:#ff3042!important;text-shadow:0 2px 18px #000,0 0 14px rgba(255,0,20,.5)!important}
+@media(max-width:900px){#challenge-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:620px){#challenge-list{grid-template-columns:1fr!important;gap:12px!important}#challenge-list .challenge-card{min-height:270px!important;border-radius:16px!important}#challenge-list .challenge-card .challenge-copy{padding:13px 14px 14px!important;min-height:112px!important}#challenge-list .challenge-card h3{font-size:20px!important}#challenge-list .challenge-card p{font-size:11px!important}}
