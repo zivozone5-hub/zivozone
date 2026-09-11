@@ -13,32 +13,8 @@
 
   /* 1) Mining: true rolling 24-hour cooldown, not a calendar-day lock. */
   async function mine24(){
-    const u=user(),d=db();
-    if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return false}
-    if(isAdmin())return false;
-    if(!d)return false;
-    const root=d.collection('users').doc(u.uid).collection('zivozone');
-    const wallet=root.doc('wallet'), mining=root.doc('mining');
-    const ledger=wallet.collection('ledger').doc('mine_'+Date.now()+'_'+Math.random().toString(36).slice(2,9));
-    const now=Date.now();
-    try{
-      await d.runTransaction(async tx=>{
-        const [ws,ms]=await Promise.all([tx.get(wallet),tx.get(mining)]);
-        const next=ms.exists ? (ms.data()?.nextMiningAt?.toMillis?.()||Number(ms.data()?.nextMiningAt)||0) : 0;
-        if(next>now)throw new Error('التعدين متاح بعد انتهاء العداد.');
-        const current=money(ws.data()?.zivo);
-        const fv=window.firebase.firestore.FieldValue;
-        tx.set(wallet,{zivo:money(current+0.5),updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
-        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000+120000),amount:0.5,version:'spark-v1058'},{merge:true});
-        tx.set(ledger,{type:'daily_mining',label:'التعدين اليومي',amount:0.5,createdAt:fv.serverTimestamp(),source:'client-rules-v1058'},{merge:false});
-      });
-      await window.ZIVOZONE_ECONOMY?.refresh?.();
-      window.dispatchEvent(new CustomEvent('zivozone-wallet-updated'));
-      return true;
-    }catch(e){
-      console.warn('V1058 mining',e);
-      return false;
-    }
+    if(window.ZIVOZONE_ECONOMY?.mine) return !!(await window.ZIVOZONE_ECONOMY.mine());
+    return false;
   }
 
   /* Replace the old mining handler with the rolling 24h implementation. */
@@ -46,12 +22,7 @@
     const b=document.getElementById('z101-mine');
     if(!b||b.dataset.v1058Bound)return;
     b.dataset.v1058Bound='1';
-    b.onclick=async function(){
-      b.disabled=true;
-      const ok=await mine24();
-      if(!ok) await window.ZIVOZONE_ECONOMY?.refresh?.();
-      if(ok){b.textContent='التعدين مفعّل';}
-    };
+    b.onclick=()=>mine24();
   }
 
   /* 2) Challenge cards: the complete visual card is the primary action. */
@@ -126,8 +97,25 @@
     if(b){b.textContent='👑 ADMIN';b.title='غرفة إدارة ZIVOZONE';b.setAttribute('aria-label','فتح غرفة إدارة ZIVOZONE')}
   }
 
+
+  function bindForensicZoom(){
+    if(document.body.dataset.v1059Zoom)return;
+    document.body.dataset.v1059Zoom='1';
+    document.addEventListener('click',e=>{
+      const fig=e.target.closest('.forensic-evidence');
+      if(!fig)return;
+      const img=fig.querySelector('img'); if(!img?.src)return;
+      const o=document.createElement('div'); o.className='z1059-evidence-overlay';
+      o.innerHTML=`<button type="button" aria-label="إغلاق">×</button><img src="${img.src}" alt="تكبير الدليل">`;
+      document.body.appendChild(o);
+      const close=()=>{o.remove();document.removeEventListener('keydown',esc)};
+      const esc=k=>{if(k.key==='Escape')close()};
+      o.addEventListener('click',x=>{if(x.target===o||x.target.tagName==='BUTTON')close()});
+      document.addEventListener('keydown',esc);
+    },true);
+  }
   function boot(){
-    bindMining();bindChallengeCards();promoteChallengeTiles();hardenRunner();compactNews();adminPolish();
+    bindMining();bindChallengeCards();promoteChallengeTiles();hardenRunner();compactNews();adminPolish();bindForensicZoom();
   }
   document.addEventListener('DOMContentLoaded',boot);
   window.addEventListener('zivozone-auth',()=>setTimeout(boot,250));
