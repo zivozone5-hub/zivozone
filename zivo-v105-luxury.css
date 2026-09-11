@@ -27,3 +27,36 @@ html{background:#02050b}body{background:radial-gradient(circle at 50% -5%,rgba(2
  .challenge-center-section{width:calc(100% - 12px)!important;margin:8px auto!important;padding:10px!important;border-radius:19px!important}.challenge-center-heading{margin-bottom:9px!important}.challenge-center-heading h2{font-size:22px!important}.challenge-center-heading p{font-size:8px!important}.challenge-center-meta{display:none!important}.challenge-toolbar{display:none!important}.challenge-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}.challenge-card{display:flex!important;flex-direction:column!important;min-height:0!important;height:182px!important;border-radius:15px!important}.challenge-visual{width:100%!important;height:78px!important;min-height:78px!important;border-bottom:1px solid rgba(57,197,255,.16)!important}.z104-challenge-icon{width:52px!important;height:52px!important;border-radius:16px!important;font-size:23px!important}.challenge-copy{padding:7px 8px!important;display:block!important}.challenge-copy .card-tag{font-size:7px!important}.challenge-copy h3{font-size:11px!important;line-height:1.35!important;margin:2px 0!important}.challenge-copy p{font-size:7px!important;line-height:1.55!important;-webkit-line-clamp:2!important}.challenge-card>.btn{width:calc(100% - 14px)!important;min-width:0!important;height:29px!important;margin:0 7px 7px!important;padding:5px!important;font-size:8px!important}
  .section:not(#home):not(#challenges){width:calc(100% - 12px);margin-inline:auto}.mobile-nav{left:6px!important;right:6px!important;bottom:6px!important;border-radius:17px!important;padding:5px!important}.mobile-nav a,.mobile-nav button{min-height:49px!important;font-size:17px!important}.mobile-nav a span,.mobile-nav button span{font-size:7px!important}
 }
+/* ============================================================
+   ZIVOZONE V105.4 — RESTORED SIGNATURE Z / PERFORMANCE LAYER
+   Restore the original glowing Z identity while keeping the
+   luxury mobile system. No player-background replacement.
+============================================================ */
+.brand-mark{
+  display:grid!important;place-items:center!important;
+  width:40px!important;height:40px!important;border-radius:13px!important;
+  font-size:24px!important;font-weight:1000!important;line-height:1!important;
+  color:#fff!important;
+  background:radial-gradient(circle at 30% 22%,#ffffff 0,#55d8ff 24%,#4b3dff 58%,#160d35 100%)!important;
+  border:1px solid rgba(255,255,255,.2)!important;
+  box-shadow:0 0 30px rgba(69,130,255,.38),inset 0 0 18px rgba(255,255,255,.10)!important;
+}
+.brand-mark:before,.brand-mark:after{pointer-events:none!important}
+.hero-orb-wrap{
+  background:none!important;filter:drop-shadow(0 0 45px rgba(72,88,255,.22))!important;
+}
+.hero-orb{
+  display:grid!important;place-items:center!important;position:relative!important;
+  width:300px!important;height:300px!important;border-radius:50%!important;
+  background:radial-gradient(circle at 34% 27%,#8b6dff 0,#5140d6 28%,#151632 62%,#050812 100%)!important;
+  box-shadow:0 0 100px rgba(91,66,255,.42),inset 0 0 55px rgba(255,255,255,.09)!important;
+  overflow:visible!important;
+}
+.hero-orb span{
+  display:block!important;color:#fff!important;font-size:132px!important;font-weight:1000!important;
+  text-shadow:0 0 14px #fff,0 0 38px rgba(124,92,255,.95),0 0 75px rgba(45,210,255,.28)!important;
+  animation:zCenterGlow 4.5s ease-in-out infinite!important;
+}
+@media(max-width:900px){.hero-orb-wrap{min-height:260px!important;order:-1!important}.hero-orb{width:235px!important;height:235px!important}.hero-orb span{font-size:105px!important}}
+@media(max-width:700px){.brand-mark{width:34px!important;height:34px!important;font-size:20px!important}.hero-orb-wrap{min-height:210px!important;margin:0!important}.hero-orb{width:190px!important;height:190px!important}.hero-orb span{font-size:82px!important}.hero-orb:before{inset:-10px!important}.hero-orb:after{inset:-20px!important}}
+

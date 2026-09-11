@@ -3041,7 +3041,9 @@ window.ZIVOZONE_V18 = {
     document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,50));
   }else setTimeout(boot,50);
 
-  new MutationObserver(()=>repairButtons()).observe(document.documentElement,{subtree:true,childList:true});
+  // V105.3 performance hardening: avoid a document-wide MutationObserver.
+  // UI modules call repairButtons when they actually mount or change.
+
 })();
 
 
@@ -3290,7 +3292,8 @@ window.ZIVOZONE_V18 = {
   window.ZIVOZONE_V85_NEWS={clean,speed};
   addEventListener('zivozone:news-updated',()=>setTimeout(()=>{clean();speed()},50));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{clean();speed()},700));else setTimeout(()=>{clean();speed()},700);
-  setInterval(()=>{clean();speed()},5000);addEventListener('resize',()=>{clearTimeout(window.__z85rs);window.__z85rs=setTimeout(speed,150)});
+  // V105.4: no periodic DOM-wide scan. Recalculate only after real news/resize events.
+  addEventListener('resize',()=>{clearTimeout(window.__z85rs);window.__z85rs=setTimeout(speed,180)},{passive:true});
 })();
 
 /* ===== admin-monitor.js ===== */

@@ -80,10 +80,12 @@
   }
 
   function observe(){
+    // V105.3 performance hardening: do not observe the whole document.
+    // Challenge/news rendering can create many DOM nodes and a global observer
+    // causes repeated scans on the main thread. Rebind only on meaningful app events.
     styleEconomy();bindAdmin();consentUX();adaptiveUX();
-    const mo=new MutationObserver(()=>{styleEconomy();bindAdmin();consentUX();adaptiveUX()});mo.observe(document.body,{childList:true,subtree:true});
-    window.addEventListener('zivozone-auth',()=>setTimeout(()=>{styleEconomy();bindAdmin();consentUX()},250));
-    window.addEventListener('hashchange',()=>setTimeout(bindAdmin,150));
+    window.addEventListener('zivozone-auth',()=>setTimeout(()=>{styleEconomy();bindAdmin();consentUX();adaptiveUX()},250),{passive:true});
+    window.addEventListener('hashchange',()=>setTimeout(()=>{bindAdmin();adaptiveUX()},150),{passive:true});
   }
   window.ZIVOZONE_V103={openAdmin,collectAdmin};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',observe);else observe();
