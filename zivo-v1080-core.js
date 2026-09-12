@@ -68,6 +68,10 @@
         <button data-mine>⛏️<strong>التعدين</strong><small>${d.done?'تم اليوم':'متاح من نظام الاقتصاد'}</small></button>
         <button data-wallet>💰<strong>المحفظة</strong><small>${p.zivo} ZIVO</small></button>
         <button data-hub="#profile">👤<strong>ملفي</strong><small>إحصائيات اللاعب</small></button>
+        <button data-module="level">📈<strong>مستواي</strong><small>XP والتقدم</small></button>
+        <button data-module="ranking">🏆<strong>التصنيف</strong><small>ترتيب اللاعبين</small></button>
+        <button data-module="daily">🔥<strong>تحدي اليوم</strong><small>تحدٍ متجدد</small></button>
+        <button data-module="achievements">🏅<strong>إنجازاتي</strong><small>الشارات والجوائز</small></button>
       </div>
       <section class="v1080-section"><div class="v1080-section-title"><h3>🎖️ إنجازاتك</h3><span>${a.earned.length}/${BADGES.length}</span></div><div class="v1080-badges">${badgeHtml}</div></section>
       <section class="v1080-section"><div class="v1080-section-title"><h3>🏆 التنافس</h3></div><div class="v1080-competition"><button data-hub="#challenges">⚡ ابدأ تحديًا</button><button data-hub="#profile">🏆 افتح ملفي</button></div></section>`;
@@ -85,6 +89,14 @@
         if(b){o.classList.remove('open');document.querySelector(b.dataset.hub)?.scrollIntoView({behavior:'smooth',block:'start'});return}
         if(e.target.closest('[data-wallet]')){window.ZIVOZONE_ECONOMY?.open?.();return}
         if(e.target.closest('[data-mine]')){window.ZIVOZONE_ECONOMY?.mine?.();return}
+        const mod=e.target.closest('[data-module]')?.dataset.module;
+        if(mod){
+          const map={level:'ZIVOZONE_V35',ranking:'ZIVOZONE_V29',daily:'ZIVOZONE_V32',achievements:'ZIVOZONE_V31'};
+          const api=window[map[mod]];
+          o.classList.remove('open');
+          if(api?.open){api.open();return}
+          if(mod==='ranking'){document.querySelector('#sports')?.scrollIntoView({behavior:'smooth'});}
+        }
       });
     }
     o.querySelector('.v1080-card').innerHTML=render();
