@@ -21,246 +21,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=1064.1">
-
-<style id="zivo-v51-core">
-/* V51: ZIVO wallet + player cloud status + mobile action sheet */
-.zivo-v51-wallet{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,#17130a,#30240a);border:1px solid rgba(255,215,70,.32);border-radius:12px;padding:7px 10px;color:#fff;box-shadow:0 7px 22px rgba(255,190,0,.10)}
-.zivo-v51-wallet .coin{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff2a4,#ffd43d 40%,#9b6500);color:#5b3900;font-weight:1000;border:2px solid #ffe88a}
-.zivo-v51-wallet .balance{font-size:15px;font-weight:1000}
-.zivo-v51-wallet small{display:block;color:#e9d98f;font-size:9px;font-weight:800}
-.zivo-v51-cloud{font-size:10px;font-weight:900;opacity:.9}
-.zivo-v51-cloud.online{color:#79f2a0}.zivo-v51-cloud.offline{color:#ffb0b0}
-.zivo-v51-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
-.zivo-v51-action{border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.045);padding:12px;text-align:center;color:inherit;cursor:pointer;transition:transform .18s ease,background .18s ease}
-.zivo-v51-action:hover{transform:translateY(-2px);background:rgba(255,255,255,.075)}
-.zivo-v51-action strong{display:block;font-size:13px}.zivo-v51-action span{display:block;font-size:10px;opacity:.68;margin-top:3px}
-.zivo-v51-toast{position:fixed;left:16px;bottom:84px;z-index:99999;max-width:320px;padding:11px 14px;border-radius:12px;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 35px rgba(0,0,0,.35);font-size:12px;font-weight:800;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s}
-.zivo-v51-toast.show{transform:translateY(0);opacity:1}
-@media(max-width:700px){
- .zivo-v51-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
- .zivo-v51-wallet{padding:6px 8px}
-}
-
-.zivo-footer-link{background:none;border:0;color:#9fa8bf;font:inherit;font-size:11px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.zivo-footer-link:hover{color:#fff}
-.zivo-legal-overlay{position:fixed;inset:0;z-index:200000;display:grid;place-items:center;padding:14px;background:rgba(2,4,10,.82);backdrop-filter:blur(16px)}.zivo-legal-card{width:min(860px,calc(100vw - 24px));max-height:90dvh;overflow:auto;background:linear-gradient(145deg,#0d1220,#070a12);border:1px solid rgba(255,215,70,.25);border-radius:22px;padding:22px;box-shadow:0 30px 100px rgba(0,0,0,.6)}.zivo-legal-card h2{margin:5px 0 4px}.zivo-legal-card>p{font-size:11px;color:#8993aa}.zivo-legal-body{margin-top:15px}.zivo-legal-body h3{font-size:13px;color:#ffe27a;margin:16px 0 6px}.zivo-legal-body p{font-size:11px;line-height:1.8;color:#c3cada;margin:0}.zivo-legal-close{border:0;background:rgba(255,255,255,.08);color:#fff;border-radius:11px;cursor:pointer}.zivo-legal-card>.zivo-legal-close{position:absolute;margin:-8px 0 0 0;width:38px;height:38px;font-size:22px}.zivo-legal-actions{display:flex;justify-content:flex-start;margin-top:18px}.zivo-terms-check{display:flex;align-items:flex-start;gap:8px;margin:10px 0;font-size:10px;line-height:1.7;color:#b9c2d5}.zivo-terms-check input{margin-top:3px;accent-color:#7c6cff}.zivo-inline-link{padding:0;border:0;background:none;color:#8ad9ff;text-decoration:underline;cursor:pointer;font:inherit}@media(max-width:700px){.zivo-legal-card{padding:17px;border-radius:18px}.zivo-legal-body p{font-size:10px}.zivo-footer-link{font-size:10px}}
-</style>
-
-<style id="zivo-v53-forensic">.forensic-evidence{margin:10px 0 16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;background:#0b1018}.forensic-evidence img{display:block;width:100%;max-height:210px;object-fit:cover}.forensic-evidence figcaption{padding:7px 10px;font-size:11px;color:#aebbd0;font-weight:800}</style>
+<link rel="stylesheet" href="zivozone-core-v1082.css?v=1082.0">
 
 
-<style id="zivo-v55-retention">
-.zivo-v55-dashboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
-.zivo-v55-kpi{border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:10px;background:rgba(255,255,255,.045)}
-.zivo-v55-kpi small{display:block;font-size:9px;opacity:.62}.zivo-v55-kpi b{display:block;font-size:16px;margin-top:3px}
-.zivo-v55-mission{border:1px solid rgba(255,215,70,.20);border-radius:15px;padding:12px;background:linear-gradient(135deg,rgba(255,215,70,.08),rgba(255,255,255,.025));margin:12px 0}
-.zivo-v55-mission-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.zivo-v55-badge{padding:4px 7px;border-radius:999px;background:rgba(255,215,70,.14);font-size:9px;font-weight:1000}
-.zivo-v55-progress{height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:9px}.zivo-v55-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd43d,#76e6ff);transition:width .35s}
-.zivo-v55-ai-panel{display:flex;gap:10px;align-items:center}.zivo-v55-ai-panel .orb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,#7ee7ff 30%,#5267ff 65%,#171b55);font-size:11px;font-weight:1000}
-.zivo-v55-ai-panel p{margin:2px 0 0;font-size:10px;opacity:.72}
-@media(max-width:700px){.zivo-v55-dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}}
-</style>
 
 
-<style id="zivo-v56-unified">
-.zivo-v56-hub{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin:14px 0}
-.zivo-v56-card{border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:14px;background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));box-shadow:0 10px 30px rgba(0,0,0,.14)}
-.zivo-v56-title{font-weight:1000;font-size:16px}.zivo-v56-sub{font-size:10px;opacity:.68;margin-top:3px}
-.zivo-v56-progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:10px 0 7px}.zivo-v56-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd43d,#75e5ff);transition:width .4s}
-.zivo-v56-actions{display:flex;gap:7px;flex-wrap:wrap}.zivo-v56-btn{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:10px;padding:7px 9px;color:inherit;font-weight:900;font-size:10px;cursor:pointer}
-.zivo-v56-ledger{max-height:150px;overflow:auto;margin-top:8px}.zivo-v56-row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:10px}.zivo-v56-row b{color:#ffe06a}
-.zivo-v56-status{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:900}.zivo-v56-dot{width:7px;height:7px;border-radius:50%;background:#71efa0}
-@media(max-width:700px){.zivo-v56-hub{grid-template-columns:1fr}.zivo-v56-card{padding:11px}}
-</style>
 
 
-<style id="zivo-v57-cloud">
-.zivo-v57-cloudbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;margin:10px 0;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035);font-size:10px}
-.zivo-v57-cloudbar .ok{color:#78efa1}.zivo-v57-cloudbar .warn{color:#ffd27a}.zivo-v57-cloudbar .bad{color:#ff9a9a}
-.zivo-v57-auth{display:flex;gap:7px;flex-wrap:wrap}.zivo-v57-auth button{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:inherit;border-radius:9px;padding:7px 10px;font-size:10px;font-weight:900;cursor:pointer}
-.zivo-v57-modal{position:fixed;inset:0;z-index:100000;display:none;place-items:center;background:rgba(0,0,0,.62);backdrop-filter:blur(6px)}.zivo-v57-modal.show{display:grid}
-.zivo-v57-dialog{width:min(430px,calc(100vw - 28px));border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;background:#101827;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.45)}
-.zivo-v57-dialog h3{margin:0 0 5px;font-size:16px}.zivo-v57-dialog p{font-size:10px;opacity:.7;margin:0 0 12px}.zivo-v57-input{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#0b1220;color:#fff}.zivo-v57-primary{width:100%;margin-top:8px;border:0;border-radius:10px;padding:10px;background:linear-gradient(90deg,#ffd43d,#75e5ff);color:#111;font-weight:1000;cursor:pointer}
-</style>
 
-<style id="zivo-v62-clean">.profile-cloud-note{margin-top:10px;padding:9px 11px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035);font-size:10px}@media(max-width:700px){.profile-cloud-note{font-size:9px;padding:8px 9px}}</style><style id="zivo-v65-integration-css">.challenge-card{align-items:stretch}.challenge-visual{width:92px;height:72px;object-fit:cover;border-radius:11px;flex:0 0 92px;background:rgba(255,255,255,.04);display:grid;place-items:center;font-size:30px}.challenge-visual-fallback{border:1px solid rgba(255,255,255,.08)}.challenge-copy{min-width:0;flex:1}.challenge-copy p{line-height:1.5}@media(max-width:700px){.challenge-card{display:grid;grid-template-columns:64px 1fr;gap:9px}.challenge-visual{width:64px;height:58px}.challenge-card>.btn{grid-column:1/-1;width:100%}}</style>
 
-<style id="zivo-v68-challenge-core">
-/* ZIVOZONE V68 — Challenge Center is the visual heart */
-#challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,
-.challenges-grid .challenge-card,#challenges .game-card,#challengeCenter .game-card{
-  min-height:188px!important;
-  padding:14px!important;
-  border-radius:18px!important;
-}
-#challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-.challenges-grid .challenge-card .icon{
-  width:46px!important;height:46px!important;
-  min-width:46px!important;min-height:46px!important;
-  font-size:21px!important;line-height:46px!important;
-}
-#challenges .challenge-card img,#challengeCenter .challenge-card img,.challenge-center .challenge-card img,
-.challenges-grid .challenge-card img{
-  height:92px!important;max-height:92px!important;
-  border-radius:12px!important;
-}
-#challenges .challenge-card button,#challengeCenter .challenge-card button,.challenge-center .challenge-card button,
-.challenges-grid .challenge-card button{
-  min-height:30px!important;
-  height:30px!important;
-  padding:5px 10px!important;
-  font-size:9px!important;
-  border-radius:8px!important;
-  line-height:1!important;
-  width:auto!important;
-  max-width:118px!important;
-}
-#challenges .challenge-card button svg,#challengeCenter .challenge-card button svg,
-.challenge-center .challenge-card button svg,.challenges-grid .challenge-card button svg{
-  width:14px!important;height:14px!important;
-}
-@media(max-width:700px){
-  #challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,
-  .challenges-grid .challenge-card,#challenges .game-card,#challengeCenter .game-card{
-    min-height:170px!important;
-    padding:11px!important;
-    border-radius:15px!important;
-  }
-  #challenges .challenge-card img,#challengeCenter .challenge-card img,.challenge-center .challenge-card img,
-  .challenges-grid .challenge-card img{
-    height:76px!important;max-height:76px!important;
-  }
-  #challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-  .challenges-grid .challenge-card .icon{
-    width:40px!important;height:40px!important;
-    min-width:40px!important;min-height:40px!important;
-    font-size:18px!important;line-height:40px!important;
-  }
-  #challenges .challenge-card button,#challengeCenter .challenge-card button,.challenge-center .challenge-card button,
-  .challenges-grid .challenge-card button{
-    height:29px!important;min-height:29px!important;
-    padding:5px 9px!important;font-size:8.5px!important;
-    max-width:108px!important;
-  }
-}
-</style>
 
-<style id="zivo-v72-news-pro">
-/* ZIVOZONE V72 — broadcast-quality Arabic news rails */
-.zivo-news-stack{
-  width:100%;display:grid;gap:10px;margin:16px 0 20px;
-  direction:rtl;
-}
-.zivo-news-rail{
-  position:relative;display:flex;align-items:stretch;min-width:0;height:56px;
-  overflow:hidden;border-radius:15px;
-  background:linear-gradient(90deg,#070a10 0%,#101826 52%,#070a10 100%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 10px 30px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.035);
-}
-.zivo-news-rail:after{
-  content:"";position:absolute;inset:0;pointer-events:none;z-index:3;
-  background:linear-gradient(90deg,rgba(7,10,16,.96),transparent 8%,transparent 92%,rgba(7,10,16,.96));
-}
-.zivo-rail-head{
-  z-index:6;flex:0 0 auto;display:flex;align-items:center;gap:9px;
-  min-width:285px;padding:0 15px;
-  background:linear-gradient(135deg,#172437,#0a1019);
-  border-inline-start:1px solid rgba(255,255,255,.06);
-  border-inline-end:1px solid rgba(255,255,255,.13);
-  white-space:nowrap;
-}
-.zivo-rail-live{
-  color:#fff;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif;
-  background:#e3263d;border-radius:99px;padding:6px 8px;
-  box-shadow:0 0 0 3px rgba(227,38,61,.10);
-}
-.zivo-rail-live:before{content:"";display:inline-block;width:6px;height:6px;margin-inline-end:5px;border-radius:50%;background:#fff;animation:zivoLivePulse 1.4s infinite}
-.zivo-rail-badge{
-  color:#10151d;background:#f4c94e;border-radius:99px;padding:6px 9px;
-  font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-title{
-  color:#fff;font:950 14px/1.1 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;
-  letter-spacing:.25px;
-}
-.zivo-rail-sub{
-  color:#91a5bf;font:700 9px/1.3 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-status{
-  margin-inline-start:auto;color:#6f8198;font:700 8px/1.2 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-window{
-  position:relative;min-width:0;flex:1;overflow:hidden;direction:ltr;
-}
-.zivo-rail-window:before,.zivo-rail-window:after{
-  content:"";position:absolute;top:0;bottom:0;width:52px;z-index:4;pointer-events:none;
-}
-.zivo-rail-window:before{left:0;background:linear-gradient(90deg,#070a10,transparent)}
-.zivo-rail-window:after{right:0;background:linear-gradient(270deg,#070a10,transparent)}
-.zivo-rail-track{
-  display:flex;align-items:center;width:max-content;height:100%;
-  direction:ltr;white-space:nowrap;
-  animation:zivoBroadcastFlowV72 var(--zivo-flow-duration,70s) linear infinite;
-  will-change:transform;
-}
-.zivo-rail-sequence{
-  display:flex;align-items:center;gap:44px;flex:none;
-  padding:0 24px;
-}
-.zivo-news-item{
-  display:inline-flex;align-items:center;gap:9px;flex:none;
-  color:#f5f7fb;text-decoration:none;
-  font:800 13px/1.8 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;
-}
-a.zivo-news-item:hover .zivo-news-headline{color:#78d2ff;text-decoration:underline;text-underline-offset:3px}
-.zivo-news-dot{color:#4e647d;font-size:8px}
-.zivo-news-source{
-  color:#77caff;font-size:9px;font-weight:900;
-  background:rgba(119,202,255,.08);padding:3px 7px;border-radius:6px;
-}
-.zivo-news-headline{max-width:none}
-.zivo-news-time{color:#708299;font-size:9px;font-weight:700}
-.zivo-rail-track-empty{animation:none!important}
-.zivo-short-feed{animation-duration:45s!important}.zivo-general-rail .zivo-rail-track{animation-duration:120s!important}
-.zivo-news-rail:hover .zivo-rail-track{animation-play-state:paused}
-@keyframes zivoBroadcastFlowV72{
-  from{transform:translate3d(0,0,0)}
-  to{transform:translate3d(-50%,0,0)}
-}
-@keyframes zivoLivePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.72)}}
-@media(max-width:900px){
-  .zivo-rail-head{min-width:245px}
-  .zivo-rail-status{display:none}
-}
-@media(max-width:700px){
-  .zivo-news-stack{gap:7px;margin:11px 0 15px}
-  .zivo-news-rail{height:49px;border-radius:12px}
-  .zivo-rail-head{min-width:154px;padding:0 9px;gap:6px}
-  .zivo-rail-title{font-size:11px}
-  .zivo-rail-sub{display:none}
-  .zivo-rail-live,.zivo-rail-badge{font-size:8px;padding:5px 6px}
-  .zivo-rail-sequence{gap:28px;padding:0 17px}
-  .zivo-news-item{font-size:11px;gap:7px}
-  .zivo-news-source{font-size:8px;padding:2px 5px}
-  .zivo-news-time{display:none}
-}
-@media(prefers-reduced-motion:reduce){
-  .zivo-rail-track{animation:none!important}
-}
-</style>
-<style id="zivo-v100-mobile-safety">
-/* V100: single responsive codebase; prevent accidental horizontal overflow. */
-html { overflow-x: hidden; }
-body { max-width: 100%; overflow-x: hidden; }
-img, video, canvas, iframe { max-width: 100%; }
-button, a, input, select, textarea { touch-action: manipulation; }
-@media (max-width: 480px) {
-  .zivo-desktop-only { display: none !important; }
-}
-</style>
 
-<style id="zivo-v105-loader-guard">#app-loader{transition:opacity .25s ease,visibility .25s ease}.zivo-loader-released{opacity:0!important;visibility:hidden!important;pointer-events:none!important}</style>
+
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
 </head>
 <body>
@@ -447,11 +219,8 @@ document.addEventListener('DOMContentLoaded',function(){
   setTimeout(release,1800);
 })();
 </script>
-<script src="zivozone-runtime.js?v=1081.1"></script>
-<script src="zivo-global-core.js?v=1064.1"></script>
-<link rel="stylesheet" href="zivo-v103-pro.css?v=1064.1"><script src="zivo-v103-pro.js?v=1064.1"></script><link rel="stylesheet" href="zivo-v104-pro.css?v=1064.1"><script src="zivo-v104-pro.js?v=1064.1"></script><link rel="stylesheet" href="zivo-v105-luxury.css?v=1064.1"><link rel="stylesheet" href="zivo-v1062-royal.css?v=1064.1"><script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
+<script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
 
-<script src="zivo-v1062-royal.js?v=1064.1"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js",{scope:"/"}).catch(e=>console.warn("ZIVOZONE SW:",e)));}</script>
 
 <!-- ZIVO V101 UNIFIED MOBILE-FIRST ECONOMY
@@ -464,6 +233,6 @@ document.addEventListener('DOMContentLoaded',function(){
      Backend must validate all ZIVO/XP transactions server-side.
 -->
 
-\n<link rel="stylesheet" href="zivo-v1080-core.css?v=1080.0">\n<script src="zivo-v1080-core.js?v=1080.0"></script>\n<!-- ZIVOZONE V1080 CORE -->\n<link rel="stylesheet" href="zivo-v1081-player.css?v=1081.0"><script src="zivo-v1081-player.js?v=1081.0"></script>
+\n\n\n<!-- ZIVOZONE V1080 CORE -->\n<script src="zivozone-core-v1082.js?v=1082.0"></script>
 </body>
 </html>
