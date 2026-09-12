@@ -3549,17 +3549,26 @@ window.ZIVOZONE_V18 = {
     injectStyle();
     if(document.getElementById('zivo-v101-economy'))return;
     const h=document.querySelector('header.topbar');if(!h)return;
-    const root=document.createElement('section');root.id='zivo-v101-economy';root.className='z101-economy';root.setAttribute('aria-label','ZIVO Economy');
+    const root=document.createElement('div');root.id='zivo-v101-economy';root.className='z101-economy z101-header-economy';root.setAttribute('aria-label','ZIVO Economy');
     root.innerHTML=`
-      <article class="z101-card z101-wallet">
-        <div class="z101-coin">Z</div><div><div class="z101-label">ZIVO WALLET</div><div id="z101-balance" class="z101-balance">0 ZIVO</div><div id="z101-wallet-status" class="z101-sub">سجّل الدخول لحفظ رصيدك ومكافآتك.</div></div>
-        <div class="z101-wallet-actions"><button id="z101-wallet-open" class="z101-btn">المحفظة</button></div>
-      </article>
-      <article class="z101-card z101-mining">
-        <div class="z101-mining-icon">⛏️</div><div><h3>التعدين اليومي</h3><p>فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.</p><div id="z101-countdown" class="z101-countdown">—</div></div>
-        <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary">بدء التعدين +0.50</button></div>
-      </article>`;
-    h.insertAdjacentElement('afterend',root);
+      <button type="button" class="z101-card z101-wallet" id="z101-wallet-open" aria-label="نظام العملات ZIVO">
+        <span class="z101-coin">Z</span>
+        <span class="z101-wallet-copy">
+          <span class="z101-label">نظام العملات</span>
+          <span id="z101-balance" class="z101-balance">0 ZIVO</span>
+        </span>
+      </button>
+      <button type="button" class="z101-card z101-mining" id="z101-mine" aria-label="التعدين اليومي">
+        <span class="z101-mining-icon">⛏️</span>
+        <span class="z101-mining-copy">
+          <span class="z101-mining-title">التعدين</span>
+          <span id="z101-countdown" class="z101-countdown">—</span>
+        </span>
+        <span class="z101-mine-action"><span class="z101-btn primary">+0.50</span></span>
+      </button>`;
+    const actions=h.querySelector('.top-actions');
+    if(actions) actions.insertBefore(root,document.getElementById('login-btn'));
+    else h.insertAdjacentElement('afterend',root);
     root.querySelector('#z101-wallet-open').onclick=openWallet;
     root.querySelector('#z101-mine').onclick=mine;
   }
