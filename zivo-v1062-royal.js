@@ -138,6 +138,17 @@
   };
   document.addEventListener('DOMContentLoaded',schedule);
   window.addEventListener('load',()=>setTimeout(schedule,350));
-  const mo=new MutationObserver(schedule);
-  mo.observe(document.body,{childList:true,subtree:true});
+  // Observe only the dynamic challenge container instead of the entire document.
+  // This preserves cards rendered after boot while avoiding document-wide rescans.
+  let observerStarted=false;
+  function observeChallengeList(){
+    if(observerStarted)return;
+    const list=document.getElementById('challenge-list');
+    if(!list)return;
+    observerStarted=true;
+    const mo=new MutationObserver(schedule);
+    mo.observe(list,{childList:true,subtree:true});
+  }
+  document.addEventListener('DOMContentLoaded',observeChallengeList,{once:true});
+  setTimeout(observeChallengeList,1000);
 })();
