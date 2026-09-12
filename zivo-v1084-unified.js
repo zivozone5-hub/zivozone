@@ -38,7 +38,7 @@ function openHub(){
  </div>`;
  o.classList.add('open');
 }
-function profile(){scrollTo('#profile')}
+function profile(){if(window.ZIVOZONE_PROFILE?.open)return window.ZIVOZONE_PROFILE.open();scrollTo('#profile')}
 function renderBar(){
  const p=player(), w=economy()?.getWallet?.()||{};
  const name=(p.name||user()?.displayName||'لاعب ZIVO').trim();
