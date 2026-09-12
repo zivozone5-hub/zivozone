@@ -101,22 +101,6 @@ service cloud.firestore {
       match /wallet/{doc} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
     }
 
-
-    match /reels/{reelId} {
-      allow read: if resource.data.published == true || isOwner();
-      allow create,delete: if isOwner();
-      allow update: if isOwner() || (signedIn()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes'])
-        && request.resource.data.likes >= 0
-        && (request.resource.data.likes == resource.data.likes + 1
-            || request.resource.data.likes == resource.data.likes - 1));
-      match /likes/{uid} {
-        allow read: if signedIn();
-        allow create,delete: if signedIn() && request.auth.uid == uid;
-        allow update: if false;
-      }
-    }
-
     match /questions/{id} { allow read: if signedIn(); allow write: if false; }
     match /dailyChallenges/{id} { allow read: if signedIn(); allow write: if false; }
     match /results/{id} { allow read,create: if signedIn(); allow update,delete: if false; }
