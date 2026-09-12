@@ -1172,3 +1172,8 @@ html,body{overflow-x:hidden}
 .player-quick-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
 .player-quick-actions .btn{min-height:42px}
 @media(max-width:700px){.player-quick-actions{display:grid;grid-template-columns:1fr 1fr}.player-quick-actions .btn{width:100%;font-size:12px}}
+
+/* V1084 Clean Home helpers */
+.modal-root-clean{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}
+.clean-ai-modal{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto}
+.clean-ai-close{position:absolute;inset-inline-end:14px;top:12px;width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}
