@@ -2,7 +2,7 @@
  * Firebase AI Logic + Gemini Developer API.
  * No Gemini API key is stored in the client.
  */
-import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
+import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-ai.js';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check.js';
 
@@ -49,16 +49,20 @@ Keep responses suitable for a broad audience and avoid collecting unnecessary pe
 
   async function init() {
     if (!cfg?.projectId) throw new Error('Missing Firebase configuration');
-    const name = 'zivo-ai';
-    let app = getApps().find(a => a.name === name);
-    if (!app) app = initializeApp(cfg, name);
+    // Use the single default Firebase app. The previous build created a second
+    // named app while the legacy runtime had already initialized Firebase,
+    // which could result in App Check being initialized on a different app.
+    let app;
+    const apps = getApps();
+    if (apps.length) app = getApp();
+    else app = initializeApp(cfg);
 
     // ZIVOZONE V1070 — App Check is mandatory for Firebase AI Logic.
-    // The same public reCAPTCHA Enterprise site key must be registered
-    // for the ZIVOZONE WEB app in Firebase Console.
+    // The same public reCAPTCHA Enterprise SCORE-based site key must be registered
+    // for the ZIVOZONE WEB app in Firebase Console and allowed for the production domain.
     const appCheckKey = String(window.ZIVOZONE_SECURITY?.appCheckSiteKey || '').trim();
     if (!appCheckKey || appCheckKey.startsWith('<') || appCheckKey.includes('<script')) {
-      throw new Error('مفتاح reCAPTCHA Enterprise غير صالح أو غير مضبوط في الموقع.');
+      throw new Error('مفتاح reCAPTCHA Enterprise غير مضبوط. تأكد أن المفتاح SCORE-based نفسه مسجل في Firebase App Check وأن نطاق الموقع مسموح في Google Cloud.');
     }
 
     let appCheck = window.ZIVOZONE_AI_APP_CHECK;
