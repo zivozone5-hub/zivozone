@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;family=Noto+Sans+Devanagari:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
-<link href="styles.css?v=1084.0" rel="stylesheet"/>
+<link href="styles.css?v=1086.0" rel="stylesheet"/>
 
 
 
@@ -56,40 +56,71 @@
 </div>
 </header>
 <main>
-<section class="hero section" id="home">
-<div class="hero-copy">
-<span class="eyebrow" data-i18n="heroEyebrow">عالم رقمي • ZIVOZONE</span>
-<h1><span class="hero-brand">ZIVOZONE</span><br/><span data-i18n="heroTitle">عالمك يبدأ من هنا</span></h1>
-<p data-i18n="heroText">ألعاب وتحديات وذكاء ورعب وعلوم ورياضة واكتشاف للشخصية في عالم رقمي واحد.</p>
-<div class="hero-actions"><button class="btn btn-primary btn-lg" data-action="scroll-challenges" data-i18n="play">🚀 ابدأ التحديات</button><button class="btn btn-ghost btn-lg" data-action="login" data-i18n="login">🔐 إنشاء حساب / دخول</button></div>
-<div class="hero-stats"><div><b>5</b><span data-i18n="languages">لغات</span></div><div><b>10+</b><span data-i18n="modes">أنماط ألعاب</span></div><div><b>100+</b><span data-i18n="challengesCount">تحديات</span></div></div>
+<section class="z86-dashboard" id="home">
+<aside aria-label="ZIVOZONE command navigation" class="z86-sidebar">
+<div class="z86-side-brand"><span class="z86-side-mark">Z</span><div><b>ZIVOZONE</b><small>PLAYER COMMAND</small></div></div>
+<div class="z86-side-group">
+<button class="z86-nav active" data-z86-nav="home"><span>⌂</span><b>الرئيسية</b></button>
+<button class="z86-nav" data-z86-nav="challenges"><span>🎮</span><b>التحديات</b></button>
+<button class="z86-nav" data-z86-nav="sports"><span>⚽</span><b>الرياضة والأخبار</b></button>
+<button class="z86-nav" data-z86-action="ai"><span>🤖</span><b>ZIVO AI</b></button>
+<button class="z86-nav" data-z86-action="matches"><span>📅</span><b>المباريات</b></button>
+<button class="z86-nav" data-z86-action="leaderboard"><span>🏆</span><b>المتصدرون</b></button>
+<button class="z86-nav" data-z86-action="wallet"><span>💰</span><b>المحفظة</b><em id="z86-side-zivo">0 ZIVO</em></button>
+<button class="z86-nav" data-z86-action="store"><span>🛒</span><b>المتجر</b></button>
+<button class="z86-nav" data-z86-action="identity"><span>🧠</span><b>اكتشف نفسك</b></button>
+<button class="z86-nav" data-z86-action="achievements"><span>🏅</span><b>إنجازاتي</b></button>
+<button class="z86-nav" data-z86-action="daily"><span>🔥</span><b>تحدي اليوم</b></button>
+<button class="z86-nav" data-z86-action="missions"><span>🎯</span><b>مهامي</b></button>
+<button class="z86-nav" data-z86-action="level"><span>📈</span><b>مستواي</b></button>
 </div>
-<div class="hero-orb-wrap"><div class="hero-orb"><span>Z</span></div><span class="float-tag t1">IQ</span><span class="float-tag t2">AI</span><span class="float-tag t3">HORROR</span><span class="float-tag t4">SPORT</span></div>
-</section>
-<section class="section alt challenge-center-section" id="challenges">
-<div class="section-heading challenge-center-heading">
-<div><span class="eyebrow" data-i18n="challengeEyebrow">مركز التحديات</span><h2 data-i18n="challengeTitle">مركز التحديات</h2><p class="muted" data-i18n="challengeText">كل تحدٍ عالم مستقل؛ اختر واحدًا وابدأ رحلة تتصاعد في الصعوبة.</p></div>
-<div class="challenge-center-meta"><span class="level-chip" id="player-level-chip">Level 1</span><span class="challenge-live-chip">● LIVE CHALLENGE ENGINE</span></div>
-</div>
-<div class="ad-slot ad-top" data-ad-slot="top"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
-<div class="challenge-layout premium-challenge-layout">
-<aside aria-label="Future advertising area" class="ad-column ad-left">
-<div class="ad-slot" data-ad-slot="left-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
-<div class="ad-slot" data-ad-slot="left-2"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>ZIVO Partner</strong></div>
+<div class="z86-side-bottom"><button class="z86-premium"><strong>✦ ZIVOZONE</strong><span>كل أدوات اللاعب في مكان واحد</span></button><div class="z86-cloud" id="z86-cloud">● Cloud</div></div>
 </aside>
-<div class="challenge-main">
-<div class="challenge-toolbar"><span class="muted" data-i18n="challengeToolbar">تحديات متنوعة: منطق، ذاكرة، رياضيات، علوم، كرة قدم، سرعة، واستراتيجية. • 30 ثانية لكل سؤال.</span></div>
-<div class="challenge-list" id="challenge-list"></div>
+<div class="z86-main">
+<section class="z86-hero">
+<div class="z86-hero-copy">
+<span class="eyebrow">DIGITAL WORLD • ZIVOZONE</span>
+<h1><span>ZIVOZONE</span><br/>عالمك يبدأ من هنا</h1>
+<p>تحديات، رياضة، ذكاء، أخبار، ومكافآت — كل رحلتك كلاعب في مكان واحد.</p>
+<div class="z86-hero-actions">
+<button class="btn btn-primary btn-lg" data-z86-action="challenges">🚀 ابدأ التحديات</button>
+<button class="btn btn-ghost btn-lg" data-z86-action="profile">👤 ملفي</button>
 </div>
-<aside aria-label="Future advertising area" class="ad-column ad-right">
-<div class="ad-slot" data-ad-slot="right-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
-<div class="ad-slot" data-ad-slot="right-2"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>ZIVO Partner</strong></div>
-</aside>
 </div>
-<div class="ad-slot ad-bottom" data-ad-slot="bottom"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
+<div class="z86-orb-wrap"><div class="z86-orb"><b>Z</b></div><i>IQ</i><i>AI</i><i>SPORT</i><i>PLAY</i></div>
 </section>
-<section class="section" id="sports"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div class="sports-grid" id="news-list"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div class="sports-grid" id="jordan-news-list"></div><div class="subheading"><h3 data-i18n="matches">المباريات القادمة</h3></div><div class="sports-grid" id="sports-list"></div><div class="match-alert" hidden="" id="match-alert"></div><div class="subheading"><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><span class="live-badge">LIVE / UPCOMING</span></div><div class="sports-grid" id="fixture-list"></div></section>
-<section class="section alt" id="profile"><div class="profile-panel"><div class="avatar">Z</div><div class="profile-main"><span class="eyebrow" data-i18n="profileEyebrow">لاعب ZIVO</span><h2 id="profile-name">زائر</h2><p class="muted" id="profile-email">يمكنك اللعب كزائر ثم إنشاء حساب لحفظ تقدمك.</p><div class="progress"><span id="xp-progress"></span></div><div class="profile-stats"><span><span data-i18n="level">المستوى</span> <b id="profile-level">1</b></span><span><span data-i18n="xp">XP</span> <b id="profile-xp">0</b></span><span>🪙 <span data-i18n="coins">ZIVO</span> <b id="profile-coins">0</b></span><span>🏆 <span data-i18n="wins">انتصارات</span> <b id="profile-wins">0</b></span><span>🔥 <span data-i18n="bestStreak">أفضل سلسلة</span> <b id="profile-best-streak">0</b></span></div></div><div class="profile-actions"><button class="btn btn-primary" data-action="login" data-i18n="account">🔐 الحساب</button><button class="btn btn-ghost" data-action="logout" data-i18n="logout" hidden="" id="logout-btn">تسجيل الخروج</button></div></div><div class="profile-cloud-note">☁️ <b>ملف اللاعب:</b> تقدمك وXP وZIVO والنتائج تُدار من هذا القسم بعد تسجيل الدخول.</div><div class="notice" data-i18n="saveHint">الزائر يستطيع اللعب. الحساب المجاني يحفظ تقدمك وXP وZIVO والنتائج.</div><div aria-label="ZIVOZONE player tools" class="player-quick-actions"><button class="btn btn-ghost" data-action="open-identity" data-i18n="identityStart">🧠 اكتشف نفسك</button><button class="btn btn-ghost" data-action="open-ai" data-i18n="ai">🤖 ZIVO AI</button><button class="btn btn-ghost" data-action="open-wallet">💰 محفظة ZIVO</button></div></section>
+<section aria-label="Player statistics" class="z86-stat-grid">
+<button class="z86-stat" data-z86-action="profile"><span>⚡ XP</span><strong id="z86-xp">0</strong><small id="z86-xp-sub">تقدم اللاعب</small><i><em id="z86-xp-fill"></em></i></button>
+<button class="z86-stat" data-z86-action="wallet"><span>🪙 ZIVO</span><strong id="z86-zivo">0</strong><small>رصيدك داخل المنصة</small></button>
+<button class="z86-stat" data-z86-action="daily"><span>🔥 STREAK</span><strong id="z86-streak">0</strong><small>أيام متتالية</small></button>
+<button class="z86-stat" data-z86-action="level"><span>👑 LEVEL</span><strong id="z86-level">1</strong><small id="z86-level-sub">المستوى الحالي</small></button>
+<button class="z86-stat" data-z86-action="leaderboard"><span>🏆 RANK</span><strong id="z86-rank">—</strong><small>الترتيب العالمي</small></button>
+</section>
+<section class="z86-grid-2">
+<article class="z86-panel z86-challenges-panel" id="z86-challenges-panel">
+<div class="z86-panel-head"><div><span class="eyebrow">LIVE CHALLENGE ENGINE</span><h2>التحديات النشطة</h2></div><button class="z86-link" data-z86-action="challenges">عرض الكل ←</button></div>
+<div class="z86-challenge-mini-grid">
+<button data-game="iq"><span>🧠</span><b>اختبار الذكاء</b><small>10 أسئلة • 30 ثانية</small><em>ابدأ</em></button>
+<button data-game="football"><span>⚽</span><b>تحدي كرة القدم</b><small>معرفة وتكتيك</small><em>ابدأ</em></button>
+<button data-game="logic"><span>♟️</span><b>مختبر المنطق</b><small>تفكير وتصعيد</small><em>ابدأ</em></button>
+<button data-game="memory"><span>🧩</span><b>الذاكرة</b><small>تركيز وسرعة</small><em>ابدأ</em></button>
+</div>
+</article>
+<article class="z86-panel" id="z86-news-panel">
+<div class="z86-panel-head"><div><span class="eyebrow">LIVE SPORTS</span><h2>آخر الأخبار</h2></div><button class="z86-link" data-z86-nav="sports">الرياضة ←</button></div>
+<div class="z86-news-preview" id="z86-news-preview"><div>جاري تحميل الأخبار الرياضية...</div><div>الأخبار العربية والأردنية تظهر هنا.</div><div>تحديث تلقائي من مصادر المنصة.</div></div>
+</article>
+</section>
+<section class="z86-grid-3">
+<article class="z86-panel z86-ai-card"><span class="z86-big-icon">🤖</span><div><span class="eyebrow">ZIVO AI</span><h3>مساعدك الذكي</h3><p>اسأل عن التحديات، مستواك، الرياضة أو رحلتك.</p><button class="btn btn-primary" data-z86-action="ai">افتح ZIVO AI</button></div></article>
+<article class="z86-panel z86-match-card"><div class="z86-panel-head"><div><span class="eyebrow">FIXTURE CENTER</span><h3>المباريات القادمة</h3></div><button class="z86-link" data-z86-action="matches">عرض الكل</button></div><div id="z86-fixture-preview">جارٍ تحميل المباريات...</div></article>
+<article class="z86-panel z86-rank-card"><div class="z86-panel-head"><div><span class="eyebrow">GLOBAL RANK</span><h3>المتصدرون</h3></div><button class="z86-link" data-z86-action="leaderboard">عرض الكل</button></div><div id="z86-rank-preview">سجّل الدخول لعرض ترتيبك العالمي.</div></article>
+</section>
+<section class="z86-section-spacer" id="challenges"></section>
+<section class="z86-section-spacer" id="sports"></section>
+<section class="z86-section-spacer" id="profile"></section>
+</div>
+</section>
 </main>
 <nav aria-label="Mobile navigation" class="mobile-nav">
 <a data-mobile-nav="home" href="#home">⌂<span data-i18n="home">الرئيسية</span></a>
@@ -112,6 +143,20 @@
 
 
 
+<!-- ZIVO V101 UNIFIED MOBILE-FIRST ECONOMY
+     Single responsive codebase: mobile is the primary UX target.
+     Economy contract:
+       XP      = progression / level (not spendable)
+       ZIVO    = virtual in-platform currency (not cash-out)
+       TICKETS = event/tournament entry units
+     Primary action rule: one primary action per user intent.
+     Backend must validate all ZIVO/XP transactions server-side.
+-->
 
-<script src="zivozone-config.js?v=1086.0"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="zivo-ai.js?v=1086.0" type="module"></script><script src="zivozone-app.js?v=1086.0"></script><script src="zivozone-runtime.js?v=1086.0"></script></body>
+<div aria-hidden="true" class="z86-compat">
+<div id="challenge-list"></div><div id="news-list"></div><div id="jordan-news-list"></div><div id="sports-list"></div><div id="fixture-list"></div>
+<div id="profile-name"></div><div id="profile-email"></div><span id="profile-level"></span><span id="profile-xp"></span><span id="profile-coins"></span><span id="profile-wins"></span><span id="profile-best-streak"></span><span id="xp-progress"></span>
+<select id="language-select-compat"><option value="ar">العربية</option></select>
+</div>
+<script src="zivozone-config.js?v=1086.0"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="zivo-ai.js?v=1086.0" type="module"></script><script src="zivozone-app.js?v=1086.0"></script><script src="zivozone-runtime.js?v=1086.0"></script><script src="zivozone-v1086-ui.js?v=1086.0"></script></body>
 </html>

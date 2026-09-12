@@ -39,6 +39,7 @@
 ============================================================ */
 .question-progress{height:5px;background:#171b2b;border-radius:99px;overflow:hidden;margin:14px 0 18px}.question-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:width .35s ease}.answer-correct{border-color:#28d98b!important;background:rgba(40,217,139,.14)!important;box-shadow:0 0 22px rgba(40,217,139,.12)}.answer-wrong{border-color:#e44368!important;background:rgba(228,67,104,.13)!important;box-shadow:0 0 22px rgba(228,67,104,.12)}.answer:disabled{cursor:default;opacity:1}.football-card{border-color:#203d4a}.football-card:hover{box-shadow:0 0 45px rgba(45,220,255,.12)}.challenge-card .card-tag{letter-spacing:.5px}.modal-card.horror-modal.phase-3 .question-progress span{background:linear-gradient(90deg,#d82b61,#ff4f78)}
 
+
 /* ============================================================
    ZIVOZONE V6 — PREMIUM Z MARK + CHALLENGE WORLDS
 ============================================================ */
@@ -74,6 +75,7 @@ body:has(.modal-card:not(.horror-modal)) .hero-orb{filter:none}.modal-card:not(.
 /* Dark room: progressive sensory pressure */
 body.horror-active{background:#020207!important}.horror-active .topbar,.horror-active .hero,.horror-active main>section:not(#games){filter:saturate(.7) brightness(.7)}.horror-active .modal-backdrop{background:radial-gradient(circle at 50% 45%,rgba(80,0,18,.08),rgba(0,0,0,.91) 72%)}.horror-active .modal-card{min-height:420px}.horror-active .answer{min-height:56px}.horror-active .answer:hover{border-color:#7c2947;box-shadow:0 0 28px rgba(180,0,55,.14)}.horror-active .question-progress{background:#08040a}.horror-active .question-progress span{background:linear-gradient(90deg,#6e1232,#f02b64,#4a0b24);box-shadow:0 0 20px rgba(240,43,100,.45)}.horror-active .game-head strong{color:#ff7b9a}.horror-active .modal-close{color:#ff91aa}.signup-horror{border-color:#9b1d47!important}.signup-horror h2{text-shadow:0 0 30px rgba(255,40,100,.32)}
 @media(max-width:600px){.input-answer-form{grid-template-columns:1fr}.horror-active .modal-card{min-height:0}.horror-active .answer{min-height:62px}.jordan-heading{align-items:flex-start;gap:10px;flex-direction:column}}
+
 
 /* ============================================================
    ZIVOZONE V9 — SINGLE CHALLENGE CENTER
@@ -111,6 +113,7 @@ body.horror-active{background:#020207!important}.horror-active .topbar,.horror-a
 @media(max-width:600px){.ad-column{grid-template-columns:1fr}.ad-top,.ad-bottom{min-height:58px}.identity-test-modal .answers{grid-template-columns:1fr}}
 
 .match-alert{max-width:1180px;margin:0 auto 18px;padding:18px 20px;border:1px solid rgba(255,74,103,.28);border-radius:18px;background:linear-gradient(100deg,rgba(120,0,35,.22),rgba(20,16,40,.75));box-shadow:0 18px 55px rgba(0,0,0,.25),0 0 30px rgba(255,45,90,.08);display:flex;align-items:center;justify-content:space-between;gap:20px}.match-alert>div{display:flex;flex-direction:column;gap:5px}.match-alert-kicker{font-size:.68rem;letter-spacing:.16em;color:#ff7993}.match-alert strong{font-size:1.08rem}.match-alert strong span{opacity:.45;margin:0 8px}.match-alert small,.match-alert-note{color:#aeb5d1}.match-alert-note{font-size:.82rem}@media(max-width:700px){.match-alert{align-items:flex-start;flex-direction:column}}
+
 
 /* ============================================================
    V15 — 10 SECOND QUESTION TIMER
@@ -176,6 +179,7 @@ body.horror-active{background:#020207!important}.horror-active .topbar,.horror-a
   .question-timer strong{font-size:1.35rem}
 }
 
+
 /* ============================================================
    V16 — PRESSURE ENGINE / SPEED SCORE / STREAK
 ============================================================ */
@@ -199,6 +203,7 @@ body.horror-active{background:#020207!important}.horror-active .topbar,.horror-a
   .pressure-hud{width:100%;justify-content:center;font-size:.78rem}
 }
 
+/* V17 — PLAYER PROFILE */
 .zivo-player-card{padding:20px;border:1px solid rgba(124,108,255,.2);border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(15,12,28,.75));box-shadow:0 18px 50px rgba(0,0,0,.24)}
 .zivo-player-top{display:flex;justify-content:space-between;gap:16px}.zivo-player-top h2{margin:4px 0;font-size:2rem}.zivo-player-top p{margin:0;color:#9ea6c6}.zivo-player-badge{padding:9px 12px;border-radius:999px;background:rgba(124,108,255,.12);font-weight:800}
 .zivo-xp-track{height:9px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;margin:18px 0 10px}.zivo-xp-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#37e08f,#7c6cff,#4dd8ff)}
@@ -407,6 +412,7 @@ body.zivo-dark-active{overflow:hidden}
 .v39-overlay{position:fixed;inset:0;z-index:14000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(1,2,7,.96);backdrop-filter:blur(22px)}.v39-overlay.open{display:flex}.v39-card{position:relative;width:min(900px,100%);max-height:88vh;overflow:auto;padding:27px;border:1px solid rgba(255,255,255,.1);border-radius:28px;background:rgba(7,8,15,.99);color:#fff;box-shadow:0 50px 160px rgba(0,0,0,.9)}.v39-close{position:absolute;right:14px;top:9px;border:0;background:none;color:#9aa1b6;font-size:25px;cursor:pointer}.v39-title{display:flex;align-items:center;gap:14px;margin-bottom:20px}.v39-orbit{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:27px;font-weight:1000;background:radial-gradient(circle at 35% 30%,#e0e3ff,#494768 58%,#101016);border:1px solid rgba(255,255,255,.4);box-shadow:0 0 35px rgba(255,255,255,.06)}.v39-title small{font-size:8px;letter-spacing:2px;color:#858ca1}.v39-title h2{margin:3px 0;font-size:23px}.v39-title span{font-size:9px;color:#70788d}.v39-filter{display:flex;gap:8px;align-items:center;margin-bottom:12px}.v39-filter input{flex:1;padding:11px 13px;border:1px solid rgba(255,255,255,.07);border-radius:12px;outline:0;background:rgba(255,255,255,.04);color:#fff;font-size:10px}.v39-filter span{font-size:8px;color:#70788d;white-space:nowrap}.v39-filter input::placeholder{color:#626a7e}#v39-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.v39-item{min-height:145px;text-align:right;padding:16px;border:1px solid rgba(255,255,255,.06);border-radius:16px;background:rgba(255,255,255,.035);color:#fff;cursor:pointer;transition:.2s;position:relative}.v39-item:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.06)}.v39-item b{display:block;font-size:25px;margin-bottom:11px}.v39-item strong{display:block;font-size:12px}.v39-item span{display:block;margin-top:6px;color:#71798d;font-size:8px}.v39-item em{position:absolute;left:13px;bottom:13px;font-style:normal;font-size:8px;font-weight:900}.v39-empty{grid-column:1/-1;text-align:center;padding:40px;color:#6d7589;font-size:10px}.v39-foot{margin-top:12px;font-size:8px;color:#646c80;line-height:1.7}
 @media(max-width:700px){#v39-open{left:8px;bottom:552px}.v39-card{padding:18px}.v39-filter{align-items:stretch;flex-direction:column}#v39-grid{grid-template-columns:1fr 1fr}}@media(max-width:430px){#v39-grid{grid-template-columns:1fr}}
 
+/* V40 — Challenge bank visual identity */
 .v40-pack-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:8px;background:rgba(255,255,255,.05);font-size:7px;color:#8b93a7}
 
 /* ============================================================
@@ -420,10 +426,12 @@ body.zivo-dark-active{overflow:hidden}
 .v42-cloud-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-inline-end:5px;background:#777}
 .v42-cloud-dot.online{background:#dfe3ef;box-shadow:0 0 10px rgba(255,255,255,.35)}
 
+/* V43 — real cloud indicator */
 #v43-cloud{position:fixed;right:16px;bottom:16px;z-index:9402;display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(7,8,14,.9);color:#7d8598;font-size:8px;backdrop-filter:blur(10px);pointer-events:none}
 #v43-cloud .v43-dot{width:6px;height:6px;border-radius:50%;background:#777}
 #v43-cloud.ok{color:#b8becd}
 #v43-cloud.ok .v43-dot{background:#e2e5ee;box-shadow:0 0 9px rgba(255,255,255,.3)}
+
 
 /* ============================================================
    V44 — HOMEPAGE POLISH
@@ -433,6 +441,8 @@ body.zivo-dark-active{overflow:hidden}
 .zivo-v44-ready button.v44-click{transform:scale(.97);filter:brightness(.92)}
 #v43-cloud.v44-visible{opacity:.94}
 
+
+/* ZIVOZONE V47 — guaranteed boot release */
 #app-loader{
   animation:zivoLoaderRelease 1.35s ease forwards;
   animation-delay:.65s;
@@ -487,6 +497,7 @@ body.zivo-dark-active{overflow:hidden}
 }
 @media(max-width:380px){.mobile-tools-list{grid-template-columns:1fr}.brand-name{display:none}.top-actions #language-select{display:none}}
 
+
 /* ============================================================
    ZIVOZONE V84 — UNIFIED GOLD ZIVO LAUNCHER
 ============================================================ */
@@ -512,6 +523,7 @@ body.zivo-dark-active{overflow:hidden}
 .zivo-v81-open:hover{transform:translateY(-1px)}
 @media(max-width:600px){.zivo-v81-open{right:9px;bottom:9px}}
 
+/* V84: faster TV-news motion; hover still pauses. */
 .zivo-rail-track{animation-timing-function:linear!important}
 
 /* ============================================================
@@ -529,6 +541,8 @@ body.zivo-dark-active{overflow:hidden}
 .zivo-v87-quickdock.collapsed{width:50px;padding:8px}.zivo-v87-quickdock.collapsed .zivo-v87-brand div,.zivo-v87-quickdock.collapsed .zivo-v87-list .z87-tx{display:none}.zivo-v87-quickdock.collapsed .zivo-v87-brand{justify-content:center;border-bottom:0;padding-bottom:4px}.zivo-v87-quickdock.collapsed .zivo-v87-collapse{transform:rotate(180deg)}
 @media(max-width:900px){.zivo-v87-quickdock{left:8px;top:auto;bottom:76px;width:calc(100vw - 16px);max-width:420px;padding:8px;border-radius:18px}.zivo-v87-brand{padding-bottom:7px}.zivo-v87-list{grid-template-columns:repeat(4,1fr);gap:5px}.zivo-v87-list button{justify-content:center;flex-direction:column;gap:3px;min-height:54px;padding:6px 4px;font-size:8px}.z87-ic{width:24px;height:24px}.z87-tx{display:block}.zivo-v87-collapse{margin-left:auto}.zivo-v87-quickdock.collapsed{width:48px;left:8px}.zivo-v87-quickdock.collapsed .zivo-v87-list{display:none}}
 
+
+/* ZIVOZONE V101 PRO POLISH — mobile-first luxury challenge cards */
 .challenge-center-section{background:radial-gradient(circle at 50% 0%,rgba(124,60,255,.08),transparent 36%),linear-gradient(180deg,#080b15,#070912)}
 .challenge-list{gap:14px}
 .challenge-card{min-height:168px;padding:0;display:grid;grid-template-columns:108px minmax(0,1fr) auto;align-items:stretch;gap:0;border-radius:22px;border:1px solid rgba(255,255,255,.09);background:linear-gradient(145deg,rgba(18,23,39,.98),rgba(8,11,21,.98));box-shadow:0 18px 50px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.035);overflow:hidden}
@@ -547,10 +561,13 @@ body.zivo-dark-active{overflow:hidden}
   .z81-admin-open{top:66px!important;right:8px!important;padding:7px 9px!important;font-size:10px!important;border-radius:11px!important}.z81-card{width:calc(100vw - 12px)!important;max-height:92dvh!important;border-radius:20px!important}.z81-head{padding:15px!important}.z81-head h2{font-size:18px!important}.z81-grid{grid-template-columns:repeat(2,1fr)!important}.z81-table{font-size:9px!important}.z81-row{min-width:720px!important}.z81-status{flex-wrap:wrap!important}
 }
 
+
+/* ZIVOZONE V102 — GLOBAL PRO LUXURY LAYER */
 .zivo-admin-identity{position:fixed;right:18px;top:112px;z-index:120002;display:flex;align-items:center;gap:7px;padding:7px 11px;border:1px solid rgba(255,215,70,.32);border-radius:13px;background:linear-gradient(135deg,rgba(35,27,8,.94),rgba(10,13,21,.94));backdrop-filter:blur(14px);box-shadow:0 12px 34px rgba(0,0,0,.35),0 0 26px rgba(255,210,50,.08);cursor:pointer}.zivo-admin-identity span{font-size:14px}.zivo-admin-identity b{font-size:10px;color:#ffe27a;letter-spacing:.08em}.zivo-admin-identity small{font-size:9px;color:#aeb7c9}
 .z81-head{display:flex!important;align-items:center;gap:14px}.z81-live{margin-inline-start:auto;color:#79f2a6;font-weight:900;font-size:10px}.z81-live:first-letter{font-size:16px}
 .v20-feedback{min-height:20px;margin-top:10px;text-align:center;font-weight:900;font-size:11px;color:#ffe27a}.v20-adaptive-note{padding:9px 12px;border-radius:12px;border:1px solid rgba(124,108,255,.18);background:rgba(124,108,255,.07);color:#b9c2dd}
 @media(max-width:700px){.zivo-admin-identity{top:108px;right:8px;padding:6px 8px}.zivo-admin-identity small{display:none}.v20-feedback{font-size:10px}.v20-adaptive-note{font-size:10px}}
+/* ZIVOZONE V103 — Luxury responsive product layer */
 :root{--z103-bg:#050812;--z103-panel:rgba(10,17,30,.88);--z103-line:rgba(93,174,255,.18);--z103-blue:#2787ff;--z103-cyan:#35dcff;--z103-purple:#805cff;--z103-gold:#ffd84a;--z103-text:#f5f7ff;--z103-muted:#8f9bb3}
 body{background:radial-gradient(circle at 15% 10%,rgba(94,54,255,.11),transparent 28%),radial-gradient(circle at 85% 80%,rgba(30,201,255,.07),transparent 26%),#050812}
 .topbar{position:sticky;top:0;z-index:11000;background:rgba(5,7,15,.82)!important;backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)!important}
@@ -597,6 +614,7 @@ body{background:radial-gradient(circle at 15% 10%,rgba(94,54,255,.11),transparen
  .z103-terms-callout{font-size:9px;padding:10px}.zivo-legal-card{padding:14px!important}.zivo-legal-body p{font-size:9px!important}.zivo-legal-body h3{font-size:11px!important}
 }
 
+/* ZIVOZONE V104 — Global Luxury Command + Mobile Challenge System */
 :root{
  --z104-bg:#05070d;--z104-panel:rgba(11,17,29,.94);--z104-line:rgba(107,186,255,.16);
  --z104-cyan:#43dcff;--z104-purple:#8b68ff;--z104-gold:#ffd84a;--z104-green:#72f0b0;
@@ -624,6 +642,7 @@ box-shadow:0 35px 100px rgba(0,0,0,.6),inset 0 1px rgba(255,255,255,.06);color:#
  .challenge-card .challenge-visual{width:62px!important;height:62px!important}
  .challenge-card>.btn{grid-column:1/-1!important;width:100%!important;max-width:none!important;height:38px!important;font-size:11px!important}
 }
+/* ZIVOZONE V105 — visual system inspired by the supplied mobile product reference */
 :root{--v105-bg:#02050b;--v105-panel:#07101b;--v105-line:rgba(62,190,255,.32);--v105-cyan:#22c8ff;--v105-blue:#1768ff;--v105-purple:#8b4dff;--v105-gold:#ffd33d;--v105-text:#f5f8ff;--v105-muted:#8795ad}
 html{background:#02050b}body{background:radial-gradient(circle at 50% -5%,rgba(23,104,255,.12),transparent 27%),linear-gradient(180deg,#02050b 0%,#030711 55%,#02050b 100%);font-family:"Cairo",system-ui,sans-serif}
 .topbar{height:64px!important;padding:7px 14px!important;background:rgba(2,7,14,.9)!important;border-bottom:1px solid rgba(51,188,255,.18)!important;backdrop-filter:blur(18px);box-shadow:0 8px 35px rgba(0,0,0,.35);position:sticky!important;top:0;z-index:11000}
@@ -685,6 +704,8 @@ html{background:#02050b}body{background:radial-gradient(circle at 50% -5%,rgba(2
 @media(max-width:900px){.hero-orb-wrap{min-height:260px!important;order:-1!important}.hero-orb{width:235px!important;height:235px!important}.hero-orb span{font-size:105px!important}}
 @media(max-width:700px){.brand-mark{width:34px!important;height:34px!important;font-size:20px!important}.hero-orb-wrap{min-height:210px!important;margin:0!important}.hero-orb{width:190px!important;height:190px!important}.hero-orb span{font-size:82px!important}.hero-orb:before{inset:-10px!important}.hero-orb:after{inset:-20px!important}}
 
+
+/* ZIVOZONE V1056 — single ADMIN entry point + mobile luxury polish */
 #z81-admin-open,#zivo-admin-identity,#z80-admin-open{display:none!important}
 #login-btn.z104-admin-name{min-width:82px!important;max-width:112px!important;text-align:center!important;border-radius:12px!important;box-shadow:0 0 22px rgba(255,216,74,.12),inset 0 1px 0 rgba(255,255,255,.08)!important}
 @media(max-width:700px){#login-btn.z104-admin-name{min-width:72px!important;max-width:82px!important;padding:8px 8px!important;font-size:9px!important}.z104-head{position:sticky;top:0}.z104-body{padding-bottom:24px}}
@@ -1124,6 +1145,7 @@ html,body{overflow-x:hidden}
   .z1062-desc{font-size:6.5px!important}
   #zivo-dark-room .z1062-horror-card{min-height:160px!important}
 }
+/* ZIVOZONE V1080 CORE HUB */
 .v1080-launch{position:fixed;right:16px;bottom:86px;z-index:9000;border:1px solid rgba(255,215,90,.35);background:rgba(10,10,16,.94);color:#fff;border-radius:999px;padding:11px 16px;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.3);cursor:pointer}
 .v1080-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);z-index:9999;display:none;align-items:flex-end;justify-content:center;padding:12px}
 .v1080-overlay.open{display:flex}
@@ -1133,6 +1155,7 @@ html,body{overflow-x:hidden}
 .v1080-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.v1080-grid button{min-height:105px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.045);color:#fff;border-radius:18px;padding:14px;text-align:right;cursor:pointer}.v1080-grid button:hover{background:rgba(255,255,255,.09)}.v1080-grid strong,.v1080-grid small{display:block}.v1080-grid strong{margin-top:8px;font-size:15px}.v1080-grid small{margin-top:4px;opacity:.55}
 .v1080-section{margin-top:18px}.v1080-section-title{display:flex;justify-content:space-between;align-items:center}.v1080-section-title h3{margin:0}.v1080-section-title span{opacity:.55}.v1080-badges{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px}.v1080-badge{border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px 5px;text-align:center;opacity:.28;filter:grayscale(1)}.v1080-badge.earned{opacity:1;filter:none}.v1080-badge span{display:block;font-size:23px}.v1080-badge small{display:block;font-size:9px;margin-top:5px}.v1080-competition{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.v1080-competition button{padding:13px;border:1px solid rgba(255,255,255,.1);border-radius:14px;background:rgba(255,255,255,.05);color:#fff;font-weight:800;cursor:pointer}
 @media(max-width:620px){.v1080-launch{right:12px;bottom:76px}.v1080-card{padding:16px;border-radius:22px}.v1080-stats{grid-template-columns:repeat(2,1fr)}.v1080-grid{grid-template-columns:repeat(2,1fr)}.v1080-badges{grid-template-columns:repeat(3,1fr)}.v1080-overlay{padding:7px}}
+/* V1081 Player/Profile/Wallet */
 #v1081-profile-launch{position:fixed;left:14px;bottom:86px;z-index:9000;border:1px solid rgba(255,255,255,.14);background:rgba(10,10,16,.95);color:#fff;border-radius:999px;padding:11px 15px;font-weight:900;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.3)}
 #v1081-player{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center;padding:10px}
 #v1081-player.open{display:flex}
@@ -1144,231 +1167,38 @@ html,body{overflow-x:hidden}
 .v1081-statline,.v1081-row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}.v1081-statline span,.v1081-row span{opacity:.7}.v1081-balance{text-align:center;font-size:36px;font-weight:950;padding:20px}.v1081-balance small{font-size:13px;opacity:.55}.v1081-empty{padding:20px;text-align:center;opacity:.55}.v1081-notice{padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:14px;opacity:.75;line-height:1.7}.v1081-pack{display:flex;justify-content:space-between;align-items:center;padding:15px;margin-top:8px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.04)}.v1081-pack span{opacity:.5}
 @media(max-width:600px){.v1081-card{padding:16px}.v1081-stats{grid-template-columns:repeat(2,1fr)}#v1081-profile-launch{left:10px;bottom:76px}.v1081-profile{padding-top:8px}}
 
+
+/* V1083 — unified player actions */
 .player-quick-actions{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
 .player-quick-actions .btn{min-height:42px}
 @media(max-width:700px){.player-quick-actions{display:grid;grid-template-columns:1fr 1fr}.player-quick-actions .btn{width:100%;font-size:12px}}
 
+/* V1084 Clean Home helpers */
 .modal-root-clean{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}
 .clean-ai-modal{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto}
 .clean-ai-close{position:absolute;inset-inline-end:14px;top:12px;width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}
 
-.zivo-v51-wallet{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,#17130a,#30240a);border:1px solid rgba(255,215,70,.32);border-radius:12px;padding:7px 10px;color:#fff;box-shadow:0 7px 22px rgba(255,190,0,.10)}
-.zivo-v51-wallet .coin{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff2a4,#ffd43d 40%,#9b6500);color:#5b3900;font-weight:1000;border:2px solid #ffe88a}
-.zivo-v51-wallet .balance{font-size:15px;font-weight:1000}
-.zivo-v51-wallet small{display:block;color:#e9d98f;font-size:9px;font-weight:800}
-.zivo-v51-cloud{font-size:10px;font-weight:900;opacity:.9}
-.zivo-v51-cloud.online{color:#79f2a0}.zivo-v51-cloud.offline{color:#ffb0b0}
-.zivo-v51-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
-.zivo-v51-action{border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.045);padding:12px;text-align:center;color:inherit;cursor:pointer;transition:transform .18s ease,background .18s ease}
-.zivo-v51-action:hover{transform:translateY(-2px);background:rgba(255,255,255,.075)}
-.zivo-v51-action strong{display:block;font-size:13px}.zivo-v51-action span{display:block;font-size:10px;opacity:.68;margin-top:3px}
-.zivo-v51-toast{position:fixed;left:16px;bottom:84px;z-index:99999;max-width:320px;padding:11px 14px;border-radius:12px;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 35px rgba(0,0,0,.35);font-size:12px;font-weight:800;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s}
-.zivo-v51-toast.show{transform:translateY(0);opacity:1}
-@media(max-width:700px){
- .zivo-v51-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
- .zivo-v51-wallet{padding:6px 8px}
-}
 
-.zivo-footer-link{background:none;border:0;color:#9fa8bf;font:inherit;font-size:11px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.zivo-footer-link:hover{color:#fff}
-.zivo-legal-overlay{position:fixed;inset:0;z-index:200000;display:grid;place-items:center;padding:14px;background:rgba(2,4,10,.82);backdrop-filter:blur(16px)}.zivo-legal-card{width:min(860px,calc(100vw - 24px));max-height:90dvh;overflow:auto;background:linear-gradient(145deg,#0d1220,#070a12);border:1px solid rgba(255,215,70,.25);border-radius:22px;padding:22px;box-shadow:0 30px 100px rgba(0,0,0,.6)}.zivo-legal-card h2{margin:5px 0 4px}.zivo-legal-card>p{font-size:11px;color:#8993aa}.zivo-legal-body{margin-top:15px}.zivo-legal-body h3{font-size:13px;color:#ffe27a;margin:16px 0 6px}.zivo-legal-body p{font-size:11px;line-height:1.8;color:#c3cada;margin:0}.zivo-legal-close{border:0;background:rgba(255,255,255,.08);color:#fff;border-radius:11px;cursor:pointer}.zivo-legal-card>.zivo-legal-close{position:absolute;margin:-8px 0 0 0;width:38px;height:38px;font-size:22px}.zivo-legal-actions{display:flex;justify-content:flex-start;margin-top:18px}.zivo-terms-check{display:flex;align-items:flex-start;gap:8px;margin:10px 0;font-size:10px;line-height:1.7;color:#b9c2d5}.zivo-terms-check input{margin-top:3px;accent-color:#7c6cff}.zivo-inline-link{padding:0;border:0;background:none;color:#8ad9ff;text-decoration:underline;cursor:pointer;font:inherit}@media(max-width:700px){.zivo-legal-card{padding:17px;border-radius:18px}.zivo-legal-body p{font-size:10px}.zivo-footer-link{font-size:10px}}
+/* ============================================================
+   ZIVOZONE V1086 CLEAN CORE — COMMAND UI
+   V1081 Player/Wallet experience reimagined without floating legacy launchers.
+============================================================ */
+:root{--z86-bg:#050912;--z86-panel:#091321;--z86-panel2:#0d1929;--z86-line:rgba(98,176,255,.18);--z86-blue:#238bff;--z86-cyan:#22d3ee;--z86-violet:#7c4dff;--z86-gold:#ffd44d}
+html,body{background:radial-gradient(circle at 70% -10%,rgba(58,94,255,.13),transparent 35%),#050912!important;color:#f5f8ff!important}
+body{overflow-x:hidden}
+.topbar{position:sticky!important;top:0;z-index:5000!important;background:rgba(3,8,16,.9)!important;backdrop-filter:blur(16px);border-bottom:1px solid var(--z86-line)!important}
+.z86-dashboard{width:min(1540px,100%);margin:0 auto;display:grid;grid-template-columns:248px minmax(0,1fr);gap:18px;padding:18px}
+.z86-sidebar{position:sticky;top:84px;height:calc(100vh - 102px);min-height:620px;border:1px solid var(--z86-line);border-radius:22px;background:linear-gradient(180deg,rgba(10,22,39,.98),rgba(5,12,22,.98));box-shadow:0 20px 60px rgba(0,0,0,.32);padding:14px;display:flex;flex-direction:column;overflow:auto}
+.z86-side-brand{display:flex;align-items:center;gap:10px;padding:8px 7px 18px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:10px}.z86-side-mark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:25px;font-weight:1000;background:linear-gradient(135deg,#2b8cff,#7a4dff);box-shadow:0 0 28px rgba(48,122,255,.3)}.z86-side-brand b{display:block;font-size:16px;letter-spacing:.6px}.z86-side-brand small{display:block;color:#6f88a5;font-size:8px;margin-top:2px}
+.z86-side-group{display:grid;gap:5px}.z86-nav{appearance:none;border:1px solid transparent;background:transparent;color:#b7c7db;border-radius:12px;min-height:42px;padding:8px 10px;display:grid;grid-template-columns:27px 1fr auto;align-items:center;text-align:start;gap:6px;cursor:pointer;transition:.18s}.z86-nav span{font-size:17px;text-align:center}.z86-nav b{font-size:11px}.z86-nav em{font-style:normal;font-size:8px;color:#65d8ff}.z86-nav:hover{background:rgba(44,128,255,.08);border-color:rgba(72,156,255,.18);color:#fff;transform:translateX(2px)}.z86-nav.active{background:linear-gradient(90deg,rgba(41,133,255,.28),rgba(124,77,255,.14));border-color:rgba(60,155,255,.35);color:#fff;box-shadow:inset 3px 0 0 #2e91ff}
+.z86-side-bottom{margin-top:auto;padding-top:12px}.z86-premium{width:100%;border:1px solid rgba(255,211,73,.26);background:linear-gradient(145deg,rgba(255,211,73,.1),rgba(124,77,255,.08));color:#fff;border-radius:14px;padding:12px;text-align:start;cursor:pointer}.z86-premium strong{display:block;color:#ffe17a;font-size:11px}.z86-premium span{display:block;font-size:9px;opacity:.65;margin-top:4px}.z86-cloud{font-size:8px;color:#67e8a8;margin:9px 4px 0}
+.z86-main{min-width:0}.z86-hero{min-height:360px;border:1px solid rgba(74,153,255,.3);border-radius:26px;overflow:hidden;position:relative;background:radial-gradient(circle at 24% 52%,rgba(79,66,255,.3),transparent 28%),linear-gradient(115deg,#0d1e46 0%,#07101e 48%,#0a0718 100%);display:grid;grid-template-columns:1.25fr .75fr;align-items:center;padding:34px 40px;box-shadow:0 24px 70px rgba(0,0,0,.28)}.z86-hero:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(80,150,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(80,150,255,.06) 1px,transparent 1px);background-size:38px 38px;mask-image:linear-gradient(90deg,#000,transparent 85%);pointer-events:none}.z86-hero-copy{position:relative;z-index:2}.z86-hero h1{font-size:clamp(36px,5vw,68px);line-height:1.05;margin:12px 0 15px;font-weight:1000}.z86-hero h1 span{background:linear-gradient(90deg,#fff,#b9b3ff,#23d8ff);-webkit-background-clip:text;background-clip:text;color:transparent}.z86-hero p{max-width:650px;color:#9db0c8;font-size:14px;line-height:1.9}.z86-hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.z86-orb-wrap{height:270px;position:relative;display:grid;place-items:center;z-index:1}.z86-orb{width:220px;height:220px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 25%,#7967ff,#35208d 47%,#080b20 72%);box-shadow:0 0 80px rgba(79,70,229,.42),inset 0 0 40px rgba(255,255,255,.05)}.z86-orb b{font-size:105px;color:#fff;text-shadow:0 0 24px #fff}.z86-orb-wrap i{position:absolute;font-style:normal;font-size:8px;font-weight:900;padding:8px 10px;border:1px solid #1e74b7;background:#07111d;border-radius:99px}.z86-orb-wrap i:nth-of-type(1){left:10%;top:15%}.z86-orb-wrap i:nth-of-type(2){right:5%;top:25%}.z86-orb-wrap i:nth-of-type(3){left:4%;bottom:22%}.z86-orb-wrap i:nth-of-type(4){right:7%;bottom:15%}
+.z86-stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0}.z86-stat{min-width:0;text-align:start;border:1px solid var(--z86-line);border-radius:15px;background:linear-gradient(145deg,rgba(13,27,46,.95),rgba(7,15,26,.95));padding:13px;color:#fff;cursor:pointer;transition:.18s}.z86-stat:hover{border-color:rgba(76,160,255,.5);transform:translateY(-2px)}.z86-stat span{display:block;color:#8fa8c4;font-size:9px;font-weight:900}.z86-stat strong{display:block;font-size:25px;margin:4px 0}.z86-stat small{display:block;color:#6e839c;font-size:8px}.z86-stat i{display:block;height:5px;border-radius:99px;background:#14253a;margin-top:9px;overflow:hidden}.z86-stat i em{display:block;height:100%;width:0;background:linear-gradient(90deg,#9a5cff,#23baff);border-radius:inherit}
+.z86-grid-2{display:grid;grid-template-columns:1.4fr .9fr;gap:12px}.z86-grid-3{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:12px;margin-top:12px}.z86-panel{border:1px solid var(--z86-line);border-radius:18px;background:linear-gradient(145deg,rgba(10,23,40,.96),rgba(5,13,23,.96));padding:16px;min-width:0;box-shadow:0 16px 45px rgba(0,0,0,.16)}.z86-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.z86-panel h2,.z86-panel h3{margin:3px 0;font-size:20px}.z86-link{border:0;background:transparent;color:#65cfff;font-weight:900;cursor:pointer;font-size:9px}.z86-challenge-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.z86-challenge-mini-grid button{border:1px solid rgba(73,154,255,.15);border-radius:14px;background:rgba(255,255,255,.025);color:#fff;padding:13px 10px;text-align:start;cursor:pointer;min-height:135px;display:flex;flex-direction:column;transition:.18s}.z86-challenge-mini-grid button:hover{transform:translateY(-3px);border-color:rgba(82,170,255,.5);background:rgba(55,125,255,.08)}.z86-challenge-mini-grid span{font-size:26px}.z86-challenge-mini-grid b{font-size:12px;margin-top:auto}.z86-challenge-mini-grid small{font-size:8px;color:#7d91aa;margin-top:5px}.z86-challenge-mini-grid em{font-style:normal;color:#fff;background:linear-gradient(90deg,#4b55ff,#208cff);border-radius:9px;text-align:center;padding:7px;margin-top:9px;font-size:9px;font-weight:900}
+.z86-news-preview{display:grid;gap:8px}.z86-news-preview div{padding:13px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);font-size:10px;color:#b7c6d8}.z86-ai-card{display:flex;align-items:center;gap:14px}.z86-big-icon{font-size:48px;filter:drop-shadow(0 0 18px rgba(64,156,255,.4))}.z86-ai-card p{font-size:10px;color:#8399b2;line-height:1.7}.z86-match-card,.z86-rank-card{min-height:190px}.z86-section-spacer{scroll-margin-top:100px;height:1px}.z86-compat{display:none!important}
+@media(max-width:1050px){.z86-dashboard{grid-template-columns:86px 1fr}.z86-sidebar{padding:10px}.z86-side-brand div,.z86-nav b,.z86-nav em,.z86-premium span,.z86-cloud{display:none}.z86-side-brand{justify-content:center}.z86-nav{grid-template-columns:1fr;justify-items:center;padding:10px}.z86-grid-2,.z86-grid-3{grid-template-columns:1fr}.z86-stat-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.z86-dashboard{display:block;padding:8px;padding-bottom:82px}.z86-sidebar{position:fixed;z-index:4500;left:8px;right:8px;bottom:8px;top:auto;height:62px;min-height:0;overflow:visible;border-radius:18px;padding:6px;display:block}.z86-side-brand,.z86-side-group{display:flex;gap:4px;margin:0;padding:0;border:0;justify-content:space-around}.z86-side-brand,.z86-side-bottom{display:none}.z86-nav{display:flex!important;flex:1;min-width:0;height:50px;min-height:50px;padding:4px;flex-direction:column;justify-content:center;gap:1px;border-radius:12px}.z86-nav:nth-child(n+6){display:none!important}.z86-nav span{font-size:16px}.z86-nav b{display:block;font-size:7px}.z86-main{width:100%}.z86-hero{grid-template-columns:1fr;min-height:440px;padding:25px 18px}.z86-orb-wrap{height:150px;order:-1}.z86-orb{width:130px;height:130px}.z86-orb b{font-size:65px}.z86-orb-wrap i{font-size:6px;padding:5px 7px}.z86-hero h1{font-size:38px}.z86-hero p{font-size:11px}.z86-stat-grid{grid-template-columns:repeat(2,1fr);gap:7px}.z86-stat{padding:10px}.z86-stat strong{font-size:21px}.z86-challenge-mini-grid{grid-template-columns:repeat(2,1fr)}.z86-panel{padding:12px}.topbar .main-nav{display:none!important}}
+@media(max-width:420px){.z86-stat-grid{grid-template-columns:1fr 1fr}.z86-hero-actions .btn{width:100%}.z86-challenge-mini-grid button{min-height:125px}}
 
-.forensic-evidence{margin:10px 0 16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;background:#0b1018}.forensic-evidence img{display:block;width:100%;max-height:210px;object-fit:cover}.forensic-evidence figcaption{padding:7px 10px;font-size:11px;color:#aebbd0;font-weight:800}
-
-.zivo-v55-dashboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
-.zivo-v55-kpi{border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:10px;background:rgba(255,255,255,.045)}
-.zivo-v55-kpi small{display:block;font-size:9px;opacity:.62}.zivo-v55-kpi b{display:block;font-size:16px;margin-top:3px}
-.zivo-v55-mission{border:1px solid rgba(255,215,70,.20);border-radius:15px;padding:12px;background:linear-gradient(135deg,rgba(255,215,70,.08),rgba(255,255,255,.025));margin:12px 0}
-.zivo-v55-mission-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.zivo-v55-badge{padding:4px 7px;border-radius:999px;background:rgba(255,215,70,.14);font-size:9px;font-weight:1000}
-.zivo-v55-progress{height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:9px}.zivo-v55-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd43d,#76e6ff);transition:width .35s}
-.zivo-v55-ai-panel{display:flex;gap:10px;align-items:center}.zivo-v55-ai-panel .orb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,#7ee7ff 30%,#5267ff 65%,#171b55);font-size:11px;font-weight:1000}
-.zivo-v55-ai-panel p{margin:2px 0 0;font-size:10px;opacity:.72}
-@media(max-width:700px){.zivo-v55-dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-.zivo-v56-hub{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin:14px 0}
-.zivo-v56-card{border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:14px;background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));box-shadow:0 10px 30px rgba(0,0,0,.14)}
-.zivo-v56-title{font-weight:1000;font-size:16px}.zivo-v56-sub{font-size:10px;opacity:.68;margin-top:3px}
-.zivo-v56-progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:10px 0 7px}.zivo-v56-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd43d,#75e5ff);transition:width .4s}
-.zivo-v56-actions{display:flex;gap:7px;flex-wrap:wrap}.zivo-v56-btn{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:10px;padding:7px 9px;color:inherit;font-weight:900;font-size:10px;cursor:pointer}
-.zivo-v56-ledger{max-height:150px;overflow:auto;margin-top:8px}.zivo-v56-row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:10px}.zivo-v56-row b{color:#ffe06a}
-.zivo-v56-status{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:900}.zivo-v56-dot{width:7px;height:7px;border-radius:50%;background:#71efa0}
-@media(max-width:700px){.zivo-v56-hub{grid-template-columns:1fr}.zivo-v56-card{padding:11px}}
-
-.zivo-v57-cloudbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;margin:10px 0;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035);font-size:10px}
-.zivo-v57-cloudbar .ok{color:#78efa1}.zivo-v57-cloudbar .warn{color:#ffd27a}.zivo-v57-cloudbar .bad{color:#ff9a9a}
-.zivo-v57-auth{display:flex;gap:7px;flex-wrap:wrap}.zivo-v57-auth button{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:inherit;border-radius:9px;padding:7px 10px;font-size:10px;font-weight:900;cursor:pointer}
-.zivo-v57-modal{position:fixed;inset:0;z-index:100000;display:none;place-items:center;background:rgba(0,0,0,.62);backdrop-filter:blur(6px)}.zivo-v57-modal.show{display:grid}
-.zivo-v57-dialog{width:min(430px,calc(100vw - 28px));border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;background:#101827;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.45)}
-.zivo-v57-dialog h3{margin:0 0 5px;font-size:16px}.zivo-v57-dialog p{font-size:10px;opacity:.7;margin:0 0 12px}.zivo-v57-input{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#0b1220;color:#fff}.zivo-v57-primary{width:100%;margin-top:8px;border:0;border-radius:10px;padding:10px;background:linear-gradient(90deg,#ffd43d,#75e5ff);color:#111;font-weight:1000;cursor:pointer}
-
-.profile-cloud-note{margin-top:10px;padding:9px 11px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035);font-size:10px}@media(max-width:700px){.profile-cloud-note{font-size:9px;padding:8px 9px}}
-
-.challenge-card{align-items:stretch}.challenge-visual{width:92px;height:72px;object-fit:cover;border-radius:11px;flex:0 0 92px;background:rgba(255,255,255,.04);display:grid;place-items:center;font-size:30px}.challenge-visual-fallback{border:1px solid rgba(255,255,255,.08)}.challenge-copy{min-width:0;flex:1}.challenge-copy p{line-height:1.5}@media(max-width:700px){.challenge-card{display:grid;grid-template-columns:64px 1fr;gap:9px}.challenge-visual{width:64px;height:58px}.challenge-card>.btn{grid-column:1/-1;width:100%}}
-
-#challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,
-.challenges-grid .challenge-card,#challenges .game-card,#challengeCenter .game-card{
-  min-height:188px!important;
-  padding:14px!important;
-  border-radius:18px!important;
-}
-#challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-.challenges-grid .challenge-card .icon{
-  width:46px!important;height:46px!important;
-  min-width:46px!important;min-height:46px!important;
-  font-size:21px!important;line-height:46px!important;
-}
-#challenges .challenge-card img,#challengeCenter .challenge-card img,.challenge-center .challenge-card img,
-.challenges-grid .challenge-card img{
-  height:92px!important;max-height:92px!important;
-  border-radius:12px!important;
-}
-#challenges .challenge-card button,#challengeCenter .challenge-card button,.challenge-center .challenge-card button,
-.challenges-grid .challenge-card button{
-  min-height:30px!important;
-  height:30px!important;
-  padding:5px 10px!important;
-  font-size:9px!important;
-  border-radius:8px!important;
-  line-height:1!important;
-  width:auto!important;
-  max-width:118px!important;
-}
-#challenges .challenge-card button svg,#challengeCenter .challenge-card button svg,
-.challenge-center .challenge-card button svg,.challenges-grid .challenge-card button svg{
-  width:14px!important;height:14px!important;
-}
-@media(max-width:700px){
-  #challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,
-  .challenges-grid .challenge-card,#challenges .game-card,#challengeCenter .game-card{
-    min-height:170px!important;
-    padding:11px!important;
-    border-radius:15px!important;
-  }
-  #challenges .challenge-card img,#challengeCenter .challenge-card img,.challenge-center .challenge-card img,
-  .challenges-grid .challenge-card img{
-    height:76px!important;max-height:76px!important;
-  }
-  #challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-  .challenges-grid .challenge-card .icon{
-    width:40px!important;height:40px!important;
-    min-width:40px!important;min-height:40px!important;
-    font-size:18px!important;line-height:40px!important;
-  }
-  #challenges .challenge-card button,#challengeCenter .challenge-card button,.challenge-center .challenge-card button,
-  .challenges-grid .challenge-card button{
-    height:29px!important;min-height:29px!important;
-    padding:5px 9px!important;font-size:8.5px!important;
-    max-width:108px!important;
-  }
-}
-
-.zivo-news-stack{
-  width:100%;display:grid;gap:10px;margin:16px 0 20px;
-  direction:rtl;
-}
-.zivo-news-rail{
-  position:relative;display:flex;align-items:stretch;min-width:0;height:56px;
-  overflow:hidden;border-radius:15px;
-  background:linear-gradient(90deg,#070a10 0%,#101826 52%,#070a10 100%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 10px 30px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.035);
-}
-.zivo-news-rail:after{
-  content:"";position:absolute;inset:0;pointer-events:none;z-index:3;
-  background:linear-gradient(90deg,rgba(7,10,16,.96),transparent 8%,transparent 92%,rgba(7,10,16,.96));
-}
-.zivo-rail-head{
-  z-index:6;flex:0 0 auto;display:flex;align-items:center;gap:9px;
-  min-width:285px;padding:0 15px;
-  background:linear-gradient(135deg,#172437,#0a1019);
-  border-inline-start:1px solid rgba(255,255,255,.06);
-  border-inline-end:1px solid rgba(255,255,255,.13);
-  white-space:nowrap;
-}
-.zivo-rail-live{
-  color:#fff;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif;
-  background:#e3263d;border-radius:99px;padding:6px 8px;
-  box-shadow:0 0 0 3px rgba(227,38,61,.10);
-}
-.zivo-rail-live:before{content:"";display:inline-block;width:6px;height:6px;margin-inline-end:5px;border-radius:50%;background:#fff;animation:zivoLivePulse 1.4s infinite}
-.zivo-rail-badge{
-  color:#10151d;background:#f4c94e;border-radius:99px;padding:6px 9px;
-  font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-title{
-  color:#fff;font:950 14px/1.1 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;
-  letter-spacing:.25px;
-}
-.zivo-rail-sub{
-  color:#91a5bf;font:700 9px/1.3 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-status{
-  margin-inline-start:auto;color:#6f8198;font:700 8px/1.2 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-window{
-  position:relative;min-width:0;flex:1;overflow:hidden;direction:ltr;
-}
-.zivo-rail-window:before,.zivo-rail-window:after{
-  content:"";position:absolute;top:0;bottom:0;width:52px;z-index:4;pointer-events:none;
-}
-.zivo-rail-window:before{left:0;background:linear-gradient(90deg,#070a10,transparent)}
-.zivo-rail-window:after{right:0;background:linear-gradient(270deg,#070a10,transparent)}
-.zivo-rail-track{
-  display:flex;align-items:center;width:max-content;height:100%;
-  direction:ltr;white-space:nowrap;
-  animation:zivoBroadcastFlowV72 var(--zivo-flow-duration,70s) linear infinite;
-  will-change:transform;
-}
-.zivo-rail-sequence{
-  display:flex;align-items:center;gap:44px;flex:none;
-  padding:0 24px;
-}
-.zivo-news-item{
-  display:inline-flex;align-items:center;gap:9px;flex:none;
-  color:#f5f7fb;text-decoration:none;
-  font:800 13px/1.8 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;
-}
-a.zivo-news-item:hover .zivo-news-headline{color:#78d2ff;text-decoration:underline;text-underline-offset:3px}
-.zivo-news-dot{color:#4e647d;font-size:8px}
-.zivo-news-source{
-  color:#77caff;font-size:9px;font-weight:900;
-  background:rgba(119,202,255,.08);padding:3px 7px;border-radius:6px;
-}
-.zivo-news-headline{max-width:none}
-.zivo-news-time{color:#708299;font-size:9px;font-weight:700}
-.zivo-rail-track-empty{animation:none!important}
-.zivo-short-feed{animation-duration:45s!important}.zivo-general-rail .zivo-rail-track{animation-duration:120s!important}
-.zivo-news-rail:hover .zivo-rail-track{animation-play-state:paused}
-@keyframes zivoBroadcastFlowV72{
-  from{transform:translate3d(0,0,0)}
-  to{transform:translate3d(-50%,0,0)}
-}
-@keyframes zivoLivePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.72)}}
-@media(max-width:900px){
-  .zivo-rail-head{min-width:245px}
-  .zivo-rail-status{display:none}
-}
-@media(max-width:700px){
-  .zivo-news-stack{gap:7px;margin:11px 0 15px}
-  .zivo-news-rail{height:49px;border-radius:12px}
-  .zivo-rail-head{min-width:154px;padding:0 9px;gap:6px}
-  .zivo-rail-title{font-size:11px}
-  .zivo-rail-sub{display:none}
-  .zivo-rail-live,.zivo-rail-badge{font-size:8px;padding:5px 6px}
-  .zivo-rail-sequence{gap:28px;padding:0 17px}
-  .zivo-news-item{font-size:11px;gap:7px}
-  .zivo-news-source{font-size:8px;padding:2px 5px}
-  .zivo-news-time{display:none}
-}
-@media(prefers-reduced-motion:reduce){
-  .zivo-rail-track{animation:none!important}
-}
-
-html { overflow-x: hidden; }
-body { max-width: 100%; overflow-x: hidden; }
-img, video, canvas, iframe { max-width: 100%; }
-button, a, input, select, textarea { touch-action: manipulation; }
-@media (max-width: 480px) {
-  .zivo-desktop-only { display: none !important; }
-}
-
-#app-loader{transition:opacity .25s ease,visibility .25s ease}.zivo-loader-released{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+/* Legacy floating launcher purge — functionality is now routed by V1086 command UI. */
+#v37-open,#v38-open,#v39-open,#v30-open,#v31-open,#v32-open,#v35-open,#v28-open,#v29-open,#v33-open,#v34-open,#v36-cloud,#v43-cloud,#v21-open,#zivo-v21-hud,#zivo-v101-economy{display:none!important}
