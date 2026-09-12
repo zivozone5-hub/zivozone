@@ -1,4 +1,4 @@
-const CACHE='zivozone-shell-v1064-2';
+const CACHE='zivozone-shell-v1064-3';
 const SHELL=['/','/index.html','/manifest.webmanifest','/styles.css','/zivozone-runtime.js','/zivo-global-core.js','/zivo-v103-pro.css','/zivo-v103-pro.js','/zivo-v104-pro.css','/zivo-v104-pro.js','/zivo-v105-luxury.css','/zivo-v105-luxury.js','/zivo-v1062-royal.css','/zivo-v1062-royal.js','/zivo-ai.js'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).catch(()=>{}));self.skipWaiting()});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('zivozone-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});

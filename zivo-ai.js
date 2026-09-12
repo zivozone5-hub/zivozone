@@ -4,7 +4,7 @@
  */
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-ai.js';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check.js';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check.js';
 
 (() => {
   const cfg = window.ZIVOZONE_FIREBASE_CONFIG;
@@ -50,6 +50,8 @@ Keep responses suitable for a broad audience and avoid collecting unnecessary pe
   async function init() {
     if (!cfg?.projectId) throw new Error('Missing Firebase configuration');
     const name = 'zivo-ai';
+    // Keep AI Logic isolated from the legacy compat Firebase app.
+    // App Check is initialized exactly once on this same modular app instance.
     let app = getApps().find(a => a.name === name);
     if (!app) app = initializeApp(cfg, name);
 
@@ -68,12 +70,9 @@ Keep responses suitable for a broad audience and avoid collecting unnecessary pe
         isTokenAutoRefreshEnabled: true
       });
 
-      // Force an initial token acquisition so we fail early with a useful error
-      // instead of sending an invalid/empty App Check token to AI Logic.
-      await getToken(appCheck, false);
     } catch (appCheckError) {
       console.error('ZIVO AI App Check initialization/token error:', appCheckError);
-      throw new Error('فشل التحقق الأمني App Check لـ ZIVO AI. تأكد من أن مفتاح reCAPTCHA Enterprise مسجل لنطاق zivozone.com.');
+      throw new Error(`فشل التحقق الأمني App Check لـ ZIVO AI على النطاق ${location.hostname}. تأكد أن مفتاح reCAPTCHA Enterprise نفسه مسجل لهذا النطاق في Google Cloud، ثم أعد تحميل الصفحة.`);
     }
 
     const ai = getAI(app, {
