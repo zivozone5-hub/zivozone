@@ -1,7 +1,7 @@
 
 /* ZIVOZONE V104 — Functional luxury command center + challenge polish */
 (()=>{'use strict';
-const ADMIN=window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
+const ADMIN='raefalbtish@gmail.com';
 const AICON={daily:'⚡',iq:'🧠',logic:'♟️',math:'∑',science:'⚗️',football:'⚽',memory:'◈',strategy:'♜',reaction:'◉',forensic:'🔎',horror:'◉',identity:'✦'};
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
