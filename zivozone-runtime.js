@@ -797,7 +797,7 @@ window.ZIVOZONE_V18 = {
       auth.onAuthStateChanged(async u=>{
         if(!u){if(!String(user?.uid||'').startsWith('local_')){user=null;player=null;saveLocal()}emit();return}
         user={uid:u.uid,email:u.email||'',name:u.displayName||player?.name||'ZIVO Player'};
-        const isAdminAccount=String(u.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
+        const isAdminAccount=String(u.email||'').trim().toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
         if(isAdminAccount){
           player=null;
           saveLocal();emit();
@@ -817,7 +817,7 @@ window.ZIVOZONE_V18 = {
   async function register(data){
     const name=String(data.name||'').trim(),email=String(data.email||'').trim().toLowerCase(),password=String(data.password||''),age=Number(data.age);
     const termsAccepted=data.termsAccepted===true;
-    if(email==='raefalbtish@gmail.com')throw Error('هذا البريد محجوز لحساب إدارة ZIVOZONE فقط.');
+    if(email===window.ZIVOZONE_CONFIG.ADMIN_EMAIL)throw Error('هذا البريد محجوز لحساب إدارة ZIVOZONE فقط.');
     if(!termsAccepted)throw Error('يجب الموافقة على شروط استخدام ZIVOZONE قبل إنشاء الحساب.');
     if(name.length<2)throw Error(t('nameError'));
     if(!Number.isInteger(age)||age<5||age>100)throw Error(t('ageError'));
@@ -888,7 +888,7 @@ window.ZIVOZONE_V18 = {
   setInterval(()=>{ if(user&&!document.hidden) touchSession(); },5*60*1000);
 
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
-  const isAdmin=()=>String(user?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
+  const isAdmin=()=>String(user?.email||'').trim().toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
   window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
@@ -908,7 +908,7 @@ window.ZIVOZONE_V18 = {
   const A=window.ZIVOZONE_AUTH,C=window.ZIVOZONE_CHALLENGES,I=window.ZIVOZONE_I18N;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const LS='zivozone_state_v8';
-  const ADMIN_EMAIL='raefalbtish@gmail.com';
+  const ADMIN_EMAIL=window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
   const ADMIN_NAME='رائف البطوش';
   const API=window.ZIVOZONE_API||{};
   let state={level:1,xp:0,coins:0,wins:0,gamesPlayed:0,bestStreak:0,identity:null};
@@ -3304,7 +3304,7 @@ window.ZIVOZONE_V18 = {
 */
 (function(){'use strict';
   const OWNER_UID='';
-  const OWNER_EMAIL='raefalbtish@gmail.com';
+  const OWNER_EMAIL=window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
   const OWNER_NAME='رائف البطوش';
 
   const auth=()=>window.firebase?.auth?.();

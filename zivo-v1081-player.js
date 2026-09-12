@@ -4,7 +4,6 @@
 (function(){
 'use strict';
 const PROFILE_KEY='zivozone_player_profile_v1081';
-const LEDGER_KEY='zivozone_wallet_ledger_v1081';
 
 function getProfile(){
   let p={};
@@ -22,11 +21,13 @@ function getProfile(){
   };
 }
 function ledger(){
-  try{return JSON.parse(localStorage.getItem(LEDGER_KEY)||'[]')}catch(e){return []}
+  const cloud=window.ZIVOZONE_ECONOMY?.getWallet?.();
+  if(Array.isArray(cloud?.ledger)) return cloud.ledger;
+  return [];
 }
 function addLedger(type,amount,label){
-  const a=ledger(); a.unshift({type,amount:Number(amount)||0,label,date:new Date().toISOString()});
-  localStorage.setItem(LEDGER_KEY,JSON.stringify(a.slice(0,100)));
+  console.warn('ZIVOZONE_PLAYER.addLedger is deprecated; wallet transactions must be created by ZIVOZONE_ECONOMY.');
+  return false;
 }
 function setProfile(p){localStorage.setItem(PROFILE_KEY,JSON.stringify(p))}
 function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -51,7 +52,8 @@ function render(){
  <section data-pane="store" style="display:none"><h3>🛒 متجر ZIVO</h3><div class="v1081-notice">المتجر مجهّز كواجهة فقط في هذه النسخة. لا يتم خصم أو إضافة أموال حقيقية، ولا يوجد دفع حقيقي حتى نربط مزود دفع آمن من جهة الخادم.</div><div class="v1081-pack"><b>100 ZIVO</b><span>قريبًا</span></div><div class="v1081-pack"><b>500 ZIVO</b><span>قريبًا</span></div><div class="v1081-pack"><b>1,200 ZIVO</b><span>قريبًا</span></div></section>
  </div></div>`;
 }
-function open(){
+async function open(){
+ await window.ZIVOZONE_ECONOMY?.refresh?.();
  let o=document.getElementById('v1081-player');
  if(!o){o=document.createElement('div');o.id='v1081-player';document.body.appendChild(o);
   o.addEventListener('click',e=>{

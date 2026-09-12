@@ -7,7 +7,7 @@
 */
 (function(){
   'use strict';
-  const ADMIN='raefalbtish@gmail.com';
+  const ADMIN=window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const auth=()=>window.firebase?.auth?.();
   const db=()=>window.firebase?.firestore?.();

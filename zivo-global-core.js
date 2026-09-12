@@ -55,7 +55,7 @@
   }
 
   async function refresh(){
-    const u=user(),d=db(); state.uid=u?.uid||null; if(u?.email?.toLowerCase()==='raefalbtish@gmail.com'){state.zivo=0;state.ledger=[];state.nextMiningAt=0;syncUI();return state;}
+    const u=user(),d=db(); state.uid=u?.uid||null; if(u?.email?.toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL){state.zivo=0;state.ledger=[];state.nextMiningAt=0;syncUI();return state;}
     if(!u||!d){state.zivo=0;state.ledger=[];state.nextMiningAt=0;syncUI();return state;}
     try{
       const w=await d.collection('users').doc(u.uid).collection('zivozone').doc('wallet').get();
@@ -77,7 +77,7 @@
   }
   function updateMiningUI(){
     const b=document.getElementById('z101-mine'),c=document.getElementById('z101-countdown');if(!b||!c)return;
-    if(!user()){b.textContent='تسجيل الدخول للتعدين';b.disabled=false;c.textContent='الحساب مطلوب';return;} if(user().email?.toLowerCase()==='raefalbtish@gmail.com'){b.textContent='حساب الإدارة';b.disabled=true;c.textContent='ADMIN';return;}
+    if(!user()){b.textContent='تسجيل الدخول للتعدين';b.disabled=false;c.textContent='الحساب مطلوب';return;} if(user().email?.toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL){b.textContent='حساب الإدارة';b.disabled=true;c.textContent='ADMIN';return;}
     const left=Math.max(0,(state.nextMiningAt||0)-Date.now());
     if(left<=0){b.textContent='بدء التعدين +0.50';b.disabled=false;c.textContent='متاح الآن';c.classList.add('z101-ready')}
     else{b.textContent='التعدين مفعّل';b.disabled=true;c.classList.remove('z101-ready');c.textContent=formatMs(left)}
@@ -87,7 +87,7 @@
   async function mine(){
     const u=user(),d=db();
     if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return}
-    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
+    if(u.email?.toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
     const b=document.getElementById('z101-mine');if(b)b.disabled=true;
     try{
       const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
@@ -117,7 +117,7 @@
     const correct=Math.max(0,Math.min(total,Number(d.correct??d.score??0)||0));
     const timed=Number(d.timedOut)||0;
     if(total!==10||correct!==10||timed!==0)return false;
-    if(u.email?.toLowerCase()==='raefalbtish@gmail.com')return false;
+    if(u.email?.toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL)return false;
     const challenge=String(d.challenge||d.gameId||d.challengeId||'challenge').slice(0,80);
     const attemptId=String(d.attemptId||d.eventId||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100);
     if(!attemptId)return false;
