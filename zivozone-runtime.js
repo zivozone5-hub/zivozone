@@ -867,22 +867,6 @@ window.ZIVOZONE_V18 = {
     if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
     try{await db.collection('players').doc(user.uid).collection('results').add({...result,createdAt:firebase.firestore.FieldValue.serverTimestamp()});return true}catch(e){console.warn('Result save:',e);return false}
   }
-  async function savePlayerProgress(patch={}){
-    if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
-    try{
-      const safe={
-        xp:Math.max(0,Number(patch.xp)||0),
-        level:Math.max(1,Number(patch.level)||1),
-        gamesPlayed:Math.max(0,Number(patch.games??patch.gamesPlayed)||0),
-        bestScore:Math.max(0,Number(patch.bestScore)||0),
-        streak:Math.max(0,Number(patch.streak)||0),
-        history:Array.isArray(patch.history)?patch.history.slice(-50):[],
-        updatedAt:firebase.firestore.FieldValue.serverTimestamp()
-      };
-      await db.collection('players').doc(user.uid).set(safe,{merge:true});
-      return true;
-    }catch(e){console.warn('Player progress save:',e);return false}
-  }
   async function setLanguage(lang){if(player){player.language=lang;saveLocal();if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({language:lang},{merge:true})}catch(e){}}emit()}}
   const isLoggedIn=()=>!!user&&!!player;
   async function touchSession(){
@@ -905,7 +889,7 @@ window.ZIVOZONE_V18 = {
 
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
   const isAdmin=()=>String(user?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
-  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,savePlayerProgress,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
 
@@ -3414,7 +3398,7 @@ window.ZIVOZONE_V18 = {
     const b=document.getElementById('login-btn');
     const u=auth()?.currentUser;
     const owner=isOwner();
-    if(b){const pp=window.ZIVOZONE_AUTH?.getPlayer?.();const logged=!!window.ZIVOZONE_AUTH?.isLoggedIn?.();const nm=String(pp?.name||u?.displayName||u?.name||'لاعب ZIVO').trim();b.textContent=owner?'👑 ADMIN':logged?`👤 ${nm}`:'🔐 إنشاء حساب / دخول';b.title=owner?'غرفة إدارة ZIVOZONE':logged?'فتح ملف اللاعب':'الحساب';}
+    if(b){b.textContent=owner?'👑 ADMIN':'🔐 إنشاء حساب / دخول';b.title=owner?'غرفة إدارة ZIVOZONE':'الحساب';}
     if(owner){
       document.body.classList.add('zivo-admin-mode');
       mount();
