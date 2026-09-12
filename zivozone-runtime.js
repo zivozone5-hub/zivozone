@@ -3412,3 +3412,98 @@ window.ZIVOZONE_V18 = {
   window.addEventListener('load',()=>setTimeout(()=>{heartbeat();syncAdminHeader();if(location.hash==='#admin')open()},900));
   window.addEventListener('zivozone-auth',()=>setTimeout(()=>{heartbeat();syncAdminHeader();if(location.hash==='#admin')open()},500));
 })();
+
+
+/* ============================================================
+   ZIVOZONE V1081 — SINGLE NAVIGATION MENU
+   UI-only organization layer for the existing launchers.
+   It does not replace, duplicate, or alter any underlying feature.
+   Every menu item delegates to the original launcher/button.
+   ============================================================ */
+(function(){
+  'use strict';
+  const ITEMS = [
+    {id:'v39-open', icon:'🎮', label:'مركز التحديات', group:'اللعب', desc:'كل التحديات الموجودة في الموقع'},
+    {id:'v32-open', icon:'🔥', label:'تحدي اليوم', group:'اللعب', desc:'التحدي اليومي الحالي'},
+    {id:'v33-open', icon:'🏆', label:'المنافسة', group:'اللعب', desc:'السلسلة والمكافآت اليومية'},
+    {id:'v34-open', icon:'🎯', label:'مهامي', group:'اللاعب', desc:'المهام والتقدم اليومي'},
+    {id:'v31-open', icon:'🏅', label:'إنجازاتي', group:'اللاعب', desc:'إنجازاتك وسجل التقدم'},
+    {id:'v35-open', icon:'📈', label:'مستواي', group:'اللاعب', desc:'المستوى والتقدم'},
+    {id:'v30-open', icon:'👤', label:'ملفي', group:'اللاعب', desc:'إحصائيات ملف اللاعب'},
+    {id:'v37-open', icon:'🪪', label:'رحلة اللاعب', group:'اللاعب', desc:'لوحة اللاعب الموحدة'},
+    {id:'v29-open', icon:'🥇', label:'المتصدرون', group:'المنافسة', desc:'الترتيب العالمي'},
+    {id:'v38-open', icon:'✦', label:'مركز ZIVOZONE', group:'المنافسة', desc:'المركز الموحد للأنظمة'},
+    {id:'v28-open', icon:'☁️', label:'مركز اللاعب', group:'النظام', desc:'حالة اللاعب والمزامنة'}
+  ];
+
+  function source(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function mount(){
+    if(document.getElementById('zivo-single-menu')) return;
+    const wrap=document.createElement('div');
+    wrap.id='zivo-single-menu';
+    wrap.dir='rtl';
+    wrap.innerHTML=`
+      <button type="button" id="zivo-single-menu-toggle" aria-expanded="false" aria-controls="zivo-single-menu-panel">
+        <span class="zivo-menu-symbol">☰</span>
+        <span class="zivo-menu-label">ZIVOZONE</span>
+        <span class="zivo-menu-chevron">⌃</span>
+      </button>
+      <div id="zivo-single-menu-panel" class="zivo-single-menu-panel" hidden>
+        <div class="zivo-menu-head">
+          <div><small>ZIVOZONE</small><strong>مركز الخدمات</strong></div>
+          <button type="button" class="zivo-menu-close" aria-label="إغلاق">×</button>
+        </div>
+        <div class="zivo-menu-list"></div>
+      </div>`;
+    document.body.appendChild(wrap);
+
+    const panel=wrap.querySelector('#zivo-single-menu-panel');
+    const list=wrap.querySelector('.zivo-menu-list');
+    const toggle=wrap.querySelector('#zivo-single-menu-toggle');
+    const closeBtn=wrap.querySelector('.zivo-menu-close');
+
+    function render(){
+      list.innerHTML='';
+      let current='';
+      ITEMS.forEach(item=>{
+        const src=source(item.id);
+        if(!src) return;
+        if(item.group!==current){
+          current=item.group;
+          const h=document.createElement('div');
+          h.className='zivo-menu-group'; h.textContent=current; list.appendChild(h);
+        }
+        const b=document.createElement('button');
+        b.type='button'; b.className='zivo-menu-item';
+        b.innerHTML=`<span class="zivo-menu-icon">${esc(item.icon)}</span><span class="zivo-menu-copy"><strong>${esc(item.label)}</strong><small>${esc(item.desc)}</small></span><span class="zivo-menu-arrow">‹</span>`;
+        b.addEventListener('click',()=>{
+          close();
+          const target=source(item.id);
+          if(target) target.click();
+        });
+        list.appendChild(b);
+      });
+    }
+    function open(){render();panel.hidden=false;toggle.setAttribute('aria-expanded','true');wrap.classList.add('is-open');}
+    function close(){panel.hidden=true;toggle.setAttribute('aria-expanded','false');wrap.classList.remove('is-open');}
+    toggle.addEventListener('click',()=>panel.hidden?open():close());
+    closeBtn.addEventListener('click',close);
+    document.addEventListener('click',e=>{if(!wrap.contains(e.target)) close();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+
+    // Keep the existing launchers alive as the source of truth, but remove their
+    // floating presentation so the page has one clean navigation entry point.
+    const hideExisting=()=>ITEMS.forEach(item=>{
+      const el=source(item.id);
+      if(el){el.setAttribute('data-zivo-managed','true');el.style.setProperty('display','none','important');}
+    });
+    hideExisting();
+    const observer=new MutationObserver(hideExisting);
+    observer.observe(document.body,{childList:true,subtree:true});
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount,{once:true});
+  else mount();
+})();
