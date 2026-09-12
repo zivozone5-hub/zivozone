@@ -49,11 +49,12 @@ Keep responses suitable for a broad audience and avoid collecting unnecessary pe
 
   async function init() {
     if (!cfg?.projectId) throw new Error('Missing Firebase configuration');
-    const name = 'zivo-ai';
-    // Keep AI Logic isolated from the legacy compat Firebase app.
-    // App Check is initialized exactly once on this same modular app instance.
-    let app = getApps().find(a => a.name === name);
-    if (!app) app = initializeApp(cfg, name);
+    // Use the DEFAULT Firebase app so Firebase AI Logic and App Check share
+    // exactly one app instance. The previous build created a separate named
+    // app while the legacy runtime also initialized App Check on the default
+    // app; that split can produce invalid App Check tokens for AI Logic.
+    let app = getApps()[0];
+    if (!app) app = initializeApp(cfg);
 
     // ZIVOZONE V1064 App Check for the modular Firebase AI Logic app.
     const appCheckKey = window.ZIVOZONE_SECURITY?.appCheckSiteKey;
