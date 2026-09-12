@@ -791,10 +791,21 @@ window.ZIVOZONE_V18 = {
     try{
       if(!firebase.apps.length)firebase.initializeApp(CONFIG);
 
-      // App Check for Firebase AI Logic is initialized by zivo-ai.js on the
-      // same default modular Firebase app. Do not initialize a second provider
-      // instance here; doing so can lead to invalid/mismatched tokens.
-      console.info('ZIVOZONE App Check: managed by Firebase AI Logic bridge');
+      // ZIVOZONE V1064 App Check — reCAPTCHA Enterprise
+      // Runs immediately after Firebase initialization and before Auth/Firestore access.
+      try{
+        const appCheckKey=window.ZIVOZONE_SECURITY?.appCheckSiteKey;
+        if(appCheckKey && firebase.appCheck && firebase.appCheck.ReCaptchaEnterpriseProvider){
+          const appCheck=firebase.appCheck();
+          appCheck.activate(new firebase.appCheck.ReCaptchaEnterpriseProvider(appCheckKey),true);
+          window.ZIVOZONE_APP_CHECK=appCheck;
+          console.info('ZIVOZONE App Check: reCAPTCHA Enterprise active');
+        }else{
+          console.warn('ZIVOZONE App Check: provider/key unavailable');
+        }
+      }catch(appCheckError){
+        console.warn('ZIVOZONE App Check initialization:',appCheckError);
+      }
 
       auth=firebase.auth();db=firebase.firestore();cloud=true;
       try{auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)}catch(e){}

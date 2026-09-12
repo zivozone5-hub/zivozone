@@ -13,10 +13,3 @@ Integrated the registered Firebase App Check Web app with reCAPTCHA Enterprise.
 This package sends App Check tokens, but Firebase product enforcement should be enabled only after deploying and monitoring valid traffic in Firebase Console > App Check.
 
 The reCAPTCHA Enterprise site key is a public browser key. Do not put any reCAPTCHA secret or service-account credential in the frontend.
-
-
-## V1064.2 AI Logic fix
-- Firebase AI Logic now uses the App Check instance attached to its own Firebase app.
-- Performs an initial App Check token acquisition before creating the AI model.
-- Enables `useLimitedUseAppCheckTokens: true` for stronger AI Logic App Check protection.
-- Cache version bumped to force production clients to receive the corrected AI bridge.

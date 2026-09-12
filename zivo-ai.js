@@ -1,10 +1,10 @@
-/* ZIVOZONE V1064 — Real ZIVO AI bridge
+/* ZIVOZONE V1070 — Real ZIVO AI bridge
  * Firebase AI Logic + Gemini Developer API.
  * No Gemini API key is stored in the client.
  */
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-ai.js';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check.js';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check.js';
 
 (() => {
   const cfg = window.ZIVOZONE_FIREBASE_CONFIG;
@@ -49,37 +49,43 @@ Keep responses suitable for a broad audience and avoid collecting unnecessary pe
 
   async function init() {
     if (!cfg?.projectId) throw new Error('Missing Firebase configuration');
-    // Use the DEFAULT Firebase app so Firebase AI Logic and App Check share
-    // exactly one app instance. The previous build created a separate named
-    // app while the legacy runtime also initialized App Check on the default
-    // app; that split can produce invalid App Check tokens for AI Logic.
-    let app = getApps()[0];
-    if (!app) app = initializeApp(cfg);
+    const name = 'zivo-ai';
+    let app = getApps().find(a => a.name === name);
+    if (!app) app = initializeApp(cfg, name);
 
-    // ZIVOZONE V1064 App Check for the modular Firebase AI Logic app.
-    const appCheckKey = window.ZIVOZONE_SECURITY?.appCheckSiteKey;
-    if (!appCheckKey) {
-      throw new Error('Missing reCAPTCHA Enterprise App Check site key');
+    // ZIVOZONE V1070 — App Check is mandatory for Firebase AI Logic.
+    // The same public reCAPTCHA Enterprise site key must be registered
+    // for the ZIVOZONE WEB app in Firebase Console.
+    const appCheckKey = String(window.ZIVOZONE_SECURITY?.appCheckSiteKey || '').trim();
+    if (!appCheckKey || appCheckKey.startsWith('<') || appCheckKey.includes('<script')) {
+      throw new Error('مفتاح reCAPTCHA Enterprise غير صالح أو غير مضبوط في الموقع.');
     }
 
-    // App Check MUST be initialized on the same Firebase app instance used by AI Logic.
-    // Use limited-use tokens for Firebase AI Logic to provide stronger replay protection.
-    let appCheck;
-    try {
+    let appCheck = window.ZIVOZONE_AI_APP_CHECK;
+    if (!appCheck) {
       appCheck = initializeAppCheck(app, {
         provider: new ReCaptchaEnterpriseProvider(appCheckKey),
         isTokenAutoRefreshEnabled: true
       });
-
-    } catch (appCheckError) {
-      console.error('ZIVO AI App Check initialization/token error:', appCheckError);
-      throw new Error(`فشل التحقق الأمني App Check لـ ZIVO AI على النطاق ${location.hostname}. تأكد أن مفتاح reCAPTCHA Enterprise نفسه مسجل لهذا النطاق في Google Cloud، ثم أعد تحميل الصفحة.`);
+      window.ZIVOZONE_AI_APP_CHECK = appCheck;
     }
 
-    const ai = getAI(app, {
-      backend: new GoogleAIBackend(),
-      useLimitedUseAppCheckTokens: true
-    });
+    // Do not create the AI client until a real App Check token exists.
+    // This prevents the old "AppCheck: ReCAPTCHA error" from reaching AI Logic.
+    let tokenResult;
+    try {
+      tokenResult = await getToken(appCheck, false);
+      if (!tokenResult?.token) throw new Error('لم يتم إصدار App Check token.');
+    } catch (firstError) {
+      console.warn('ZIVO AI App Check first token attempt failed; refreshing once.', firstError);
+      tokenResult = await getToken(appCheck, true);
+      if (!tokenResult?.token) throw new Error('فشل إصدار App Check token. تحقق من reCAPTCHA Enterprise site key والدومين.');
+    }
+
+    window.ZIVOZONE_APP_CHECK = appCheck;
+    window.ZIVOZONE_APP_CHECK_READY = true;
+
+    const ai = getAI(app, { backend: new GoogleAIBackend() });
     model = getGenerativeModel(ai, {
       model: window.ZIVOZONE_AI_CONFIG?.model || 'gemini-3.5-flash-lite',
       systemInstruction: systemInstruction(),
