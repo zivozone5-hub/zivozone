@@ -790,6 +790,23 @@ window.ZIVOZONE_V18 = {
     if(!CONFIG||!window.firebase||!window.firebase.initializeApp)return false;
     try{
       if(!firebase.apps.length)firebase.initializeApp(CONFIG);
+
+      // ZIVOZONE V1064 App Check — reCAPTCHA Enterprise
+      // Runs immediately after Firebase initialization and before Auth/Firestore access.
+      try{
+        const appCheckKey=window.ZIVOZONE_SECURITY?.appCheckSiteKey;
+        if(appCheckKey && firebase.appCheck && firebase.appCheck.ReCaptchaEnterpriseProvider){
+          const appCheck=firebase.appCheck();
+          appCheck.activate(new firebase.appCheck.ReCaptchaEnterpriseProvider(appCheckKey),true);
+          window.ZIVOZONE_APP_CHECK=appCheck;
+          console.info('ZIVOZONE App Check: reCAPTCHA Enterprise active');
+        }else{
+          console.warn('ZIVOZONE App Check: provider/key unavailable');
+        }
+      }catch(appCheckError){
+        console.warn('ZIVOZONE App Check initialization:',appCheckError);
+      }
+
       auth=firebase.auth();db=firebase.firestore();cloud=true;
       try{auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)}catch(e){}
       try{await db.enablePersistence({synchronizeTabs:true})}catch(e){}

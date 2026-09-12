@@ -4,6 +4,7 @@
  */
 import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-ai.js';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check.js';
 
 (() => {
   const cfg = window.ZIVOZONE_FIREBASE_CONFIG;
@@ -51,6 +52,21 @@ Keep responses suitable for a broad audience and avoid collecting unnecessary pe
     const name = 'zivo-ai';
     let app = getApps().find(a => a.name === name);
     if (!app) app = initializeApp(cfg, name);
+
+    // ZIVOZONE V1064 App Check for the modular Firebase AI Logic app.
+    const appCheckKey = window.ZIVOZONE_SECURITY?.appCheckSiteKey;
+    if (appCheckKey) {
+      try {
+        initializeAppCheck(app, {
+          provider: new ReCaptchaEnterpriseProvider(appCheckKey),
+          isTokenAutoRefreshEnabled: true
+        });
+      } catch (appCheckError) {
+        // initializeAppCheck can only run once per app; keep AI available if it was already initialized.
+        console.warn('ZIVO AI App Check initialization:', appCheckError);
+      }
+    }
+
     const ai = getAI(app, { backend: new GoogleAIBackend() });
     model = getGenerativeModel(ai, {
       model: window.ZIVOZONE_AI_CONFIG?.model || 'gemini-3.5-flash-lite',
