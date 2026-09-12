@@ -1,440 +1,117 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="ZIVOZONE — عالم رقمي للألعاب والتحديات والرياضة والذكاء مع اقتصاد ZIVO وتقدم اللاعب.">
-<meta name="theme-color" content="#05060b">
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="ZIVOZONE — عالم رقمي للألعاب والتحديات والرياضة والذكاء مع اقتصاد ZIVO وتقدم اللاعب." name="description"/>
+<meta content="#05060b" name="theme-color"/>
 <title>ZIVOZONE | عالمك يبدأ من هنا</title>
-<link rel="canonical" href="https://zivozone.com/">
-<meta name="robots" content="index,follow,max-image-preview:large">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://zivozone.com/">
-<meta property="og:title" content="ZIVOZONE | ألعاب وتحديات ورياضة واقتصاد ZIVO">
-<meta property="og:description" content="ZIVOZONE — ألعاب وتحديات ورياضة وتجارب رقمية مع XP وZIVO في منصة واحدة.">
-<meta property="og:site_name" content="ZIVOZONE">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="assets/icons/zivo-192.png" type="image/png">
-<link rel="apple-touch-icon" href="assets/icons/zivo-192.png">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=1084.0">
-
-<style id="zivo-v51-core">
-/* V51: ZIVO wallet + player cloud status + mobile action sheet */
-.zivo-v51-wallet{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,#17130a,#30240a);border:1px solid rgba(255,215,70,.32);border-radius:12px;padding:7px 10px;color:#fff;box-shadow:0 7px 22px rgba(255,190,0,.10)}
-.zivo-v51-wallet .coin{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff2a4,#ffd43d 40%,#9b6500);color:#5b3900;font-weight:1000;border:2px solid #ffe88a}
-.zivo-v51-wallet .balance{font-size:15px;font-weight:1000}
-.zivo-v51-wallet small{display:block;color:#e9d98f;font-size:9px;font-weight:800}
-.zivo-v51-cloud{font-size:10px;font-weight:900;opacity:.9}
-.zivo-v51-cloud.online{color:#79f2a0}.zivo-v51-cloud.offline{color:#ffb0b0}
-.zivo-v51-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
-.zivo-v51-action{border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.045);padding:12px;text-align:center;color:inherit;cursor:pointer;transition:transform .18s ease,background .18s ease}
-.zivo-v51-action:hover{transform:translateY(-2px);background:rgba(255,255,255,.075)}
-.zivo-v51-action strong{display:block;font-size:13px}.zivo-v51-action span{display:block;font-size:10px;opacity:.68;margin-top:3px}
-.zivo-v51-toast{position:fixed;left:16px;bottom:84px;z-index:99999;max-width:320px;padding:11px 14px;border-radius:12px;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);box-shadow:0 12px 35px rgba(0,0,0,.35);font-size:12px;font-weight:800;transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s}
-.zivo-v51-toast.show{transform:translateY(0);opacity:1}
-@media(max-width:700px){
- .zivo-v51-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
- .zivo-v51-wallet{padding:6px 8px}
-}
-
-.zivo-footer-link{background:none;border:0;color:#9fa8bf;font:inherit;font-size:11px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.zivo-footer-link:hover{color:#fff}
-.zivo-legal-overlay{position:fixed;inset:0;z-index:200000;display:grid;place-items:center;padding:14px;background:rgba(2,4,10,.82);backdrop-filter:blur(16px)}.zivo-legal-card{width:min(860px,calc(100vw - 24px));max-height:90dvh;overflow:auto;background:linear-gradient(145deg,#0d1220,#070a12);border:1px solid rgba(255,215,70,.25);border-radius:22px;padding:22px;box-shadow:0 30px 100px rgba(0,0,0,.6)}.zivo-legal-card h2{margin:5px 0 4px}.zivo-legal-card>p{font-size:11px;color:#8993aa}.zivo-legal-body{margin-top:15px}.zivo-legal-body h3{font-size:13px;color:#ffe27a;margin:16px 0 6px}.zivo-legal-body p{font-size:11px;line-height:1.8;color:#c3cada;margin:0}.zivo-legal-close{border:0;background:rgba(255,255,255,.08);color:#fff;border-radius:11px;cursor:pointer}.zivo-legal-card>.zivo-legal-close{position:absolute;margin:-8px 0 0 0;width:38px;height:38px;font-size:22px}.zivo-legal-actions{display:flex;justify-content:flex-start;margin-top:18px}.zivo-terms-check{display:flex;align-items:flex-start;gap:8px;margin:10px 0;font-size:10px;line-height:1.7;color:#b9c2d5}.zivo-terms-check input{margin-top:3px;accent-color:#7c6cff}.zivo-inline-link{padding:0;border:0;background:none;color:#8ad9ff;text-decoration:underline;cursor:pointer;font:inherit}@media(max-width:700px){.zivo-legal-card{padding:17px;border-radius:18px}.zivo-legal-body p{font-size:10px}.zivo-footer-link{font-size:10px}}
-</style>
-
-<style id="zivo-v53-forensic">.forensic-evidence{margin:10px 0 16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;overflow:hidden;background:#0b1018}.forensic-evidence img{display:block;width:100%;max-height:210px;object-fit:cover}.forensic-evidence figcaption{padding:7px 10px;font-size:11px;color:#aebbd0;font-weight:800}</style>
+<link href="https://zivozone.com/" rel="canonical"/>
+<meta content="index,follow,max-image-preview:large" name="robots"/>
+<meta content="website" property="og:type"/>
+<meta content="https://zivozone.com/" property="og:url"/>
+<meta content="ZIVOZONE | ألعاب وتحديات ورياضة واقتصاد ZIVO" property="og:title"/>
+<meta content="ZIVOZONE — ألعاب وتحديات ورياضة وتجارب رقمية مع XP وZIVO في منصة واحدة." property="og:description"/>
+<meta content="ZIVOZONE" property="og:site_name"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="assets/icons/zivo-192.png" rel="icon" type="image/png"/>
+<link href="assets/icons/zivo-192.png" rel="apple-touch-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&amp;family=Noto+Sans+SC:wght@400;500;700;900&amp;family=Noto+Sans+Devanagari:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="styles.css?v=1084.0" rel="stylesheet"/>
 
 
-<style id="zivo-v55-retention">
-.zivo-v55-dashboard{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
-.zivo-v55-kpi{border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:10px;background:rgba(255,255,255,.045)}
-.zivo-v55-kpi small{display:block;font-size:9px;opacity:.62}.zivo-v55-kpi b{display:block;font-size:16px;margin-top:3px}
-.zivo-v55-mission{border:1px solid rgba(255,215,70,.20);border-radius:15px;padding:12px;background:linear-gradient(135deg,rgba(255,215,70,.08),rgba(255,255,255,.025));margin:12px 0}
-.zivo-v55-mission-head{display:flex;justify-content:space-between;align-items:center;gap:8px}.zivo-v55-badge{padding:4px 7px;border-radius:999px;background:rgba(255,215,70,.14);font-size:9px;font-weight:1000}
-.zivo-v55-progress{height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:9px}.zivo-v55-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd43d,#76e6ff);transition:width .35s}
-.zivo-v55-ai-panel{display:flex;gap:10px;align-items:center}.zivo-v55-ai-panel .orb{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#fff,#7ee7ff 30%,#5267ff 65%,#171b55);font-size:11px;font-weight:1000}
-.zivo-v55-ai-panel p{margin:2px 0 0;font-size:10px;opacity:.72}
-@media(max-width:700px){.zivo-v55-dashboard{grid-template-columns:repeat(2,minmax(0,1fr))}}
-</style>
 
 
-<style id="zivo-v56-unified">
-.zivo-v56-hub{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin:14px 0}
-.zivo-v56-card{border:1px solid rgba(255,255,255,.10);border-radius:16px;padding:14px;background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));box-shadow:0 10px 30px rgba(0,0,0,.14)}
-.zivo-v56-title{font-weight:1000;font-size:16px}.zivo-v56-sub{font-size:10px;opacity:.68;margin-top:3px}
-.zivo-v56-progress{height:8px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:10px 0 7px}.zivo-v56-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ffd43d,#75e5ff);transition:width .4s}
-.zivo-v56-actions{display:flex;gap:7px;flex-wrap:wrap}.zivo-v56-btn{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:10px;padding:7px 9px;color:inherit;font-weight:900;font-size:10px;cursor:pointer}
-.zivo-v56-ledger{max-height:150px;overflow:auto;margin-top:8px}.zivo-v56-row{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:10px}.zivo-v56-row b{color:#ffe06a}
-.zivo-v56-status{display:inline-flex;align-items:center;gap:6px;font-size:9px;font-weight:900}.zivo-v56-dot{width:7px;height:7px;border-radius:50%;background:#71efa0}
-@media(max-width:700px){.zivo-v56-hub{grid-template-columns:1fr}.zivo-v56-card{padding:11px}}
-</style>
 
 
-<style id="zivo-v57-cloud">
-.zivo-v57-cloudbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;margin:10px 0;border:1px solid rgba(255,255,255,.09);border-radius:12px;background:rgba(255,255,255,.035);font-size:10px}
-.zivo-v57-cloudbar .ok{color:#78efa1}.zivo-v57-cloudbar .warn{color:#ffd27a}.zivo-v57-cloudbar .bad{color:#ff9a9a}
-.zivo-v57-auth{display:flex;gap:7px;flex-wrap:wrap}.zivo-v57-auth button{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:inherit;border-radius:9px;padding:7px 10px;font-size:10px;font-weight:900;cursor:pointer}
-.zivo-v57-modal{position:fixed;inset:0;z-index:100000;display:none;place-items:center;background:rgba(0,0,0,.62);backdrop-filter:blur(6px)}.zivo-v57-modal.show{display:grid}
-.zivo-v57-dialog{width:min(430px,calc(100vw - 28px));border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;background:#101827;color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.45)}
-.zivo-v57-dialog h3{margin:0 0 5px;font-size:16px}.zivo-v57-dialog p{font-size:10px;opacity:.7;margin:0 0 12px}.zivo-v57-input{width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:#0b1220;color:#fff}.zivo-v57-primary{width:100%;margin-top:8px;border:0;border-radius:10px;padding:10px;background:linear-gradient(90deg,#ffd43d,#75e5ff);color:#111;font-weight:1000;cursor:pointer}
-</style>
 
-<style id="zivo-v62-clean">.profile-cloud-note{margin-top:10px;padding:9px 11px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:rgba(255,255,255,.035);font-size:10px}@media(max-width:700px){.profile-cloud-note{font-size:9px;padding:8px 9px}}</style><style id="zivo-v65-integration-css">.challenge-card{align-items:stretch}.challenge-visual{width:92px;height:72px;object-fit:cover;border-radius:11px;flex:0 0 92px;background:rgba(255,255,255,.04);display:grid;place-items:center;font-size:30px}.challenge-visual-fallback{border:1px solid rgba(255,255,255,.08)}.challenge-copy{min-width:0;flex:1}.challenge-copy p{line-height:1.5}@media(max-width:700px){.challenge-card{display:grid;grid-template-columns:64px 1fr;gap:9px}.challenge-visual{width:64px;height:58px}.challenge-card>.btn{grid-column:1/-1;width:100%}}</style>
 
-<style id="zivo-v68-challenge-core">
-/* ZIVOZONE V68 — Challenge Center is the visual heart */
-#challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,
-.challenges-grid .challenge-card,#challenges .game-card,#challengeCenter .game-card{
-  min-height:188px!important;
-  padding:14px!important;
-  border-radius:18px!important;
-}
-#challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-.challenges-grid .challenge-card .icon{
-  width:46px!important;height:46px!important;
-  min-width:46px!important;min-height:46px!important;
-  font-size:21px!important;line-height:46px!important;
-}
-#challenges .challenge-card img,#challengeCenter .challenge-card img,.challenge-center .challenge-card img,
-.challenges-grid .challenge-card img{
-  height:92px!important;max-height:92px!important;
-  border-radius:12px!important;
-}
-#challenges .challenge-card button,#challengeCenter .challenge-card button,.challenge-center .challenge-card button,
-.challenges-grid .challenge-card button{
-  min-height:30px!important;
-  height:30px!important;
-  padding:5px 10px!important;
-  font-size:9px!important;
-  border-radius:8px!important;
-  line-height:1!important;
-  width:auto!important;
-  max-width:118px!important;
-}
-#challenges .challenge-card button svg,#challengeCenter .challenge-card button svg,
-.challenge-center .challenge-card button svg,.challenges-grid .challenge-card button svg{
-  width:14px!important;height:14px!important;
-}
-@media(max-width:700px){
-  #challenges .challenge-card,#challengeCenter .challenge-card,.challenge-center .challenge-card,
-  .challenges-grid .challenge-card,#challenges .game-card,#challengeCenter .game-card{
-    min-height:170px!important;
-    padding:11px!important;
-    border-radius:15px!important;
-  }
-  #challenges .challenge-card img,#challengeCenter .challenge-card img,.challenge-center .challenge-card img,
-  .challenges-grid .challenge-card img{
-    height:76px!important;max-height:76px!important;
-  }
-  #challenges .challenge-card .icon,#challengeCenter .challenge-card .icon,.challenge-center .challenge-card .icon,
-  .challenges-grid .challenge-card .icon{
-    width:40px!important;height:40px!important;
-    min-width:40px!important;min-height:40px!important;
-    font-size:18px!important;line-height:40px!important;
-  }
-  #challenges .challenge-card button,#challengeCenter .challenge-card button,.challenge-center .challenge-card button,
-  .challenges-grid .challenge-card button{
-    height:29px!important;min-height:29px!important;
-    padding:5px 9px!important;font-size:8.5px!important;
-    max-width:108px!important;
-  }
-}
-</style>
 
-<style id="zivo-v72-news-pro">
-/* ZIVOZONE V72 — broadcast-quality Arabic news rails */
-.zivo-news-stack{
-  width:100%;display:grid;gap:10px;margin:16px 0 20px;
-  direction:rtl;
-}
-.zivo-news-rail{
-  position:relative;display:flex;align-items:stretch;min-width:0;height:56px;
-  overflow:hidden;border-radius:15px;
-  background:linear-gradient(90deg,#070a10 0%,#101826 52%,#070a10 100%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 10px 30px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.035);
-}
-.zivo-news-rail:after{
-  content:"";position:absolute;inset:0;pointer-events:none;z-index:3;
-  background:linear-gradient(90deg,rgba(7,10,16,.96),transparent 8%,transparent 92%,rgba(7,10,16,.96));
-}
-.zivo-rail-head{
-  z-index:6;flex:0 0 auto;display:flex;align-items:center;gap:9px;
-  min-width:285px;padding:0 15px;
-  background:linear-gradient(135deg,#172437,#0a1019);
-  border-inline-start:1px solid rgba(255,255,255,.06);
-  border-inline-end:1px solid rgba(255,255,255,.13);
-  white-space:nowrap;
-}
-.zivo-rail-live{
-  color:#fff;font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif;
-  background:#e3263d;border-radius:99px;padding:6px 8px;
-  box-shadow:0 0 0 3px rgba(227,38,61,.10);
-}
-.zivo-rail-live:before{content:"";display:inline-block;width:6px;height:6px;margin-inline-end:5px;border-radius:50%;background:#fff;animation:zivoLivePulse 1.4s infinite}
-.zivo-rail-badge{
-  color:#10151d;background:#f4c94e;border-radius:99px;padding:6px 9px;
-  font:900 10px/1 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-title{
-  color:#fff;font:950 14px/1.1 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;
-  letter-spacing:.25px;
-}
-.zivo-rail-sub{
-  color:#91a5bf;font:700 9px/1.3 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-status{
-  margin-inline-start:auto;color:#6f8198;font:700 8px/1.2 "Noto Sans Arabic","Tahoma",sans-serif;
-}
-.zivo-rail-window{
-  position:relative;min-width:0;flex:1;overflow:hidden;direction:ltr;
-}
-.zivo-rail-window:before,.zivo-rail-window:after{
-  content:"";position:absolute;top:0;bottom:0;width:52px;z-index:4;pointer-events:none;
-}
-.zivo-rail-window:before{left:0;background:linear-gradient(90deg,#070a10,transparent)}
-.zivo-rail-window:after{right:0;background:linear-gradient(270deg,#070a10,transparent)}
-.zivo-rail-track{
-  display:flex;align-items:center;width:max-content;height:100%;
-  direction:ltr;white-space:nowrap;
-  animation:zivoBroadcastFlowV72 var(--zivo-flow-duration,70s) linear infinite;
-  will-change:transform;
-}
-.zivo-rail-sequence{
-  display:flex;align-items:center;gap:44px;flex:none;
-  padding:0 24px;
-}
-.zivo-news-item{
-  display:inline-flex;align-items:center;gap:9px;flex:none;
-  color:#f5f7fb;text-decoration:none;
-  font:800 13px/1.8 "Noto Sans Arabic","Noto Kufi Arabic","Tahoma",sans-serif;
-}
-a.zivo-news-item:hover .zivo-news-headline{color:#78d2ff;text-decoration:underline;text-underline-offset:3px}
-.zivo-news-dot{color:#4e647d;font-size:8px}
-.zivo-news-source{
-  color:#77caff;font-size:9px;font-weight:900;
-  background:rgba(119,202,255,.08);padding:3px 7px;border-radius:6px;
-}
-.zivo-news-headline{max-width:none}
-.zivo-news-time{color:#708299;font-size:9px;font-weight:700}
-.zivo-rail-track-empty{animation:none!important}
-.zivo-short-feed{animation-duration:45s!important}.zivo-general-rail .zivo-rail-track{animation-duration:120s!important}
-.zivo-news-rail:hover .zivo-rail-track{animation-play-state:paused}
-@keyframes zivoBroadcastFlowV72{
-  from{transform:translate3d(0,0,0)}
-  to{transform:translate3d(-50%,0,0)}
-}
-@keyframes zivoLivePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.72)}}
-@media(max-width:900px){
-  .zivo-rail-head{min-width:245px}
-  .zivo-rail-status{display:none}
-}
-@media(max-width:700px){
-  .zivo-news-stack{gap:7px;margin:11px 0 15px}
-  .zivo-news-rail{height:49px;border-radius:12px}
-  .zivo-rail-head{min-width:154px;padding:0 9px;gap:6px}
-  .zivo-rail-title{font-size:11px}
-  .zivo-rail-sub{display:none}
-  .zivo-rail-live,.zivo-rail-badge{font-size:8px;padding:5px 6px}
-  .zivo-rail-sequence{gap:28px;padding:0 17px}
-  .zivo-news-item{font-size:11px;gap:7px}
-  .zivo-news-source{font-size:8px;padding:2px 5px}
-  .zivo-news-time{display:none}
-}
-@media(prefers-reduced-motion:reduce){
-  .zivo-rail-track{animation:none!important}
-}
-</style>
-<style id="zivo-v100-mobile-safety">
-/* V100: single responsive codebase; prevent accidental horizontal overflow. */
-html { overflow-x: hidden; }
-body { max-width: 100%; overflow-x: hidden; }
-img, video, canvas, iframe { max-width: 100%; }
-button, a, input, select, textarea { touch-action: manipulation; }
-@media (max-width: 480px) {
-  .zivo-desktop-only { display: none !important; }
-}
-</style>
 
-<style id="zivo-v105-loader-guard">#app-loader{transition:opacity .25s ease,visibility .25s ease}.zivo-loader-released{opacity:0!important;visibility:hidden!important;pointer-events:none!important}</style>
-<script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
+
 </head>
 <body>
-<div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
+<div class="loader" id="app-loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
 <header class="topbar">
-  <a class="brand" href="#home" aria-label="ZIVOZONE"><span class="brand-mark">Z</span><span class="brand-name">ZIVOZONE</span></a>
-  <nav class="main-nav" aria-label="main navigation">
-    <a href="#home" data-i18n="home">الرئيسية</a><a href="#challenges" data-i18n="challenges">التحديات</a>
-    <a href="#sports" data-i18n="sports">الرياضة</a>
-    <a href="#profile" data-i18n="profile">ملفي</a>
-  </nav>
-  <div class="top-actions"><button id="audio-toggle" class="icon-btn" type="button" aria-label="Sound">🔊</button><span id="firebase-status" class="firebase-status" title="Firebase">●</span>
-    <label class="sr-only" for="language-select">Language</label>
-    <select id="language-select" aria-label="Language">
-      <option value="ar">العربية</option>
-      <option value="en">English</option>
-      <option value="zh">中文</option>
-      <option value="hi">हिन्दी</option>
-      <option value="es">Español</option>
-    </select>
-    <button id="login-btn" class="btn btn-primary" data-i18n="login">🔐 إنشاء حساب / دخول</button>
-  </div>
+<a aria-label="ZIVOZONE" class="brand" href="#home"><span class="brand-mark">Z</span><span class="brand-name">ZIVOZONE</span></a>
+<nav aria-label="main navigation" class="main-nav">
+<a data-i18n="home" href="#home">الرئيسية</a><a data-i18n="challenges" href="#challenges">التحديات</a>
+<a data-i18n="sports" href="#sports">الرياضة</a>
+<a data-i18n="profile" href="#profile">ملفي</a>
+</nav>
+<div class="top-actions"><button aria-label="Sound" class="icon-btn" id="audio-toggle" type="button">🔊</button><span class="firebase-status" id="firebase-status" title="Firebase">●</span>
+<label class="sr-only" for="language-select">Language</label>
+<select aria-label="Language" id="language-select">
+<option value="ar">العربية</option>
+<option value="en">English</option>
+<option value="zh">中文</option>
+<option value="hi">हिन्दी</option>
+<option value="es">Español</option>
+</select>
+<button class="btn btn-primary" data-i18n="login" id="login-btn">🔐 إنشاء حساب / دخول</button>
+</div>
 </header>
 <main>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<section id="home" class="hero section">
-  <div class="hero-copy">
-    <span class="eyebrow" data-i18n="heroEyebrow">عالم رقمي • ZIVOZONE</span>
-    <h1><span class="hero-brand">ZIVOZONE</span><br><span data-i18n="heroTitle">عالمك يبدأ من هنا</span></h1>
-    <p data-i18n="heroText">ألعاب وتحديات وذكاء ورعب وعلوم ورياضة واكتشاف للشخصية في عالم رقمي واحد.</p>
-    <div class="hero-actions"><button class="btn btn-primary btn-lg" data-action="scroll-challenges" data-i18n="play">🚀 ابدأ التحديات</button><button class="btn btn-ghost btn-lg" data-action="login" data-i18n="login">🔐 إنشاء حساب / دخول</button></div>
-    <div class="hero-stats"><div><b>5</b><span data-i18n="languages">لغات</span></div><div><b>10+</b><span data-i18n="modes">أنماط ألعاب</span></div><div><b>100+</b><span data-i18n="challengesCount">تحديات</span></div></div>
-  </div>
-  <div class="hero-orb-wrap"><div class="hero-orb"><span>Z</span></div><span class="float-tag t1">IQ</span><span class="float-tag t2">AI</span><span class="float-tag t3">HORROR</span><span class="float-tag t4">SPORT</span></div>
-</section>
-
-
-
-
-
-<section id="challenges" class="section alt challenge-center-section">
-  <div class="section-heading challenge-center-heading">
-    <div><span class="eyebrow" data-i18n="challengeEyebrow">مركز التحديات</span><h2 data-i18n="challengeTitle">مركز التحديات</h2><p class="muted" data-i18n="challengeText">كل تحدٍ عالم مستقل؛ اختر واحدًا وابدأ رحلة تتصاعد في الصعوبة.</p></div>
-    <div class="challenge-center-meta"><span id="player-level-chip" class="level-chip">Level 1</span><span class="challenge-live-chip">● LIVE CHALLENGE ENGINE</span></div>
-  </div>
-  <div class="ad-slot ad-top" data-ad-slot="top"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
-  <div class="challenge-layout premium-challenge-layout">
-    <aside class="ad-column ad-left" aria-label="Future advertising area">
-      <div class="ad-slot" data-ad-slot="left-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
-      <div class="ad-slot" data-ad-slot="left-2"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>ZIVO Partner</strong></div>
-    </aside>
-    <div class="challenge-main">
-      <div class="challenge-toolbar"><span class="muted" data-i18n="challengeToolbar">تحديات متنوعة: منطق، ذاكرة، رياضيات، علوم، كرة قدم، سرعة، واستراتيجية. • 30 ثانية لكل سؤال.</span></div>
-      <div id="challenge-list" class="challenge-list"></div>
-    </div>
-    <aside class="ad-column ad-right" aria-label="Future advertising area">
-      <div class="ad-slot" data-ad-slot="right-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
-      <div class="ad-slot" data-ad-slot="right-2"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>ZIVO Partner</strong></div>
-    </aside>
-  </div>
-  <div class="ad-slot ad-bottom" data-ad-slot="bottom"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
-</section>
-
-
-<section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading"><h3 data-i18n="matches">المباريات القادمة</h3></div><div id="sports-list" class="sports-grid"></div><div class="match-alert" id="match-alert" hidden></div><div class="subheading"><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><span class="live-badge">LIVE / UPCOMING</span></div><div id="fixture-list" class="sports-grid"></div></section>
-<section id="profile" class="section alt"><div class="profile-panel"><div class="avatar">Z</div><div class="profile-main"><span class="eyebrow" data-i18n="profileEyebrow">لاعب ZIVO</span><h2 id="profile-name">زائر</h2><p id="profile-email" class="muted">يمكنك اللعب كزائر ثم إنشاء حساب لحفظ تقدمك.</p><div class="progress"><span id="xp-progress"></span></div><div class="profile-stats"><span><span data-i18n="level">المستوى</span> <b id="profile-level">1</b></span><span><span data-i18n="xp">XP</span> <b id="profile-xp">0</b></span><span>🪙 <span data-i18n="coins">ZIVO</span> <b id="profile-coins">0</b></span><span>🏆 <span data-i18n="wins">انتصارات</span> <b id="profile-wins">0</b></span><span>🔥 <span data-i18n="bestStreak">أفضل سلسلة</span> <b id="profile-best-streak">0</b></span></div></div><div class="profile-actions"><button class="btn btn-primary" data-action="login" data-i18n="account">🔐 الحساب</button><button id="logout-btn" class="btn btn-ghost" data-action="logout" hidden data-i18n="logout">تسجيل الخروج</button></div></div><div class="profile-cloud-note">☁️ <b>ملف اللاعب:</b> تقدمك وXP وZIVO والنتائج تُدار من هذا القسم بعد تسجيل الدخول.</div><div class="notice" data-i18n="saveHint">الزائر يستطيع اللعب. الحساب المجاني يحفظ تقدمك وXP وZIVO والنتائج.</div><div class="player-quick-actions" aria-label="ZIVOZONE player tools"><button class="btn btn-ghost" data-action="open-identity" data-i18n="identityStart">🧠 اكتشف نفسك</button><button class="btn btn-ghost" data-action="open-ai" data-i18n="ai">🤖 ZIVO AI</button><button class="btn btn-ghost" data-action="open-wallet">💰 محفظة ZIVO</button></div></div></section>
-</main>
-<nav class="mobile-nav" aria-label="Mobile navigation">
-  <a href="#home" data-mobile-nav="home">⌂<span data-i18n="home">الرئيسية</span></a>
-  <a href="#challenges" data-mobile-nav="challenges">⚡<span data-i18n="challenges">التحديات</span></a>
-  <a href="#sports" data-mobile-nav="sports">⚽<span data-i18n="sports">الرياضة</span></a>
-  <a href="#profile" data-mobile-nav="profile">👤<span data-i18n="profile">ملفي</span></a>
-</nav>
+<section class="hero section" id="home">
+<div class="hero-copy">
+<span class="eyebrow" data-i18n="heroEyebrow">عالم رقمي • ZIVOZONE</span>
+<h1><span class="hero-brand">ZIVOZONE</span><br/><span data-i18n="heroTitle">عالمك يبدأ من هنا</span></h1>
+<p data-i18n="heroText">ألعاب وتحديات وذكاء ورعب وعلوم ورياضة واكتشاف للشخصية في عالم رقمي واحد.</p>
+<div class="hero-actions"><button class="btn btn-primary btn-lg" data-action="scroll-challenges" data-i18n="play">🚀 ابدأ التحديات</button><button class="btn btn-ghost btn-lg" data-action="login" data-i18n="login">🔐 إنشاء حساب / دخول</button></div>
+<div class="hero-stats"><div><b>5</b><span data-i18n="languages">لغات</span></div><div><b>10+</b><span data-i18n="modes">أنماط ألعاب</span></div><div><b>100+</b><span data-i18n="challengesCount">تحديات</span></div></div>
 </div>
-<footer class="footer"><strong>ZIVOZONE</strong><span>© 2026 ZIVOZONE</span><span id="footer-tagline">Built for the next generation.</span><button id="zivo-terms-footer" class="zivo-footer-link" type="button">الشروط والاستخدام</button></footer>
-<div id="modal-root" class="modal-root" aria-hidden="true"></div><div id="toast-container" class="toast-container" aria-live="polite"></div>
-<script>
-window.ZIVOZONE_FIREBASE_CONFIG={apiKey:'AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s',authDomain:'zivozone-fc6ed.firebaseapp.com',projectId:'zivozone-fc6ed',storageBucket:'zivozone-fc6ed.firebasestorage.app',messagingSenderId:'169366383094',appId:'1:169366383094:web:5875e8d24b1c543e4a7fd7',measurementId:'G-ZXW8LP39JY'};
-/* Optional secure backends. Leave blank until a server endpoint is deployed. */
-window.ZIVOZONE_API={aiEndpoint:'',sportsNewsEndpoint:'',aiCallable:'zivoAI',sportsCallable:'getSportsBroadcast'};
-window.ZIVOZONE_GAME_RULES={questionSeconds:30,version:'V62-clean-engine'};
-// IMPORTANT: raw reCAPTCHA Enterprise SITE KEY only (no <script> tag).
-window.ZIVOZONE_SECURITY={appCheckSiteKey:'6LcDYbctAAAAAHJP_2BRgSXi3cnq1iKxCNTH1zBW'};
-window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
-</script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1085.0"></script>
+<div class="hero-orb-wrap"><div class="hero-orb"><span>Z</span></div><span class="float-tag t1">IQ</span><span class="float-tag t2">AI</span><span class="float-tag t3">HORROR</span><span class="float-tag t4">SPORT</span></div>
+</section>
+<section class="section alt challenge-center-section" id="challenges">
+<div class="section-heading challenge-center-heading">
+<div><span class="eyebrow" data-i18n="challengeEyebrow">مركز التحديات</span><h2 data-i18n="challengeTitle">مركز التحديات</h2><p class="muted" data-i18n="challengeText">كل تحدٍ عالم مستقل؛ اختر واحدًا وابدأ رحلة تتصاعد في الصعوبة.</p></div>
+<div class="challenge-center-meta"><span class="level-chip" id="player-level-chip">Level 1</span><span class="challenge-live-chip">● LIVE CHALLENGE ENGINE</span></div>
+</div>
+<div class="ad-slot ad-top" data-ad-slot="top"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
+<div class="challenge-layout premium-challenge-layout">
+<aside aria-label="Future advertising area" class="ad-column ad-left">
+<div class="ad-slot" data-ad-slot="left-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
+<div class="ad-slot" data-ad-slot="left-2"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>ZIVO Partner</strong></div>
+</aside>
+<div class="challenge-main">
+<div class="challenge-toolbar"><span class="muted" data-i18n="challengeToolbar">تحديات متنوعة: منطق، ذاكرة، رياضيات، علوم، كرة قدم، سرعة، واستراتيجية. • 30 ثانية لكل سؤال.</span></div>
+<div class="challenge-list" id="challenge-list"></div>
+</div>
+<aside aria-label="Future advertising area" class="ad-column ad-right">
+<div class="ad-slot" data-ad-slot="right-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
+<div class="ad-slot" data-ad-slot="right-2"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>ZIVO Partner</strong></div>
+</aside>
+</div>
+<div class="ad-slot ad-bottom" data-ad-slot="bottom"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
+</section>
+<section class="section" id="sports"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div class="sports-grid" id="news-list"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div class="sports-grid" id="jordan-news-list"></div><div class="subheading"><h3 data-i18n="matches">المباريات القادمة</h3></div><div class="sports-grid" id="sports-list"></div><div class="match-alert" hidden="" id="match-alert"></div><div class="subheading"><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><span class="live-badge">LIVE / UPCOMING</span></div><div class="sports-grid" id="fixture-list"></div></section>
+<section class="section alt" id="profile"><div class="profile-panel"><div class="avatar">Z</div><div class="profile-main"><span class="eyebrow" data-i18n="profileEyebrow">لاعب ZIVO</span><h2 id="profile-name">زائر</h2><p class="muted" id="profile-email">يمكنك اللعب كزائر ثم إنشاء حساب لحفظ تقدمك.</p><div class="progress"><span id="xp-progress"></span></div><div class="profile-stats"><span><span data-i18n="level">المستوى</span> <b id="profile-level">1</b></span><span><span data-i18n="xp">XP</span> <b id="profile-xp">0</b></span><span>🪙 <span data-i18n="coins">ZIVO</span> <b id="profile-coins">0</b></span><span>🏆 <span data-i18n="wins">انتصارات</span> <b id="profile-wins">0</b></span><span>🔥 <span data-i18n="bestStreak">أفضل سلسلة</span> <b id="profile-best-streak">0</b></span></div></div><div class="profile-actions"><button class="btn btn-primary" data-action="login" data-i18n="account">🔐 الحساب</button><button class="btn btn-ghost" data-action="logout" data-i18n="logout" hidden="" id="logout-btn">تسجيل الخروج</button></div></div><div class="profile-cloud-note">☁️ <b>ملف اللاعب:</b> تقدمك وXP وZIVO والنتائج تُدار من هذا القسم بعد تسجيل الدخول.</div><div class="notice" data-i18n="saveHint">الزائر يستطيع اللعب. الحساب المجاني يحفظ تقدمك وXP وZIVO والنتائج.</div><div aria-label="ZIVOZONE player tools" class="player-quick-actions"><button class="btn btn-ghost" data-action="open-identity" data-i18n="identityStart">🧠 اكتشف نفسك</button><button class="btn btn-ghost" data-action="open-ai" data-i18n="ai">🤖 ZIVO AI</button><button class="btn btn-ghost" data-action="open-wallet">💰 محفظة ZIVO</button></div></section>
+</main>
+<nav aria-label="Mobile navigation" class="mobile-nav">
+<a data-mobile-nav="home" href="#home">⌂<span data-i18n="home">الرئيسية</span></a>
+<a data-mobile-nav="challenges" href="#challenges">⚡<span data-i18n="challenges">التحديات</span></a>
+<a data-mobile-nav="sports" href="#sports">⚽<span data-i18n="sports">الرياضة</span></a>
+<a data-mobile-nav="profile" href="#profile">👤<span data-i18n="profile">ملفي</span></a>
+</nav>
 
-<script>
-document.addEventListener('click',function(e){
-  const b=e.target.closest('[data-challenge],[data-game]');
-  const core=window.ZIVOZONE_CORE;
-  if(!b||!core)return;
-  const id=b.dataset.challenge||b.dataset.game;
-  if(id!=='horror'&&core.challenges.list().some(x=>x.id===id||x.id?.startsWith(id+'_v18'))){
-    e.preventDefault();e.stopImmediatePropagation();core.challenges.start(id);
-  }
-},true);
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded',function(){
-  if(document.getElementById('z27-cloud-status'))return;
-  const e=document.createElement('div');e.id='z27-cloud-status';
-  e.innerHTML='☁ <strong>CLOUD READY</strong> · ZIVOZONE';
-  document.body.appendChild(e);
-});
-</script>
-
-
-<script>
-/* ZIVOZONE V47 — runtime guard */
-(function(){
-  function release(){
-    var el=document.getElementById('app-loader');
-    if(el) el.classList.add('hidden');
-  }
-  window.addEventListener('error',function(e){
-    console.error('ZIVOZONE runtime error:',e.error||e.message);
-    release();
-  });
-  window.addEventListener('unhandledrejection',function(e){
-    console.error('ZIVOZONE promise error:',e.reason);
-    release();
-  });
-  setTimeout(release,1800);
-})();
-</script>
-<script src="zivozone-config.js?v=1085.0"></script>
-<script src="zivozone-app.js?v=1085.0"></script>
-<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js",{scope:"/"}).catch(e=>console.warn("ZIVOZONE SW:",e)));}</script>
-
-<!-- ZIVO V101 UNIFIED MOBILE-FIRST ECONOMY
-     Single responsive codebase: mobile is the primary UX target.
-     Economy contract:
-       XP      = progression / level (not spendable)
-       ZIVO    = virtual in-platform currency (not cash-out)
-       TICKETS = event/tournament entry units
-     Primary action rule: one primary action per user intent.
-     Backend must validate all ZIVO/XP transactions server-side.
--->
+<footer class="footer"><strong>ZIVOZONE</strong><span>© 2026 ZIVOZONE</span><span id="footer-tagline">Built for the next generation.</span><button class="zivo-footer-link" id="zivo-terms-footer" type="button">الشروط والاستخدام</button></footer>
+<div aria-hidden="true" class="modal-root" id="modal-root"></div><div aria-live="polite" class="toast-container" id="toast-container"></div>
 
 
 
-</body>
+
+
+
+
+
+
+
+
+
+
+<script src="zivozone-config.js?v=1086.0"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script><script src="zivo-ai.js?v=1086.0" type="module"></script><script src="zivozone-app.js?v=1086.0"></script><script src="zivozone-runtime.js?v=1086.0"></script></body>
 </html>

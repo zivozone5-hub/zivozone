@@ -1,3 +1,4 @@
+window.ZIVOZONE_INTERNAL=window.ZIVOZONE_INTERNAL||{};
 /* ZIVOZONE V1084 — UNIFIED CORE CLEAN RUNTIME */
 
 /* ===== audio.js ===== */
