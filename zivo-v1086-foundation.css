@@ -1,0 +1,43 @@
+/* ZIVOZONE V1086 — FOUNDATION UI
+   Single player utility rail + clean mobile dock + account/menu polish.
+*/
+:root{--z86-cyan:#55d7ff;--z86-violet:#7b61ff;--z86-gold:#ffd85a;--z86-green:#77e7a0}
+/* Retire old navigation shells: V1086 owns these surfaces. */
+#z1084-bar,#z1084-mobile,#v1080-launch,#v1081-profile-launch,#v1083-dock,#zivo-v101-economy,#zivo-global-wallet,#zivo-v85-open,#zivo-v85-economy,#zivo-v81-open,#zivo-v81-economy,#zivo-v80-open,#zivo-v87-quickdock,#z80-admin-open,#v26-open,#v25-wallet-btn,#z25-wallet-btn,#zivo-v24-balance{display:none!important}
+.mobile-nav{display:none!important}
+/* Desktop utility strip sits below the real header instead of floating over content. */
+#z86-utility{position:fixed;top:76px;right:18px;z-index:9400;display:flex;align-items:center;gap:6px;padding:6px;border:1px solid rgba(85,215,255,.14);border-radius:15px;background:rgba(5,10,18,.86);backdrop-filter:blur(18px);box-shadow:0 14px 35px rgba(0,0,0,.28)}
+#z86-utility button{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.045);color:#fff;border-radius:11px;padding:8px 10px;font:inherit;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;transition:.18s ease}
+#z86-utility button:hover{background:rgba(255,255,255,.09);transform:translateY(-1px)}
+#z86-utility .z86-profile{display:flex;align-items:center;gap:7px;text-align:right}
+.z86-mini-avatar{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#263cff,#11b9ff);font-size:12px}
+.z86-mini-copy b,.z86-mini-copy small{display:block}.z86-mini-copy small{font-size:7px;opacity:.55;margin-top:2px}.z86-wallet{color:var(--z86-gold)!important}.z86-mine{color:var(--z86-green)!important}.z86-hub{color:#b7b5ff!important}
+/* Mobile header: no cramped desktop nav. */
+#z86-menu{display:none}
+@media(max-width:900px){
+  body{padding-bottom:82px}
+  .topbar{min-height:62px!important;padding:7px 10px!important;gap:7px!important;position:sticky;top:0;z-index:9100}
+  .brand{min-width:0}.brand-name{font-size:17px!important}.brand-mark{width:34px!important;height:34px!important}
+  .main-nav{display:none!important}
+  .top-actions{margin-inline-start:auto;gap:5px!important}.top-actions #audio-toggle,.top-actions #firebase-status,.top-actions #language-select{display:none!important}
+  .top-actions #login-btn{display:inline-flex!important;max-width:145px!important;min-width:92px;font-size:9px!important;padding:8px 10px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #z86-menu{display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid rgba(85,215,255,.18);border-radius:11px;background:rgba(255,255,255,.04);color:#fff;font-size:19px;cursor:pointer}
+  #z86-utility{display:none!important}
+  #z86-mobile-dock{position:fixed;left:8px;right:8px;bottom:8px;z-index:9998;display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:6px;border:1px solid rgba(85,215,255,.16);border-radius:18px;background:rgba(5,10,19,.94);backdrop-filter:blur(18px);box-shadow:0 16px 45px rgba(0,0,0,.5);padding-bottom:max(6px,env(safe-area-inset-bottom))}
+  #z86-mobile-dock button{min-width:0;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.045);color:#fff;border-radius:12px;padding:8px 3px 7px;font:inherit;font-weight:900;font-size:16px;cursor:pointer}
+  #z86-mobile-dock button span{display:block;margin-top:2px;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.8}
+  #z86-mobile-dock button:nth-child(2){color:var(--z86-gold)}#z86-mobile-dock button:nth-child(3){color:var(--z86-green)}#z86-mobile-dock button:nth-child(4){color:#b7b5ff}
+}
+@media(min-width:901px){#z86-mobile-dock{display:none!important}}
+/* Account/menu sheet */
+#z86-menu-sheet{position:fixed;inset:0;z-index:150000;display:none;background:rgba(0,0,0,.66);backdrop-filter:blur(12px);align-items:flex-start;justify-content:center;padding:76px 12px 12px}
+#z86-menu-sheet.open{display:flex}
+.z86-menu-card{width:min(520px,100%);border:1px solid rgba(85,215,255,.16);border-radius:20px;background:linear-gradient(180deg,#101827,#070b13);box-shadow:0 30px 100px #000b;padding:14px;color:#fff}
+.z86-menu-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.z86-menu-head h2{font-size:18px;margin:0}.z86-menu-close{width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:#fff;font-size:20px}
+.z86-menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.z86-menu-grid button{padding:13px;text-align:right;border:1px solid rgba(255,255,255,.07);border-radius:13px;background:rgba(255,255,255,.035);color:#fff;font:inherit;font-weight:900;cursor:pointer}.z86-menu-grid small{display:block;opacity:.5;font-size:9px;margin-top:3px}
+/* Logout confirmation */
+#z86-logout{position:fixed;inset:0;z-index:160000;display:none;place-items:center;padding:14px;background:rgba(0,0,0,.8);backdrop-filter:blur(14px)}
+#z86-logout.open{display:grid}.z86-logout-card{width:min(450px,100%);text-align:center;padding:24px;border:1px solid rgba(255,86,122,.24);border-radius:23px;background:radial-gradient(circle at 50% 0,rgba(125,40,90,.2),transparent 45%),linear-gradient(180deg,#141321,#07080d);color:#fff;box-shadow:0 30px 100px #000c}.z86-logout-icon{font-size:34px}.z86-logout-card h2{margin:7px 0;font-size:22px}.z86-logout-card p{margin:0;color:#aeb6c7;font-size:11px;line-height:1.9}.z86-logout-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:18px}.z86-logout-actions button{padding:11px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:#fff;font:inherit;font-weight:900;cursor:pointer}.z86-logout-actions .stay{background:linear-gradient(90deg,#4f46ff,#20c7ff);border:0}.z86-logout-actions .leave{color:#ff9ab1}
+/* Header logged-in state */
+#login-btn.z86-account{display:inline-flex;align-items:center;gap:6px;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:560px){.z86-menu-grid{grid-template-columns:1fr}.z86-logout-card{padding:20px}.z86-logout-actions{grid-template-columns:1fr}.z1085-profile-actions{width:100%}}
