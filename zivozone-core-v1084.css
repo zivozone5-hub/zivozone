@@ -1732,3 +1732,7 @@ body.zivo-admin-mode #login-btn{
  .z1084-reels-section .section-head{align-items:flex-start}
  .z1084-reel-actions .btn{min-height:40px}
 }
+
+.z1084-reel-media iframe{width:100%;height:100%;border:0;display:block}
+.z1084-url-label{grid-column:1/-1}
+.z1084-free-note{grid-column:1/-1;font-size:10px;opacity:.62;line-height:1.5}
