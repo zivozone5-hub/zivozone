@@ -1,69 +1,4 @@
-/* ZIVOZONE V1087 — UNIFIED APPLICATION CORE
-   All legacy feature modules are preserved inside one execution bundle.
-   No feature layer is removed without its runtime being retained here.
-*/
-
-/* ===== SOURCE: inline ===== */
-(function(){
-'use strict';
-(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();
-})();
-
-/* ===== SOURCE: inline ===== */
-(function(){
-'use strict';
-
-document.addEventListener('click',function(e){
-  const b=e.target.closest('[data-challenge],[data-game]');
-  if(!b||!window.ZIVOZONE_V20)return;
-  const id=b.dataset.challenge||b.dataset.game;
-  if(id!=='horror'&&window.ZIVOZONE_V20.findBanks().some(x=>x.id===id||x.id?.startsWith(id+'_v18'))){
-    e.preventDefault();e.stopImmediatePropagation();window.ZIVOZONE_V20.start(id);
-  }
-},true);
-
-})();
-
-/* ===== SOURCE: inline ===== */
-(function(){
-'use strict';
-
-document.addEventListener('DOMContentLoaded',function(){
-  if(document.getElementById('z27-cloud-status'))return;
-  const e=document.createElement('div');e.id='z27-cloud-status';
-  e.innerHTML='☁ <strong>CLOUD READY</strong> · ZIVOZONE';
-  document.body.appendChild(e);
-});
-
-})();
-
-/* ===== SOURCE: inline ===== */
-(function(){
-'use strict';
-
-/* ZIVOZONE V47 — runtime guard */
-(function(){
-  function release(){
-    var el=document.getElementById('app-loader');
-    if(el) el.classList.add('hidden');
-  }
-  window.addEventListener('error',function(e){
-    console.error('ZIVOZONE runtime error:',e.error||e.message);
-    release();
-  });
-  window.addEventListener('unhandledrejection',function(e){
-    console.error('ZIVOZONE promise error:',e.reason);
-    release();
-  });
-  setTimeout(release,1800);
-})();
-
-})();
-
-/* ===== SOURCE: zivozone-runtime.js ===== */
-(function(){
-'use strict';
-/* ZIVOZONE V82 — CONSOLIDATED RUNTIME BUNDLE */
+/* ZIVOZONE V1084 — UNIFIED CORE CLEAN RUNTIME */
 
 /* ===== audio.js ===== */
 /* ZIVOZONE CINEMATIC AUDIO V11
@@ -361,7 +296,7 @@ document.addEventListener('DOMContentLoaded',function(){
    Types: sequence, numeric, text, pattern, logic, odd-one-out.
    Existing challenge banks above are preserved.
 ============================================================ */
-window.ZIVOZONE_V18_BANK = {
+window.ZIVOZONE_INTERNAL.v18_bank = {
   logic: {
     id:"logic_v18", title:"Logic Lab", icon:"🧠", special:false,
     questions:[
@@ -409,9 +344,9 @@ window.ZIVOZONE_V18_BANK = {
   }
 };
 
-window.ZIVOZONE_V18 = {
+window.ZIVOZONE_INTERNAL.v18 = {
   version:18,
-  banks:window.ZIVOZONE_V18_BANK,
+  banks:window.ZIVOZONE_INTERNAL.v18_bank,
   normalize:function(v){
     return String(v??"").trim().toLowerCase()
       .replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه")
@@ -440,6 +375,7 @@ window.ZIVOZONE_V18 = {
    ZIVOZONE V40 — CHALLENGE EXPANSION BANK
    10-question packs, escalating difficulty, additive only.
 ============================================================ */
+window.ZIVOZONE_INTERNAL=window.ZIVOZONE_INTERNAL||{};
 (function(){
   'use strict';
   const packs={
@@ -486,7 +422,7 @@ window.ZIVOZONE_V18 = {
       ]
     }
   };
-  window.ZIVOZONE_V40_BANK=packs;
+  window.ZIVOZONE_INTERNAL.v40_bank=packs;
   window.ZIVOZONE_CHALLENGES=window.ZIVOZONE_CHALLENGES||{};
   Object.keys(packs).forEach(k=>{
     if(!window.ZIVOZONE_CHALLENGES[k])window.ZIVOZONE_CHALLENGES[k]=packs[k];
@@ -591,7 +527,7 @@ window.ZIVOZONE_V18 = {
       Q('vi22_10','choice',M('نمط: ●، ●●، ●●●، ؟ كم دائرة؟','Pattern: ●, ●●, ●●●, ? How many circles next?','模式：●、●●、●●●、？下一项几个圆？','पैटर्न: ●, ●●, ●●●, ? अगली बार कितने वृत्त?','Patrón: ●, ●●, ●●●, ¿cuántos círculos siguen?'),[M('3','3','3','3','3'),M('4','4','4','4','4'),M('5','5','5','5','5'),M('6','6','6','6','6')],1,10)
     ])
   };
-  window.ZIVOZONE_V22_BANK=banks;
+  window.ZIVOZONE_INTERNAL.v22_bank=banks;
   const C=window.ZIVOZONE_CHALLENGES;
   if(C){Object.values(banks).forEach(b=>{C[b.id]=b});const old=C.getAll;C.getAll=()=>{const arr=old?old.call(C):[];return arr.concat(Object.values(banks)).filter((x,i,a)=>x&&x.id&&a.findIndex(y=>y.id===x.id)===i)};}
 })();
@@ -862,7 +798,7 @@ window.ZIVOZONE_V18 = {
       auth.onAuthStateChanged(async u=>{
         if(!u){if(!String(user?.uid||'').startsWith('local_')){user=null;player=null;saveLocal()}emit();return}
         user={uid:u.uid,email:u.email||'',name:u.displayName||player?.name||'ZIVO Player'};
-        const isAdminAccount=String(u.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
+        const isAdminAccount=String(u.email||'').trim().toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
         if(isAdminAccount){
           player=null;
           saveLocal();emit();
@@ -882,7 +818,7 @@ window.ZIVOZONE_V18 = {
   async function register(data){
     const name=String(data.name||'').trim(),email=String(data.email||'').trim().toLowerCase(),password=String(data.password||''),age=Number(data.age);
     const termsAccepted=data.termsAccepted===true;
-    if(email==='raefalbtish@gmail.com')throw Error('هذا البريد محجوز لحساب إدارة ZIVOZONE فقط.');
+    if(email===window.ZIVOZONE_CONFIG.ADMIN_EMAIL)throw Error('هذا البريد محجوز لحساب إدارة ZIVOZONE فقط.');
     if(!termsAccepted)throw Error('يجب الموافقة على شروط استخدام ZIVOZONE قبل إنشاء الحساب.');
     if(name.length<2)throw Error(t('nameError'));
     if(!Number.isInteger(age)||age<5||age>100)throw Error(t('ageError'));
@@ -947,13 +883,13 @@ window.ZIVOZONE_V18 = {
       }catch(e){console.warn('Session touch:',e)}
     }
   }
-  async function flushAttempts(){try{await window.ZIVOZONE_V46?.flush?.()}catch(e){}}
+  async function flushAttempts(){try{await window.ZIVOZONE_INTERNAL.v46?.flush?.()}catch(e){}}
   window.addEventListener('hashchange',()=>{ if(user) { touchSession(); track('page_view',{path:location.hash||'#home'}); } });
   document.addEventListener('visibilitychange',()=>{ if(!document.hidden&&user) touchSession(); });
   setInterval(()=>{ if(user&&!document.hidden) touchSession(); },5*60*1000);
 
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
-  const isAdmin=()=>String(user?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
+  const isAdmin=()=>String(user?.email||'').trim().toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
   window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
@@ -973,7 +909,7 @@ window.ZIVOZONE_V18 = {
   const A=window.ZIVOZONE_AUTH,C=window.ZIVOZONE_CHALLENGES,I=window.ZIVOZONE_I18N;
   const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
   const LS='zivozone_state_v8';
-  const ADMIN_EMAIL='raefalbtish@gmail.com';
+  const ADMIN_EMAIL=window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
   const ADMIN_NAME='رائف البطوش';
   const API=window.ZIVOZONE_API||{};
   let state={level:1,xp:0,coins:0,wins:0,gamesPlayed:0,bestStreak:0,identity:null};
@@ -1179,8 +1115,21 @@ window.ZIVOZONE_V18 = {
   async function sports(){renderNewsSources();window.ZIVOZONE_NEWS?.load?.($('#news-list'),lang());window.ZIVOZONE_NEWS?.loadJordan?.($('#jordan-news-list'),lang());window.ZIVOZONE_FIXTURES?.load?.($('#fixture-list'),lang());const box=$('#sports-list');if(!box)return;box.innerHTML=`<article class="sports-card loading-card"><div class="spinner"></div><h3>${esc(t('sportsTitle'))}</h3><p>${esc(t('loader'))}</p></article>`;const teamIds=['133604','133602','133738','133739'];let events=[];try{const data=await Promise.all(teamIds.map(id=>fetch(`https://www.thesportsdb.com/api/v1/json/123/eventsnext.php?id=${id}`).then(r=>r.ok?r.json():null).catch(()=>null)));data.forEach(d=>{if(d?.events)events.push(...d.events)})}catch(e){}const seen=new Set();events=events.filter(e=>{const k=e.idEvent||`${e.strEvent}-${e.dateEvent}`;if(seen.has(k))return false;seen.add(k);return true}).slice(0,8);if(!events.length){box.innerHTML=`<article class="sports-card"><div class="icon">📡</div><h3>${esc(t('noData'))}</h3><p>${esc(t('newsUnavailable'))}</p></article>`;return}box.innerHTML=events.map(e=>`<article class="sports-card"><div class="match-icon">⚽</div><span class="card-tag">${esc(e.strLeague||e.strSport||'Sport')}</span><h3>${esc(e.strHomeTeam||'Home')} <span class="versus">VS</span> ${esc(e.strAwayTeam||'Away')}</h3><p>${esc(e.dateEvent||'')} ${esc(e.strTime||'')}</p><a class="btn btn-ghost" href="https://www.thesportsdb.com/" target="_blank" rel="noopener noreferrer">${t('open')}</a></article>`).join('')}
   function localAIReply(q){const x=q.toLowerCase();if(x.includes('مستوى')||x.includes('level')||x.includes('等级')||x.includes('nivel'))return`${t('level')} ${state.level} — ${state.xp} XP, ${state.coins} ZIVO.`;if(x.includes('تحد')||x.includes('challenge')||x.includes('挑战')||x.includes('desaf'))return t('challengeText');if(x.includes('رياض')||x.includes('sport')||x.includes('体育')||x.includes('deporte'))return t('sportsIntro');return t('aiWelcome')}
   async function askAI(message){const payload={message:String(message||'').slice(0,1000),language:lang(),player:{level:state.level,xp:state.xp,gamesPlayed:state.gamesPlayed,coins:state.coins}};try{if(window.ZIVOZONE_REAL_AI?.ask){return await window.ZIVOZONE_REAL_AI.ask(message)}}catch(e){console.warn('ZIVO AI Gemini:',e);if(e?.message)toast(e.message,'error')}try{const f=window.firebase?.functions?.();if(f){const fn=f.httpsCallable(API.aiCallable||'zivoAI');const r=await fn(payload);if(r?.data?.reply)return r.data.reply}}catch(e){console.warn('ZIVO AI callable:',e)}if(API.aiEndpoint){try{const r=await fetch(API.aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(r.ok){const d=await r.json();if(d.reply)return d.reply}}catch(e){console.warn('ZIVO AI endpoint:',e)}}return localAIReply(message)}
+  function openAIModal(){
+    let o=document.getElementById('zivo-ai-modal-clean');
+    if(!o){
+      o=document.createElement('div');o.id='zivo-ai-modal-clean';o.className='modal-root-clean';
+      o.innerHTML=`<div class="modal-backdrop"><div class="modal-card clean-ai-modal" dir="rtl"><button class="clean-ai-close" aria-label="إغلاق">×</button><span class="eyebrow">ZIVO AI</span><h2>مساعد ZIVO الذكي</h2><div id="clean-ai-messages" class="ai-messages"><div class="ai-message bot">أهلًا بك 🤖 اسألني عن مستواك أو الألعاب أو التحديات أو الرياضة.</div></div><form id="clean-ai-form" class="ai-form"><input id="clean-ai-input" maxlength="1000" required placeholder="اكتب سؤالك..."><button class="btn btn-primary" type="submit">إرسال</button></form><small class="muted">ZIVO AI ميزة مساعدة داخل المنصة.</small></div></div>`;
+      document.body.appendChild(o);
+      o.querySelector('.clean-ai-close').onclick=()=>o.remove();
+      o.querySelector('.modal-backdrop').onclick=e=>{if(e.target===e.currentTarget)o.remove()};
+      o.querySelector('#clean-ai-form').onsubmit=async e=>{e.preventDefault();const input=o.querySelector('#clean-ai-input'),v=input.value.trim();if(!v)return;const box=o.querySelector('#clean-ai-messages');const u=document.createElement('div');u.className='ai-message user';u.textContent=v;box.append(u);input.value='';const b=document.createElement('div');b.className='ai-message bot';b.textContent='…';box.append(b);b.textContent=await askAI(v);box.scrollTop=box.scrollHeight};
+    }
+    o.querySelector('#clean-ai-input')?.focus();
+  }
+
   function applyLanguage(){const l=lang();document.documentElement.lang=l;document.documentElement.dir=I.dir[l];$$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I.T[l]?.[k]!==undefined)el.textContent=t(k)});$$('[data-i18n-placeholder]').forEach(el=>el.placeholder=t(el.dataset.i18nPlaceholder));renderChallenges();renderNewsSources();profile();sports();$('#footer-tagline')?.replaceChildren(document.createTextNode(t('footerTagline')))}
-  document.addEventListener('click',e=>{const gameBtn=e.target.closest('[data-game],[data-challenge]');if(gameBtn){e.preventDefault();startGame(gameBtn.dataset.game||gameBtn.dataset.challenge);return}const action=e.target.closest('[data-action]')?.dataset.action;if(action==='scroll-games'||action==='scroll-challenges'){e.preventDefault();$('#challenges')?.scrollIntoView({behavior:'smooth'});return}if(action==='open-identity'){identity();return}if(action==='login'){A.isLoggedIn()?location.hash='#profile':authModal();return}if(action==='logout'){A.logout().then(()=>{state={level:1,xp:0,coins:0,wins:0,gamesPlayed:0,bestStreak:0,identity:null};saveState();profile();toast(t('logoutDone'))});return}if(action==='refresh-sports'){sports();return}if(action==='ad-info'){toast(t('adText'));return}if(action==='ads-control'){window.ZIVOZONE_ADS?.open?.();return}if(action==='return-challenges'){returnToChallenges();return}if(action==='quit-game'){quitGame();return}});
+  document.addEventListener('click',e=>{const gameBtn=e.target.closest('[data-game],[data-challenge]');if(gameBtn){e.preventDefault();startGame(gameBtn.dataset.game||gameBtn.dataset.challenge);return}const action=e.target.closest('[data-action]')?.dataset.action;if(action==='scroll-games'||action==='scroll-challenges'){e.preventDefault();$('#challenges')?.scrollIntoView({behavior:'smooth'});return}if(action==='open-identity'){identity();return}if(action==='open-wallet'){window.ZIVOZONE_ECONOMY?.open?.();return}if(action==='open-ai'){openAIModal();return}if(action==='login'){A.isLoggedIn()?location.hash='#profile':authModal();return}if(action==='logout'){A.logout().then(()=>{state={level:1,xp:0,coins:0,wins:0,gamesPlayed:0,bestStreak:0,identity:null};saveState();profile();toast(t('logoutDone'))});return}if(action==='refresh-sports'){sports();return}if(action==='ad-info'){toast(t('adText'));return}if(action==='ads-control'){window.ZIVOZONE_ADS?.open?.();return}if(action==='return-challenges'){returnToChallenges();return}if(action==='quit-game'){quitGame();return}});
   function bindMobileUX(){
     const more=$('#mobile-more'),root=$('#mobile-tools'),list=$('#mobile-tools-list');
     if(!more||!root||!list)return;
@@ -1285,10 +1234,10 @@ window.ZIVOZONE_V18 = {
     saveUsed(u);
   }
   function expandedBank(id){
-    if(!window.ZIVOZONE_V18?.get)return null;
-    return window.ZIVOZONE_V18.get(id);
+    if(!window.ZIVOZONE_INTERNAL.v18?.get)return null;
+    return window.ZIVOZONE_INTERNAL.v18.get(id);
   }
-  window.ZIVOZONE_V18_ENGINE={
+  window.ZIVOZONE_INTERNAL.v18_engine={
     used,saveUsed,rememberQuestions,expandedBank,
     nextRun:function(id){
       const b=expandedBank(id);if(!b)return null;
@@ -1303,7 +1252,7 @@ window.ZIVOZONE_V18 = {
 })();
 
 (function(){
-  window.ZIVOZONE_V18_CATALOG=[
+  window.ZIVOZONE_INTERNAL.v18_catalog=[
     {id:'logic',label:'Logic Lab',icon:'🧠'},
     {id:'pattern',label:'Pattern Break',icon:'🔷'},
     {id:'focus',label:'Focus Trap',icon:'🎯'}
@@ -1439,52 +1388,6 @@ window.ZIVOZONE_V18 = {
 })();
 
 
-
-/* ============================================================
-   ZIVOZONE CHALLENGE BANK PRO — ADDITIVE CONTENT EXPANSION
-   Keeps the existing UI/runner/auth/wallet intact. Expands each
-   playable challenge bank with 20 curated questions.
-   ============================================================ */
-(function(){
-  'use strict';
-  const mk=(id,q,opts,c,d)=>({id,type:'choice',q,a:opts,c,d});
-  const packs={};
-  packs["code_v22"]=[mk("qb_code_v22_01","ما ناتج 2+3 في أغلب لغات البرمجة؟",["5", "23", "6", "خطأ"],0,1),mk("qb_code_v22_02","ما الرمز الشائع للتعليق في JavaScript؟",["//", "##", "<>", "**"],0,2),mk("qb_code_v22_03","أي نوع يخزن true/false؟",["Boolean", "String", "Number", "Array"],0,3),mk("qb_code_v22_04","ما الذي تفعله الحلقة غالبًا؟",["تكرار تعليمات", "حذف الإنترنت", "تشغيل الشاشة", "ضغط الملفات"],0,4),mk("qb_code_v22_05","أي بنية تخزن عدة قيم مرتبة في JavaScript؟",["Array", "Boolean", "Number", "Function"],0,5),mk("qb_code_v22_06","ما وظيفة if؟",["تنفيذ فرع حسب شرط", "تكرار دائمًا", "تعريف صورة", "إغلاق المتصفح"],0,6),mk("qb_code_v22_07","ما نوع 'hello'؟",["String", "Number", "Boolean", "Object"],0,7),mk("qb_code_v22_08","ما ناتج 10%3؟",["0", "1", "2", "3"],2,8),mk("qb_code_v22_09","أي كلمة تعرّف ثابتًا في JavaScript الحديثة؟",["const", "fixed", "letonly", "static"],0,9),mk("qb_code_v22_10","ما فائدة function؟",["تجميع منطق قابل للاستدعاء", "تغيير نظام التشغيل", "حذف ملف", "فتح الكاميرا"],0,10),mk("qb_code_v22_11","أي رمز للمقارنة الصارمة؟",["===", "=", "<>", "=>"],0,5),mk("qb_code_v22_12","ما نوع 42؟",["Number", "String", "Boolean", "Array"],0,4),mk("qb_code_v22_13","ما وظيفة return؟",["إرجاع قيمة من الدالة", "إعادة تشغيل الحاسوب", "حذف المتغير", "إيقاف الإنترنت"],0,6),mk("qb_code_v22_14","ما الذي يميز let عن const؟",["let يمكن إعادة إسناده", "const لا يمكن استخدامه", "let نوع بيانات", "const دالة"],0,7),mk("qb_code_v22_15","ما الذي تفعله JSON.parse؟",["تحويل نص JSON إلى قيمة JavaScript", "ضغط صورة", "تشفير كلمة مرور", "حذف ملف"],0,8),mk("qb_code_v22_16","ما الذي تفعله JSON.stringify؟",["تحويل قيمة إلى نص JSON", "تشغيل صوت", "فتح قاعدة بيانات", "إنشاء CSS"],0,9),mk("qb_code_v22_17","ما المقصود بـ bug؟",["خطأ أو سلوك غير مقصود في البرنامج", "ميزة جديدة", "لغة برمجة", "ملف صورة"],0,3),mk("qb_code_v22_18","ما المقصود بـ API؟",["واجهة تواصل بين برمجيات", "نوع شاشة", "قاعدة بيانات فقط", "لغة"],0,6),mk("qb_code_v22_19","ما فائدة try/catch؟",["التعامل مع الأخطاء", "تسريع الإنترنت", "تصميم الألوان", "حذف السجلات"],0,8),mk("qb_code_v22_20","ما أفضل ممارسة عند إدخال بيانات المستخدم؟",["التحقق والتنقية قبل استخدامها", "الثقة بكل مدخل", "عرضها كـHTML مباشرة", "تجاهلها"],0,10)];
-  packs["daily"]=[mk("qb_daily_01","ما عاصمة الأردن؟",["عمّان", "إربد", "الزرقاء", "العقبة"],0,1),mk("qb_daily_02","كم يومًا في السنة العادية؟",["360", "365", "366", "370"],1,2),mk("qb_daily_03","ما أكبر محيط؟",["الأطلسي", "الهندي", "الهادئ", "المتجمد"],2,3),mk("qb_daily_04","ما اللغة الرسمية في البرازيل؟",["الإسبانية", "البرتغالية", "الفرنسية", "الإنجليزية"],1,4),mk("qb_daily_05","ما القارة التي تقع فيها مصر؟",["آسيا", "أوروبا", "أفريقيا", "أمريكا"],2,5),mk("qb_daily_06","كم قارة في العالم وفق التقسيم الشائع؟",["5", "6", "7", "8"],2,6),mk("qb_daily_07","ما عاصمة اليابان؟",["كيوتو", "طوكيو", "أوساكا", "هيروشيما"],1,7),mk("qb_daily_08","ما أكبر قارة مساحة؟",["أفريقيا", "آسيا", "أوروبا", "أمريكا الجنوبية"],1,8),mk("qb_daily_09","من اخترع الهاتف تقليديًا في المناهج؟",["غراهام بيل", "نيوتن", "أينشتاين", "إديسون"],0,9),mk("qb_daily_10","ما الكوكب الذي نعيش عليه؟",["المريخ", "الأرض", "الزهرة", "زحل"],1,10),mk("qb_daily_11","ما العملة الرسمية في الأردن؟",["الدينار", "الريال", "الدرهم", "الليرة"],0,3),mk("qb_daily_12","كم شهرًا في السنة؟",["10", "11", "12", "13"],2,2),mk("qb_daily_13","ما البحر الذي يفصل أوروبا عن أفريقيا في الغرب؟",["المتوسط", "الأحمر", "الأسود", "العربي"],0,6),mk("qb_daily_14","ما عاصمة فرنسا؟",["روما", "مدريد", "باريس", "برلين"],2,4),mk("qb_daily_15","ما الحيوان المعروف بسفينة الصحراء؟",["الحصان", "الجمل", "الفيل", "الغزال"],1,1),mk("qb_daily_16","ما اللون الناتج عن مزج الأزرق والأصفر في الرسم؟",["أخضر", "بنفسجي", "برتقالي", "بني"],0,5),mk("qb_daily_17","كم ساعة في اليوم؟",["12", "18", "24", "48"],2,2),mk("qb_daily_18","ما أكبر عضو في جسم الإنسان من حيث المساحة؟",["القلب", "الجلد", "الكبد", "الرئة"],1,8),mk("qb_daily_19","ما عاصمة إسبانيا؟",["مدريد", "برشلونة", "فالنسيا", "إشبيلية"],0,5),mk("qb_daily_20","ما اسم القمر الطبيعي للأرض؟",["فوبوس", "القمر", "تيتان", "أوروبا"],1,7)];
-  packs["football"]=[mk("qb_football_01","كم لاعبًا يبدأ به الفريق داخل الملعب؟",["9", "10", "11", "12"],2,1),mk("qb_football_02","كم دقيقة مدة الشوط قبل بدل الضائع؟",["30", "40", "45", "60"],2,2),mk("qb_football_03","ما البطاقة التي تعني الطرد؟",["الصفراء", "الحمراء", "الخضراء", "الزرقاء"],1,3),mk("qb_football_04","كم عدد الحكام المساعدين على الخط في الطاقم التقليدي؟",["1", "2", "3", "4"],1,4),mk("qb_football_05","متى تُحتسب ركلة جزاء؟",["عند كل رمية تماس", "عند مخالفة تستوجبها داخل منطقة الجزاء", "عند كل تسلل", "عند كل ركنية"],1,5),mk("qb_football_06","ما الهدف الأساسي من التمرير القصير؟",["الحفاظ على الاستحواذ وربط اللعب", "إيقاف المباراة", "تغيير الحكم", "إهدار الوقت دائمًا"],0,6),mk("qb_football_07","ما المقصود بالتحول الهجومي؟",["الانتقال السريع من الدفاع للهجوم", "تغيير الملعب", "تبديل الحارس", "إيقاف اللعب"],0,7),mk("qb_football_08","ما فائدة عرض الملعب هجوميًا؟",["تقليل المساحات", "فتح مساحات في العمق", "منع التمرير", "تثبيت الجميع"],1,8),mk("qb_football_09","ماذا يعني الضغط العالي؟",["الدفاع قرب مرمى الخصم", "الدفاع داخل منطقة الجزاء فقط", "عدم الضغط", "اللعب دون حارس"],0,9),mk("qb_football_10","أي مركز يلعب غالبًا أمام خط الدفاع في 4-3-3؟",["المحور", "الجناح", "المهاجم", "الحارس"],0,10),mk("qb_football_11","كم تبديلًا يسمح به النظام الحديث في معظم المسابقات؟",["2", "3", "5", "10"],2,5),mk("qb_football_12","ما المقصود بالتسلل باختصار؟",["مخالفة مرتبطة بموقع المهاجم عند تمرير الكرة", "لمس الكرة باليد", "ركلة ركنية", "رمية تماس"],0,6),mk("qb_football_13","ما أفضل استجابة شائعة لدفاع متكتل؟",["توسيع الملعب وتغيير جهة اللعب", "تضييق الملعب", "إيقاف الحركة", "إعادة الكرة للحارس دائمًا"],0,7),mk("qb_football_14","ما دور قلب الدفاع الأساسي؟",["حماية العمق والدفاع", "تنفيذ كل الركلات", "اللعب كجناح فقط", "تسجيل كل الأهداف"],0,4),mk("qb_football_15","ما فائدة الظهير المتقدم؟",["خلق زيادة عددية وعرض هجومي", "البقاء دائمًا خلف الحارس", "منع كل التمريرات", "إيقاف المهاجم"],0,8),mk("qb_football_16","ما المقصود بالضغط العكسي؟",["محاولة استعادة الكرة مباشرة بعد فقدانها", "التراجع البطيء", "تغيير التشكيل فقط", "ركلة حرة"],0,9),mk("qb_football_17","ما المبدأ المهم عند الدفاع ككتلة؟",["تقارب الخطوط", "تباعدها لأقصى حد", "عدم التواصل", "الركض الفردي"],0,6),mk("qb_football_18","لماذا يستخدم الفريق التمرير الخلفي أحيانًا؟",["إعادة تدوير اللعب وصناعة زاوية جديدة", "لإلغاء الهجمة دائمًا", "لإضاعة الحكم", "لمنع الاستحواذ"],0,5),mk("qb_football_19","ماذا تعني المساحة خلف الخط الدفاعي؟",["المساحة التي يمكن استغلالها بالتحرك والتمرير", "منطقة الجمهور", "منطقة المدربين", "الركنية"],0,8),mk("qb_football_20","ما العامل الأهم في تنفيذ الضغط الجماعي؟",["التوقيت والمسافة والتغطية", "السرعة فقط", "الصراخ فقط", "عدد المهاجمين فقط"],0,10)];
-  packs["football_intelligence"]=[mk("qb_football_intelligence_01","كم لاعبًا يبدأ به الفريق داخل الملعب؟",["9", "10", "11", "12"],2,1),mk("qb_football_intelligence_02","كم دقيقة مدة الشوط قبل بدل الضائع؟",["30", "40", "45", "60"],2,2),mk("qb_football_intelligence_03","ما البطاقة التي تعني الطرد؟",["الصفراء", "الحمراء", "الخضراء", "الزرقاء"],1,3),mk("qb_football_intelligence_04","كم عدد الحكام المساعدين على الخط في الطاقم التقليدي؟",["1", "2", "3", "4"],1,4),mk("qb_football_intelligence_05","متى تُحتسب ركلة جزاء؟",["عند كل رمية تماس", "عند مخالفة تستوجبها داخل منطقة الجزاء", "عند كل تسلل", "عند كل ركنية"],1,5),mk("qb_football_intelligence_06","ما الهدف الأساسي من التمرير القصير؟",["الحفاظ على الاستحواذ وربط اللعب", "إيقاف المباراة", "تغيير الحكم", "إهدار الوقت دائمًا"],0,6),mk("qb_football_intelligence_07","ما المقصود بالتحول الهجومي؟",["الانتقال السريع من الدفاع للهجوم", "تغيير الملعب", "تبديل الحارس", "إيقاف اللعب"],0,7),mk("qb_football_intelligence_08","ما فائدة عرض الملعب هجوميًا؟",["تقليل المساحات", "فتح مساحات في العمق", "منع التمرير", "تثبيت الجميع"],1,8),mk("qb_football_intelligence_09","ماذا يعني الضغط العالي؟",["الدفاع قرب مرمى الخصم", "الدفاع داخل منطقة الجزاء فقط", "عدم الضغط", "اللعب دون حارس"],0,9),mk("qb_football_intelligence_10","أي مركز يلعب غالبًا أمام خط الدفاع في 4-3-3؟",["المحور", "الجناح", "المهاجم", "الحارس"],0,10),mk("qb_football_intelligence_11","كم تبديلًا يسمح به النظام الحديث في معظم المسابقات؟",["2", "3", "5", "10"],2,5),mk("qb_football_intelligence_12","ما المقصود بالتسلل باختصار؟",["مخالفة مرتبطة بموقع المهاجم عند تمرير الكرة", "لمس الكرة باليد", "ركلة ركنية", "رمية تماس"],0,6),mk("qb_football_intelligence_13","ما أفضل استجابة شائعة لدفاع متكتل؟",["توسيع الملعب وتغيير جهة اللعب", "تضييق الملعب", "إيقاف الحركة", "إعادة الكرة للحارس دائمًا"],0,7),mk("qb_football_intelligence_14","ما دور قلب الدفاع الأساسي؟",["حماية العمق والدفاع", "تنفيذ كل الركلات", "اللعب كجناح فقط", "تسجيل كل الأهداف"],0,4),mk("qb_football_intelligence_15","ما فائدة الظهير المتقدم؟",["خلق زيادة عددية وعرض هجومي", "البقاء دائمًا خلف الحارس", "منع كل التمريرات", "إيقاف المهاجم"],0,8),mk("qb_football_intelligence_16","ما المقصود بالضغط العكسي؟",["محاولة استعادة الكرة مباشرة بعد فقدانها", "التراجع البطيء", "تغيير التشكيل فقط", "ركلة حرة"],0,9),mk("qb_football_intelligence_17","ما المبدأ المهم عند الدفاع ككتلة؟",["تقارب الخطوط", "تباعدها لأقصى حد", "عدم التواصل", "الركض الفردي"],0,6),mk("qb_football_intelligence_18","لماذا يستخدم الفريق التمرير الخلفي أحيانًا؟",["إعادة تدوير اللعب وصناعة زاوية جديدة", "لإلغاء الهجمة دائمًا", "لإضاعة الحكم", "لمنع الاستحواذ"],0,5),mk("qb_football_intelligence_19","ماذا تعني المساحة خلف الخط الدفاعي؟",["المساحة التي يمكن استغلالها بالتحرك والتمرير", "منطقة الجمهور", "منطقة المدربين", "الركنية"],0,8),mk("qb_football_intelligence_20","ما العامل الأهم في تنفيذ الضغط الجماعي؟",["التوقيت والمسافة والتغطية", "السرعة فقط", "الصراخ فقط", "عدد المهاجمين فقط"],0,10)];
-  packs["forensic"]=[mk("qb_forensic_01","ما قيمة الصورة الفوتوغرافية في مسرح الحادث؟",["توثيق الحالة قبل التغيير", "تغيير الأدلة", "استبدال الشهود", "حذف التفاصيل"],0,1),mk("qb_forensic_02","ما الأفضل عند جمع دليل مادي؟",["تجنب تلويثه وتوثيق مصدره", "لمسه بلا قفازات", "خلطه مع الأدلة", "نقله دون تسجيل"],0,2),mk("qb_forensic_03","ما المقصود بسلسلة حيازة الدليل؟",["توثيق من استلمه ومتى وكيف", "قائمة المشتبه بهم", "تقرير الطقس", "سجل المكالمات فقط"],0,3),mk("qb_forensic_04","بصمة جزئية على سطح قد تعني؟",["وجود تماس محتمل يحتاج مقارنة", "إدانة مؤكدة", "لا قيمة لها أبدًا", "أنها حديثة قطعًا"],0,4),mk("qb_forensic_05","لماذا تُجمع العينات في عبوات منفصلة؟",["منع التلوث المتبادل", "تسريع التحقيق فقط", "زيادة الحجم", "تغيير النتيجة"],0,5),mk("qb_forensic_06","ما أفضل طريقة للتعامل مع فرضية أولية؟",["اختبارها بأدلة مؤيدة ومعارضة", "اعتبارها حقيقة", "تجاهل الأدلة المخالفة", "اختيار الأكثر إثارة"],0,6),mk("qb_forensic_07","ما الذي يجعل شهادة شاهد أقل موثوقية؟",["تناقضات جوهرية غير مفسرة", "وضوحها", "تعدد التفاصيل المتسقة", "توثيقها"],0,7),mk("qb_forensic_08","الوقت في التحقيق مهم لأنه يساعد على؟",["بناء تسلسل للأحداث", "تحديد المذنب وحده", "إلغاء الأدلة", "منع المقارنة"],0,8),mk("qb_forensic_09","إذا تعارض دليلان، الأفضل؟",["فحص مصدر كل دليل وسياقه", "اختيار الأقوى شكلاً", "تجاهلهما", "دمجهما بلا تحليل"],0,9),mk("qb_forensic_10","ما الفرق بين ملاحظة واستنتاج؟",["الملاحظة ما شوهد، والاستنتاج تفسير لها", "لا فرق", "الاستنتاج دليل مادي", "الملاحظة تخمين"],0,10),mk("qb_forensic_11","لماذا توثيق موقع الدليل مهم؟",["للحفاظ على السياق المكاني", "لتغيير مكانه", "لإخفائه", "لمنع الفحص"],0,4),mk("qb_forensic_12","ما الذي يجب تجنبه أثناء جمع الأدلة؟",["التلوث أو الخلط", "التوثيق", "الترقيم", "الحفظ"],0,3),mk("qb_forensic_13","إذا كانت فرضيتان تفسران الدليل، ماذا نفعل؟",["نبحث عن دليل يميز بينهما", "نختار الأسرع", "نختار الأشد", "نوقف التحقيق"],0,6),mk("qb_forensic_14","ما قيمة القياس المتكرر؟",["تقليل احتمال خطأ عشوائي", "تغيير الواقع", "إخفاء النتيجة", "منع المقارنة"],0,5),mk("qb_forensic_15","عند تسجيل إفادة، الأفضل؟",["تسجيلها بدقة دون إضافة تفسير شخصي", "تغيير الكلمات", "حذف التناقضات", "اختصارها دائمًا"],0,7),mk("qb_forensic_16","ما المقصود بدليل سلبي؟",["غياب متوقع لشيء قد يؤثر في الفرضية", "دليل مزور", "بصمة", "صورة"],0,8),mk("qb_forensic_17","إذا لم يطابق الدليل فرضيتك؟",["راجع الفرضية", "غيّر الدليل", "تجاهله", "أخفه"],0,9),mk("qb_forensic_18","ما أهمية المعايرة في أداة القياس؟",["رفع موثوقية القياسات", "زيادة الضوضاء", "تغيير الوحدات", "إلغاء القياس"],0,5),mk("qb_forensic_19","ما أفضل عقلية في تحليل الأدلة؟",["الحياد وقابلية التصحيح", "الثقة المسبقة", "البحث عن الإدانة فقط", "السرعة قبل الدقة"],0,10),mk("qb_forensic_20","هل وجود دليل واحد يعني دائمًا نتيجة قطعية؟",["لا، يعتمد على نوعه وسياقه وقوته", "نعم دائمًا", "فقط إذا كان مشهورًا", "نعم بلا استثناء"],0,10)];
-  packs["horror"]=[mk("qb_horror_01","في الغرفة المظلمة، تسمع صوتًا من خلفك. ما القرار الأكثر أمانًا؟",["الاستمرار دون ذعر أو الخروج إذا انزعجت", "إغلاق الشاشة بعنف", "الاقتراب من مصدر الصوت الحقيقي", "إيذاء نفسك"],0,1),mk("qb_horror_02","يظهر على الشاشة: لا تلتفت. ما العنصر الذي يجب أن تتذكره؟",["السؤال الحالي", "معلومات شخصية", "كلمة مرور", "لا شيء"],0,2),mk("qb_horror_03","إذا تغيرت الإضاءة فجأة، ماذا يعني ذلك داخل اللعبة؟",["مؤثر جوي في التجربة", "خطر حقيقي", "تعطل الجهاز حتمًا", "شخص دخل الغرفة"],0,3),mk("qb_horror_04","ما أفضل طريقة للتعامل مع صوت مفاجئ أثناء اللعب؟",["الحفاظ على الهدوء وإيقاف التجربة إذا لم تشعر بالراحة", "رفع الصوت أكثر", "ترك الجهاز يعمل وحده", "إجبار نفسك على الاستمرار"],0,4),mk("qb_horror_05","أي شيء لا ينتمي إلى غرفة رعب خيالية؟",["مؤثرات صوتية", "ضباب بصري", "أسئلة غامضة", "خطر حقيقي على المستخدم"],3,5),mk("qb_horror_06","إذا ظهر عداد تنازلي، ماذا يقيس داخل اللعبة؟",["وقت الجولة", "نبضك الحقيقي", "درجة حرارة الغرفة", "سرعة الإنترنت فقط"],0,6),mk("qb_horror_07","الرسالة الغامضة الأفضل في تجربة رعب هي التي؟",["توتر دون ادعاء خطر حقيقي", "تطلب إيذاء المستخدم", "تكشف بياناته", "تهدده خارج اللعبة"],0,7),mk("qb_horror_08","إذا شعرت بعدم الارتياح، ما القرار الصحيح؟",["الخروج من التجربة", "الاستمرار مهما كان", "رفع الصوت", "إغلاق الأنوار"],0,8),mk("qb_horror_09","في نهاية الغرفة، ما الأفضل للاعب؟",["نتيجة واضحة وخيار خروج", "إجباره على الاستمرار", "منع زر الخروج", "حفظ كلمة مروره"],0,9),mk("qb_horror_10","ما مصدر الخوف الآمن في اللعبة؟",["الصوت والإضاءة والغموض", "خطر فعلي", "أذى جسدي", "كشف معلومات خاصة"],0,10),mk("qb_horror_11","إذا اختفت إحدى الإجابات للحظة، فهذا؟",["مؤثر واجهة مقصود", "دليل أن الجهاز مخترق", "خطر حقيقي", "فيروس مؤكد"],0,5),mk("qb_horror_12","ما الذي يزيد التوتر دون تغيير قواعد اللعب؟",["الصوت والتوقيت والرسائل", "حذف زر الخروج", "جمع بيانات خاصة", "تعطيل الجهاز"],0,6),mk("qb_horror_13","ما القاعدة الذهبية في Dark Room؟",["التجربة اختيارية ويمكن الخروج في أي وقت", "لا يمكن الخروج", "يجب اللعب ليلًا", "يجب رفع الصوت"],0,7),mk("qb_horror_14","عند السؤال الأخير، ما الذي يهم؟",["الإجابة والتركيز ثم النتيجة", "الخوف الحقيقي", "إيذاء النفس", "ترك الجهاز"],0,8),mk("qb_horror_15","أي عنصر بصري مناسب للرعب الآمن؟",["تشويش خفيف وظلال", "صور مؤذية", "مشاهد دموية", "تهديدات شخصية"],0,9),mk("qb_horror_16","إذا ظهر نص: أنا أراقبك، داخل لعبة، فالأفضل فهمه كـ؟",["جزء خيالي من السيناريو", "مراقبة حقيقية مؤكدة", "اختراق للكاميرا", "دليل على شخص في المنزل"],0,10),mk("qb_horror_17","ما أفضل صوت للخوف الآمن؟",["همس ومؤثرات منخفضة", "صوت مؤلم جدًا", "إنذار حقيقي", "رسالة طوارئ مزيفة"],0,4),mk("qb_horror_18","إذا انقطع الصوت، ماذا يمكن أن يحدث؟",["تغيير مقصود في الجو", "خطر حقيقي", "تلف الحاسوب حتمًا", "فقدان البيانات"],0,5),mk("qb_horror_19","هل يجب أن تعتمد اللعبة على كاميرا المستخدم لإخافته؟",["لا، يمكن خلق الرعب داخل اللعبة فقط", "نعم دائمًا", "فقط ليلًا", "إذا رفض المستخدم"],0,8),mk("qb_horror_20","ما النهاية الأفضل لـDark Room؟",["خروج آمن + نتيجة + أثر قصصي", "منع المستخدم من الخروج", "رسالة تهديد حقيقية", "حذف حسابه"],0,10)];
-  packs["iq"]=[mk("qb_iq_01","ما العدد التالي: 5، 10، 20، 40، ؟",["60", "70", "80", "90"],2,1),mk("qb_iq_02","ما العدد التالي: 1، 4، 9، 16، ؟",["20", "24", "25", "36"],2,2),mk("qb_iq_03","إذا كان كل لاعب سريعًا يحتاج تدريبًا، ومحمد لاعب سريع، فما النتيجة؟",["محمد يحتاج تدريبًا", "محمد مدرب", "كل المدربين سريعون", "لا نتيجة"],0,3),mk("qb_iq_04","أي كلمة مختلفة: قلم، دفتر، كتاب، كرة؟",["قلم", "دفتر", "كتاب", "كرة"],3,4),mk("qb_iq_05","أكمل: 2، 6، 12، 20، 30، ؟",["40", "42", "44", "46"],1,5),mk("qb_iq_06","إذا كان 3→9 و4→16، فـ7→؟",["21", "28", "49", "56"],2,6),mk("qb_iq_07","ما العدد المفقود: 81، 27، 9، 3، ؟",["0", "1", "2", "6"],1,7),mk("qb_iq_08","أي ترتيب من الأصغر إلى الأكبر صحيح؟",["0.8،0.5،0.2", "0.2،0.5،0.8", "0.5،0.2،0.8", "0.8،0.2،0.5"],1,8),mk("qb_iq_09","لديك 4 أشخاص، كل شخص صافح كل الآخرين مرة واحدة. كم مصافحة؟",["4", "6", "8", "12"],1,9),mk("qb_iq_10","إذا كانت الساعة 3:00، فما الزاوية بين العقربين؟",["30°", "60°", "90°", "180°"],2,10),mk("qb_iq_11","ما العدد الذي يكمل: 7، 14، 28، 56، ؟",["84", "98", "112", "120"],2,10),mk("qb_iq_12","إذا كان نصف عدد يساوي 18، فما العدد؟",["9", "27", "36", "54"],2,9),mk("qb_iq_13","ثلاثة أعداد مجموعها 30، الأول 10 والثاني 8، فما الثالث؟",["10", "12", "14", "18"],1,8),mk("qb_iq_14","ما النمط: 10، 9، 7، 4، 0، ؟",["-3", "-4", "-5", "1"],1,7),mk("qb_iq_15","أي شكل له أكبر عدد من الأضلاع؟",["مثلث", "مربع", "خماسي", "دائرة"],2,6),mk("qb_iq_16","إذا كان A أكبر من B وB أكبر من C، فمن الأكبر؟",["A", "B", "C", "لا يمكن"],0,5),mk("qb_iq_17","ما العدد التالي: 2، 5، 10، 17، 26، ؟",["35", "36", "37", "38"],2,9),mk("qb_iq_18","إذا كان اليوم الإثنين، فما اليوم بعد 10 أيام؟",["الأربعاء", "الخميس", "الجمعة", "السبت"],1,8),mk("qb_iq_19","أي عبارة منطقية صحيحة؟",["كل المربعات دوائر", "كل المربعات مستطيلات", "كل الدوائر مثلثات", "لا مربع له أضلاع"],1,4),mk("qb_iq_20","ما العدد التالي: 100، 90، 72، 48، ؟",["24", "30", "20", "18"],2,10)];
-  packs["language_v22"]=[mk("qb_language_v22_01","ما جمع كلمة 'كتاب'؟",["كتب", "كتابون", "كاتب", "مكتبة"],0,1),mk("qb_language_v22_02","ما ضد 'سريع'؟",["بطيء", "قوي", "كبير", "مرتفع"],0,2),mk("qb_language_v22_03","ما مرادف 'سعيد'؟",["فرح", "غاضب", "حزين", "متعب"],0,3),mk("qb_language_v22_04","أي كلمة فعل؟",["يكتب", "كتاب", "قلم", "مدرسة"],0,4),mk("qb_language_v22_05","أي كلمة اسم؟",["ملعب", "يركض", "اكتب", "سريع"],0,5),mk("qb_language_v22_06","ما جمع 'لاعب'؟",["لاعبون", "لعب", "ملعب", "لعبة"],0,6),mk("qb_language_v22_07","أي جملة صحيحة؟",["اللاعبُ سريعٌ", "اللاعب سريعًا", "اللاعبون سريع", "اللاعبَ سريع"],0,7),mk("qb_language_v22_08","ما نوع كلمة 'في'؟",["حرف جر", "فعل", "اسم", "صفة"],0,8),mk("qb_language_v22_09","ما ضد 'بداية'؟",["نهاية", "منتصف", "وقت", "أول"],0,9),mk("qb_language_v22_10","ما المثنى من لاعب؟",["لاعبان", "لاعبون", "لاعبات", "لعب"],0,10),mk("qb_language_v22_11","أي كلمة تحتوي همزة قطع؟",["أحمد", "ابن", "اسم", "اثنان"],0,5),mk("qb_language_v22_12","ما مفرد 'أقلام'؟",["قلم", "قلمان", "قلمون", "قلام"],0,4),mk("qb_language_v22_13","أي كلمة صفة؟",["جميل", "كتب", "مدرسة", "يقرأ"],0,6),mk("qb_language_v22_14","ما معنى 'يستنتج'؟",["يستخلص نتيجة", "ينسى", "يكرر", "يكتب فقط"],0,7),mk("qb_language_v22_15","أي جملة فعلية؟",["يلعبُ رائفُ", "رائف لاعبٌ", "الملعب واسع", "الكرة جديدة"],0,8),mk("qb_language_v22_16","ما جمع 'مدينة'؟",["مدن", "مدينتان", "مديني", "مدينةون"],0,9),mk("qb_language_v22_17","أي كلمة تبدأ بألف وصل غالبًا؟",["استخرج", "أحمد", "إكرام", "أمجد"],0,6),mk("qb_language_v22_18","ما ضد 'واضح'؟",["غامض", "سريع", "قريب", "كبير"],0,3),mk("qb_language_v22_19","أي كلمة صحيحة إملائيًا؟",["مسؤول", "مسئول", "مسوول", "مسئؤل"],0,10),mk("qb_language_v22_20","ما مرادف 'بدأ'؟",["شرع", "أنهى", "توقف", "عاد"],0,5)];
-  packs["lateral_v22"]=[mk("qb_lateral_v22_01","رجل دخل غرفة وأغلق الباب، ثم وجدها مضاءة رغم انقطاع الكهرباء. ما التفسير الأبسط؟",["مصدر ضوء مستقل", "سحر", "انفجار", "لا تفسير"],0,1),mk("qb_lateral_v22_02","ما الشيء الذي كلما أخذت منه كبر؟",["الحفرة", "الكتاب", "الماء", "الطريق"],0,2),mk("qb_lateral_v22_03","شيء له أسنان ولا يعض، ما هو؟",["المشط", "القلم", "الباب", "الكرسي"],0,3),mk("qb_lateral_v22_04","ما الذي يمكنك كسره دون لمسه؟",["الوعد", "الطاولة", "الحجر", "الكأس"],0,4),mk("qb_lateral_v22_05","شيء يمشي بلا أرجل ويبكي بلا عيون؟",["السحاب", "الكرسي", "الساعة", "القلم"],0,5),mk("qb_lateral_v22_06","رجل خرج تحت المطر ولم يبتل شعره. لماذا؟",["كان أصلع", "كان في البحر", "كان يركض", "كان ليلًا"],0,6),mk("qb_lateral_v22_07","ما الذي له مفاتيح ولا يفتح أبوابًا؟",["البيانو", "المفتاح", "الدرج", "القفل"],0,7),mk("qb_lateral_v22_08","ما الذي كلما زاد نقص؟",["العمر", "المال دائمًا", "الطريق", "الماء"],0,8),mk("qb_lateral_v22_09","شيء تملكه ويستعمله الآخرون أكثر منك؟",["اسمك", "حذاؤك", "بيتك", "قلمك"],0,9),mk("qb_lateral_v22_10","ما الذي إذا نطقته كسرته؟",["الصمت", "الزجاج", "الحبل", "الباب"],0,10),mk("qb_lateral_v22_11","ما الذي يمكن أن يملأ غرفة دون أن يشغل مساحة مادية كبيرة؟",["الضوء", "الحجر", "الكرسي", "الماء"],0,4),mk("qb_lateral_v22_12","ما الذي له وجه ويدان ولا جسم؟",["الساعة", "الإنسان", "الكتاب", "الباب"],0,3),mk("qb_lateral_v22_13","ما الذي يجري ولا يمشي؟",["الماء", "الكرسي", "الحجر", "الباب"],0,5),mk("qb_lateral_v22_14","ما الذي يسمع بلا أذن ويرد بلا فم؟",["الصدى", "الهاتف", "الطاولة", "الكتاب"],0,6),mk("qb_lateral_v22_15","ما الشيء الذي إذا أعطيته للناس لا ينقص؟",["النصيحة", "النقود", "الطعام", "الماء"],0,7),mk("qb_lateral_v22_16","ما الذي له رقبة بلا رأس؟",["الزجاجة", "القميص", "الكرسي", "الطاولة"],0,8),mk("qb_lateral_v22_17","ما الذي يكتب ولا يقرأ؟",["القلم", "الكتاب", "الطالب", "المعلم"],0,9),mk("qb_lateral_v22_18","ما الذي لا يمكن استخدامه إلا بعد كسره؟",["البيضة", "القلم", "الباب", "الحجر"],0,10),mk("qb_lateral_v22_19","ما الذي يزداد كلما شاركته؟",["المعرفة", "المال", "الوقت", "الطعام"],0,6),mk("qb_lateral_v22_20","ما الشيء الذي يكون أمامك دائمًا ولا تستطيع رؤيته؟",["المستقبل", "الماضي", "الكرسي", "الحائط"],0,10)];
-  packs["logic"]=[mk("qb_logic_01","ما العدد التالي: 5، 10، 20، 40، ؟",["60", "70", "80", "90"],2,1),mk("qb_logic_02","ما العدد التالي: 1، 4، 9، 16، ؟",["20", "24", "25", "36"],2,2),mk("qb_logic_03","إذا كان كل لاعب سريعًا يحتاج تدريبًا، ومحمد لاعب سريع، فما النتيجة؟",["محمد يحتاج تدريبًا", "محمد مدرب", "كل المدربين سريعون", "لا نتيجة"],0,3),mk("qb_logic_04","أي كلمة مختلفة: قلم، دفتر، كتاب، كرة؟",["قلم", "دفتر", "كتاب", "كرة"],3,4),mk("qb_logic_05","أكمل: 2، 6، 12، 20، 30، ؟",["40", "42", "44", "46"],1,5),mk("qb_logic_06","إذا كان 3→9 و4→16، فـ7→؟",["21", "28", "49", "56"],2,6),mk("qb_logic_07","ما العدد المفقود: 81، 27، 9، 3، ؟",["0", "1", "2", "6"],1,7),mk("qb_logic_08","أي ترتيب من الأصغر إلى الأكبر صحيح؟",["0.8،0.5،0.2", "0.2،0.5،0.8", "0.5،0.2،0.8", "0.8،0.2،0.5"],1,8),mk("qb_logic_09","لديك 4 أشخاص، كل شخص صافح كل الآخرين مرة واحدة. كم مصافحة؟",["4", "6", "8", "12"],1,9),mk("qb_logic_10","إذا كانت الساعة 3:00، فما الزاوية بين العقربين؟",["30°", "60°", "90°", "180°"],2,10),mk("qb_logic_11","ما العدد الذي يكمل: 7، 14، 28، 56، ؟",["84", "98", "112", "120"],2,10),mk("qb_logic_12","إذا كان نصف عدد يساوي 18، فما العدد؟",["9", "27", "36", "54"],2,9),mk("qb_logic_13","ثلاثة أعداد مجموعها 30، الأول 10 والثاني 8، فما الثالث؟",["10", "12", "14", "18"],1,8),mk("qb_logic_14","ما النمط: 10، 9، 7، 4، 0، ؟",["-3", "-4", "-5", "1"],1,7),mk("qb_logic_15","أي شكل له أكبر عدد من الأضلاع؟",["مثلث", "مربع", "خماسي", "دائرة"],2,6),mk("qb_logic_16","إذا كان A أكبر من B وB أكبر من C، فمن الأكبر؟",["A", "B", "C", "لا يمكن"],0,5),mk("qb_logic_17","ما العدد التالي: 2، 5، 10، 17، 26، ؟",["35", "36", "37", "38"],2,9),mk("qb_logic_18","إذا كان اليوم الإثنين، فما اليوم بعد 10 أيام؟",["الأربعاء", "الخميس", "الجمعة", "السبت"],1,8),mk("qb_logic_19","أي عبارة منطقية صحيحة؟",["كل المربعات دوائر", "كل المربعات مستطيلات", "كل الدوائر مثلثات", "لا مربع له أضلاع"],1,4),mk("qb_logic_20","ما العدد التالي: 100، 90، 72، 48، ؟",["24", "30", "20", "18"],2,10)];
-  packs["logic_extreme"]=[mk("qb_logic_extreme_01","ما العدد التالي: 5، 10، 20، 40، ؟",["60", "70", "80", "90"],2,1),mk("qb_logic_extreme_02","ما العدد التالي: 1، 4، 9، 16، ؟",["20", "24", "25", "36"],2,2),mk("qb_logic_extreme_03","إذا كان كل لاعب سريعًا يحتاج تدريبًا، ومحمد لاعب سريع، فما النتيجة؟",["محمد يحتاج تدريبًا", "محمد مدرب", "كل المدربين سريعون", "لا نتيجة"],0,3),mk("qb_logic_extreme_04","أي كلمة مختلفة: قلم، دفتر، كتاب، كرة؟",["قلم", "دفتر", "كتاب", "كرة"],3,4),mk("qb_logic_extreme_05","أكمل: 2، 6، 12، 20، 30، ؟",["40", "42", "44", "46"],1,5),mk("qb_logic_extreme_06","إذا كان 3→9 و4→16، فـ7→؟",["21", "28", "49", "56"],2,6),mk("qb_logic_extreme_07","ما العدد المفقود: 81، 27، 9، 3، ؟",["0", "1", "2", "6"],1,7),mk("qb_logic_extreme_08","أي ترتيب من الأصغر إلى الأكبر صحيح؟",["0.8،0.5،0.2", "0.2،0.5،0.8", "0.5،0.2،0.8", "0.8،0.2،0.5"],1,8),mk("qb_logic_extreme_09","لديك 4 أشخاص، كل شخص صافح كل الآخرين مرة واحدة. كم مصافحة؟",["4", "6", "8", "12"],1,9),mk("qb_logic_extreme_10","إذا كانت الساعة 3:00، فما الزاوية بين العقربين؟",["30°", "60°", "90°", "180°"],2,10),mk("qb_logic_extreme_11","ما العدد الذي يكمل: 7، 14، 28، 56، ؟",["84", "98", "112", "120"],2,10),mk("qb_logic_extreme_12","إذا كان نصف عدد يساوي 18، فما العدد؟",["9", "27", "36", "54"],2,9),mk("qb_logic_extreme_13","ثلاثة أعداد مجموعها 30، الأول 10 والثاني 8، فما الثالث؟",["10", "12", "14", "18"],1,8),mk("qb_logic_extreme_14","ما النمط: 10، 9، 7، 4، 0، ؟",["-3", "-4", "-5", "1"],1,7),mk("qb_logic_extreme_15","أي شكل له أكبر عدد من الأضلاع؟",["مثلث", "مربع", "خماسي", "دائرة"],2,6),mk("qb_logic_extreme_16","إذا كان A أكبر من B وB أكبر من C، فمن الأكبر؟",["A", "B", "C", "لا يمكن"],0,5),mk("qb_logic_extreme_17","ما العدد التالي: 2، 5، 10، 17، 26، ؟",["35", "36", "37", "38"],2,9),mk("qb_logic_extreme_18","إذا كان اليوم الإثنين، فما اليوم بعد 10 أيام؟",["الأربعاء", "الخميس", "الجمعة", "السبت"],1,8),mk("qb_logic_extreme_19","أي عبارة منطقية صحيحة؟",["كل المربعات دوائر", "كل المربعات مستطيلات", "كل الدوائر مثلثات", "لا مربع له أضلاع"],1,4),mk("qb_logic_extreme_20","ما العدد التالي: 100، 90، 72، 48، ؟",["24", "30", "20", "18"],2,10)];
-  packs["math"]=[mk("qb_math_01","ما ناتج 17+28؟",["35", "45", "46", "55"],1,1),mk("qb_math_02","ما ناتج 14×6؟",["72", "84", "96", "104"],1,2),mk("qb_math_03","ما 25% من 80؟",["10", "15", "20", "25"],2,3),mk("qb_math_04","إذا x+7=19 فما x؟",["10", "11", "12", "13"],2,4),mk("qb_math_05","ما ناتج 3/4 من 20؟",["10", "12", "15", "18"],2,5),mk("qb_math_06","ما متوسط 6 و10 و14؟",["8", "10", "12", "14"],1,6),mk("qb_math_07","محيط مربع ضلعه 7؟",["14", "21", "28", "49"],2,7),mk("qb_math_08","مساحة مستطيل 8×5؟",["13", "26", "40", "80"],2,8),mk("qb_math_09","ما 15% من 200؟",["15", "20", "30", "35"],2,9),mk("qb_math_10","إذا 2x=36 فما x؟",["12", "16", "18", "20"],2,10),mk("qb_math_11","ما ناتج 144÷12؟",["10", "12", "14", "16"],1,4),mk("qb_math_12","ما العدد الأولي؟",["21", "27", "29", "33"],2,5),mk("qb_math_13","ما 0.5 كنسبة مئوية؟",["5%", "25%", "50%", "75%"],2,3),mk("qb_math_14","إذا كان سعر 100 وخصم 20%، السعر؟",["70", "80", "85", "90"],1,6),mk("qb_math_15","ما ناتج 9²؟",["18", "72", "81", "99"],2,7),mk("qb_math_16","كم زاوية للمثلث؟",["2", "3", "4", "5"],1,2),mk("qb_math_17","ما الجذر التربيعي لـ121؟",["9", "10", "11", "12"],2,8),mk("qb_math_18","إذا 5 أقلام بـ10 دنانير، سعر القلم؟",["1", "2", "2.5", "5"],1,5),mk("qb_math_19","ما ناتج 7×8-6؟",["48", "50", "52", "56"],1,9),mk("qb_math_20","إذا كان 3/5 من عدد يساوي 18، فالعدد؟",["24", "30", "36", "40"],1,10)];
-  packs["memory"]=[mk("qb_memory_01","ما العنصر الثاني في: 4-9-2-7؟",["4", "9", "2", "7"],1,1),mk("qb_memory_02","ما الأخير في: قمر-باب-نهر-مفتاح؟",["قمر", "باب", "نهر", "مفتاح"],3,2),mk("qb_memory_03","اعكس 3-8-1-6",["6-1-8-3", "6-8-1-3", "3-1-8-6", "1-6-8-3"],0,3),mk("qb_memory_04","أي رقم تكرر: 2-5-7-5-9؟",["2", "5", "7", "9"],1,4),mk("qb_memory_05","ما الثالث: 8-4-1-9-3؟",["8", "4", "1", "9"],2,5),mk("qb_memory_06","ما الأول: نجمة-مثلث-دائرة-مربع؟",["نجمة", "مثلث", "دائرة", "مربع"],0,6),mk("qb_memory_07","ما الرقم قبل الأخير في 6-2-9-4-7؟",["2", "9", "4", "7"],2,7),mk("qb_memory_08","كم عنصرًا في 1-3-5-7-9؟",["4", "5", "6", "7"],1,8),mk("qb_memory_09","أي كلمة ظهرت أولًا: باب-قلم-شمس؟",["باب", "قلم", "شمس", "لا يمكن"],0,9),mk("qb_memory_10","ما الثاني من النهاية في 8-3-6-1-4؟",["8", "3", "6", "1"],3,10),mk("qb_memory_11","ما العنصر الرابع: 5-7-2-9-1؟",["5", "7", "2", "9"],3,4),mk("qb_memory_12","ما الرقم المفقود من 2-4-?-8؟",["5", "6", "7", "9"],1,5),mk("qb_memory_13","ما آخر كلمة: بحر-جبل-طريق؟",["بحر", "جبل", "طريق", "لا شيء"],2,3),mk("qb_memory_14","ما الأول في 9-1-4-6؟",["9", "1", "4", "6"],0,2),mk("qb_memory_15","كم رقمًا في 7-8-2-5-3-1؟",["5", "6", "7", "8"],1,6),mk("qb_memory_16","أي عنصر مختلف في A-A-B-A؟",["الأول", "الثاني", "الثالث", "الرابع"],2,7),mk("qb_memory_17","ما الثالث من النهاية في 1-2-3-4-5-6؟",["3", "4", "5", "6"],1,8),mk("qb_memory_18","أي كلمة ليست في القائمة: شمس-قمر-نهر-قمر؟",["شمس", "قمر", "نهر", "لا توجد"],3,5),mk("qb_memory_19","اعكس 2-7-4-9-5",["5-9-4-7-2", "5-4-9-7-2", "2-9-4-7-5", "5-7-4-9-2"],0,9),mk("qb_memory_20","ما الرقم الرابع: 3-6-8-1-0؟",["3", "6", "8", "1"],3,10)];
-  packs["memory_focus"]=[mk("qb_memory_focus_01","ما العنصر الثاني في: 4-9-2-7؟",["4", "9", "2", "7"],1,1),mk("qb_memory_focus_02","ما الأخير في: قمر-باب-نهر-مفتاح؟",["قمر", "باب", "نهر", "مفتاح"],3,2),mk("qb_memory_focus_03","اعكس 3-8-1-6",["6-1-8-3", "6-8-1-3", "3-1-8-6", "1-6-8-3"],0,3),mk("qb_memory_focus_04","أي رقم تكرر: 2-5-7-5-9؟",["2", "5", "7", "9"],1,4),mk("qb_memory_focus_05","ما الثالث: 8-4-1-9-3؟",["8", "4", "1", "9"],2,5),mk("qb_memory_focus_06","ما الأول: نجمة-مثلث-دائرة-مربع؟",["نجمة", "مثلث", "دائرة", "مربع"],0,6),mk("qb_memory_focus_07","ما الرقم قبل الأخير في 6-2-9-4-7؟",["2", "9", "4", "7"],2,7),mk("qb_memory_focus_08","كم عنصرًا في 1-3-5-7-9؟",["4", "5", "6", "7"],1,8),mk("qb_memory_focus_09","أي كلمة ظهرت أولًا: باب-قلم-شمس؟",["باب", "قلم", "شمس", "لا يمكن"],0,9),mk("qb_memory_focus_10","ما الثاني من النهاية في 8-3-6-1-4؟",["8", "3", "6", "1"],3,10),mk("qb_memory_focus_11","ما العنصر الرابع: 5-7-2-9-1؟",["5", "7", "2", "9"],3,4),mk("qb_memory_focus_12","ما الرقم المفقود من 2-4-?-8؟",["5", "6", "7", "9"],1,5),mk("qb_memory_focus_13","ما آخر كلمة: بحر-جبل-طريق؟",["بحر", "جبل", "طريق", "لا شيء"],2,3),mk("qb_memory_focus_14","ما الأول في 9-1-4-6؟",["9", "1", "4", "6"],0,2),mk("qb_memory_focus_15","كم رقمًا في 7-8-2-5-3-1؟",["5", "6", "7", "8"],1,6),mk("qb_memory_focus_16","أي عنصر مختلف في A-A-B-A؟",["الأول", "الثاني", "الثالث", "الرابع"],2,7),mk("qb_memory_focus_17","ما الثالث من النهاية في 1-2-3-4-5-6؟",["3", "4", "5", "6"],1,8),mk("qb_memory_focus_18","أي كلمة ليست في القائمة: شمس-قمر-نهر-قمر؟",["شمس", "قمر", "نهر", "لا توجد"],3,5),mk("qb_memory_focus_19","اعكس 2-7-4-9-5",["5-9-4-7-2", "5-4-9-7-2", "2-9-4-7-5", "5-7-4-9-2"],0,9),mk("qb_memory_focus_20","ما الرقم الرابع: 3-6-8-1-0؟",["3", "6", "8", "1"],3,10)];
-  packs["memory_v22"]=[mk("qb_memory_v22_01","ما العنصر الثاني في: 4-9-2-7؟",["4", "9", "2", "7"],1,1),mk("qb_memory_v22_02","ما الأخير في: قمر-باب-نهر-مفتاح؟",["قمر", "باب", "نهر", "مفتاح"],3,2),mk("qb_memory_v22_03","اعكس 3-8-1-6",["6-1-8-3", "6-8-1-3", "3-1-8-6", "1-6-8-3"],0,3),mk("qb_memory_v22_04","أي رقم تكرر: 2-5-7-5-9؟",["2", "5", "7", "9"],1,4),mk("qb_memory_v22_05","ما الثالث: 8-4-1-9-3؟",["8", "4", "1", "9"],2,5),mk("qb_memory_v22_06","ما الأول: نجمة-مثلث-دائرة-مربع؟",["نجمة", "مثلث", "دائرة", "مربع"],0,6),mk("qb_memory_v22_07","ما الرقم قبل الأخير في 6-2-9-4-7؟",["2", "9", "4", "7"],2,7),mk("qb_memory_v22_08","كم عنصرًا في 1-3-5-7-9؟",["4", "5", "6", "7"],1,8),mk("qb_memory_v22_09","أي كلمة ظهرت أولًا: باب-قلم-شمس؟",["باب", "قلم", "شمس", "لا يمكن"],0,9),mk("qb_memory_v22_10","ما الثاني من النهاية في 8-3-6-1-4؟",["8", "3", "6", "1"],3,10),mk("qb_memory_v22_11","ما العنصر الرابع: 5-7-2-9-1؟",["5", "7", "2", "9"],3,4),mk("qb_memory_v22_12","ما الرقم المفقود من 2-4-?-8؟",["5", "6", "7", "9"],1,5),mk("qb_memory_v22_13","ما آخر كلمة: بحر-جبل-طريق؟",["بحر", "جبل", "طريق", "لا شيء"],2,3),mk("qb_memory_v22_14","ما الأول في 9-1-4-6؟",["9", "1", "4", "6"],0,2),mk("qb_memory_v22_15","كم رقمًا في 7-8-2-5-3-1؟",["5", "6", "7", "8"],1,6),mk("qb_memory_v22_16","أي عنصر مختلف في A-A-B-A؟",["الأول", "الثاني", "الثالث", "الرابع"],2,7),mk("qb_memory_v22_17","ما الثالث من النهاية في 1-2-3-4-5-6؟",["3", "4", "5", "6"],1,8),mk("qb_memory_v22_18","أي كلمة ليست في القائمة: شمس-قمر-نهر-قمر؟",["شمس", "قمر", "نهر", "لا توجد"],3,5),mk("qb_memory_v22_19","اعكس 2-7-4-9-5",["5-9-4-7-2", "5-4-9-7-2", "2-9-4-7-5", "5-7-4-9-2"],0,9),mk("qb_memory_v22_20","ما الرقم الرابع: 3-6-8-1-0؟",["3", "6", "8", "1"],3,10)];
-  packs["probability_v22"]=[mk("qb_probability_v22_01","احتمال صورة في رمية عملة عادلة؟",["1/4", "1/2", "2/3", "1"],1,1),mk("qb_probability_v22_02","احتمال الحصول على 6 في نرد عادل؟",["1/3", "1/4", "1/6", "1/2"],2,2),mk("qb_probability_v22_03","احتمال اختيار كرة حمراء من 2 حمراء و2 زرقاء؟",["1/4", "1/2", "2/3", "1"],1,3),mk("qb_probability_v22_04","احتمال عدم ظهور صورة في رمية واحدة؟",["0", "1/4", "1/2", "1"],2,4),mk("qb_probability_v22_05","إذا كان حدثان مستقلان احتمالهما 1/2 و1/2، احتمال اجتماعهما؟",["1/4", "1/2", "3/4", "1"],0,5),mk("qb_probability_v22_06","احتمال رقم زوجي في نرد؟",["1/6", "1/3", "1/2", "2/3"],2,6),mk("qb_probability_v22_07","احتمال سحب كرة زرقاء من 1 زرقاء و3 حمراء؟",["1/4", "1/3", "1/2", "3/4"],0,7),mk("qb_probability_v22_08","إذا زاد عدد النتائج الممكنة مع ثبات النتائج المفضلة، الاحتمال؟",["يزداد", "ينخفض", "يبقى دائمًا", "يصبح 1"],1,8),mk("qb_probability_v22_09","احتمال الحصول على وجه محدد في رميتين مستقلتين معًا؟",["1/2", "1/3", "1/4", "1/8"],2,9),mk("qb_probability_v22_10","إذا كان احتمال النجاح 0.8، احتمال الفشل؟",["0.1", "0.2", "0.8", "1.8"],1,10),mk("qb_probability_v22_11","كم نتيجة ممكنة لرمي عملة مرتين؟",["2", "3", "4", "6"],2,4),mk("qb_probability_v22_12","احتمال اختيار بطاقة آس من 4 آسات في 52 بطاقة؟",["1/13", "1/12", "1/4", "4/52"],0,5),mk("qb_probability_v22_13","أي حدث احتماله 1؟",["مستحيل", "ممكن", "مؤكد", "نادر"],2,3),mk("qb_probability_v22_14","أي حدث احتماله 0؟",["مؤكد", "مستحيل", "مرجح", "متساو"],1,6),mk("qb_probability_v22_15","إذا كان احتمال A = 0.3 وB مستقل=0.5، P(A∩B)=؟",["0.15", "0.2", "0.8", "1.5"],0,7),mk("qb_probability_v22_16","في نرد، احتمال رقم أكبر من 4؟",["1/6", "1/3", "1/2", "2/3"],1,8),mk("qb_probability_v22_17","في صندوق 5 كرات، 2 خضراء، احتمال الخضراء؟",["2/5", "1/5", "3/5", "1/2"],0,4),mk("qb_probability_v22_18","إذا كان الحدثان متنافيين، هل يمكن حدوثهما معًا؟",["نعم دائمًا", "لا", "أحيانًا حسب النرد", "فقط عند 1"],1,9),mk("qb_probability_v22_19","احتمال ظهور نفس النتيجة في رميتي عملة عادلة؟",["1/4", "1/2", "3/4", "1"],1,10),mk("qb_probability_v22_20","إذا تضاعف عدد الحالات المفضلة وبقيت كل الحالات الأخرى ثابتة، الاحتمال؟",["ينخفض", "يرتفع", "لا يتغير", "يصبح صفرًا"],1,10)];
-  packs["science"]=[mk("qb_science_01","ما الكوكب المعروف بالكوكب الأحمر؟",["الزهرة", "المريخ", "المشتري", "عطارد"],1,1),mk("qb_science_02","ما الغاز الأكثر وفرة في الغلاف الجوي للأرض؟",["الأكسجين", "النيتروجين", "ثاني أكسيد الكربون", "الهيدروجين"],1,2),mk("qb_science_03","ما العضو الذي يضخ الدم؟",["الرئة", "الكبد", "القلب", "الكلية"],2,3),mk("qb_science_04","ما وحدة قياس القوة في النظام الدولي؟",["جول", "واط", "نيوتن", "باسكال"],2,4),mk("qb_science_05","ما العملية التي تصنع بها النباتات غذاءها؟",["التنفس", "البناء الضوئي", "الهضم", "التبخر"],1,5),mk("qb_science_06","كم عدد الكروموسومات في الخلية الجسدية البشرية عادة؟",["23", "44", "46", "48"],2,6),mk("qb_science_07","ما أقرب نجم إلى الأرض؟",["سيريوس", "الشمس", "النسر الواقع", "القطب"],1,7),mk("qb_science_08","ما الرقم الهيدروجيني للماء النقي تقريبًا؟",["0", "5", "7", "14"],2,8),mk("qb_science_09","ما سرعة الضوء في الفراغ تقريبًا؟",["300 ألف كم/ث", "30 ألف كم/ث", "3 آلاف كم/ث", "3 ملايين كم/ث"],0,9),mk("qb_science_10","أي جزء من الخلية يحتوي المادة الوراثية في الخلايا حقيقية النواة؟",["الغشاء", "النواة", "الجدار", "السيتوبلازم"],1,10),mk("qb_science_11","ما أكبر كوكب في النظام الشمسي؟",["الأرض", "زحل", "المشتري", "نبتون"],2,4),mk("qb_science_12","ما المادة التي تحمل الأكسجين في الدم؟",["الإنسولين", "الهيموغلوبين", "الكيراتين", "الكولاجين"],1,5),mk("qb_science_13","ما القوة التي تجذب الأجسام نحو الأرض؟",["المغناطيسية", "الجاذبية", "الاحتكاك", "الطفو"],1,3),mk("qb_science_14","ما الحالة التي لا تمتلك حجمًا ثابتًا؟",["الصلبة", "السائلة", "الغازية", "كلها"],2,2),mk("qb_science_15","ما الكوكب الأقرب إلى الشمس؟",["الأرض", "عطارد", "المريخ", "الزهرة"],1,2),mk("qb_science_16","ما اسم انتقال الماء من سائل إلى غاز؟",["التجمد", "التكاثف", "التبخر", "الانصهار"],2,3),mk("qb_science_17","أي فيتامين يرتبط غالبًا بالتعرض لأشعة الشمس؟",["A", "B12", "C", "D"],3,6),mk("qb_science_18","ما الجهاز المسؤول أساسًا عن تبادل الغازات؟",["الهضمي", "التنفسي", "العصبي", "العضلي"],1,4),mk("qb_science_19","ما المعدن السائل في درجة حرارة الغرفة؟",["الحديد", "النحاس", "الزئبق", "الألومنيوم"],2,7),mk("qb_science_20","ما الطبقة التي نعيش عليها من الأرض؟",["اللب الداخلي", "اللب الخارجي", "الوشاح", "القشرة"],3,8)];
-  packs["strategy"]=[mk("qb_strategy_01","في بداية هجمة مرتدة، ما الأولوية؟",["استغلال المساحة قبل إغلاقها", "إبطاء اللعب دائمًا", "العودة للخلف", "التسديد من أي مكان"],0,1),mk("qb_strategy_02","إذا كان الخصم يضغط من اليمين، ماذا قد يفيد؟",["تغيير جهة اللعب", "إغلاق الجهة اليسرى", "إيقاف الحركة", "تثبيت الجميع"],0,2),mk("qb_strategy_03","عند فقدان الكرة والخصم غير منظم، الأفضل غالبًا؟",["ضغط عكسي سريع ومنظم", "التراجع العشوائي", "الانتظار", "ترك الكرة"],0,3),mk("qb_strategy_04","أمام فريق متكتل، ما الذي يفتح الدفاع؟",["تحريك الكرة وتغيير جهة اللعب", "اللعب في ممر واحد", "تقليل العرض", "إيقاف الجناحين"],0,4),mk("qb_strategy_05","إذا تقدم الظهير، من المهم توفير؟",["تغطية خلفه", "لا شيء", "مهاجم إضافي فقط", "حارس ثان"],0,5),mk("qb_strategy_06","ما أفضل قرار تحت ضغط قريب؟",["خيار تمرير آمن أو ثالث لاعب", "المراوغة دائمًا", "التسديد دائمًا", "التمرير العشوائي"],0,6),mk("qb_strategy_07","إذا كان قلب الدفاع يخرج للضغط، ماذا يجب أن يحدث خلفه؟",["تغطية المساحة", "تركها", "تقدم الحارس فقط", "إيقاف اللعب"],0,7),mk("qb_strategy_08","عند امتلاك تفوق عددي، ما الهدف؟",["تحويل التفوق إلى فرصة أو مساحة", "العودة للخلف", "إضاعة الوقت", "تقليل الخيارات"],0,8),mk("qb_strategy_09","ما أهم شيء في قرار التسديد؟",["زاوية وجودة الفرصة", "قوة التسديدة فقط", "اسم اللاعب", "السرعة فقط"],0,9),mk("qb_strategy_10","متى يكون التمرير العمودي مناسبًا؟",["عندما يوجد لاعب بين الخطوط أو مساحة واضحة", "عندما تكون كل الزوايا مغلقة", "دائمًا", "أبدًا"],0,10),mk("qb_strategy_11","إذا أغلق الخصم العمق، ما البديل؟",["استخدام العرض", "إيقاف الهجمة", "التمرير للخلف فقط", "التسديد من الحارس"],0,4),mk("qb_strategy_12","إذا كان الجناح معزولًا 1 ضد 1، ماذا يحتاج غالبًا؟",["دعمًا أو مساحة مناسبة", "منع التمرير", "ظهيرًا خلف الحارس", "إيقافه"],0,5),mk("qb_strategy_13","في الدفاع، لماذا نحافظ على المسافات؟",["لمنع اختراق الخطوط", "لزيادة الفراغات", "لمنع التواصل", "لترك المهاجم حرًا"],0,6),mk("qb_strategy_14","إذا خسر الفريق الكرة في الثلث الأخير، ما القرار يعتمد على؟",["موقع اللاعبين والمسافة للكرة", "النتيجة فقط", "الجمهور", "اسم المدرب"],0,7),mk("qb_strategy_15","ما فائدة اللاعب الثالث في بناء الهجمة؟",["خلق زاوية تمرير إضافية", "إغلاق الملعب", "منع الجناح", "تثبيت الحارس"],0,8),mk("qb_strategy_16","عند تقدم النتيجة، القرار التكتيكي لا يعني دائمًا؟",["التراجع الكامل", "إدارة المخاطر", "حماية المساحات", "اختيار لحظة الضغط"],0,9),mk("qb_strategy_17","إذا كان الخصم يترك مساحة خلف الظهير، الحل؟",["استغلالها بالتحرك والتمرير", "إغلاقها بأنفسنا", "عدم النظر لها", "تغيير الحكم"],0,10),mk("qb_strategy_18","ما أساس القرار التكتيكي الجيد؟",["قراءة السياق قبل الفعل", "تنفيذ نفس القرار دائمًا", "السرعة فقط", "التخمين"],0,3),mk("qb_strategy_19","إذا كان الفريق متأخرًا، زيادة المخاطرة تعني؟",["فتح خيارات هجومية مع إدارة التوازن", "ترك كل الدفاع", "إلغاء الوسط", "إيقاف اللعب"],0,8),mk("qb_strategy_20","ما أفضل وصف للخطة الجيدة؟",["مرنة وفق المباراة", "ثابتة مهما حدث", "تعتمد على لاعب واحد", "لا تحتاج قرارات"],0,10)];
-  packs["visual_v22"]=[mk("qb_visual_v22_01","أي نمط يأتي بعد ▲ ▲ ● ▲ ▲ ● ؟",["▲", "●", "■", "◆"],0,1),mk("qb_visual_v22_02","كم ضلعًا للمربع؟",["3", "4", "5", "6"],1,2),mk("qb_visual_v22_03","أي شكل مختلف؟",["مثلث", "مربع", "دائرة", "مستطيل"],2,3),mk("qb_visual_v22_04","إذا كان السهم ↑ ثم → ثم ↓، التالي؟",["←", "↑", "→", "↓"],0,4),mk("qb_visual_v22_05","كم خلية على حافة شبكة 3×3؟",["4", "6", "8", "9"],2,5),mk("qb_visual_v22_06","كم محور تناظر للمربع؟",["2", "3", "4", "5"],2,6),mk("qb_visual_v22_07","النمط 1 دائرة، 2 دائرتان، 3 دوائر، التالي؟",["3", "4", "5", "6"],1,7),mk("qb_visual_v22_08","ما الشكل ذو 5 أضلاع؟",["مثلث", "مربع", "خماسي", "دائرة"],2,8),mk("qb_visual_v22_09","إذا دارت الصورة 180°، ما الذي يحدث؟",["تدور نصف دورة", "تنعكس فقط", "تصغر", "تختفي"],0,9),mk("qb_visual_v22_10","أي زوج متطابق؟",["AB-AB", "AB-BA", "ABC-ACB", "123-132"],0,10),mk("qb_visual_v22_11","ما الشكل الذي لا أضلاع له؟",["الدائرة", "المربع", "المثلث", "الخماسي"],0,4),mk("qb_visual_v22_12","كم زاوية للمستطيل؟",["2", "3", "4", "5"],2,3),mk("qb_visual_v22_13","إذا كان النمط أحمر، أزرق، أحمر، أزرق، التالي؟",["أحمر", "أزرق", "أخضر", "أصفر"],0,5),mk("qb_visual_v22_14","أي ترتيب تصاعدي؟",["1-2-3-4", "4-3-2-1", "2-1-4-3", "3-1-4-2"],0,2),mk("qb_visual_v22_15","ما الشكل الذي له ضلعان متوازيان على الأقل؟",["مستطيل", "دائرة", "مثلث", "نجمة"],0,6),mk("qb_visual_v22_16","إذا انعكس السهم ← أفقيًا يصبح؟",["→", "↑", "↓", "←"],0,7),mk("qb_visual_v22_17","كم خلية داخلية فعلية في شبكة 4×4 بعد استبعاد الحافة؟",["2", "4", "6", "8"],1,8),mk("qb_visual_v22_18","أي نمط يتكرر كل 3 عناصر؟",["ABCABC", "AABBCC", "ABABAC", "AAABBB"],0,9),mk("qb_visual_v22_19","ما الشكل الذي له 6 أضلاع؟",["خماسي", "سداسي", "سباعي", "مربع"],1,5),mk("qb_visual_v22_20","إذا كان الشكل الأصلي مربعًا ودُوّر 90°، يبقى؟",["مربعًا", "مثلثًا", "دائرة", "مستطيلًا دائمًا"],0,10)];
-  const C=window.ZIVOZONE_CHALLENGES||{};
-  Object.keys(packs).forEach(id=>{
-    const b=C[id];
-    if(!b||!Array.isArray(b.questions)) return;
-    const existing=new Set(b.questions.map(q=>q&&q.id).filter(Boolean));
-    packs[id].forEach(q=>{ if(!existing.has(q.id)){ b.questions.push(q); existing.add(q.id); }});
-    b.questionBankSize=b.questions.length;
-    b.questionBankVersion='PRO-1';
-  });
-  // Expose a read-only style API for future admin/AI imports without changing the UI.
-  window.ZIVOZONE_QUESTION_BANK_PRO={
-    version:'PRO-1',
-    stats(id){const b=C[id];return b?{challengeId:id,total:Array.isArray(b.questions)?b.questions.length:0}:null;},
-    all(id){const b=C[id];return b&&Array.isArray(b.questions)?b.questions.slice():[];}
-  };
-})();
-
 /* ============================================================
    V20 — REAL CHALLENGE CENTER
    Connects existing banks to a unified playable runner.
@@ -1511,7 +1414,7 @@ window.ZIVOZONE_V18 = {
         if(b&&Array.isArray(b.questions)&&!b.special) out.push(b);
       });
     }
-    if(window.ZIVOZONE_V18_BANK) Object.values(window.ZIVOZONE_V18_BANK).forEach(b=>out.push(b));
+    if(window.ZIVOZONE_INTERNAL.v18_bank) Object.values(window.ZIVOZONE_INTERNAL.v18_bank).forEach(b=>out.push(b));
     const seen=new Set();
     return out.filter(b=>b?.id&&!seen.has(b.id)&&seen.add(b.id));
   }
@@ -1524,7 +1427,7 @@ window.ZIVOZONE_V18 = {
 
     // V23 SMART SELECTION: preserve the 10-question climb while adapting the mix
     // to the player's current level and recent performance.
-    const p=window.ZIVOZONE_V21?.get?.()||window.ZIVOZONE_PLAYER?.get?.()||{};
+    const p=window.ZIVOZONE_INTERNAL.v21?.get?.()||window.ZIVOZONE_PLAYER?.get?.()||{};
     const level=Math.max(1,Number(p.level)||1);
     const history=Array.isArray(p.history)?p.history.slice(-8):[];
     const recentAvg=history.length?history.reduce((n,x)=>n+(Number(x.score)||0),0)/history.length:50;
@@ -1627,8 +1530,8 @@ window.ZIVOZONE_V18 = {
       }
       window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{challenge:run.id,gameId:run.id,score:correct,total:run.questions.length,perfect,xp:0,coins:zivoReward,zivoReward,eventId:(window.crypto?.randomUUID?.()||('v20_'+Date.now()+'_'+Math.random().toString(36).slice(2)))} }));
       
-      if(window.ZIVOZONE_V46?.submit && window.ZIVOZONE_AUTH?.isLoggedIn?.()){
-        window.ZIVOZONE_V46.submit({challengeId:run.id,attemptId:(crypto?.randomUUID?.()||('attempt-'+Date.now())),answers:submittedAnswers,total:run.questions.length,correct,score:Math.round(correct/run.questions.length*100),startedAt:new Date(Date.now()-Math.max(0,(performance.now()-startAt))).toISOString()}).then(async r=>{
+      if(window.ZIVOZONE_INTERNAL.v46?.submit && window.ZIVOZONE_AUTH?.isLoggedIn?.()){
+        window.ZIVOZONE_INTERNAL.v46.submit({challengeId:run.id,attemptId:(crypto?.randomUUID?.()||('attempt-'+Date.now())),answers:submittedAnswers,total:run.questions.length,correct,score:Math.round(correct/run.questions.length*100),startedAt:new Date(Date.now()-Math.max(0,(performance.now()-startAt))).toISOString()}).then(async r=>{
           if(r?.data?.ok || r?.data?.verified || r?.accepted){
             window.ZIVOZONE_AUTH.track?.('challenge_completed',{challengeId:run.id,score:correct,total:run.questions.length,timedOut:timed,server:!!r?.server});
             try{await window.ZIVOZONE_AUTH.saveResult?.({challengeId:run.id,score:correct,total:run.questions.length,points:score,timedOut:timed,bestStreak:best,guest:false,serverVerified:!!r?.server})}catch(e){}
@@ -1645,7 +1548,7 @@ window.ZIVOZONE_V18 = {
     if(id==='horror'&&window.ZIVOZONE_DARKROOM_V19)window.ZIVOZONE_DARKROOM_V19.start();
     render();
   }
-  window.ZIVOZONE_V20={start,findBanks,pick,clearHistory:()=>writeUsed([])};
+  window.ZIVOZONE_INTERNAL.v20={start,findBanks,pick,clearHistory:()=>writeUsed([])};
 })();
 
 
@@ -1693,7 +1596,7 @@ window.ZIVOZONE_V18 = {
     await sync();return p;
   }
   function get(){return loadLocal()}
-  window.ZIVOZONE_V21={record,get,sync,calcLevel};
+  window.ZIVOZONE_INTERNAL.v21={record,get,sync,calcLevel};
   window.ZIVOZONE_PLAYER=window.ZIVOZONE_PLAYER||{};
   const oldAdd=window.ZIVOZONE_PLAYER.addProgress;
   window.ZIVOZONE_PLAYER.addProgress=async function(result){
@@ -1716,7 +1619,7 @@ window.ZIVOZONE_V18 = {
     refresh();
   }
   function refresh(){
-    const p=window.ZIVOZONE_V21?.get?.()||{};
+    const p=window.ZIVOZONE_INTERNAL.v21?.get?.()||{};
     const l=document.getElementById('v21-level'),x=document.getElementById('v21-xp'),b=document.getElementById('v21-best');
     if(l)l.textContent=p.level||1;if(x)x.textContent=p.xp||0;if(b)b.textContent=p.bestScore||0;
   }
@@ -1743,7 +1646,7 @@ window.ZIVOZONE_V18 = {
     }
     return fresh.sort(()=>Math.random()-.5).slice(0,10).sort((a,b)=>(a.d||a.difficulty||0)-(b.d||b.difficulty||0));
   }
-  window.ZIVOZONE_V22_CONTENT={read,write,mark,freshQuestions};
+  window.ZIVOZONE_INTERNAL.v22_content={read,write,mark,freshQuestions};
 })();
 
 
@@ -1763,22 +1666,22 @@ window.ZIVOZONE_V18 = {
   ];
   function read(){try{return Object.assign({},DEFAULT,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return {...DEFAULT}}}
   function write(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){};window.dispatchEvent(new CustomEvent('zivozone-v26',{detail:s}));return s}
-  function balance(){return Number(window.ZIVOZONE_V25?.get?.()?.balance||0)}
+  function balance(){return Number(window.ZIVOZONE_INTERNAL.v25?.get?.()?.balance||0)}
   function buy(id){
     const item=catalog.find(x=>x.id===id),s=read();if(!item)return false;
     if(s.owned.includes(id))return true;
     if(balance()<item.price)return false;
-    if(!window.ZIVOZONE_V25?.spend?.(item.price,'shop:'+id))return false;
+    if(!window.ZIVOZONE_INTERNAL.v25?.spend?.(item.price,'shop:'+id))return false;
     s.owned.push(id);s.purchases++;s.spent+=item.price;write(s);render();return true;
   }
   function claimDaily(){
     const d=new Date().toISOString().slice(0,10),s=read();
     if(s.dailyClaim===d)return false;
     s.dailyClaim=d;write(s);
-    window.ZIVOZONE_V25?.add?.(3,'daily_claim_v26');render();return true;
+    window.ZIVOZONE_INTERNAL.v25?.add?.(3,'daily_claim_v26');render();return true;
   }
   function profile(){
-    const p=window.ZIVOZONE_V21?.get?.()||{},s=read(),v=window.ZIVOZONE_V25?.get?.()||{};
+    const p=window.ZIVOZONE_INTERNAL.v21?.get?.()||{},s=read(),v=window.ZIVOZONE_INTERNAL.v25?.get?.()||{};
     return {level:p.level||1,xp:p.xp||0,games:p.games||0,bestScore:p.bestScore||0,balance:v.balance||0,streak:v.streak||1,spent:s.spent||0};
   }
   function open(tab){
@@ -1814,7 +1717,7 @@ window.ZIVOZONE_V18 = {
     // V84: the unified economy launcher is owned by ZIVOZONE_ECONOMY.
     // Keep V26 API for compatibility, but do not create a second currency button.
   }
-  window.ZIVOZONE_V26={open,buy,claimDaily,profile,catalog};
+  window.ZIVOZONE_INTERNAL.v26={open,buy,claimDaily,profile,catalog};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',button);else button();
 })();
 
@@ -1833,7 +1736,7 @@ window.ZIVOZONE_V18 = {
     const p=window.ZIVOZONE_AUTH?.getPlayer?.(); return p?.uid||p?.id||p?.user?.uid||null;
   }
   function snapshot(){
-    const p=window.ZIVOZONE_V26?.profile?.()||{};
+    const p=window.ZIVOZONE_INTERNAL.v26?.profile?.()||{};
     return {uid:uid(),level:p.level||1,xp:p.xp||0,games:p.games||0,bestScore:p.bestScore||0,streak:p.streak||1,at:Date.now()};
   }
   function queue(event){
@@ -1856,7 +1759,7 @@ window.ZIVOZONE_V18 = {
     const q=safeRead();q.push({event:'challenge_complete',data:snapshot(),challenge:item});safeWrite(q);
     flush();
   }
-  window.ZIVOZONE_V27={snapshot,queue,flush,submitChallenge,pending:()=>safeRead().length};
+  window.ZIVOZONE_INTERNAL.v27={snapshot,queue,flush,submitChallenge,pending:()=>safeRead().length};
   window.addEventListener('zivozone-progress',e=>{
     const d=e.detail||{};
     if(d.challenge) submitChallenge(d.challenge,d.correct,d.total,d.score);
@@ -1892,7 +1795,7 @@ window.ZIVOZONE_V18 = {
   const uid=()=>currentUser()?.uid||window.ZIVOZONE_AUTH?.getPlayer?.()?.uid||null;
 
   function makeEvent(type,payload){
-    const p=window.ZIVOZONE_V27?.snapshot?.()||{};
+    const p=window.ZIVOZONE_INTERNAL.v27?.snapshot?.()||{};
     return {type,payload,uid:uid()||null,deviceId:getDevice(),createdAt:new Date().toISOString(),
             player:{level:p.level||1,xp:p.xp||0,games:p.games||0,bestScore:p.bestScore||0,streak:p.streak||1}};
   }
@@ -1941,7 +1844,7 @@ window.ZIVOZONE_V18 = {
     const q=readQ();q.push(makeEvent(type,payload));writeQ(q);sync();
   }
 
-  window.ZIVOZONE_V28={
+  window.ZIVOZONE_INTERNAL.v28={
     cloud:()=>!!(window.firebase?.firestore&&window.firebase?.auth),
     uid, sync, pending:()=>readQ().length,
     enqueue
@@ -1980,13 +1883,13 @@ window.ZIVOZONE_V18 = {
     </div>`;
     document.body.appendChild(o);
     o.querySelector('.v28-close').onclick=()=>o.classList.remove('open');
-    o.querySelector('#v28-sync').onclick=async()=>{await window.ZIVOZONE_V28?.sync?.();render()};
+    o.querySelector('#v28-sync').onclick=async()=>{await window.ZIVOZONE_INTERNAL.v28?.sync?.();render()};
     o.querySelector('#v28-refresh').onclick=render;
   }
   function render(){
     mount();
     const o=document.getElementById('v28-center');o.classList.add('open');
-    const p=window.ZIVOZONE_V26?.profile?.()||{},cloud=window.ZIVOZONE_V28?.cloud?.(),pending=window.ZIVOZONE_V28?.pending?.()||0;
+    const p=window.ZIVOZONE_INTERNAL.v26?.profile?.()||{},cloud=window.ZIVOZONE_INTERNAL.v28?.cloud?.(),pending=window.ZIVOZONE_INTERNAL.v28?.pending?.()||0;
     o.querySelector('#v28-cloud-text').textContent=cloud?'Firebase متصل':'Firebase غير متاح حاليًا';
     o.querySelector('#v28-dot').textContent=cloud?'●':'○';
     o.querySelector('#v28-stats').innerHTML=[
@@ -2013,7 +1916,7 @@ window.ZIVOZONE_V18 = {
   const write=v=>{try{localStorage.setItem(LOCAL,JSON.stringify(v))}catch(e){}};
   const user=()=>{try{return window.firebase?.auth?.()?.currentUser||null}catch(e){return null}};
   const cloud=()=>!!(window.firebase?.auth&&window.firebase?.firestore&&user());
-  const profile=()=>window.ZIVOZONE_V26?.profile?.()||window.ZIVOZONE_V27?.snapshot?.()||{};
+  const profile=()=>window.ZIVOZONE_INTERNAL.v26?.profile?.()||window.ZIVOZONE_INTERNAL.v27?.snapshot?.()||{};
   const sanitizeName=n=>String(n||'لاعب ZIVO').replace(/[<>"'`]/g,'').trim().slice(0,24)||'لاعب ZIVO';
 
   async function saveProfile(){
@@ -2061,7 +1964,7 @@ window.ZIVOZONE_V18 = {
     }catch(e){return []}
   }
 
-  window.ZIVOZONE_V29={cloud,saveProfile,submitScore,leaderboard,sanitizeName};
+  window.ZIVOZONE_INTERNAL.v29={cloud,saveProfile,submitScore,leaderboard,sanitizeName};
   window.addEventListener('zivozone-progress',e=>{
     const d=e.detail||{};
     saveProfile();
@@ -2092,11 +1995,11 @@ window.ZIVOZONE_V18 = {
   async function load(){
     const s=document.getElementById('v29-status'),l=document.getElementById('v29-list');
     if(!s||!l)return;
-    if(!window.ZIVOZONE_V29?.cloud?.()){s.textContent='سجّل الدخول لعرض الترتيب العالمي';l.innerHTML='';return}
-    const rows=await window.ZIVOZONE_V29.leaderboard(20);
+    if(!window.ZIVOZONE_INTERNAL.v29?.cloud?.()){s.textContent='سجّل الدخول لعرض الترتيب العالمي';l.innerHTML='';return}
+    const rows=await window.ZIVOZONE_INTERNAL.v29.leaderboard(20);
     if(!rows.length){s.textContent='لا توجد نتائج سحابية بعد';l.innerHTML='';return}
     s.textContent='أفضل النتائج · ZIVOZONE';
-    l.innerHTML=rows.map(r=>`<div class="v29-row"><span>#${r.rank}</span><b>${window.ZIVOZONE_V29.sanitizeName(r.displayName)}</b><strong>${Number(r.bestScore)||0}</strong></div>`).join('');
+    l.innerHTML=rows.map(r=>`<div class="v29-row"><span>#${r.rank}</span><b>${window.ZIVOZONE_INTERNAL.v29.sanitizeName(r.displayName)}</b><strong>${Number(r.bestScore)||0}</strong></div>`).join('');
   }
   function button(){
     if(document.getElementById('v29-open'))return;
@@ -2119,7 +2022,7 @@ window.ZIVOZONE_V18 = {
   const getUser=()=>{try{return window.firebase?.auth?.()?.currentUser||null}catch(e){return null}};
   const cloud=()=>!!getUser();
   function get(){
-    const p=window.ZIVOZONE_V26?.profile?.()||{},old=read();
+    const p=window.ZIVOZONE_INTERNAL.v26?.profile?.()||{},old=read();
     return {...old,name:clean(getUser()?.displayName||old.name),level:Number(p.level)||old.level||1,
       xp:Number(p.xp)||old.xp||0,balance:Number(p.balance)||old.balance||0,games:Number(p.games)||old.games||0,
       bestScore:Number(p.bestScore)||old.bestScore||0,streak:Number(p.streak)||old.streak||0};
@@ -2132,7 +2035,7 @@ window.ZIVOZONE_V18 = {
     const q=all[key]||{games:0,correct:0,total:0,best:0};
     q.games++;q.correct+=Number(d.correct)||0;q.total+=Number(d.total)||0;q.best=Math.max(q.best,Number(d.score)||0);
     all[key]=q;s.challengeStats=all;s.name=s.name||'لاعب ZIVO';write(s);
-    try{window.ZIVOZONE_V29?.saveProfile?.()}catch(e){}
+    try{window.ZIVOZONE_INTERNAL.v29?.saveProfile?.()}catch(e){}
     return q;
   }
   function render(){
@@ -2164,7 +2067,7 @@ window.ZIVOZONE_V18 = {
     if(document.getElementById('v30-open'))return;
     const b=document.createElement('button');b.id='v30-open';b.textContent='👤 ملفي';b.onclick=open;document.body.appendChild(b);
   }
-  window.ZIVOZONE_V30={get,stats,record,open,render};
+  window.ZIVOZONE_INTERNAL.v30={get,stats,record,open,render};
   window.addEventListener('zivozone-progress',e=>record(e.detail||{}));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
@@ -2179,7 +2082,7 @@ window.ZIVOZONE_V18 = {
   const KEY='zivozone_v31_achievements';
   const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
   const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
-  const p=()=>window.ZIVOZONE_V30?.get?.()||window.ZIVOZONE_V26?.profile?.()||{};
+  const p=()=>window.ZIVOZONE_INTERNAL.v30?.get?.()||window.ZIVOZONE_INTERNAL.v26?.profile?.()||{};
   const defs=[
     ['first_step','FIRST STEP','أول تحدي','🎯',s=>s.games>=1],
     ['speed','10 SECONDS','أجبت قبل انتهاء الوقت','⚡',s=>s.challengeStats&&Object.values(s.challengeStats).some(v=>v.games>0)],
@@ -2232,7 +2135,7 @@ window.ZIVOZONE_V18 = {
     if(document.getElementById('v31-open'))return;
     const b=document.createElement('button');b.id='v31-open';b.textContent='🏅 إنجازاتي';b.onclick=open;document.body.appendChild(b);
   }
-  window.ZIVOZONE_V31={state,open,share};
+  window.ZIVOZONE_INTERNAL.v31={state,open,share};
   window.addEventListener('zivozone-progress',()=>{state()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
@@ -2283,7 +2186,7 @@ window.ZIVOZONE_V18 = {
     if(document.getElementById('v32-open'))return;
     const b=document.createElement('button');b.id='v32-open';b.textContent='🔥 تحدي اليوم';b.onclick=open;document.body.appendChild(b);
   }
-  window.ZIVOZONE_V32={open,state,challenge:pick};
+  window.ZIVOZONE_INTERNAL.v32={open,state,challenge:pick};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
 
@@ -2298,7 +2201,7 @@ window.ZIVOZONE_V18 = {
   const DAY=()=>new Date().toISOString().slice(0,10);
   const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
   const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
-  const prof=()=>window.ZIVOZONE_V30?.get?.()||window.ZIVOZONE_V26?.profile?.()||{};
+  const prof=()=>window.ZIVOZONE_INTERNAL.v30?.get?.()||window.ZIVOZONE_INTERNAL.v26?.profile?.()||{};
   function isoYesterday(d){const x=new Date(d+'T00:00:00');x.setUTCDate(x.getUTCDate()-1);return x.toISOString().slice(0,10)}
   function state(){let s=read();if(s.date!==DAY())s={date:DAY(),completed:false,days:[],week:{},claimed:false};return s}
   function ensure(){
@@ -2319,8 +2222,8 @@ window.ZIVOZONE_V18 = {
     s.claimed=true;write(s);
     try{
       const p=prof();
-      if(window.ZIVOZONE_V26?.addXP) window.ZIVOZONE_V26.addXP(s.xpReward);
-      if(window.ZIVOZONE_V26?.addZIVO) window.ZIVOZONE_V26.addZIVO(s.zivoReward);
+      if(window.ZIVOZONE_INTERNAL.v26?.addXP) window.ZIVOZONE_INTERNAL.v26.addXP(s.xpReward);
+      if(window.ZIVOZONE_INTERNAL.v26?.addZIVO) window.ZIVOZONE_INTERNAL.v26.addZIVO(s.zivoReward);
       window.dispatchEvent(new CustomEvent('zivozone-reward',{detail:{xp:s.xpReward,zivo:s.zivoReward,source:'daily'}}));
     }catch(e){}
     return s;
@@ -2357,7 +2260,7 @@ window.ZIVOZONE_V18 = {
     if(document.getElementById('v33-open'))return;
     const b=document.createElement('button');b.id='v33-open';b.textContent='🏆 المنافسة';b.onclick=open;document.body.appendChild(b);
   }
-  window.ZIVOZONE_V33={state,complete:ensure,claim,open};
+  window.ZIVOZONE_INTERNAL.v33={state,complete:ensure,claim,open};
   window.addEventListener('zivozone-daily-complete',ensure);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
@@ -2373,7 +2276,7 @@ window.ZIVOZONE_V18 = {
   const DAY=()=>new Date().toISOString().slice(0,10);
   const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){return{}}};
   const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
-  const profile=()=>window.ZIVOZONE_V30?.get?.()||window.ZIVOZONE_V26?.profile?.()||{};
+  const profile=()=>window.ZIVOZONE_INTERNAL.v30?.get?.()||window.ZIVOZONE_INTERNAL.v26?.profile?.()||{};
   function get(){
     const s=read();
     if(s.date!==DAY()) return {date:DAY(),items:{play:{goal:1,value:0},correct:{goal:5,value:0},speed:{goal:3,value:0}},claimed:{}};
@@ -2393,8 +2296,8 @@ window.ZIVOZONE_V18 = {
     s.claimed[type]=true;write(s);
     const reward={play:{xp:10,zivo:1},correct:{xp:20,zivo:2},speed:{xp:15,zivo:2}}[type];
     try{
-      if(window.ZIVOZONE_V26?.addXP)window.ZIVOZONE_V26.addXP(reward.xp);
-      if(window.ZIVOZONE_V26?.addZIVO)window.ZIVOZONE_V26.addZIVO(reward.zivo);
+      if(window.ZIVOZONE_INTERNAL.v26?.addXP)window.ZIVOZONE_INTERNAL.v26.addXP(reward.xp);
+      if(window.ZIVOZONE_INTERNAL.v26?.addZIVO)window.ZIVOZONE_INTERNAL.v26.addZIVO(reward.zivo);
       window.dispatchEvent(new CustomEvent('zivozone-reward',{detail:{...reward,source:'mission'}}));
     }catch(e){}
     render(s);return true;
@@ -2423,7 +2326,7 @@ window.ZIVOZONE_V18 = {
     if(document.getElementById('v34-open'))return;
     const b=document.createElement('button');b.id='v34-open';b.textContent='🎯 مهامي';b.onclick=open;document.body.appendChild(b);
   }
-  window.ZIVOZONE_V34={get,progress,claim,open};
+  window.ZIVOZONE_INTERNAL.v34={get,progress,claim,open};
   window.addEventListener('zivozone-progress',e=>completeFromEvent(e.detail||{}));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
@@ -2486,7 +2389,7 @@ window.ZIVOZONE_V18 = {
     if(document.getElementById('v35-open'))return;
     const b=document.createElement('button');b.id='v35-open';b.textContent='📈 مستواي';b.onclick=open;document.body.appendChild(b);
   }
-  window.ZIVOZONE_V35={state,add,open,levelFor};
+  window.ZIVOZONE_INTERNAL.v35={state,add,open,levelFor};
   window.addEventListener('zivozone-result',e=>{const d=e.detail||{};add(d.xp||0,d.correct||0,d.score||0)});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
@@ -2526,7 +2429,7 @@ window.ZIVOZONE_V18 = {
     }catch(e){return false}
   }
   function syncResult(d){return enqueue('challenge_result',{score:Number(d.score)||0,correct:Number(d.correct)||0,total:Number(d.total)||0,xp:Number(d.xp)||0,challenge:String(d.challenge||'unknown').slice(0,80)})}
-  window.ZIVOZONE_V36={enqueue,flush,syncResult,pending:()=>read().length};
+  window.ZIVOZONE_INTERNAL.v36={enqueue,flush,syncResult,pending:()=>read().length};
   window.addEventListener('zivozone-result',e=>syncResult(e.detail||{}));
   window.addEventListener('online',flush);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',flush);else flush();
@@ -2570,8 +2473,8 @@ window.ZIVOZONE_V18 = {
   }
   function profile(){
     try{
-      if(window.ZIVOZONE_V30?.get)return window.ZIVOZONE_V30.get()||{};
-      if(window.ZIVOZONE_V26?.profile)return window.ZIVOZONE_V26.profile()||{};
+      if(window.ZIVOZONE_INTERNAL.v30?.get)return window.ZIVOZONE_INTERNAL.v30.get()||{};
+      if(window.ZIVOZONE_INTERNAL.v26?.profile)return window.ZIVOZONE_INTERNAL.v26.profile()||{};
     }catch(e){}
     return {};
   }
@@ -2589,9 +2492,9 @@ window.ZIVOZONE_V18 = {
       </div>`;
       document.body.appendChild(o);
       o.querySelector('.v37-close').onclick=()=>o.classList.remove('open');
-      o.querySelector('#v37-challenge').onclick=()=>window.ZIVOZONE_V32?.open?.();
-      o.querySelector('#v37-mission').onclick=()=>window.ZIVOZONE_V34?.open?.();
-      o.querySelector('#v37-compete').onclick=()=>window.ZIVOZONE_V33?.open?.();
+      o.querySelector('#v37-challenge').onclick=()=>window.ZIVOZONE_INTERNAL.v32?.open?.();
+      o.querySelector('#v37-mission').onclick=()=>window.ZIVOZONE_INTERNAL.v34?.open?.();
+      o.querySelector('#v37-compete').onclick=()=>window.ZIVOZONE_INTERNAL.v33?.open?.();
     }
     render();o.classList.add('open');
   }
@@ -2614,7 +2517,7 @@ window.ZIVOZONE_V18 = {
     const b=document.createElement('button');b.id='v37-open';b.textContent='👤 ملفي';b.onclick=open;document.body.appendChild(b);
     ['zivozone-result','zivozone-reward','zivozone-cloud-synced'].forEach(ev=>window.addEventListener(ev,render));
   }
-  window.ZIVOZONE_V37={open,render};
+  window.ZIVOZONE_INTERNAL.v37={open,render};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
 
@@ -2653,7 +2556,7 @@ window.ZIVOZONE_V18 = {
   function render(){
     const o=document.getElementById('v38-shell');if(!o)return;
     o.querySelector('#v38-online').textContent=navigator.onLine?'ONLINE':'OFFLINE';
-    o.querySelector('#v38-pending').textContent=window.ZIVOZONE_V36?`${window.ZIVOZONE_V36.pending()} PENDING`:'SYNC';
+    o.querySelector('#v38-pending').textContent=window.ZIVOZONE_INTERNAL.v36?`${window.ZIVOZONE_INTERNAL.v36.pending()} PENDING`:'SYNC';
     o.querySelector('.v38-status i').classList.toggle('on',navigator.onLine);
   }
   function mount(){
@@ -2661,7 +2564,7 @@ window.ZIVOZONE_V18 = {
     const b=document.createElement('button');b.id='v38-open';b.textContent='✦ مركز ZIVOZONE';b.onclick=open;document.body.appendChild(b);
     ['zivozone-result','zivozone-reward','zivozone-cloud-synced','online','offline'].forEach(e=>window.addEventListener(e,render));
   }
-  window.ZIVOZONE_V38={open,render};
+  window.ZIVOZONE_INTERNAL.v38={open,render};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
 
@@ -2735,7 +2638,7 @@ window.ZIVOZONE_V18 = {
     if(document.getElementById('v39-open'))return;
     const b=document.createElement('button');b.id='v39-open';b.textContent='🎮 مركز التحديات';b.onclick=open;document.body.appendChild(b);
   }
-  window.ZIVOZONE_V39={open,render,getChallenges,start};
+  window.ZIVOZONE_INTERNAL.v39={open,render,getChallenges,start};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
 
@@ -2754,11 +2657,11 @@ window.ZIVOZONE_V18 = {
       total:Number(d.total)||0,
       xp:Number(d.xp)||Math.max(0,(Number(d.correct)||0)*10)
     };
-    if(window.ZIVOZONE_V35?.add && !d.__v40processed){
-      window.ZIVOZONE_V35.add(payload.xp,payload.correct,payload.score);
+    if(window.ZIVOZONE_INTERNAL.v35?.add && !d.__v40processed){
+      window.ZIVOZONE_INTERNAL.v35.add(payload.xp,payload.correct,payload.score);
     }
-    if(window.ZIVOZONE_V36?.syncResult && !d.__v40processed){
-      window.ZIVOZONE_V36.syncResult(payload);
+    if(window.ZIVOZONE_INTERNAL.v36?.syncResult && !d.__v40processed){
+      window.ZIVOZONE_INTERNAL.v36.syncResult(payload);
     }
   });
 })();
@@ -2836,7 +2739,7 @@ window.ZIVOZONE_V18 = {
   function install(){
     dedupe();
     prepareBank();
-    window.ZIVOZONE_V41={
+    window.ZIVOZONE_INTERNAL.v41={
       dedupe,
       rotate,
       resetHistory:function(){try{localStorage.removeItem(HIST)}catch(e){}},
@@ -2939,7 +2842,7 @@ window.ZIVOZONE_V18 = {
   }
 
   function expose(){
-    window.ZIVOZONE_V42={sync,record,clear,getUser};
+    window.ZIVOZONE_INTERNAL.v42={sync,record,clear,getUser};
   }
 
   /* Prevent accidental duplicate launchers from previous additive releases. */
@@ -3061,7 +2964,7 @@ window.ZIVOZONE_V18 = {
     return h;
   }
 
-  window.ZIVOZONE_V43={health,saveChallengeResult,saveQuestionHistory,flushQueue,init,isCloudReady};
+  window.ZIVOZONE_INTERNAL.v43={health,saveChallengeResult,saveQuestionHistory,flushQueue,init,isCloudReady};
   window.addEventListener('online',()=>flushQueue());
 
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,700));
@@ -3138,7 +3041,7 @@ window.ZIVOZONE_V18 = {
     document.documentElement.classList.add('zivo-v44-ready');
   }
 
-  window.ZIVOZONE_V44={
+  window.ZIVOZONE_INTERNAL.v44={
     audit:{
       duplicateLauncherIds:NAV_IDS.filter(id=>document.querySelectorAll('#'+CSS.escape(id)).length>1),
       buttonCount:document.querySelectorAll('button').length,
@@ -3242,7 +3145,7 @@ window.ZIVOZONE_V18 = {
     return {flushed:done,remaining:keep.length};
   }
 
-  window.ZIVOZONE_V45={submit,flush,configureEndpoint:function(url){
+  window.ZIVOZONE_INTERNAL.v45={submit,flush,configureEndpoint:function(url){
     if(url)localStorage.setItem(ENDPOINT_KEY,String(url));
     else localStorage.removeItem(ENDPOINT_KEY);
   }};
@@ -3341,7 +3244,7 @@ window.ZIVOZONE_V18 = {
     return {flushed:done,remaining:keep.length};
   }
 
-  window.ZIVOZONE_V46={submit,flush,pending:()=>readQ().length};
+  window.ZIVOZONE_INTERNAL.v46={submit,flush,pending:()=>readQ().length};
   window.addEventListener('online',()=>flush());
 })();
 
@@ -3365,7 +3268,7 @@ window.ZIVOZONE_V18 = {
     const x=read(), accuracy=x.answered?Math.round(x.correct/x.answered*100):0;
     return {sessions:x.sessions,answered:x.answered,correct:x.correct,timeouts:x.timeouts,accuracy};
   }
-  window.ZIVOZONE_V23={record,get,snapshot};
+  window.ZIVOZONE_INTERNAL.v23={record,get,snapshot};
 })();
 
 /* ============================================================
@@ -3401,7 +3304,7 @@ window.ZIVOZONE_V18 = {
   function cleanRail(selector, sportsOnly){document.querySelectorAll(`${selector} .zivo-rail-sequence`).forEach(seq=>{seq.querySelectorAll('.zivo-news-item').forEach(item=>{const isS=SPORTS.test(text(item));if(sportsOnly?!isS:isS)item.remove()})});}
   function clean(){cleanRail('.zivo-sports-rail',true);cleanRail('.zivo-general-rail',false);}
   function speed(){document.querySelectorAll('.zivo-rail-track').forEach(track=>{const seq=track.querySelector('.zivo-rail-sequence');if(!seq)return;const w=Math.max(320,seq.scrollWidth),mobile=matchMedia('(max-width:700px)').matches;const isGeneral=track.id==='zivoGeneralTrack';const pps=isGeneral?(mobile?14:22):(mobile?62:96);const dur=Math.max(isGeneral?38:11,Math.min(isGeneral?150:75,w/pps));track.style.setProperty('--zivo-flow-duration',dur+'s')});}
-  window.ZIVOZONE_V85_NEWS={clean,speed};
+  window.ZIVOZONE_INTERNAL.v85_news={clean,speed};
   addEventListener('zivozone:news-updated',()=>setTimeout(()=>{clean();speed()},50));
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{clean();speed()},700));else setTimeout(()=>{clean();speed()},700);
   // V105.4: no periodic DOM-wide scan. Recalculate only after real news/resize events.
@@ -3415,7 +3318,7 @@ window.ZIVOZONE_V18 = {
 */
 (function(){'use strict';
   const OWNER_UID='';
-  const OWNER_EMAIL='raefalbtish@gmail.com';
+  const OWNER_EMAIL=window.ZIVOZONE_CONFIG.ADMIN_EMAIL;
   const OWNER_NAME='رائف البطوش';
 
   const auth=()=>window.firebase?.auth?.();
@@ -3523,107 +3426,6 @@ window.ZIVOZONE_V18 = {
   window.addEventListener('load',()=>setTimeout(()=>{heartbeat();syncAdminHeader();if(location.hash==='#admin')open()},900));
   window.addEventListener('zivozone-auth',()=>setTimeout(()=>{heartbeat();syncAdminHeader();if(location.hash==='#admin')open()},500));
 })();
-
-
-/* ============================================================
-   ZIVOZONE V1081 — SINGLE NAVIGATION MENU
-   UI-only organization layer for the existing launchers.
-   It does not replace, duplicate, or alter any underlying feature.
-   Every menu item delegates to the original launcher/button.
-   ============================================================ */
-(function(){
-  'use strict';
-  const ITEMS = [
-    {id:'v39-open', icon:'🎮', label:'مركز التحديات', group:'اللعب', desc:'كل التحديات الموجودة في الموقع'},
-    {id:'v32-open', icon:'🔥', label:'تحدي اليوم', group:'اللعب', desc:'التحدي اليومي الحالي'},
-    {id:'v33-open', icon:'🏆', label:'المنافسة', group:'اللعب', desc:'السلسلة والمكافآت اليومية'},
-    {id:'v34-open', icon:'🎯', label:'مهامي', group:'اللاعب', desc:'المهام والتقدم اليومي'},
-    {id:'v31-open', icon:'🏅', label:'إنجازاتي', group:'اللاعب', desc:'إنجازاتك وسجل التقدم'},
-    {id:'v35-open', icon:'📈', label:'مستواي', group:'اللاعب', desc:'المستوى والتقدم'},
-    {id:'v30-open', icon:'👤', label:'ملفي', group:'اللاعب', desc:'إحصائيات ملف اللاعب'},
-    {id:'v37-open', icon:'🪪', label:'رحلة اللاعب', group:'اللاعب', desc:'لوحة اللاعب الموحدة'},
-    {id:'v29-open', icon:'🥇', label:'المتصدرون', group:'المنافسة', desc:'الترتيب العالمي'},
-    {id:'v38-open', icon:'✦', label:'مركز ZIVOZONE', group:'المنافسة', desc:'المركز الموحد للأنظمة'},
-    {id:'v28-open', icon:'☁️', label:'مركز اللاعب', group:'النظام', desc:'حالة اللاعب والمزامنة'}
-  ];
-
-  function source(id){ return document.getElementById(id); }
-  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-  function mount(){
-    if(document.getElementById('zivo-single-menu')) return;
-    const wrap=document.createElement('div');
-    wrap.id='zivo-single-menu';
-    wrap.dir='rtl';
-    wrap.innerHTML=`
-      <button type="button" id="zivo-single-menu-toggle" aria-expanded="false" aria-controls="zivo-single-menu-panel">
-        <span class="zivo-menu-symbol">☰</span>
-        <span class="zivo-menu-label">ZIVOZONE</span>
-        <span class="zivo-menu-chevron">⌃</span>
-      </button>
-      <div id="zivo-single-menu-panel" class="zivo-single-menu-panel" hidden>
-        <div class="zivo-menu-head">
-          <div><small>ZIVOZONE</small><strong>مركز الخدمات</strong></div>
-          <button type="button" class="zivo-menu-close" aria-label="إغلاق">×</button>
-        </div>
-        <div class="zivo-menu-list"></div>
-      </div>`;
-    document.body.appendChild(wrap);
-
-    const panel=wrap.querySelector('#zivo-single-menu-panel');
-    const list=wrap.querySelector('.zivo-menu-list');
-    const toggle=wrap.querySelector('#zivo-single-menu-toggle');
-    const closeBtn=wrap.querySelector('.zivo-menu-close');
-
-    function render(){
-      list.innerHTML='';
-      let current='';
-      ITEMS.forEach(item=>{
-        const src=source(item.id);
-        if(!src) return;
-        if(item.group!==current){
-          current=item.group;
-          const h=document.createElement('div');
-          h.className='zivo-menu-group'; h.textContent=current; list.appendChild(h);
-        }
-        const b=document.createElement('button');
-        b.type='button'; b.className='zivo-menu-item';
-        b.innerHTML=`<span class="zivo-menu-icon">${esc(item.icon)}</span><span class="zivo-menu-copy"><strong>${esc(item.label)}</strong><small>${esc(item.desc)}</small></span><span class="zivo-menu-arrow">‹</span>`;
-        b.addEventListener('click',()=>{
-          close();
-          const target=source(item.id);
-          if(target) target.click();
-        });
-        list.appendChild(b);
-      });
-    }
-    function open(){render();panel.hidden=false;toggle.setAttribute('aria-expanded','true');wrap.classList.add('is-open');}
-    function close(){panel.hidden=true;toggle.setAttribute('aria-expanded','false');wrap.classList.remove('is-open');}
-    toggle.addEventListener('click',()=>panel.hidden?open():close());
-    closeBtn.addEventListener('click',close);
-    document.addEventListener('click',e=>{if(!wrap.contains(e.target)) close();});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
-
-    // Keep the existing launchers alive as the source of truth, but remove their
-    // floating presentation so the page has one clean navigation entry point.
-    const hideExisting=()=>ITEMS.forEach(item=>{
-      const el=source(item.id);
-      if(el){el.setAttribute('data-zivo-managed','true');el.style.setProperty('display','none','important');}
-    });
-    hideExisting();
-    const observer=new MutationObserver(hideExisting);
-    observer.observe(document.body,{childList:true,subtree:true});
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount,{once:true});
-  else mount();
-})();
-
-})();
-
-/* ===== SOURCE: zivo-global-core.js ===== */
-(function(){
-'use strict';
 /* ZIVOZONE V101 — UNIFIED MOBILE-FIRST ECONOMY CORE
    Single wallet + server-authoritative ZIVO + 24h daily mining + unified rewards.
 */
@@ -3681,7 +3483,7 @@ window.ZIVOZONE_V18 = {
   }
 
   async function refresh(){
-    const u=user(),d=db(); state.uid=u?.uid||null; if(u?.email?.toLowerCase()==='raefalbtish@gmail.com'){state.zivo=0;state.ledger=[];state.nextMiningAt=0;syncUI();return state;}
+    const u=user(),d=db(); state.uid=u?.uid||null; if(u?.email?.toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL){state.zivo=0;state.ledger=[];state.nextMiningAt=0;syncUI();return state;}
     if(!u||!d){state.zivo=0;state.ledger=[];state.nextMiningAt=0;syncUI();return state;}
     try{
       const w=await d.collection('users').doc(u.uid).collection('zivozone').doc('wallet').get();
@@ -3703,7 +3505,7 @@ window.ZIVOZONE_V18 = {
   }
   function updateMiningUI(){
     const b=document.getElementById('z101-mine'),c=document.getElementById('z101-countdown');if(!b||!c)return;
-    if(!user()){b.textContent='تسجيل الدخول للتعدين';b.disabled=false;c.textContent='الحساب مطلوب';return;} if(user().email?.toLowerCase()==='raefalbtish@gmail.com'){b.textContent='حساب الإدارة';b.disabled=true;c.textContent='ADMIN';return;}
+    if(!user()){b.textContent='تسجيل الدخول للتعدين';b.disabled=false;c.textContent='الحساب مطلوب';return;} if(user().email?.toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL){b.textContent='حساب الإدارة';b.disabled=true;c.textContent='ADMIN';return;}
     const left=Math.max(0,(state.nextMiningAt||0)-Date.now());
     if(left<=0){b.textContent='بدء التعدين +0.50';b.disabled=false;c.textContent='متاح الآن';c.classList.add('z101-ready')}
     else{b.textContent='التعدين مفعّل';b.disabled=true;c.classList.remove('z101-ready');c.textContent=formatMs(left)}
@@ -3713,7 +3515,7 @@ window.ZIVOZONE_V18 = {
   async function mine(){
     const u=user(),d=db();
     if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return}
-    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
+    if(u.email?.toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
     const b=document.getElementById('z101-mine');if(b)b.disabled=true;
     try{
       const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
@@ -3743,7 +3545,7 @@ window.ZIVOZONE_V18 = {
     const correct=Math.max(0,Math.min(total,Number(d.correct??d.score??0)||0));
     const timed=Number(d.timedOut)||0;
     if(total!==10||correct!==10||timed!==0)return false;
-    if(u.email?.toLowerCase()==='raefalbtish@gmail.com')return false;
+    if(u.email?.toLowerCase()===window.ZIVOZONE_CONFIG.ADMIN_EMAIL)return false;
     const challenge=String(d.challenge||d.gameId||d.challengeId||'challenge').slice(0,80);
     const attemptId=String(d.attemptId||d.eventId||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100);
     if(!attemptId)return false;
@@ -3787,7 +3589,7 @@ window.ZIVOZONE_V18 = {
   }
 
   function bind(){
-    mountHub();
+    // Economy remains available through Player Hub; do not inject a permanent home-page economy bar.
     document.querySelectorAll('#mobile-more,[data-mobile-more]').forEach(x=>x.remove());
     const sheet=document.getElementById('mobile-tools');if(sheet)sheet.remove();
     const legacy=['zivo-v85-open','zivo-v85-economy','zivo-v81-open','zivo-v81-economy','zivo-v80-open','zivo-v87-quickdock','z80-admin-open'];legacy.forEach(id=>document.getElementById(id)?.remove());
@@ -3810,673 +3612,50 @@ window.ZIVOZONE_V18 = {
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(bind,50));else setTimeout(bind,50);
 })();
 
-})();
 
-/* ===== SOURCE: zivo-v103-pro.js ===== */
-(function(){
-'use strict';
-/* ZIVOZONE V103 — functional luxury UX layer
-   - Admin command center bound to owner email only
-   - Responsive challenge hub
-   - Registration consent UX
-   - Adaptive replay messaging
-   - Compact wallet/mining presentation
-*/
+/* ============================================================
+   ZIVOZONE TRUE CORE — V1085
+   One public application surface. Versioned implementation
+   modules are private implementation details under INTERNAL.
+============================================================ */
 (function(){
   'use strict';
-  const ADMIN='raefalbtish@gmail.com';
-  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const auth=()=>window.firebase?.auth?.();
-  const db=()=>window.firebase?.firestore?.();
-  const owner=()=>String(auth()?.currentUser?.email||'').trim().toLowerCase()===ADMIN;
-  const fmt=v=>v?new Date(v).toLocaleString('ar-JO',{dateStyle:'medium',timeStyle:'short'}):'—';
-  const ts=v=>v?.toMillis?.()||(typeof v==='string'?Date.parse(v)||0:Number(v)||0);
-  const toast=m=>{try{window.ZIVOZONE_ECONOMY?.open;const b=document.createElement('div');b.className='z103-toast';b.textContent=m;document.body.appendChild(b);setTimeout(()=>b.remove(),2800)}catch(e){}};
-
-  function styleEconomy(){
-    const e=document.getElementById('zivo-v101-economy'); if(e)e.classList.add('z103-economy');
-  }
-
-  async function collectAdmin(){
-    if(!owner())throw new Error('Admin access required');
-    const d=db();if(!d)throw new Error('Firestore غير متاح');
-    const [us,ps]=await Promise.all([d.collection('users').limit(500).get(),d.collection('players').limit(500).get()]);
-    const users=us.docs.map(x=>({id:x.id,...x.data()})).filter(x=>String(x.email||'').toLowerCase()!==ADMIN);
-    const players=ps.docs.map(x=>({id:x.id,...x.data()}));
-    const pm=new Map(players.map(p=>[p.id,p]));
-    const rows=users.map(u=>{const p=pm.get(u.id)||{};return {uid:u.id,name:u.name||p.name||'ZIVO Player',email:u.email||p.email||'',level:Number(p.level??u.level??1)||1,xp:Number(p.xp??u.xp??0)||0,zivo:Number(u.zivo??p.zivo??u.coins??p.coins??0)||0,games:Number(p.gamesPlayed??u.gamesPlayed??0)||0,active:Number(u.engagement?.activeMinutes??p.activeMinutes??0)||0,last:ts(u.lastSeenAt||p.lastSeenAt||u.updatedAt||p.updatedAt),path:u.lastSeenPath||p.lastSeenPath||'#home',created:ts(u.createdAt||p.createdAt),role:u.role||p.role||'player'};});
-    rows.sort((a,b)=>b.last-a.last);
-    let activity=[];
-    await Promise.all(rows.slice(0,35).map(async r=>{try{const q=await d.collection('users').doc(r.uid).collection('activity').limit(12).get();q.docs.forEach(x=>activity.push({uid:r.uid,name:r.name,...x.data(),time:ts(x.data()?.createdAt)}));}catch(e){}}));
-    activity.sort((a,b)=>b.time-a.time);activity=activity.slice(0,60);
-    const now=Date.now(),dayStart=new Date();dayStart.setHours(0,0,0,0);
-    return {rows,activity,stats:{users:rows.length,players:players.length,active:rows.filter(r=>r.last&&now-r.last<=10*60*1000).length,today:rows.filter(r=>r.last>=dayStart.getTime()).length,games:players.reduce((n,p)=>n+(Number(p.gamesPlayed)||0),0),zivo:rows.reduce((n,r)=>n+r.zivo,0),online:navigator.onLine}};
-  }
-
-  function dashboard(data){
-    let o=document.getElementById('zivo-v103-admin');
-    if(!o){o=document.createElement('div');o.id='zivo-v103-admin';o.className='z103-admin-overlay';document.body.appendChild(o);}
-    const s=data.stats,r=data.rows,a=data.activity;
-    const k=(n,v,h)=>`<div class="z103-kpi"><b>${esc(v)}</b><span>${esc(n)}</span><em>${esc(h||'')}</em></div>`;
-    const userRows=r.length?r.map(x=>`<div class="z103-user-row"><b>${esc(x.name)}</b><span>${esc(x.email)}</span><span>Lv ${x.level}</span><span>${x.xp} XP</span><span>🪙 ${x.zivo.toFixed(2)}</span><span>${x.games}</span><span class="${x.last&&Date.now()-x.last<10*60*1000?'online':''}">${x.last?fmt(x.last):'لا يوجد'}</span></div>`).join(''):`<div class="z103-empty">لا توجد حسابات لاعبين بعد.</div>`;
-    const acts=a.length?a.map(x=>`<div class="z103-activity-row"><b>${esc(x.name||'مستخدم')}</b><span>${esc(x.event||x.type||x.meta?.path||'نشاط داخل المنصة')}</span><small>${esc(x.meta?.path||x.path||'')} · ${fmt(x.time)}</small></div>`).join(''):`<div class="z103-empty">لا يوجد نشاط مسجل حتى الآن.</div>`;
-    o.innerHTML=`<div class="z103-admin-card" dir="rtl"><div class="z103-admin-head"><div class="z103-admin-logo">Z</div><div><small>PRIVATE OWNER COMMAND CENTER</small><h2>غرفة إدارة ZIVOZONE</h2><p>المدير: رائف البطوش · ${ADMIN}</p></div><div class="z103-admin-live"><i></i> LIVE</div><button class="z103-admin-close" aria-label="إغلاق">×</button></div><div class="z103-admin-body"><div class="z103-kpis">${k('المستخدمون',s.users,'Player accounts')}${k('اللاعبون',s.players,'Profiles')}${k('نشط الآن',s.active,'آخر 10 دقائق')}${k('دخول اليوم',s.today,'آخر ظهور')}${k('إجمالي الألعاب',s.games,'كل الحسابات')}${k('إجمالي ZIVO',s.zivo.toFixed(2),'رصيد افتراضي')}</div><div class="z103-admin-grid"><section class="z103-panel"><div class="z103-panel-head"><div><h3>👥 المستخدمون والنشاط</h3><small>آخر ظهور · المستوى · XP · ZIVO · الألعاب</small></div><button class="z103-refresh">↻ تحديث</button></div><div class="z103-users"><div class="z103-user-row head"><b>الاسم</b><span>البريد</span><span>المستوى</span><span>XP</span><span>ZIVO</span><span>ألعاب</span><span>آخر ظهور</span></div>${userRows}</div></section><aside class="z103-panel"><div class="z103-panel-head"><div><h3>⚡ آخر النشاط</h3><small>سجل تشغيلي حديث</small></div></div><div class="z103-activity">${acts}</div></aside></div><section class="z103-panel" style="margin-top:12px"><div class="z103-panel-head"><div><h3>🛰️ حالة المنصة</h3><small>مراقبة سريعة</small></div></div><div class="z103-system"><div>Firebase<b>CONNECTED</b></div><div>Hosting<b>${s.online?'ONLINE':'OFFLINE'}</b></div><div>Domain<b>${esc(location.hostname)}</b></div><div>Admin<b>OWNER ONLY</b></div><div>ZIVO<b>VIRTUAL ONLY</b></div><div>Mining<b>24H COOLDOWN</b></div></div></section></div></div>`;
-    o.querySelector('.z103-admin-close').onclick=()=>o.remove();o.querySelector('.z103-refresh').onclick=async()=>{const b=o.querySelector('.z103-refresh');b.disabled=true;b.textContent='جارٍ…';try{dashboard(await collectAdmin())}catch(e){b.textContent='خطأ';} };
-  }
-
-  async function openAdmin(){
-    if(!owner()){return window.ZIVOZONE_MONITOR?.open?.()}
-    try{dashboard(await collectAdmin())}catch(e){console.error('V103 admin',e);alert('تعذر تحميل لوحة الإدارة. تحقق من قواعد Firestore.');}
-  }
-
-  function bindAdmin(){
-    // V1056: ADMIN has one entry point only — the top header #login-btn.
-    // V104 owns the click handler so multiple admin engines cannot compete.
-    document.getElementById('z81-admin-open')?.remove();
-    document.getElementById('zivo-admin-identity')?.remove();
-  }
-
-  function consentUX(){
-    const form=document.getElementById('auth-form');if(!form||form.dataset.z103Terms)return;
-    const cb=form.querySelector('#auth-terms');
-    if(!cb)return;
-    form.dataset.z103Terms='1';
-    const old=cb.closest('label');
-    if(old){old.classList.add('z103-consent');const span=old.querySelector('span');if(span)span.innerHTML='أقر بأنني قرأت <button type="button" class="z103-term-link">شروط الاستخدام</button> وسياسة استخدام ZIVOZONE، وأوافق عليها قبل إنشاء الحساب. أفهم أن <strong>ZIVO</strong> رصيد افتراضي داخل المنصة فقط وليس نقودًا أو استثمارًا.';old.querySelector('.z103-term-link')?.addEventListener('click',e=>{e.preventDefault();window.ZIVOZONE_OPEN_TERMS?.()})}
-    if(!form.querySelector('.z103-terms-callout')){const x=document.createElement('div');x.className='z103-terms-callout';x.innerHTML='<strong>قبل إنشاء حسابك:</strong> الموافقة مطلوبة. شروط ZIVOZONE توضّح الحساب، الخصوصية، الاستخدام المقبول، المكافآت، التعدين، وطبيعة ZIVO الافتراضية.';form.insertBefore(x,old||form.firstChild)}
-  }
-
-  function adaptiveUX(){
-    document.querySelectorAll('.challenge-card').forEach(card=>{
-      const b=card.querySelector('[data-challenge]');if(!b)return;const id=b.dataset.challenge;if(!id||id==='horror')return;
-      let x={attempts:0,perfect:0,best:0};try{x=JSON.parse(localStorage.getItem(`zivo_adaptive_${id}`)||'{}')}catch(e){}
-      if(Number(x.attempts)>0){let tag=card.querySelector('.card-tag');if(tag&&!tag.dataset.adapt){tag.dataset.adapt='1';tag.textContent=`${Number(x.perfect)>0?'🔥 إعادة متقدمة':'↗️ إعادة محسّنة'} · ${Math.min(10,Math.max(1,Number(x.attempts)+1))}/10`}}
-    });
-  }
-
-  function observe(){
-    // V105.3 performance hardening: do not observe the whole document.
-    // Challenge/news rendering can create many DOM nodes and a global observer
-    // causes repeated scans on the main thread. Rebind only on meaningful app events.
-    styleEconomy();bindAdmin();consentUX();adaptiveUX();
-    window.addEventListener('zivozone-auth',()=>setTimeout(()=>{styleEconomy();bindAdmin();consentUX();adaptiveUX()},250),{passive:true});
-    window.addEventListener('hashchange',()=>setTimeout(()=>{bindAdmin();adaptiveUX()},150),{passive:true});
-  }
-  window.ZIVOZONE_V103={openAdmin,collectAdmin};
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',observe);else observe();
-})();
-
-})();
-
-/* ===== SOURCE: zivo-v104-pro.js ===== */
-(function(){
-'use strict';
-
-/* ZIVOZONE V104 — Functional luxury command center + challenge polish */
-(()=>{'use strict';
-const ADMIN='raefalbtish@gmail.com';
-const AICON={daily:'⚡',iq:'🧠',logic:'♟️',math:'∑',science:'⚗️',football:'⚽',memory:'◈',strategy:'♜',reaction:'◉',forensic:'🔎',horror:'◉',identity:'✦'};
-const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const auth=()=>window.firebase?.auth?.(),db=()=>window.firebase?.firestore?.();
-const owner=()=>String(auth()?.currentUser?.email||'').toLowerCase()===ADMIN;
-const ms=v=>v?.toMillis?.()||Date.parse(v)||Number(v)||0;
-const fmt=v=>v?new Date(v).toLocaleString('ar-JO',{dateStyle:'medium',timeStyle:'short'}):'—';
-
-function beautifyChallenges(){
- $$('#challenge-list .challenge-card').forEach(card=>{
-   if(card.classList.contains('z104-challenge-card'))return;
-   card.classList.add('z104-challenge-card');
-   const btn=$('[data-challenge]',card),id=btn?.dataset.challenge||'challenge';
-   const visual=$('.challenge-visual',card);
-   if(visual){
-     visual.className='z104-challenge-icon';
-     visual.innerHTML=`<span>${AICON[id]||'✦'}</span>`;
-     visual.removeAttribute('src');
-   }
-   const tag=$('.card-tag',card);
-   if(tag){tag.classList.add('z104-challenge-badge');tag.textContent=`${id==='horror'?'∞':'10'} أسئلة · مستوى ذكي`;}
- });
-}
-
-async function getUsers(){
- const d=db();if(!d||!owner())throw Error('غير مصرح');
- const [us,ps]=await Promise.all([d.collection('users').limit(250).get(),d.collection('players').limit(250).get()]);
- const users=us.docs.map(x=>({uid:x.id,...x.data()})).filter(u=>String(u.email||'').toLowerCase()!==ADMIN);
- const players=ps.docs.map(x=>({uid:x.id,...x.data()})).filter(p=>String(p.email||'').toLowerCase()!==ADMIN);
- const pm=new Map(players.map(p=>[p.uid,p]));
- const rows=users.map(u=>{const p=pm.get(u.uid)||{};return {uid:u.uid,name:u.name||p.name||'ZIVO Player',email:u.email||p.email||'',level:Number(p.level??u.level??1),xp:Number(p.xp??u.xp??0),zivo:Number(u.zivo??p.zivo??u.coins??p.coins??0),games:Number(p.gamesPlayed??u.gamesPlayed??0),last:ms(u.lastSeenAt||p.lastSeenAt||u.updatedAt||p.updatedAt),path:u.lastSeenPath||p.lastSeenPath||'#home',created:ms(u.createdAt||p.createdAt),terms:u.termsVersion||'—'}});
- let activities=[], miningTotal=0, miningCount=0, challengeCount=0;
- await Promise.all(rows.slice(0,40).map(async r=>{
-   try{
-    const [ac,wl,mi,lg,res]=await Promise.all([
-      d.collection('users').doc(r.uid).collection('activity').limit(8).get(),
-      d.collection('users').doc(r.uid).collection('zivozone').doc('wallet').get(),
-      d.collection('users').doc(r.uid).collection('zivozone').doc('mining').get(),
-      d.collection('users').doc(r.uid).collection('zivozone').doc('wallet').collection('ledger').limit(25).get(),
-      d.collection('players').doc(r.uid).collection('results').limit(30).get()
-    ]);
-    ac.docs.forEach(x=>activities.push({uid:r.uid,name:r.name,...x.data(),time:ms(x.data()?.createdAt)}));
-    lg.docs.forEach(x=>{if(x.data()?.type==='daily_mining'){miningTotal+=Number(x.data()?.amount)||0;miningCount++;}});
-    challengeCount+=res.size;
-    if(wl.exists)r.zivo=Number(wl.data()?.zivo??r.zivo)||0;
-    r.nextMiningAt=ms(mi.data()?.nextMiningAt);
-   }catch(e){}
- }));
- activities.sort((a,b)=>b.time-a.time);
- const now=Date.now(),today=new Date();today.setHours(0,0,0,0);
- const active=rows.filter(r=>r.last&&now-r.last<=10*60*1000).length;
- const todayUsers=rows.filter(r=>r.last>=today.getTime()).length;
- return {rows,activities:activities.slice(0,80),stats:{users:rows.length,players:players.length,active,today:todayUsers,games:rows.reduce((n,r)=>n+r.games,0),zivo:rows.reduce((n,r)=>n+r.zivo,0),miningTotal,miningCount,challengeCount,online:navigator.onLine}};
-}
-
-function renderAdmin(data){
- let o=$('#z104-admin-overlay');
- if(!o){o=document.createElement('div');o.id='z104-admin-overlay';o.className='z104-admin-overlay';document.body.appendChild(o)}
- const s=data.stats,r=data.rows,a=data.activities;
- const k=(v,n,h)=>`<div class="z104-kpi"><b>${esc(v)}</b><span>${esc(n)}</span><em>${esc(h)}</em></div>`;
- const users=r.length?r.map(x=>`<div class="z104-user"><b>${esc(x.name)}</b><span>${esc(x.email)}</span><span>Lv ${x.level}</span><span>${x.xp} XP</span><span>🪙 ${x.zivo.toFixed(2)}</span><span>${x.games}</span><span class="${x.last&&Date.now()-x.last<600000?'z104-online':''}">${x.last?fmt(x.last):'—'}</span></div>`).join(''):`<div class="z104-act">لا توجد حسابات لاعبين بعد.</div>`;
- const acts=a.length?a.map(x=>`<div class="z104-act"><b>${esc(x.name||'مستخدم')}</b><span>${esc(x.event||x.type||'نشاط داخل المنصة')}</span><small>${esc(x.meta?.path||x.path||'')} · ${fmt(x.time)}</small></div>`).join(''):`<div class="z104-act">لا يوجد نشاط مسجل.</div>`;
- const max=Math.max(1,s.users,s.games,s.miningCount,s.challengeCount);
- o.innerHTML=`<div class="z104-admin-shell" dir="rtl">
-  <header class="z104-head"><div class="z104-mark">Z</div><div><small>PRIVATE OWNER COMMAND CENTER</small><h2>غرفة إدارة ZIVOZONE</h2><p>المالك والمدير: رائف البطوش · ${ADMIN}</p></div><div class="z104-live"><i></i> LIVE MONITORING</div><button class="z104-close" aria-label="إغلاق">×</button></header>
-  <main class="z104-body">
-   <section class="z104-kpis">${k(s.users,'المستخدمون','حسابات اللاعبين فقط')}${k(s.active,'نشط الآن','آخر 10 دقائق')}${k(s.today,'دخلوا اليوم','آخر ظهور')}${k(s.games,'إجمالي الألعاب','كل الحسابات')}${k(s.zivo.toFixed(2),'إجمالي ZIVO','رصيد افتراضي')}${k(s.challengeCount,'محاولات التحديات','نتائج محفوظة')}</section>
-   <section class="z104-grid">
-    <div class="z104-panel"><div class="z104-panel-head"><div><h3>👥 المستخدمون — مراقبة مباشرة</h3><small>الاسم · البريد · المستوى · XP · ZIVO · الألعاب · آخر ظهور</small></div><button class="z104-refresh">↻ تحديث</button></div><div class="z104-table"><div class="z104-user head"><b>الاسم</b><span>البريد</span><span>Lv</span><span>XP</span><span>ZIVO</span><span>ألعاب</span><span>آخر ظهور</span></div>${users}</div></div>
-    <aside class="z104-panel"><div class="z104-panel-head"><div><h3>⚡ آخر النشاط</h3><small>سجل تشغيلي من Firestore</small></div></div><div class="z104-activity">${acts}</div></aside>
-   </section>
-   <section class="z104-bottom">
-    <div class="z104-panel"><div class="z104-panel-head"><div><h3>📊 مؤشرات المنصة</h3><small>قراءة سريعة للاستخدام والاقتصاد</small></div></div><div class="z104-bars">
-      <div class="z104-bar"><span>المستخدمون</span><div class="z104-track"><div class="z104-fill" style="width:${Math.min(100,s.users/max*100)}%"></div></div><b>${s.users}</b></div>
-      <div class="z104-bar"><span>الألعاب</span><div class="z104-track"><div class="z104-fill" style="width:${Math.min(100,s.games/max*100)}%"></div></div><b>${s.games}</b></div>
-      <div class="z104-bar"><span>التحديات</span><div class="z104-track"><div class="z104-fill" style="width:${Math.min(100,s.challengeCount/max*100)}%"></div></div><b>${s.challengeCount}</b></div>
-      <div class="z104-bar"><span>عمليات التعدين</span><div class="z104-track"><div class="z104-fill" style="width:${Math.min(100,s.miningCount/max*100)}%"></div></div><b>${s.miningCount}</b></div>
-    </div></div>
-    <div class="z104-panel"><div class="z104-panel-head"><div><h3>🛰️ صحة النظام</h3><small>الحالة التشغيلية</small></div></div><div class="z104-status"><div>Firebase<b>CONNECTED</b></div><div>Hosting<b>ONLINE</b></div><div>Admin<b>OWNER ONLY</b></div><div>ZIVO<b>VIRTUAL ONLY</b></div><div>Mining<b>24H COOLDOWN</b></div><div>Mining issued<b>${s.miningTotal.toFixed(2)} ZIVO</b></div></div></div>
-   </section>
-  </main>
- </div>`;
- $('.z104-close',o).onclick=()=>o.remove();
- $('.z104-refresh',o).onclick=async e=>{e.currentTarget.disabled=true;e.currentTarget.textContent='جارٍ…';try{renderAdmin(await getUsers())}catch(err){e.currentTarget.textContent='خطأ'}};
-}
-
-async function openAdmin(){if(!owner())return;try{renderAdmin(await getUsers())}catch(e){console.error(e);alert('تعذر تحميل بيانات الإدارة. تحقق من اتصال Firebase وقواعد Firestore.')}}
-
-let bootBound=false;
-function bind(){
- const btn=$('#login-btn');
- if(owner()&&btn){
-   btn.textContent='👑 ADMIN';btn.classList.add('z104-admin-name');btn.setAttribute('aria-label','غرفة إدارة ZIVOZONE');
- }
- beautifyChallenges();
- if(bootBound)return;
- bootBound=true;
- const firebaseAuth=auth();
- if(firebaseAuth?.onAuthStateChanged){
-   firebaseAuth.onAuthStateChanged(()=>setTimeout(()=>{
-     const b=$('#login-btn');
-     if(owner()&&b){b.textContent='👑 ADMIN';b.classList.add('z104-admin-name');b.setAttribute('aria-label','غرفة إدارة ZIVOZONE');}
-   },100));
- }
-}
-document.addEventListener('click',e=>{
- const b=e.target.closest('#login-btn');
- if(b&&owner()){e.preventDefault();e.stopImmediatePropagation();openAdmin();return;}
-},true);
-// V105.2 stability: do not attach a MutationObserver here. The previous observer
-// repeatedly re-ran bind(), which created new Firebase auth listeners and timers
-// whenever challenge cards/news/UI were rendered. That could saturate the main
-// thread and make Chrome report "Page Unresponsive".
-window.addEventListener('zivozone-auth',()=>setTimeout(bind,300));
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
-window.ZIVOZONE_V104={openAdmin};
-})();
-
-})();
-
-/* ===== SOURCE: inline ===== */
-(function(){
-'use strict';
-document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});
-})();
-
-/* ===== SOURCE: zivo-v1062-royal.js ===== */
-(function(){
-'use strict';
-
-/* ZIVOZONE V1062 — Royal 4D challenge presentation layer
-   Visual-only enhancement. Existing challenge engines and economy APIs remain intact.
-*/
-(function(){
-  'use strict';
-  const AS='assets/challenge-4d/';
-  const norm=s=>String(s||'').toLowerCase().replace(/[\s_-]+/g,'');
-  const visualFor=id=>{
-    const n=norm(id);
-    if(n.includes('horror')||n.includes('dark')) return AS+'horror.svg';
-    if(n.includes('forensic')) return AS+'forensic.svg';
-    if(n.includes('football')) return AS+'football.svg';
-    if(n.includes('science')) return AS+'science.svg';
-    if(n.includes('memory')) return AS+'memory.svg';
-    if(n.includes('strategy')) return AS+'strategy.svg';
-    if(n.includes('math')) return AS+'math.svg';
-    if(n.includes('reaction')||n.includes('speed')) return AS+'reaction.svg';
-    if(n.includes('pattern')) return AS+'pattern.svg';
-    if(n.includes('focus')) return AS+'focus.svg';
-    if(n.includes('probability')) return AS+'probability.svg';
-    if(n.includes('daily')) return AS+'daily.svg';
-    if(n.includes('logic')||n.includes('iq')) return AS+'logic.svg';
-    if(n.includes('whoami')||n.includes('identity')||n.includes('personality')) return AS+'whoami.svg';
-    return AS+'logic.svg';
-  };
-  const accentFor=id=>{
-    const n=norm(id);
-    if(n.includes('horror')||n.includes('dark'))return'#ff243d';
-    if(n.includes('memory'))return'#e95cff';
-    if(n.includes('logic')||n.includes('iq'))return'#a35cff';
-    if(n.includes('football'))return'#08c5ff';
-    if(n.includes('science')||n.includes('forensic'))return'#20dfff';
-    if(n.includes('strategy'))return'#ffb62e';
-    if(n.includes('math'))return'#ffd447';
-    if(n.includes('reaction'))return'#2affae';
-    if(n.includes('daily'))return'#ff3e74';
-    return'#19cfff';
-  };
-
-  function enhanceCards(){
-    const box=document.getElementById('challenge-list');
-    if(!box)return;
-    [...box.querySelectorAll('.challenge-card')].forEach(card=>{
-      if(card.classList.contains('z1062-card'))return;
-      const btn=card.querySelector('[data-challenge]');
-      const id=btn?.dataset?.challenge || card.querySelector('[data-challenge]')?.dataset?.challenge;
-      if(!id)return;
-      if(id==='horror'){card.classList.add('z1062-card');card.remove();return;}
-      const title=card.querySelector('.challenge-copy h3')?.textContent?.trim() || 'تحدي';
-      const desc=card.querySelector('.challenge-copy p')?.textContent?.trim() || '';
-      const tag=card.querySelector('.card-tag')?.textContent?.trim() || '10 أسئلة';
-      card.className='challenge-card z1062-card';
-      card.dataset.challenge=id;
-      card.style.setProperty('--z1062-accent',accentFor(id));
-      card.innerHTML=`
-        <div class="z1062-visual">
-          <img src="${visualFor(id)}" alt="" loading="lazy" draggable="false">
-        </div>
-        <div class="z1062-copy">
-          <div class="z1062-badges">
-            <span class="z1062-badge">▣ ${escapeHtml(tag.replace('· 30s','').trim())}</span>
-            <span class="z1062-badge">✦ مستوى ذكي</span>
-          </div>
-          <h3 class="z1062-title">${escapeHtml(title)}</h3>
-          <p class="z1062-desc">${escapeHtml(desc)}</p>
-        </div>`;
-      // The entire card is the native challenge target.
-      card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click()}});
-      card.setAttribute('role','button');
-      card.setAttribute('tabindex','0');
-    });
-    ensureDarkRoom();
-  }
-  function escapeHtml(s){
-    return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
-
-  function ensureDarkRoom(){
-    if(document.getElementById('zivo-dark-room'))return;
-    const challenge=document.getElementById('challenges');
-    const list=document.getElementById('challenge-list');
-    if(!challenge||!list)return;
-    const section=document.createElement('section');
-    section.id='zivo-dark-room';
-    section.setAttribute('aria-label','الغرفة المظلمة');
-    section.innerHTML=`
-      <div class="section-heading" style="margin:0 0 9px">
-        <div>
-          <span class="eyebrow" style="color:#ff4455">ZIVOZONE • DARK EXPERIENCE</span>
-          <h2 style="color:#fff">الغرفة المظلمة</h2>
-          <p class="muted">تجربة مستقلة. لا تنتمي إلى قائمة التحديات العادية.</p>
-        </div>
-      </div>
-      <article class="z1062-horror-card" data-challenge="horror" role="button" tabindex="0" aria-label="ادخل الغرفة المظلمة">
-        <img src="${AS}horror.svg" alt="" draggable="false">
-        <div class="z1062-horror-content">
-          <div class="z1062-horror-kicker">DARK ROOM • PSYCHOLOGICAL EXPERIENCE</div>
-          <h3 class="z1062-horror-title">الغرفة المظلمة</h3>
-          <p class="z1062-horror-text">أنت البطل داخل القصة. الصوت والضوء والأسئلة تتغير مع تقدمك. لا توجد إجابات صحيحة أو خاطئة داخل هذه التجربة.</p>
-          <span class="z1062-horror-enter">ادخل إذا كنت مستعدًا</span>
-        </div>
-      </article>`;
-    list.insertAdjacentElement('beforebegin',section);
-    const card=section.querySelector('.z1062-horror-card');
-    card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click()}});
-  }
-
-  function moveEconomy(){
-    const economy=document.getElementById('zivo-v101-economy');
-    const actions=document.querySelector('.topbar .top-actions');
-    if(!economy||!actions)return;
-    if(economy.parentElement!==actions) actions.appendChild(economy);
-  }
-
-  function topbarPolish(){
-    const h=document.querySelector('.topbar');if(!h)return;
-    h.classList.add('z1062-topbar');
-    if(!document.getElementById('z1062-menu')){
-      const b=document.createElement('button');
-      b.id='z1062-menu';b.type='button';b.className='z1062-menu';b.setAttribute('aria-label','القائمة');
-      b.innerHTML='☰';
-      b.onclick=()=>{
-        const nav=h.querySelector('.main-nav');
-        if(nav)nav.classList.toggle('z1062-mobile-open');
-      };
-      h.insertBefore(b,h.firstElementChild);
+  const I=window.ZIVOZONE_INTERNAL||{};
+  const v=(n)=>I['v'+n]||{};
+  const Core={
+    version:'V1085',
+    auth:()=>window.ZIVOZONE_AUTH||null,
+    player:{
+      get:()=>v(30).get?.()||v(26).profile?.()||{},
+      stats:()=>v(30).stats?.()||{},
+      open:()=>v(37).open?.()
+    },
+    challenges:{
+      list:()=>v(20).findBanks?.()||[],
+      start:(id)=>v(20).start?.(id),
+      clearHistory:()=>v(20).clearHistory?.()
+    },
+    economy:{
+      get:()=>v(25).get?.()||v(26).profile?.()||{},
+      wallet:()=>v(26).open?.('wallet'),
+      add:(n,r)=>v(25).add?.(n,r),
+      spend:(n,r)=>v(25).spend?.(n,r)
+    },
+    progress:{
+      get:()=>v(35).state?.()||v(30).get?.()||{},
+      add:(...a)=>v(35).add?.(...a)
+    },
+    sync:{
+      flush:()=>v(36).flush?.(),
+      pending:()=>v(36).pending?.()||0
+    },
+    tools:{
+      identity:()=>v(32).open?.(),
+      ai:()=>window.ZIVOZONE_AI?.open?.()
+    },
+    admin:{
+      audit:()=>v(44).audit?.()
     }
-  }
-
-  function apply(){
-    enhanceCards();moveEconomy();topbarPolish();
-  }
-  let queued=false;
-  const schedule=()=>{
-    if(queued)return;queued=true;
-    requestAnimationFrame(()=>{queued=false;apply()});
   };
-  document.addEventListener('DOMContentLoaded',schedule);
-  window.addEventListener('load',()=>setTimeout(schedule,350));
-  // Observe only the dynamic challenge container instead of the entire document.
-  // This preserves cards rendered after boot while avoiding document-wide rescans.
-  let observerStarted=false;
-  function observeChallengeList(){
-    if(observerStarted)return;
-    const list=document.getElementById('challenge-list');
-    if(!list)return;
-    observerStarted=true;
-    const mo=new MutationObserver(schedule);
-    mo.observe(list,{childList:true,subtree:true});
-  }
-  document.addEventListener('DOMContentLoaded',observeChallengeList,{once:true});
-  setTimeout(observeChallengeList,1000);
-})();
-
-})();
-
-/* ===== SOURCE: zivo-v1080-core.js ===== */
-(function(){
-'use strict';
-/* ZIVOZONE V1080 — CORE PLAYER HUB
-   Additive layer: preserves V1073 systems and unifies the player-facing experience.
-   No Billing / Functions / external paid API required.
-*/
-(function(){
-  'use strict';
-  const KEY='zivozone_v1080_achievements';
-  const DAILY='zivozone_v1080_daily';
-
-  const BADGES=[
-    ['first_challenge','🎯','أول تحدي','أكمل أول تحدٍ'],
-    ['perfect','💯','علامة كاملة','حقق 10/10 في تحدٍ'],
-    ['streak7','🔥','أسبوع كامل','وصل إلى 7 أيام متتالية'],
-    ['dark_room','🌑','ناجي الظلام','أكمل تجربة الغرفة المظلمة'],
-    ['identity','🧠','مستكشف الذات','أكمل من أنا؟'],
-    ['miner','⛏️','المعدّن','نفّذ أول عملية تعدين']
-  ];
-
-  function read(k,f){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch(e){return f}}
-  function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-  function player(){
-    const p=window.ZIVOZONE_V21?.get?.()||{};
-    const e=window.ZIVOZONE_ECONOMY?.getWallet?.()||{};
-    return {
-      level:Number(p.level)||1,xp:Number(p.xp)||0,games:Number(p.games)||0,
-      best:Number(p.bestScore)||0,streak:Number(e.streak||p.streak)||0,
-      zivo:Number(e.zivo||e.balance)||0
-    };
-  }
-  function achievements(){return read(KEY,{earned:[],stats:{perfect:0,dark:0,identity:0,mining:0}})}
-  function award(id){
-    const a=achievements();
-    if(!a.earned.includes(id)){a.earned.push(id);write(KEY,a);window.dispatchEvent(new CustomEvent('zivozone-badge',{detail:{id}}));return true}
-    return false;
-  }
-  function observe(e){
-    const d=e?.detail||{};
-    if(d.score===100 || (Number(d.correct)===10 && Number(d.total||10)===10))award('perfect');
-    if(d.challenge || d.gameId) award('first_challenge');
-    const id=String(d.challenge||d.gameId||d.id||'').toLowerCase();
-    if(id.includes('horror')||id.includes('dark')){award('dark_room');}
-    if(id.includes('who')||id.includes('identity')){award('identity');}
-  }
-  ['zivozone-result','zivozone-progress','zivozone:game-complete','zivozone:challenge-result','zivozone:progress-updated'].forEach(n=>window.addEventListener(n,e=>observe(e),true));
-
-  function daily(){
-    const d=new Date().toISOString().slice(0,10);
-    const s=read(DAILY,{date:null,done:false});
-    return {date:d,done:s.date===d&&s.done===true};
-  }
-
-  function render(){
-    const p=player(),a=achievements(),d=daily();
-    const levelBase=Math.max(100,Math.round((p.level||1)*100));
-    const progress=Math.min(100,Math.round((p.xp%levelBase)/levelBase*100));
-    const earned=new Set(a.earned);
-    const badgeHtml=BADGES.map(b=>`<div class="v1080-badge ${earned.has(b[0])?'earned':''}" title="${b[3]}"><span>${b[1]}</span><small>${b[2]}</small></div>`).join('');
-    return `<div class="v1080-head"><div><span class="v1080-kicker">ZIVOZONE CORE</span><h2>رحلة اللاعب</h2><p>كل نشاطك في مكان واحد.</p></div><button class="v1080-close" aria-label="إغلاق">×</button></div>
-      <div class="v1080-stats">
-        <div><small>LEVEL</small><b>${p.level}</b></div><div><small>XP</small><b>${p.xp}</b></div>
-        <div><small>ZIVO</small><b>🪙 ${p.zivo}</b></div><div><small>STREAK</small><b>🔥 ${p.streak}</b></div>
-      </div>
-      <div class="v1080-progress"><span style="width:${progress}%"></span></div>
-      <div class="v1080-grid">
-        <button data-hub="#challenges">🎯<strong>التحديات</strong><small>تحدي اليوم والمركز</small></button>
-        <button data-hub="#identity">🧠<strong>من أنا؟</strong><small>اكتشف نتيجتك</small></button>
-        <button data-hub="#dark">🌑<strong>الغرفة المظلمة</strong><small>تجربة خاصة</small></button>
-        <button data-mine>⛏️<strong>التعدين</strong><small>${d.done?'تم اليوم':'متاح من نظام الاقتصاد'}</small></button>
-        <button data-wallet>💰<strong>المحفظة</strong><small>${p.zivo} ZIVO</small></button>
-        <button data-hub="#profile">👤<strong>ملفي</strong><small>إحصائيات اللاعب</small></button>
-      </div>
-      <section class="v1080-section"><div class="v1080-section-title"><h3>🎖️ إنجازاتك</h3><span>${a.earned.length}/${BADGES.length}</span></div><div class="v1080-badges">${badgeHtml}</div></section>
-      <section class="v1080-section"><div class="v1080-section-title"><h3>🏆 التنافس</h3></div><div class="v1080-competition"><button data-hub="#challenges">⚡ ابدأ تحديًا</button><button data-hub="#profile">🏆 افتح ملفي</button></div></section>`;
-  }
-
-  function open(){
-    let o=document.getElementById('v1080-hub');
-    if(!o){
-      o=document.createElement('div');o.id='v1080-hub';o.className='v1080-overlay';
-      o.innerHTML='<div class="v1080-card" dir="rtl"></div>';
-      document.body.appendChild(o);
-      o.addEventListener('click',e=>{
-        if(e.target===o||e.target.closest('.v1080-close')){o.classList.remove('open');return}
-        const b=e.target.closest('[data-hub]');
-        if(b){o.classList.remove('open');document.querySelector(b.dataset.hub)?.scrollIntoView({behavior:'smooth',block:'start'});return}
-        if(e.target.closest('[data-wallet]')){window.ZIVOZONE_ECONOMY?.open?.();return}
-        if(e.target.closest('[data-mine]')){window.ZIVOZONE_ECONOMY?.mine?.();return}
-      });
-    }
-    o.querySelector('.v1080-card').innerHTML=render();
-    o.classList.add('open');
-  }
-
-  function mountButton(){
-    if(document.getElementById('v1080-launch'))return;
-    const b=document.createElement('button');
-    b.id='v1080-launch';b.className='v1080-launch';
-    b.type='button';b.innerHTML='⚡ <span>ZIVO HUB</span>';
-    b.onclick=open;
-    document.body.appendChild(b);
-  }
-
-  window.ZIVOZONE_CORE={open,player,achievements,award};
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountButton);else mountButton();
-  window.addEventListener('zivozone-progress',()=>{});
-  window.addEventListener('zivozone-badge',()=>{});
-})();
-
-})();
-
-/* ===== SOURCE: zivo-v1081-player.js ===== */
-(function(){
-'use strict';
-/* ZIVOZONE V1081 — PLAYER PROFILE + WALLET SAFE UI
-   Additive to V1080/V1073. No payment processor or Billing added.
-*/
-(function(){
-'use strict';
-const PROFILE_KEY='zivozone_player_profile_v1081';
-const LEDGER_KEY='zivozone_wallet_ledger_v1081';
-
-function getProfile(){
-  let p={};
-  try{p=JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}')}catch(e){}
-  const core=window.ZIVOZONE_CORE?.player?.()||{};
-  return {
-    name:p.name||localStorage.getItem('zivo_name')||'ZIVO Player',
-    photo:p.photo||localStorage.getItem('zivo_photo')||'',
-    level:Number(core.level)||Number(p.level)||1,
-    xp:Number(core.xp)||Number(p.xp)||0,
-    zivo:Number(core.zivo)||Number(p.zivo)||0,
-    streak:Number(core.streak)||Number(p.streak)||0,
-    games:Number(core.games)||0,
-    best:Number(core.best)||0
-  };
-}
-function ledger(){
-  try{return JSON.parse(localStorage.getItem(LEDGER_KEY)||'[]')}catch(e){return []}
-}
-function addLedger(type,amount,label){
-  const a=ledger(); a.unshift({type,amount:Number(amount)||0,label,date:new Date().toISOString()});
-  localStorage.setItem(LEDGER_KEY,JSON.stringify(a.slice(0,100)));
-}
-function setProfile(p){localStorage.setItem(PROFILE_KEY,JSON.stringify(p))}
-function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-
-function render(){
- const p=getProfile(), l=ledger();
- const avatar=p.photo?`<img src="${esc(p.photo)}" alt="صورة اللاعب">`:`<span>⚽</span>`;
- const rows=l.length?l.slice(0,8).map(x=>`<div class="v1081-row"><span>${esc(x.label)}</span><b>${x.amount>0?'+':''}${x.amount} ZIVO</b></div>`).join(''):`<div class="v1081-empty">لا توجد عمليات مسجلة بعد</div>`;
- return `<div class="v1081-modal" dir="rtl"><div class="v1081-card">
- <button class="v1081-x" aria-label="إغلاق">×</button>
- <div class="v1081-profile">
-  <div class="v1081-avatar">${avatar}</div>
-  <div><small>ZIVOZONE PLAYER</small><h2>${esc(p.name)}</h2><div class="v1081-level">LEVEL ${p.level}</div></div>
- </div>
- <div class="v1081-stats">
-  <div><small>XP</small><b>${p.xp}</b></div><div><small>ZIVO</small><b>🪙 ${p.zivo}</b></div>
-  <div><small>STREAK</small><b>🔥 ${p.streak}</b></div><div><small>CHALLENGES</small><b>${p.games}</b></div>
- </div>
- <div class="v1081-tabs"><button class="active" data-tab="profile">👤 ملفي</button><button data-tab="wallet">💰 المحفظة</button><button data-tab="store">🛒 المتجر</button></div>
- <section data-pane="profile"><h3>📊 إحصائياتي</h3><div class="v1081-statline"><span>أفضل نتيجة</span><b>${p.best||0}</b></div><div class="v1081-statline"><span>المستوى</span><b>${p.level}</b></div><div class="v1081-statline"><span>XP</span><b>${p.xp}</b></div></section>
- <section data-pane="wallet" style="display:none"><h3>💰 محفظة ZIVO</h3><div class="v1081-balance">🪙 ${p.zivo} <small>ZIVO</small></div><div class="v1081-ledger">${rows}</div></section>
- <section data-pane="store" style="display:none"><h3>🛒 متجر ZIVO</h3><div class="v1081-notice">المتجر مجهّز كواجهة فقط في هذه النسخة. لا يتم خصم أو إضافة أموال حقيقية، ولا يوجد دفع حقيقي حتى نربط مزود دفع آمن من جهة الخادم.</div><div class="v1081-pack"><b>100 ZIVO</b><span>قريبًا</span></div><div class="v1081-pack"><b>500 ZIVO</b><span>قريبًا</span></div><div class="v1081-pack"><b>1,200 ZIVO</b><span>قريبًا</span></div></section>
- </div></div>`;
-}
-function open(){
- let o=document.getElementById('v1081-player');
- if(!o){o=document.createElement('div');o.id='v1081-player';document.body.appendChild(o);
-  o.addEventListener('click',e=>{
-   if(e.target===o||e.target.closest('.v1081-x')){o.classList.remove('open');return}
-   const t=e.target.closest('[data-tab]'); if(t){
-    o.querySelectorAll('[data-tab]').forEach(x=>x.classList.remove('active'));t.classList.add('active');
-    o.querySelectorAll('[data-pane]').forEach(x=>x.style.display=x.dataset.pane===t.dataset.tab?'block':'none');
-   }
-  });
- }
- o.innerHTML=render();o.classList.add('open');
-}
-function mount(){
- if(document.getElementById('v1081-profile-launch'))return;
- const b=document.createElement('button');b.id='v1081-profile-launch';b.className='v1081-launch';b.textContent='👤 ملف اللاعب';b.onclick=open;document.body.appendChild(b);
-}
-window.ZIVOZONE_PLAYER={open,getProfile,addLedger,setProfile};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
-})();
-
-})();
-
-/* ===== V1087 AUTH UX: isolated account modal + password reset ===== */
-(function(){
-  'use strict';
-  const A=window.ZIVOZONE_AUTH;
-  const root=()=>document.getElementById('modal-root');
-  const esc=s=>{const d=document.createElement('div');d.textContent=String(s??'');return d.innerHTML};
-  function toast(msg,type='info'){
-    const box=document.getElementById('toast-container'); if(!box)return;
-    const x=document.createElement('div'); x.className='toast '+type; x.textContent=msg; box.appendChild(x); setTimeout(()=>x.remove(),3200);
-  }
-  function close(){const r=root(); if(r){r.setAttribute('aria-hidden','true');r.innerHTML='';}}
-  function render(mode='login'){
-    const r=root(); if(!r)return;
-    const isReg=mode==='register';
-    r.innerHTML=`<div class="modal-backdrop" data-auth-backdrop><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="zivo-auth-title">
-      <button class="modal-close" type="button" data-auth-close aria-label="إغلاق">×</button>
-      <span class="eyebrow">ZIVOZONE · ACCOUNT</span>
-      <h2 id="zivo-auth-title">${isReg?'إنشاء حساب':'تسجيل الدخول'}</h2>
-      <p class="muted">${isReg?'أنشئ حسابك المجاني لحفظ تقدمك وXP وZIVO.':'أدخل بيانات حساب ZIVOZONE للمتابعة.'}</p>
-      <div class="auth-tabs">
-        <button type="button" class="btn ${isReg?'btn-primary':''}" data-auth-mode="register">إنشاء حساب</button>
-        <button type="button" class="btn ${!isReg?'btn-primary':''}" data-auth-mode="login">دخول</button>
-      </div>
-      <form id="zivo-auth-form" novalidate>
-        ${isReg?`<div><label for="zivo-auth-name">اسم اللاعب</label><input id="zivo-auth-name" autocomplete="name" minlength="2" required></div><div><label for="zivo-auth-age">العمر</label><input id="zivo-auth-age" type="number" min="5" max="100" value="18" required></div>`:''}
-        <div><label for="zivo-auth-email">البريد الإلكتروني</label><input id="zivo-auth-email" type="email" autocomplete="email" required></div>
-        <div><label for="zivo-auth-pass">كلمة المرور</label><input id="zivo-auth-pass" type="password" autocomplete="${isReg?'new-password':'current-password'}" minlength="6" required></div>
-        ${isReg?`<label class="zivo-terms-check"><input id="zivo-auth-terms" type="checkbox" required><span>أوافق على شروط استخدام ZIVOZONE وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط.</span></label>`:`<button type="button" class="zivo-inline-link zivo-forgot-password" id="zivo-forgot-password">نسيت كلمة السر؟</button>`}
-        <button class="btn btn-primary full" id="zivo-auth-submit" type="submit">${isReg?'إنشاء الحساب':'دخول'}</button>
-      </form>
-    </div></div>`;
-    r.setAttribute('aria-hidden','false');
-    r.querySelector('[data-auth-close]').onclick=close;
-    r.querySelector('[data-auth-backdrop]').onclick=e=>{if(e.target===e.currentTarget)close()};
-    r.querySelectorAll('[data-auth-mode]').forEach(b=>b.onclick=()=>render(b.dataset.authMode));
-    r.querySelector('#zivo-auth-form').onsubmit=async e=>{
-      e.preventDefault();e.stopPropagation();
-      const submit=r.querySelector('#zivo-auth-submit'); if(!submit)return;
-      submit.disabled=true;submit.textContent='جارٍ التنفيذ…';
-      try{
-        if(isReg){
-          await A.register({name:r.querySelector('#zivo-auth-name').value,age:r.querySelector('#zivo-auth-age').value,email:r.querySelector('#zivo-auth-email').value,password:r.querySelector('#zivo-auth-pass').value,termsAccepted:r.querySelector('#zivo-auth-terms').checked});
-        }else{
-          await A.login(r.querySelector('#zivo-auth-email').value,r.querySelector('#zivo-auth-pass').value);
-        }
-        await A.setLanguage?.(window.ZIVOZONE_I18N?.get?.()||'ar');
-        close(); window.dispatchEvent(new CustomEvent('zivozone-auth')); toast('تم تسجيل الدخول بنجاح','success');
-      }catch(err){submit.disabled=false;submit.textContent=isReg?'إنشاء الحساب':'دخول';toast(err?.message||'تعذر إتمام العملية','error')}
-    };
-    r.querySelector('#zivo-forgot-password')?.addEventListener('click',()=>resetView());
-  }
-  function resetView(prefill=''){
-    const r=root(); if(!r)return;
-    r.innerHTML=`<div class="modal-backdrop" data-auth-backdrop><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="zivo-reset-title">
-      <button class="modal-close" type="button" data-reset-close aria-label="إغلاق">×</button>
-      <span class="eyebrow">ZIVOZONE · ACCOUNT RECOVERY</span><h2 id="zivo-reset-title">استعادة كلمة السر</h2>
-      <p class="muted">ضع البريد الإلكتروني الذي سجلت به. إذا كان الحساب موجودًا، سيرسل Firebase رابط استعادة إلى البريد.</p>
-      <form id="zivo-reset-form"><div><label for="zivo-reset-email">البريد الإلكتروني</label><input id="zivo-reset-email" type="email" autocomplete="email" required value="${esc(prefill)}"></div>
-      <button class="btn btn-primary full" id="zivo-reset-submit" type="submit">إرسال رابط الاستعادة</button></form>
-      <button type="button" class="zivo-inline-link" id="zivo-reset-back" style="margin-top:12px">← العودة لتسجيل الدخول</button>
-    </div></div>`;
-    r.setAttribute('aria-hidden','false');
-    r.querySelector('[data-reset-close]').onclick=close;
-    r.querySelector('[data-auth-backdrop]').onclick=e=>{if(e.target===e.currentTarget)close()};
-    r.querySelector('#zivo-reset-back').onclick=()=>render('login');
-    r.querySelector('#zivo-reset-form').onsubmit=async e=>{
-      e.preventDefault();e.stopPropagation();
-      const email=r.querySelector('#zivo-reset-email').value.trim().toLowerCase(); const b=r.querySelector('#zivo-reset-submit');
-      if(!email)return; b.disabled=true;b.textContent='جارٍ الإرسال…';
-      try{
-        const auth=window.firebase?.auth?.();
-        if(!auth)throw new Error('خدمة الحساب غير متاحة حاليًا.');
-        await auth.sendPasswordResetEmail(email);
-        b.textContent='تم إرسال الرابط';
-        toast('تحقق من بريدك الإلكتروني لاستعادة كلمة السر','success');
-      }catch(err){b.disabled=false;b.textContent='إرسال رابط الاستعادة';toast('تعذر إرسال رابط الاستعادة. تأكد من البريد وحاول مرة أخرى.','error')}
-    };
-  }
-  function install(){
-    const btn=document.getElementById('login-btn'); if(!btn||!A)return;
-    btn.addEventListener('click',e=>{
-      if(A.isLoggedIn?.()||A.isAdmin?.())return;
-      e.preventDefault();e.stopImmediatePropagation();render('login');
-    },true);
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,900),{once:true});else setTimeout(install,900);
+  window.ZIVOZONE_CORE=Core;
 })();
