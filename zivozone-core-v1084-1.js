@@ -4415,8 +4415,10 @@ function injectAdminPanel(){
  const o=document.getElementById('zivo-v103-admin'); if(!o||!zrOwner())return;
  if(o.querySelector('.z1084-admin-reels'))return;
  const body=o.querySelector('.z103-admin-body'); if(!body)return;
+ body.insertAdjacentHTML('afterbegin',pulseAdminPanel());
  body.insertAdjacentHTML('afterbegin',adminReelsPanel());
  wireAdminReels(o);
+ wirePulseAdmin();
 }
 
 document.addEventListener('click',e=>{
@@ -4434,4 +4436,189 @@ window.addEventListener('hashchange',()=>{if(location.hash==='#reels')loadReels(
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(loadReels,700));
 else setTimeout(loadReels,700);
 window.ZIVOZONE_REELS={load:loadReels,injectAdminPanel,publish:publishReel};
+})();
+
+
+/* ============================================================
+   ZIVOZONE V1084.2 — PULSE
+   One unified core. Admin publishes questions; users answer once.
+   Correct answers receive the question's ZIVO reward.
+   Reward authorization is enforced by Firestore rules.
+============================================================ */
+(()=>{
+'use strict';
+const ZP_ADMIN='raefalbtish@gmail.com';
+const zpDb=()=>window.firebase?.firestore?.();
+const zpAuth=()=>window.firebase?.auth?.();
+const zpUser=()=>zpAuth()?.currentUser||null;
+const zpOwner=()=>String(zpUser()?.email||'').trim().toLowerCase()===ZP_ADMIN;
+const zpEsc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const zpNum=v=>Math.max(0,Number(v)||0);
+const zpTime=v=>v?.toMillis?v.toMillis():(Date.parse(v||0)||0);
+const zpToast=m=>{try{const b=document.createElement('div');b.className='z103-toast';b.textContent=m;document.body.appendChild(b);setTimeout(()=>b.remove(),2600)}catch(_){}};
+
+async function loadPulse(){
+ const feed=document.getElementById('pulse-feed'),status=document.getElementById('pulse-status');
+ if(!feed)return;
+ const d=zpDb(),u=zpUser();
+ if(!d){status.textContent='تعذر الاتصال بمصدر Pulse.';return}
+ if(!u){status.textContent='سجّل الدخول للمشاركة والربح.';feed.innerHTML='<div class="z1084-pulse-empty"><b>🔥 ZIVO PULSE</b><span>سجّل الدخول لتجاوب وتكسب ZIVO.</span></div>';return}
+ status.textContent='جارٍ تحميل أحدث الأسئلة…';
+ try{
+   const snap=await d.collection('pulseQuestions').where('active','==',true).limit(30).get();
+   const qs=snap.docs.map(x=>({id:x.id,...x.data()}))
+     .filter(q=>!q.expiresAt || zpTime(q.expiresAt)>Date.now())
+     .sort((a,b)=>zpTime(b.createdAt)-zpTime(a.createdAt));
+   if(!qs.length){
+     feed.innerHTML='<div class="z1084-pulse-empty"><b>🔥 لا يوجد سؤال الآن</b><span>عندما تنشر الإدارة سؤالًا سيظهر هنا مباشرة.</span></div>';
+     status.textContent='Pulse جاهز — بانتظار السؤال التالي.';
+     return;
+   }
+   const claimDocs=await Promise.all(qs.map(q=>d.collection('users').doc(u.uid).collection('zivozone').doc('pulseClaims').collection('items').doc(q.id).get().catch(()=>null)));
+   feed.innerHTML=qs.map((q,i)=>{
+     const claimed=!!claimDocs[i]?.exists;
+     const opts=Array.isArray(q.options)?q.options.slice(0,4):[];
+     return `<article class="z1084-pulse-card ${claimed?'is-claimed':''}" data-pulse-id="${zpEsc(q.id)}">
+       <div class="z1084-pulse-top"><span>🔥 PULSE #${i+1}</span><span>+${zpNum(q.reward)} ZIVO</span></div>
+       <div class="z1084-pulse-category">${zpEsc(q.category||'عام')}</div>
+       <h3>${zpEsc(q.question||'سؤال ZIVO')}</h3>
+       ${q.context?`<p class="z1084-pulse-context">${zpEsc(q.context)}</p>`:''}
+       <div class="z1084-pulse-options">
+         ${opts.map((o,n)=>`<button type="button" class="z1084-pulse-option" data-pulse-answer="${n}" ${claimed?'disabled':''}>${String.fromCharCode(65+n)} · ${zpEsc(o)}</button>`).join('')}
+       </div>
+       <div class="z1084-pulse-result">${claimed?'✅ تمت المشاركة — لا يمكن تكرار المكافأة.':'اختر إجابة واحدة'}</div>
+     </article>`;
+   }).join('');
+   status.textContent=`${qs.length} سؤال نشط`;
+ }catch(e){
+   console.warn('ZIVO Pulse load',e);
+   status.textContent='تعذر تحميل Pulse.';
+   feed.innerHTML='<div class="z1084-pulse-empty"><b>تعذر تحميل الأسئلة</b><span>حاول مرة أخرى بعد قليل.</span></div>';
+ }
+}
+
+async function answerPulse(card,optionIndex){
+ const d=zpDb(),u=zpUser();
+ if(!d||!u){zpToast('سجّل الدخول أولًا.');return}
+ const id=card?.dataset?.pulseId;
+ if(!id)return;
+ const buttons=[...card.querySelectorAll('[data-pulse-answer]')];
+ buttons.forEach(b=>b.disabled=true);
+ const result=card.querySelector('.z1084-pulse-result');
+ try{
+   const q=await d.collection('pulseQuestions').doc(id).get();
+   if(!q.exists||q.data()?.active!==true)throw new Error('السؤال لم يعد متاحًا.');
+   const reward=Math.max(0,Math.min(10,Number(q.data()?.reward)||0));
+   if(reward<=0)throw new Error('هذا السؤال غير قابل للمكافأة.');
+   const root=d.collection('users').doc(u.uid).collection('zivozone');
+   const wallet=root.doc('wallet');
+   const claim=root.doc('pulseClaims').collection('items').doc(id);
+   const ledger=wallet.collection('ledger').doc('pulse_'+id);
+   const fv=window.firebase.firestore.FieldValue;
+   await d.runTransaction(async tx=>{
+     const [ws,cs,ls]=await Promise.all([tx.get(wallet),tx.get(claim),tx.get(ledger)]);
+     if(cs.exists||ls.exists)throw new Error('تمت المشاركة بهذا السؤال مسبقًا.');
+     const current=zpNum(ws.data()?.zivo);
+     tx.set(claim,{questionId:id,answer:Number(optionIndex),amount:reward,status:'correct',claimedAt:fv.serverTimestamp(),createdAt:fv.serverTimestamp()});
+     tx.set(wallet,{zivo:current+reward,lastPulseClaim:id,lastPulseAmount:reward,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
+     tx.set(ledger,{type:'pulse_reward',label:`مكافأة ZIVO PULSE — ${q.data()?.category||'عام'}`,amount:reward,eventId:ledger.id,questionId:id,createdAt:fv.serverTimestamp(),source:'pulse'});
+   });
+   card.classList.add('is-correct');
+   result.textContent=`🎉 إجابة صحيحة! +${reward} ZIVO`;
+   buttons.forEach(b=>b.disabled=true);
+   window.ZIVOZONE_ECONOMY?.refresh?.();
+   zpToast(`🎉 ربحت +${reward} ZIVO`);
+ }catch(e){
+   console.warn('ZIVO Pulse answer',e);
+   result.textContent=e?.message||'تعذر تسجيل الإجابة.';
+   if(!String(e?.message||'').includes('مسبقًا'))buttons.forEach(b=>b.disabled=false);
+ }
+}
+
+function pulseAdminPanel(){
+ if(!zpOwner())return '';
+ return `<section class="z1084-pulse-admin z103-panel">
+   <div class="z103-panel-head"><div><h3>🔥 إدارة ZIVO PULSE</h3><small>أنت تنشر السؤال؛ النظام يتولى العرض والإجابة والمكافأة.</small></div></div>
+   <form id="zp-form" class="z1084-pulse-form">
+     <label>السؤال<input id="zp-question" maxlength="220" required placeholder="مثال: من فاز بآخر مباراة؟"></label>
+     <label>التصنيف<select id="zp-category"><option>كرة القدم</option><option>الأردن</option><option>أخبار</option><option>رياضة</option><option>عالمي</option><option>عام</option></select></label>
+     <label class="zp-wide">سياق قصير <input id="zp-context" maxlength="240" placeholder="اختياري: سطر يشرح الخبر أو الموضوع"></label>
+     <label>الإجابة A<input id="zp-a" maxlength="100" required></label>
+     <label>الإجابة B<input id="zp-b" maxlength="100" required></label>
+     <label>الإجابة C<input id="zp-c" maxlength="100" required></label>
+     <label>الإجابة D<input id="zp-d" maxlength="100" required></label>
+     <label>الإجابة الصحيحة<select id="zp-correct"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></label>
+     <label>مكافأة ZIVO<select id="zp-reward"><option value="1">+1 ZIVO</option><option value="2" selected>+2 ZIVO</option><option value="3">+3 ZIVO</option><option value="5">+5 ZIVO</option></select></label>
+     <label>مدة الظهور<select id="zp-expire"><option value="0">بدون انتهاء</option><option value="24">24 ساعة</option><option value="48">48 ساعة</option><option value="72">72 ساعة</option></select></label>
+     <div class="z1084-pulse-admin-actions"><button class="btn btn-primary" type="submit">🚀 نشر السؤال</button><span id="zp-status" class="muted"></span></div>
+   </form>
+   <div id="zp-admin-list" class="z1084-pulse-admin-list"></div>
+ </section>`;
+}
+
+async function publishPulse(form){
+ if(!zpOwner())throw Error('غير مصرح');
+ const d=zpDb(); if(!d)throw Error('Firestore غير جاهز');
+ const q=form.querySelector('#zp-question').value.trim();
+ const category=form.querySelector('#zp-category').value;
+ const context=form.querySelector('#zp-context').value.trim();
+ const options=[form.querySelector('#zp-a').value.trim(),form.querySelector('#zp-b').value.trim(),form.querySelector('#zp-c').value.trim(),form.querySelector('#zp-d').value.trim()];
+ const correct=Number(form.querySelector('#zp-correct').value);
+ const reward=Math.max(1,Math.min(5,Number(form.querySelector('#zp-reward').value)||2));
+ const hours=Number(form.querySelector('#zp-expire').value)||0;
+ if(!q||options.some(x=>!x))throw Error('أكمل السؤال والخيارات الأربعة.');
+ const ref=d.collection('pulseQuestions').doc();
+ const secret=ref.collection('private').doc('answer');
+ const fv=window.firebase.firestore.FieldValue;
+ const expires=hours?new Date(Date.now()+hours*3600000):null;
+ const publicData={question:q,category,context,options,reward,active:true,createdAt:fv.serverTimestamp(),createdBy:ZP_ADMIN};
+ if(expires)publicData.expiresAt=expires;
+ await d.runTransaction(async tx=>{
+   tx.set(ref,publicData);
+   tx.set(secret,{correctOption:correct,reward,createdAt:fv.serverTimestamp(),createdBy:ZP_ADMIN});
+ });
+ form.reset();
+ await loadPulse();
+ await renderPulseAdminList();
+}
+
+async function renderPulseAdminList(){
+ const o=document.getElementById('zp-admin-list');if(!o||!zpOwner())return;
+ const d=zpDb();if(!d)return;
+ try{
+   const snap=await d.collection('pulseQuestions').limit(30).get();
+   const rows=snap.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>zpTime(b.createdAt)-zpTime(a.createdAt));
+   o.innerHTML=rows.length?rows.map(q=>`<div class="z1084-pulse-admin-row" data-admin-pulse="${zpEsc(q.id)}"><div><b>${zpEsc(q.question)}</b><small>${zpEsc(q.category||'عام')} · +${zpNum(q.reward)} ZIVO · ${q.active?'نشط':'متوقف'}</small></div><button type="button" class="btn btn-ghost" data-pulse-toggle="${zpEsc(q.id)}">${q.active?'⏸ إيقاف':'▶ تفعيل'}</button></div>`).join(''):'<div class="muted">لم تنشر أسئلة بعد.</div>';
+ }catch(e){o.innerHTML='<div class="muted">تعذر تحميل إدارة Pulse.</div>'}
+}
+
+async function togglePulse(id){
+ if(!zpOwner())return;
+ const d=zpDb();if(!d)return;
+ try{await d.collection('pulseQuestions').doc(id).update({active:!(await d.collection('pulseQuestions').doc(id).get()).data()?.active});await renderPulseAdminList();await loadPulse();}catch(e){zpToast('تعذر تغيير حالة السؤال.')}
+}
+
+function wirePulseAdmin(){
+ const form=document.getElementById('zp-form');if(!form||form.dataset.bound)return;
+ form.dataset.bound='1';
+ form.addEventListener('submit',async e=>{
+   e.preventDefault();const b=form.querySelector('button[type=submit]'),s=form.querySelector('#zp-status');b.disabled=true;s.textContent='جارٍ النشر…';
+   try{await publishPulse(form);s.textContent='تم نشر السؤال بنجاح 🔥';}catch(err){s.textContent=err.message||'فشل النشر.';}finally{b.disabled=false}
+ });
+ document.getElementById('zp-admin-list')?.addEventListener('click',e=>{
+   const b=e.target.closest('[data-pulse-toggle]');if(b)togglePulse(b.dataset.pulseToggle);
+ });
+ renderPulseAdminList();
+}
+
+document.addEventListener('click',e=>{
+ const a=e.target.closest('[data-pulse-answer]');
+ if(a){answerPulse(a.closest('[data-pulse-id]'),Number(a.dataset.pulseAnswer));return}
+ if(e.target.closest('#pulse-refresh'))loadPulse();
+});
+window.addEventListener('zivozone-auth',()=>setTimeout(()=>{wirePulseAdmin();loadPulse()},450));
+window.addEventListener('hashchange',()=>{if(location.hash==='#pulse')loadPulse()});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{wirePulseAdmin();loadPulse()},800));
+else setTimeout(()=>{wirePulseAdmin();loadPulse()},800);
+window.ZIVOZONE_PULSE={load:loadPulse,answer:answerPulse,publish:publishPulse};
 })();
