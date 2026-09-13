@@ -949,3 +949,26 @@ button, a, input, select, textarea { touch-action: manipulation; }
 @media (min-width:701px){
   #zivo-v101-economy{max-width:1180px}
 }
+
+/* V1086 — Unified account/player/hub entry points
+   Uses the existing V1081/V37 engines through one clean UI. No new floating layers. */
+.profile-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.profile-actions .btn{min-height:42px}
+#v37-open,#v1081-profile-launch,#z81-admin-open,#zivo-admin-identity{display:none!important}
+@media(max-width:700px){
+  .profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}
+  .profile-actions .btn{width:100%;min-height:46px;font-size:11px}
+  .profile-actions [data-action="login"]{grid-column:1/-1}
+}
+/* Keep the existing admin/player/hub overlays, but make them compact on small screens. */
+@media(max-width:600px){
+  .v37-overlay{padding:8px!important}
+  .v37-card{width:100%!important;max-height:94dvh!important;padding:14px!important;border-radius:20px!important;overflow:auto}
+  .v37-cover h2{font-size:17px!important}
+  .v37-stats{grid-template-columns:repeat(2,1fr)!important}
+  .v37-panels,.v37-actions{grid-template-columns:1fr!important}
+  #v1081-player{padding:7px!important}
+  #v1081-player .v1081-card{width:100%!important;max-height:94dvh!important;border-radius:20px!important}
+  .z104-admin-overlay{padding:6px!important}
+  .z104-admin-shell{width:100%!important;max-height:95dvh!important;border-radius:18px!important}
+}

@@ -4017,6 +4017,34 @@ window.ZIVOZONE_V104={openAdmin};
 })();
 
 
+/* ===== ZIVOZONE V1086 — UNIFIED PLAYER / HUB / ADMIN ENTRY POINTS =====
+   Reuses the existing engines already inside the consolidated runtime.
+   No new feature layer, no new backend, no paid service. */
+(function(){
+  'use strict';
+  const $=(s,r=document)=>r.querySelector(s);
+  const auth=()=>window.firebase?.auth?.();
+  const owner=()=>String(auth()?.currentUser?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
+  function safeOpen(fn){try{if(typeof fn==='function')return fn()}catch(e){console.warn('ZIVOZONE entry:',e)}}
+  function bindUnifiedEntries(){
+    const player=$('[data-action="open-player-profile"]');
+    const hub=$('[data-action="open-zivo-hub"]');
+    if(player&&!player.__zivoBound){player.__zivoBound=true;player.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();safeOpen(window.ZIVOZONE_PLAYER?.open)})}
+    if(hub&&!hub.__zivoBound){hub.__zivoBound=true;hub.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();safeOpen(window.ZIVOZONE_V37?.open)})}
+    const login=$('#login-btn');
+    if(login&&!login.__zivoUnified){
+      login.__zivoUnified=true;
+      login.addEventListener('click',e=>{
+        if(owner()){e.preventDefault();e.stopImmediatePropagation();safeOpen(window.ZIVOZONE_V104?.openAdmin||window.ZIVOZONE_MONITOR?.open);}
+      },true);
+    }
+    document.body.classList.toggle('zivo-admin-mode',owner());
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(bindUnifiedEntries,250));else setTimeout(bindUnifiedEntries,250);
+  window.addEventListener('zivozone-auth',()=>setTimeout(bindUnifiedEntries,200));
+  window.ZIVOZONE_UNIFIED={bind:bindUnifiedEntries,openPlayer:()=>safeOpen(window.ZIVOZONE_PLAYER?.open),openHub:()=>safeOpen(window.ZIVOZONE_V37?.open),openAdmin:()=>safeOpen(window.ZIVOZONE_V104?.openAdmin||window.ZIVOZONE_MONITOR?.open)};
+})();
+
 /* ===== INLINE TERMS LAUNCHER ===== */
 document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});
 
