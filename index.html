@@ -21,8 +21,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=1064.1">
-
 <style id="zivo-v51-core">
 /* V51: ZIVO wallet + player cloud status + mobile action sheet */
 .zivo-v51-wallet{display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,#17130a,#30240a);border:1px solid rgba(255,215,70,.32);border-radius:12px;padding:7px 10px;color:#fff;box-shadow:0 7px 22px rgba(255,190,0,.10)}
@@ -262,6 +260,7 @@ button, a, input, select, textarea { touch-action: manipulation; }
 
 <style id="zivo-v105-loader-guard">#app-loader{transition:opacity .25s ease,visibility .25s ease}.zivo-loader-released{opacity:0!important;visibility:hidden!important;pointer-events:none!important}</style>
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
+  <link rel="stylesheet" href="zivozone-core.css?v=1082">
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -406,8 +405,6 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1073.0"></script>
-
 <script>
 document.addEventListener('click',function(e){
   const b=e.target.closest('[data-challenge],[data-game]');
@@ -447,11 +444,8 @@ document.addEventListener('DOMContentLoaded',function(){
   setTimeout(release,1800);
 })();
 </script>
-<script src="zivozone-runtime.js?v=1081.1"></script>
-<script src="zivo-global-core.js?v=1064.1"></script>
-<link rel="stylesheet" href="zivo-v103-pro.css?v=1064.1"><script src="zivo-v103-pro.js?v=1064.1"></script><link rel="stylesheet" href="zivo-v104-pro.css?v=1064.1"><script src="zivo-v104-pro.js?v=1064.1"></script><link rel="stylesheet" href="zivo-v105-luxury.css?v=1064.1"><link rel="stylesheet" href="zivo-v1062-royal.css?v=1064.1"><script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
+<script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
 
-<script src="zivo-v1062-royal.js?v=1064.1"></script>
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js",{scope:"/"}).catch(e=>console.warn("ZIVOZONE SW:",e)));}</script>
 
 <!-- ZIVO V101 UNIFIED MOBILE-FIRST ECONOMY
@@ -464,6 +458,6 @@ document.addEventListener('DOMContentLoaded',function(){
      Backend must validate all ZIVO/XP transactions server-side.
 -->
 
-\n<link rel="stylesheet" href="zivo-v1080-core.css?v=1080.0">\n<script src="zivo-v1080-core.js?v=1080.0"></script>\n<!-- ZIVOZONE V1080 CORE -->\n<link rel="stylesheet" href="zivo-v1081-player.css?v=1081.0"><script src="zivo-v1081-player.js?v=1081.0"></script>
+\n\n\n<!-- ZIVOZONE V1080 CORE -->\n  <script src="zivozone-core.js?v=1082"></script>
 </body>
 </html>

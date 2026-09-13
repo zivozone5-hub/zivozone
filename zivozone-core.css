@@ -1,10 +1,7 @@
-/* ============================================================
-   ZIVOZONE CLEAN CORE — V1081 BASELINE
-   Consolidated styles: existing visual rules preserved.
-============================================================ */
+/* ZIVOZONE V1082 — UNIFIED STYLE CORE */
 
 
-/* ===== MERGED: styles.css ===== */
+/* ===== STYLE MODULE: styles.css ===== */
 /* ============================================================
    ZIVOZONE VISUAL SYSTEM
    Sport × Intelligence × Psychological Horror
@@ -589,7 +586,7 @@ body.zivo-dark-active{overflow:hidden}
 @media (max-width:600px){#zivo-single-menu{left:8px;bottom:10px}.zivo-single-menu-panel{bottom:50px;width:min(330px,calc(100vw - 16px));max-height:70vh;border-radius:18px}.zivo-menu-item{min-height:54px;padding:8px 7px}.zivo-menu-copy strong{font-size:11px}.zivo-menu-copy small{font-size:8px}}
 
 
-/* ===== MERGED: zivo-v103-pro.css ===== */
+/* ===== STYLE MODULE: zivo-v103-pro.css ===== */
 /* ZIVOZONE V103 — Luxury responsive product layer */
 :root{--z103-bg:#050812;--z103-panel:rgba(10,17,30,.88);--z103-line:rgba(93,174,255,.18);--z103-blue:#2787ff;--z103-cyan:#35dcff;--z103-purple:#805cff;--z103-gold:#ffd84a;--z103-text:#f5f7ff;--z103-muted:#8f9bb3}
 body{background:radial-gradient(circle at 15% 10%,rgba(94,54,255,.11),transparent 28%),radial-gradient(circle at 85% 80%,rgba(30,201,255,.07),transparent 26%),#050812}
@@ -638,7 +635,7 @@ body{background:radial-gradient(circle at 15% 10%,rgba(94,54,255,.11),transparen
 }
 
 
-/* ===== MERGED: zivo-v104-pro.css ===== */
+/* ===== STYLE MODULE: zivo-v104-pro.css ===== */
 
 /* ZIVOZONE V104 — Global Luxury Command + Mobile Challenge System */
 :root{
@@ -670,7 +667,7 @@ box-shadow:0 35px 100px rgba(0,0,0,.6),inset 0 1px rgba(255,255,255,.06);color:#
 }
 
 
-/* ===== MERGED: zivo-v105-luxury.css ===== */
+/* ===== STYLE MODULE: zivo-v105-luxury.css ===== */
 /* ZIVOZONE V105 — visual system inspired by the supplied mobile product reference */
 :root{--v105-bg:#02050b;--v105-panel:#07101b;--v105-line:rgba(62,190,255,.32);--v105-cyan:#22c8ff;--v105-blue:#1768ff;--v105-purple:#8b4dff;--v105-gold:#ffd33d;--v105-text:#f5f8ff;--v105-muted:#8795ad}
 html{background:#02050b}body{background:radial-gradient(circle at 50% -5%,rgba(23,104,255,.12),transparent 27%),linear-gradient(180deg,#02050b 0%,#030711 55%,#02050b 100%);font-family:"Cairo",system-ui,sans-serif}
@@ -740,7 +737,7 @@ html{background:#02050b}body{background:radial-gradient(circle at 50% -5%,rgba(2
 @media(max-width:700px){#login-btn.z104-admin-name{min-width:72px!important;max-width:82px!important;padding:8px 8px!important;font-size:9px!important}.z104-head{position:sticky;top:0}.z104-body{padding-bottom:24px}}
 
 
-/* ===== MERGED: zivo-v1062-royal.css ===== */
+/* ===== STYLE MODULE: zivo-v1062-royal.css ===== */
 
 /* ============================================================
    ZIVOZONE V1062 — ROYAL 4D CHALLENGE CINEMA / MOBILE FIRST
@@ -1179,7 +1176,7 @@ html,body{overflow-x:hidden}
 }
 
 
-/* ===== MERGED: zivo-v1080-core.css ===== */
+/* ===== STYLE MODULE: zivo-v1080-core.css ===== */
 /* ZIVOZONE V1080 CORE HUB */
 .v1080-launch{position:fixed;right:16px;bottom:86px;z-index:9000;border:1px solid rgba(255,215,90,.35);background:rgba(10,10,16,.94);color:#fff;border-radius:999px;padding:11px 16px;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.3);cursor:pointer}
 .v1080-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(10px);z-index:9999;display:none;align-items:flex-end;justify-content:center;padding:12px}
@@ -1192,7 +1189,7 @@ html,body{overflow-x:hidden}
 @media(max-width:620px){.v1080-launch{right:12px;bottom:76px}.v1080-card{padding:16px;border-radius:22px}.v1080-stats{grid-template-columns:repeat(2,1fr)}.v1080-grid{grid-template-columns:repeat(2,1fr)}.v1080-badges{grid-template-columns:repeat(3,1fr)}.v1080-overlay{padding:7px}}
 
 
-/* ===== MERGED: zivo-v1081-player.css ===== */
+/* ===== STYLE MODULE: zivo-v1081-player.css ===== */
 /* V1081 Player/Profile/Wallet */
 #v1081-profile-launch{position:fixed;left:14px;bottom:86px;z-index:9000;border:1px solid rgba(255,255,255,.14);background:rgba(10,10,16,.95);color:#fff;border-radius:999px;padding:11px 15px;font-weight:900;cursor:pointer;box-shadow:0 12px 30px rgba(0,0,0,.3)}
 #v1081-player{position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center;padding:10px}
@@ -1204,4 +1201,3 @@ html,body{overflow-x:hidden}
 .v1081-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.v1081-tabs button{padding:12px;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:rgba(255,255,255,.04);color:#fff;font-weight:800;cursor:pointer}.v1081-tabs button.active{background:rgba(255,255,255,.12)}
 .v1081-statline,.v1081-row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}.v1081-statline span,.v1081-row span{opacity:.7}.v1081-balance{text-align:center;font-size:36px;font-weight:950;padding:20px}.v1081-balance small{font-size:13px;opacity:.55}.v1081-empty{padding:20px;text-align:center;opacity:.55}.v1081-notice{padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:14px;opacity:.75;line-height:1.7}.v1081-pack{display:flex;justify-content:space-between;align-items:center;padding:15px;margin-top:8px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.04)}.v1081-pack span{opacity:.5}
 @media(max-width:600px){.v1081-card{padding:16px}.v1081-stats{grid-template-columns:repeat(2,1fr)}#v1081-profile-launch{left:10px;bottom:76px}.v1081-profile{padding-top:8px}}
-

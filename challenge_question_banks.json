@@ -1,0 +1,1468 @@
+{
+  "version": "2.0",
+  "banks": {
+    "iq": [
+      {
+        "id": "iq-ai-seed-001",
+        "difficulty": "2",
+        "question": "ما العدد التالي: 3، 6، 12، 24، ؟",
+        "options": [
+          "36",
+          "42",
+          "48",
+          "54"
+        ],
+        "answer": 2,
+        "explanation": "كل حد يساوي ضعف السابق.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "iq-ai-seed-002",
+        "difficulty": "4",
+        "question": "أي شكل يختلف عن البقية إذا كانت ثلاثة أشكال لها تماثل رأسي؟",
+        "options": [
+          "مثلث متساوي الساقين",
+          "مربع",
+          "دائرة",
+          "مثلث مختلف الأضلاع"
+        ],
+        "answer": 3,
+        "explanation": "المثلث المختلف الأضلاع لا يملك تماثلًا رأسيًا بالضرورة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "iq-ai-seed-003",
+        "difficulty": "6",
+        "question": "إذا كان A أكبر من B وB أكبر من C، فما النتيجة؟",
+        "options": [
+          "C أكبر من A",
+          "A أكبر من C",
+          "A يساوي C",
+          "لا يمكن معرفة شيء"
+        ],
+        "answer": 1,
+        "explanation": "علاقة التعدي.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "iq-ai-seed-004",
+        "difficulty": "8",
+        "question": "أكمل: 1، 4، 9، 16، ؟",
+        "options": [
+          "20",
+          "24",
+          "25",
+          "36"
+        ],
+        "answer": 2,
+        "explanation": "مربعات الأعداد الصحيحة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "iq-ai-seed-005",
+        "difficulty": "10",
+        "question": "إذا كانت كل X هي Y وبعض Y هي Z، ماذا نستنتج حتمًا؟",
+        "options": [
+          "كل X هي Z",
+          "بعض X هي Z",
+          "كل Z هي X",
+          "لا شيء من ذلك"
+        ],
+        "answer": 3,
+        "explanation": "لا توجد علاقة لازمة بين X وZ.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "science": [
+      {
+        "id": "science-ai-seed-001",
+        "difficulty": "2",
+        "question": "أي غاز يشكل النسبة الأكبر من الغلاف الجوي للأرض؟",
+        "options": [
+          "الأكسجين",
+          "النيتروجين",
+          "ثاني أكسيد الكربون",
+          "الهيدروجين"
+        ],
+        "answer": 1,
+        "explanation": "النيتروجين هو المكوّن الأكبر.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "science-ai-seed-002",
+        "difficulty": "4",
+        "question": "ما الوحدة الأساسية للتيار الكهربائي؟",
+        "options": [
+          "فولت",
+          "واط",
+          "أمبير",
+          "أوم"
+        ],
+        "answer": 2,
+        "explanation": "الأمبير وحدة شدة التيار.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "science-ai-seed-003",
+        "difficulty": "6",
+        "question": "ما الكوكب المعروف بالكوكب الأحمر؟",
+        "options": [
+          "الزهرة",
+          "المريخ",
+          "المشتري",
+          "عطارد"
+        ],
+        "answer": 1,
+        "explanation": "سطح المريخ غني بأكاسيد الحديد.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "science-ai-seed-004",
+        "difficulty": "8",
+        "question": "أي عضو يضخ الدم في جسم الإنسان؟",
+        "options": [
+          "الرئة",
+          "الكبد",
+          "القلب",
+          "الكلى"
+        ],
+        "answer": 2,
+        "explanation": "القلب يضخ الدم.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "science-ai-seed-005",
+        "difficulty": "10",
+        "question": "ما العملية التي تصنع فيها النباتات غذاءها باستخدام الضوء؟",
+        "options": [
+          "التنفس",
+          "البناء الضوئي",
+          "التخمّر",
+          "الانتشار"
+        ],
+        "answer": 1,
+        "explanation": "البناء الضوئي.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "daily": [
+      {
+        "id": "daily-ai-seed-001",
+        "difficulty": "2",
+        "question": "أي عادة تساعد أكثر على تنظيم وقت اليوم؟",
+        "options": [
+          "تأجيل كل المهام",
+          "تحديد أولويات واضحة",
+          "تجاهل المواعيد",
+          "تغيير الخطة كل ساعة"
+        ],
+        "answer": 1,
+        "explanation": "تحديد الأولويات يساعد على تنظيم الوقت.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "daily-ai-seed-002",
+        "difficulty": "4",
+        "question": "ما الأفضل قبل بدء مهمة كبيرة؟",
+        "options": [
+          "تقسيمها إلى خطوات",
+          "تركها غامضة",
+          "البدء دون هدف",
+          "تجاهل الوقت"
+        ],
+        "answer": 0,
+        "explanation": "التقسيم يجعل التنفيذ أوضح.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "daily-ai-seed-003",
+        "difficulty": "6",
+        "question": "أي خيار يمثل هدفًا قابلًا للقياس؟",
+        "options": [
+          "أريد أن أتحسن",
+          "سأقرأ 10 صفحات اليوم",
+          "سأكون أفضل",
+          "سأحاول أكثر"
+        ],
+        "answer": 1,
+        "explanation": "له مقدار وزمن محددان.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "daily-ai-seed-004",
+        "difficulty": "8",
+        "question": "عند كثرة المهام، ما الإجراء الأول الأنسب؟",
+        "options": [
+          "تحديد العاجل والمهم",
+          "اختيار الأسهل دائمًا",
+          "عدم كتابة شيء",
+          "ترك كل شيء"
+        ],
+        "answer": 0,
+        "explanation": "الأولوية تبدأ بفرز المهام.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "daily-ai-seed-005",
+        "difficulty": "10",
+        "question": "ما الذي يساعد على بناء عادة جديدة؟",
+        "options": [
+          "الاستمرارية",
+          "التوقف المتكرر",
+          "الاعتماد على الحماس فقط",
+          "تغييرها يوميًا"
+        ],
+        "answer": 0,
+        "explanation": "الاستمرارية عنصر أساسي.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "football": [
+      {
+        "id": "football-ai-seed-001",
+        "difficulty": "2",
+        "question": "كم لاعبًا يبدأ به فريق كرة القدم داخل الملعب؟",
+        "options": [
+          "9",
+          "10",
+          "11",
+          "12"
+        ],
+        "answer": 2,
+        "explanation": "الفريق يبدأ بـ11 لاعبًا.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "football-ai-seed-002",
+        "difficulty": "4",
+        "question": "كم دقيقة مدة الشوط الواحد قبل الوقت بدل الضائع؟",
+        "options": [
+          "30",
+          "40",
+          "45",
+          "60"
+        ],
+        "answer": 2,
+        "explanation": "45 دقيقة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "football-ai-seed-003",
+        "difficulty": "6",
+        "question": "ما الركلة التي تُحتسب عند بعض المخالفات داخل منطقة الجزاء؟",
+        "options": [
+          "ركلة ركنية",
+          "ركلة جزاء",
+          "رمية تماس",
+          "ركلة مرمى"
+        ],
+        "answer": 1,
+        "explanation": "قد تُحتسب ركلة جزاء.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "football-ai-seed-004",
+        "difficulty": "8",
+        "question": "ما الهدف الأساسي من الضغط العالي؟",
+        "options": [
+          "استعادة الكرة قرب مرمى الخصم",
+          "إضاعة الوقت",
+          "تقليل الاستحواذ",
+          "إخراج الكرة"
+        ],
+        "answer": 0,
+        "explanation": "الضغط العالي يهدف لاستعادة الكرة في مناطق متقدمة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "football-ai-seed-005",
+        "difficulty": "10",
+        "question": "ماذا يعني التحول الهجومي؟",
+        "options": [
+          "الانتقال السريع من الدفاع للهجوم",
+          "التوقف",
+          "تغيير الحكم",
+          "العودة للحارس"
+        ],
+        "answer": 0,
+        "explanation": "هو الانتقال من الحالة الدفاعية إلى الهجومية.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "logic": [
+      {
+        "id": "logic-ai-seed-001",
+        "difficulty": "2",
+        "question": "إذا كان اليوم الاثنين، فما اليوم بعد 10 أيام؟",
+        "options": [
+          "الأربعاء",
+          "الخميس",
+          "الجمعة",
+          "السبت"
+        ],
+        "answer": 1,
+        "explanation": "10 أيام = أسبوع وثلاثة أيام.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "logic-ai-seed-002",
+        "difficulty": "4",
+        "question": "لديك 3 صناديق، واحد فقط يحتوي الجائزة. ما أفضل بداية؟",
+        "options": [
+          "اختيار عشوائي دون معلومات",
+          "جمع معلومات عن الصناديق",
+          "فتحها كلها معًا",
+          "إلغاء اللعبة"
+        ],
+        "answer": 1,
+        "explanation": "المعلومات تقلل عدم اليقين.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "logic-ai-seed-003",
+        "difficulty": "6",
+        "question": "كل الطيور لها أجنحة. البط طائر. ماذا نستنتج؟",
+        "options": [
+          "البط له أجنحة",
+          "كل ذي أجنحة بط",
+          "لا علاقة",
+          "البط ليس طائرًا"
+        ],
+        "answer": 0,
+        "explanation": "استنتاج مباشر من المقدمات.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "logic-ai-seed-004",
+        "difficulty": "8",
+        "question": "ما العدد المختلف: 2،4،6،9،10؟",
+        "options": [
+          "2",
+          "6",
+          "9",
+          "10"
+        ],
+        "answer": 2,
+        "explanation": "9 فردي والبقية زوجية.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "logic-ai-seed-005",
+        "difficulty": "10",
+        "question": "إذا سبق خالد سامر، وسامر سبق مازن، فمن الأول؟",
+        "options": [
+          "سامر",
+          "مازن",
+          "خالد",
+          "لا يمكن معرفة"
+        ],
+        "answer": 2,
+        "explanation": "خالد يسبق سامر وسامر يسبق مازن.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "horror": [
+      {
+        "id": "horror-ai-seed-001",
+        "difficulty": "2",
+        "question": "في الغرفة المظلمة، إذا سمعت ثلاث طرقات متباعدة، ما أفضل قرار في اللعبة؟",
+        "options": [
+          "مراقبة المؤشرات قبل الاختيار",
+          "اختيار عشوائي فورًا",
+          "إغلاق اللعبة",
+          "تجاهل السؤال"
+        ],
+        "answer": 0,
+        "explanation": "اللعبة تكافئ الانتباه للمؤشرات.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "horror-ai-seed-002",
+        "difficulty": "4",
+        "question": "إذا تغيرت إضاءة الشاشة قبل السؤال، ما الاحتمال المقصود داخل التجربة؟",
+        "options": [
+          "وجود إشارة مرتبطة باللغز",
+          "تعطل الجهاز حتمًا",
+          "انتهاء اللعبة",
+          "لا شيء"
+        ],
+        "answer": 0,
+        "explanation": "الإضاءة جزء من التجربة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "horror-ai-seed-003",
+        "difficulty": "6",
+        "question": "ظهر رمز للحظة ثم اختفى. ما المهارة المطلوبة؟",
+        "options": [
+          "الانتباه والذاكرة",
+          "الحساب فقط",
+          "السرعة البدنية",
+          "الكتابة"
+        ],
+        "answer": 0,
+        "explanation": "الرموز السريعة تختبر الانتباه.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "horror-ai-seed-004",
+        "difficulty": "8",
+        "question": "في مرحلة الرعب، أي خيار يقلل احتمال الوقوع في خدعة؟",
+        "options": [
+          "قراءة المعطيات كاملة",
+          "الضغط عشوائيًا",
+          "تجاهل المؤقت",
+          "إعادة السؤال بلا تفكير"
+        ],
+        "answer": 0,
+        "explanation": "القراءة الكاملة تقلل الخداع.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "horror-ai-seed-005",
+        "difficulty": "10",
+        "question": "إذا كانت الإجابة الصحيحة مخفية ضمن نمط متكرر، ماذا تفعل؟",
+        "options": [
+          "تبحث عن النمط",
+          "تختار أول خيار",
+          "تغلق الصوت",
+          "تغير الشاشة"
+        ],
+        "answer": 0,
+        "explanation": "النمط مفتاح الحل.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "memory": [
+      {
+        "id": "memory-ai-seed-001",
+        "difficulty": "2",
+        "question": "أي عنصر تتذكره من سلسلة: كرة، كتاب، مفتاح؟",
+        "options": [
+          "قلم",
+          "مفتاح",
+          "ساعة",
+          "باب"
+        ],
+        "answer": 1,
+        "explanation": "المفتاح كان في السلسلة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory-ai-seed-002",
+        "difficulty": "4",
+        "question": "في ترتيب: أحمر، أزرق، أخضر، ما اللون الثاني؟",
+        "options": [
+          "أحمر",
+          "أزرق",
+          "أخضر",
+          "أصفر"
+        ],
+        "answer": 1,
+        "explanation": "الأزرق هو الثاني.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory-ai-seed-003",
+        "difficulty": "6",
+        "question": "أي رقم ظهر أولًا: 7،2،9؟",
+        "options": [
+          "9",
+          "2",
+          "7",
+          "6"
+        ],
+        "answer": 2,
+        "explanation": "7 ظهر أولًا.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory-ai-seed-004",
+        "difficulty": "8",
+        "question": "أي كلمة كانت ضمن القائمة: نجم، بحر، قمر؟",
+        "options": [
+          "جبل",
+          "قمر",
+          "نار",
+          "طريق"
+        ],
+        "answer": 1,
+        "explanation": "القمر كان ضمن القائمة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory-ai-seed-005",
+        "difficulty": "10",
+        "question": "إذا كانت الصورة تعرض مثلثًا ثم دائرة، فما الشكل الثاني؟",
+        "options": [
+          "مربع",
+          "دائرة",
+          "مثلث",
+          "نجمة"
+        ],
+        "answer": 1,
+        "explanation": "الدائرة هي الثانية.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "strategy": [
+      {
+        "id": "strategy-ai-seed-001",
+        "difficulty": "2",
+        "question": "في مباراة، الخصم يغلق العمق. ما الحل التكتيكي الأنسب؟",
+        "options": [
+          "توسيع الملعب",
+          "إغلاق المساحات",
+          "التوقف",
+          "إرسال الجميع للخلف"
+        ],
+        "answer": 0,
+        "explanation": "التوسيع يخلق مساحات جديدة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "strategy-ai-seed-002",
+        "difficulty": "4",
+        "question": "عند فقدان الكرة قرب منطقة الخصم، ماذا يفيد غالبًا؟",
+        "options": [
+          "ضغط فوري منظم",
+          "ترك الخصم",
+          "تراجع الجميع ببطء",
+          "تغيير الحارس"
+        ],
+        "answer": 0,
+        "explanation": "الضغط العكسي قد يستعيد الكرة سريعًا.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "strategy-ai-seed-003",
+        "difficulty": "6",
+        "question": "إذا كان جناحك معزولًا ضد مدافعين، ما الخيار الأفضل؟",
+        "options": [
+          "خلق تفوق عددي قريب",
+          "تركه وحده",
+          "إيقاف الهجمة",
+          "إعادة الكرة دائمًا"
+        ],
+        "answer": 0,
+        "explanation": "الدعم يصنع التفوق.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "strategy-ai-seed-004",
+        "difficulty": "8",
+        "question": "ما الهدف من التمرير الثالث في بعض أنظمة اللعب؟",
+        "options": [
+          "استغلال المساحة الناتجة عن تحرك المدافع",
+          "إضاعة الوقت",
+          "تغيير الملعب فقط",
+          "منع الحركة"
+        ],
+        "answer": 0,
+        "explanation": "الحركة تفتح مساحة للتمريرة التالية.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "strategy-ai-seed-005",
+        "difficulty": "10",
+        "question": "متى يكون التراجع المنظم مناسبًا؟",
+        "options": [
+          "عند حماية نتيجة أو إعادة تنظيم الفريق",
+          "دائمًا",
+          "بعد كل تمريرة",
+          "عند امتلاك الكرة فقط"
+        ],
+        "answer": 0,
+        "explanation": "قد يكون خيارًا تكتيكيًا بحسب الحالة.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "math": [
+      {
+        "id": "math-ai-seed-001",
+        "difficulty": "2",
+        "question": "كم يساوي 15 + 27؟",
+        "options": [
+          "32",
+          "40",
+          "42",
+          "44"
+        ],
+        "answer": 2,
+        "explanation": "42.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "math-ai-seed-002",
+        "difficulty": "4",
+        "question": "كم يساوي 12 × 8؟",
+        "options": [
+          "86",
+          "96",
+          "108",
+          "112"
+        ],
+        "answer": 1,
+        "explanation": "96.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "math-ai-seed-003",
+        "difficulty": "6",
+        "question": "25% من 80 تساوي؟",
+        "options": [
+          "10",
+          "15",
+          "20",
+          "25"
+        ],
+        "answer": 2,
+        "explanation": "20.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "math-ai-seed-004",
+        "difficulty": "8",
+        "question": "إذا كان x+7=19 فما قيمة x؟",
+        "options": [
+          "10",
+          "11",
+          "12",
+          "13"
+        ],
+        "answer": 2,
+        "explanation": "12.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "math-ai-seed-005",
+        "difficulty": "10",
+        "question": "ما متوسط 6 و10 و14؟",
+        "options": [
+          "8",
+          "10",
+          "12",
+          "14"
+        ],
+        "answer": 1,
+        "explanation": "(6+10+14)/3 = 10.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "forensic": [
+      {
+        "id": "forensic-ai-seed-001",
+        "difficulty": "2",
+        "question": "وجود بصمة جزئية يعني غالبًا ماذا؟",
+        "options": [
+          "وجود تماس مع السطح",
+          "إثبات الدافع",
+          "إثبات الزمن بدقة",
+          "إثبات الاعتراف"
+        ],
+        "answer": 0,
+        "explanation": "البصمة قد تثبت تماسًا لكنها لا تثبت وحدها الدافع أو الزمن.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "forensic-ai-seed-002",
+        "difficulty": "4",
+        "question": "لماذا تُحفظ الأدلة في عبوات مناسبة؟",
+        "options": [
+          "لتقليل التلوث والتلف",
+          "لتغيير الدليل",
+          "لإخفائه",
+          "لتسريع الحكم"
+        ],
+        "answer": 0,
+        "explanation": "الحفظ يمنع التلوث والتدهور.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "forensic-ai-seed-003",
+        "difficulty": "6",
+        "question": "ما الفرق بين الملاحظة والاستنتاج؟",
+        "options": [
+          "الملاحظة وصف لما شوهد والاستنتاج تفسير له",
+          "لا فرق",
+          "الاستنتاج صورة",
+          "الملاحظة حكم نهائي"
+        ],
+        "answer": 0,
+        "explanation": "تمييزهما مهم في التحليل.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "forensic-ai-seed-004",
+        "difficulty": "8",
+        "question": "إذا اختلفت روايتان، ما الخطوة الأفضل؟",
+        "options": [
+          "مقارنة الروايات بالأدلة المستقلة",
+          "اختيار الأولى تلقائيًا",
+          "تجاهل الأدلة",
+          "تغيير الوقائع"
+        ],
+        "answer": 0,
+        "explanation": "الأدلة المستقلة تساعد على التحقق.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "forensic-ai-seed-005",
+        "difficulty": "10",
+        "question": "ما فائدة توثيق سلسلة حيازة الدليل؟",
+        "options": [
+          "إثبات كيفية انتقاله وحفظه",
+          "تغيير محتواه",
+          "تحديد النية",
+          "إخفاء مصدره"
+        ],
+        "answer": 0,
+        "explanation": "تحافظ على سلامة الدليل إجرائيًا.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "probability": [
+      {
+        "id": "probability-ai-seed-001",
+        "difficulty": "2",
+        "question": "احتمال ظهور صورة عند رمي قطعة نقد عادلة مرة واحدة؟",
+        "options": [
+          "1/4",
+          "1/2",
+          "2/3",
+          "1"
+        ],
+        "answer": 1,
+        "explanation": "نصف الحالات.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "probability-ai-seed-002",
+        "difficulty": "4",
+        "question": "كيس فيه 3 كرات حمراء و1 زرقاء. احتمال سحب حمراء؟",
+        "options": [
+          "1/4",
+          "1/2",
+          "3/4",
+          "1"
+        ],
+        "answer": 2,
+        "explanation": "3 من 4.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "probability-ai-seed-003",
+        "difficulty": "6",
+        "question": "إذا كان حدثان مستقلان واحتمالهما 1/2 لكل منهما، احتمال حدوثهما معًا؟",
+        "options": [
+          "1/4",
+          "1/2",
+          "3/4",
+          "1"
+        ],
+        "answer": 0,
+        "explanation": "نضرب الاحتمالين.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "probability-ai-seed-004",
+        "difficulty": "8",
+        "question": "رمي نرد عادل: احتمال ظهور 6؟",
+        "options": [
+          "1/2",
+          "1/3",
+          "1/6",
+          "1/12"
+        ],
+        "answer": 2,
+        "explanation": "وجه واحد من ستة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "probability-ai-seed-005",
+        "difficulty": "10",
+        "question": "إذا تضاعف عدد النتائج الممكنة مع بقاء نتيجة واحدة ناجحة، ماذا يحدث للاحتمال؟",
+        "options": [
+          "يزداد",
+          "ينخفض",
+          "يبقى دائمًا",
+          "يصبح صفرًا"
+        ],
+        "answer": 1,
+        "explanation": "المقام يكبر مع ثبات البسط.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "lateral": [
+      {
+        "id": "lateral-ai-seed-001",
+        "difficulty": "2",
+        "question": "رجل خرج تحت المطر دون مظلة ولم يبتل شعره. لماذا؟",
+        "options": [
+          "كان أصلع",
+          "كان داخل سيارة",
+          "المطر توقف",
+          "كل ما سبق ممكن"
+        ],
+        "answer": 0,
+        "explanation": "كونه أصلع يفسر عدم ابتلال الشعر.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "lateral-ai-seed-002",
+        "difficulty": "4",
+        "question": "ما الشيء الذي كلما أخذت منه كبر؟",
+        "options": [
+          "الحفرة",
+          "الكتاب",
+          "الطريق",
+          "الكرة"
+        ],
+        "answer": 0,
+        "explanation": "الحفرة تكبر بالحفر.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "lateral-ai-seed-003",
+        "difficulty": "6",
+        "question": "شيء له أسنان ولا يعض، ما هو؟",
+        "options": [
+          "المشط",
+          "الكرسي",
+          "الباب",
+          "القلم"
+        ],
+        "answer": 0,
+        "explanation": "المشط له أسنان.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "lateral-ai-seed-004",
+        "difficulty": "8",
+        "question": "ما الذي يمكن كسره دون لمسه؟",
+        "options": [
+          "الوعد",
+          "الحجر",
+          "الكأس",
+          "الباب"
+        ],
+        "answer": 0,
+        "explanation": "يمكن كسر الوعد.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "lateral-ai-seed-005",
+        "difficulty": "10",
+        "question": "ما الذي يمشي بلا أرجل؟",
+        "options": [
+          "الوقت",
+          "الكرسي",
+          "الكتاب",
+          "الحائط"
+        ],
+        "answer": 0,
+        "explanation": "الوقت يمضي.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "code": [
+      {
+        "id": "code-ai-seed-001",
+        "difficulty": "2",
+        "question": "ما ناتج التعبير 2 + 3 * 4 في معظم اللغات؟",
+        "options": [
+          "20",
+          "14",
+          "24",
+          "10"
+        ],
+        "answer": 1,
+        "explanation": "الضرب يسبق الجمع.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "code-ai-seed-002",
+        "difficulty": "4",
+        "question": "أي بنية تخزن قيمًا مرتبة في كثير من اللغات؟",
+        "options": [
+          "Array/List",
+          "Boolean",
+          "Function فقط",
+          "Comment"
+        ],
+        "answer": 0,
+        "explanation": "القائمة/المصفوفة تخزن عناصر مرتبة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "code-ai-seed-003",
+        "difficulty": "6",
+        "question": "ما الغرض من الحلقة loop؟",
+        "options": [
+          "تكرار تنفيذ تعليمات",
+          "حذف البرنامج",
+          "إيقاف الجهاز",
+          "تغيير الشاشة فقط"
+        ],
+        "answer": 0,
+        "explanation": "الحلقات للتكرار.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "code-ai-seed-004",
+        "difficulty": "8",
+        "question": "ما الذي تعيده الدالة عادةً عند استخدام return؟",
+        "options": [
+          "قيمة/نتيجة",
+          "ملف كامل دائمًا",
+          "حاسوبًا",
+          "شبكة"
+        ],
+        "answer": 0,
+        "explanation": "return تعيد قيمة إلى المستدعي.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "code-ai-seed-005",
+        "difficulty": "10",
+        "question": "أي قيمة تمثل Boolean؟",
+        "options": [
+          "42",
+          "true",
+          "3.14",
+          "hello"
+        ],
+        "answer": 1,
+        "explanation": "true قيمة منطقية.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "language": [
+      {
+        "id": "language-ai-seed-001",
+        "difficulty": "2",
+        "question": "أي كلمة أقرب معنى لـ'سريع'؟",
+        "options": [
+          "بطيء",
+          "عاجل",
+          "ثقيل",
+          "هادئ"
+        ],
+        "answer": 1,
+        "explanation": "عاجل أقرب في السياق العام.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "language-ai-seed-002",
+        "difficulty": "4",
+        "question": "ما جمع كلمة 'كتاب'؟",
+        "options": [
+          "كاتب",
+          "كتب",
+          "كتابات فقط",
+          "مكتبة"
+        ],
+        "answer": 1,
+        "explanation": "جمع تكسير: كتب.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "language-ai-seed-003",
+        "difficulty": "6",
+        "question": "أي جملة صحيحة إملائيًا؟",
+        "options": [
+          "هذا كتابٌ مفيدٌ",
+          "هاذا كتاب مفيد",
+          "هذا كتابن مفيد",
+          "هاذا كتابٌ"
+        ],
+        "answer": 0,
+        "explanation": "الصياغة الأولى صحيحة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "language-ai-seed-004",
+        "difficulty": "8",
+        "question": "ما ضد 'النجاح'؟",
+        "options": [
+          "التقدم",
+          "الفشل",
+          "الإنجاز",
+          "التميز"
+        ],
+        "answer": 1,
+        "explanation": "الفشل هو الضد المباشر.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "language-ai-seed-005",
+        "difficulty": "10",
+        "question": "ما نوع كلمة 'يجري'؟",
+        "options": [
+          "فعل",
+          "اسم",
+          "حرف",
+          "عدد"
+        ],
+        "answer": 0,
+        "explanation": "فعل مضارع.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "visual": [
+      {
+        "id": "visual-ai-seed-001",
+        "difficulty": "2",
+        "question": "إذا تكرر النمط ▲ ● ▲ ●، ما العنصر التالي؟",
+        "options": [
+          "▲",
+          "●",
+          "■",
+          "◆"
+        ],
+        "answer": 0,
+        "explanation": "النمط يتناوب مثلث/دائرة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "visual-ai-seed-002",
+        "difficulty": "4",
+        "question": "أي ترتيب يطابق: كبير، صغير، كبير؟",
+        "options": [
+          "صغير كبير صغير",
+          "كبير صغير كبير",
+          "كبير كبير صغير",
+          "صغير صغير كبير"
+        ],
+        "answer": 1,
+        "explanation": "يطابق الترتيب المطلوب.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "visual-ai-seed-003",
+        "difficulty": "6",
+        "question": "ما المختلف: ■ ■ ● ■؟",
+        "options": [
+          "الأول",
+          "الثاني",
+          "الثالث",
+          "الرابع"
+        ],
+        "answer": 2,
+        "explanation": "الثالث دائرة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "visual-ai-seed-004",
+        "difficulty": "8",
+        "question": "إذا دار السهم ↑ بزاوية 90° مع عقارب الساعة يصبح؟",
+        "options": [
+          "←",
+          "→",
+          "↓",
+          "↑"
+        ],
+        "answer": 1,
+        "explanation": "يصير إلى اليمين.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "visual-ai-seed-005",
+        "difficulty": "10",
+        "question": "ما الشكل ذو أربعة أضلاع متساوية وزوايا قائمة؟",
+        "options": [
+          "مثلث",
+          "مربع",
+          "دائرة",
+          "خماسي"
+        ],
+        "answer": 1,
+        "explanation": "المربع.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "logic_extreme": [
+      {
+        "id": "logic_extreme-ai-seed-001",
+        "difficulty": "2",
+        "question": "إذا كانت كل A هي B ولا شيء من B هو C، هل يمكن أن تكون A هي C؟",
+        "options": [
+          "نعم دائمًا",
+          "لا",
+          "أحيانًا دون قيود",
+          "لا علاقة"
+        ],
+        "answer": 1,
+        "explanation": "A ضمن B وB منفصل عن C، إذن A لا تكون C.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "logic_extreme-ai-seed-002",
+        "difficulty": "4",
+        "question": "متتالية: 1، 2، 6، 24، 120، ؟",
+        "options": [
+          "240",
+          "360",
+          "720",
+          "840"
+        ],
+        "answer": 2,
+        "explanation": "مضروب: 1!,2!,3!,4!,5!, ثم 6!=720.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "logic_extreme-ai-seed-003",
+        "difficulty": "6",
+        "question": "إذا كان مجموع رقمين 10 وحاصل ضربهما 21، فما هما؟",
+        "options": [
+          "2 و8",
+          "3 و7",
+          "4 و6",
+          "1 و9"
+        ],
+        "answer": 1,
+        "explanation": "3+7=10 و3×7=21.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "logic_extreme-ai-seed-004",
+        "difficulty": "8",
+        "question": "ثلاثة أشخاص ينجزون مهمة في 6 أيام بالمعدل نفسه. كم يحتاج 6 أشخاص؟",
+        "options": [
+          "1",
+          "2",
+          "3",
+          "6"
+        ],
+        "answer": 2,
+        "explanation": "مضاعفة العدد تقسم الزمن إلى 3 أيام.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "logic_extreme-ai-seed-005",
+        "difficulty": "10",
+        "question": "إذا كان P⇒Q وQ⇒R، فما النتيجة؟",
+        "options": [
+          "R⇒P",
+          "P⇒R",
+          "P⇔R",
+          "لا علاقة"
+        ],
+        "answer": 1,
+        "explanation": "التعدي المنطقي.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "memory_focus": [
+      {
+        "id": "memory_focus-ai-seed-001",
+        "difficulty": "2",
+        "question": "بعد عرض 4 رموز: ★، ▲، ●، ■، ما الرمز الثالث؟",
+        "options": [
+          "★",
+          "▲",
+          "●",
+          "■"
+        ],
+        "answer": 2,
+        "explanation": "الثالث دائرة.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory_focus-ai-seed-002",
+        "difficulty": "4",
+        "question": "ترتيب الألوان: أحمر، أصفر، أزرق، أخضر. ما الأول؟",
+        "options": [
+          "أحمر",
+          "أخضر",
+          "أزرق",
+          "أصفر"
+        ],
+        "answer": 0,
+        "explanation": "الأحمر أولًا.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory_focus-ai-seed-003",
+        "difficulty": "6",
+        "question": "الأرقام: 8، 3، 6، 1. ما الرقم الثاني؟",
+        "options": [
+          "8",
+          "3",
+          "6",
+          "1"
+        ],
+        "answer": 1,
+        "explanation": "3.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory_focus-ai-seed-004",
+        "difficulty": "8",
+        "question": "الكلمات: قمر، بحر، جبل. ما الأخيرة؟",
+        "options": [
+          "قمر",
+          "بحر",
+          "جبل",
+          "نهر"
+        ],
+        "answer": 2,
+        "explanation": "جبل.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory_focus-ai-seed-005",
+        "difficulty": "10",
+        "question": "الحروف: A، C، B، D. ما الثاني؟",
+        "options": [
+          "A",
+          "C",
+          "B",
+          "D"
+        ],
+        "answer": 1,
+        "explanation": "C.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "football_intelligence": [
+      {
+        "id": "football_intelligence-ai-seed-001",
+        "difficulty": "2",
+        "question": "عندما يضغط الخصم على البناء من الخلف، ما الحل الشائع؟",
+        "options": [
+          "خلق لاعب حر إضافي",
+          "تثبيت الجميع",
+          "منع التمرير",
+          "إخراج الحارس"
+        ],
+        "answer": 0,
+        "explanation": "خلق لاعب حر يخفف الضغط.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "football_intelligence-ai-seed-002",
+        "difficulty": "4",
+        "question": "لماذا يستخدم الجناح العرض؟",
+        "options": [
+          "لسحب المدافع وفتح ممرات",
+          "لمنع الهجوم",
+          "لإبطاء كل شيء",
+          "لإلغاء العمق"
+        ],
+        "answer": 0,
+        "explanation": "العرض يوسّع الدفاع.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "football_intelligence-ai-seed-003",
+        "difficulty": "6",
+        "question": "ماذا يعني third-man run؟",
+        "options": [
+          "تحرك لاعب ثالث لاستغلال المساحة",
+          "تبديل حارس",
+          "ركلة ركنية",
+          "تراجع جماعي"
+        ],
+        "answer": 0,
+        "explanation": "تحرك اللاعب الثالث بعد تمرير/تحرك سابق.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "football_intelligence-ai-seed-004",
+        "difficulty": "8",
+        "question": "أين تكون المساحة غالبًا بعد سحب الظهير بعيدًا؟",
+        "options": [
+          "خلفه أو في الممر المجاور",
+          "خلف الحارس فقط",
+          "خارج الملعب",
+          "في دائرة الوسط دائمًا"
+        ],
+        "answer": 0,
+        "explanation": "يتغير مكان المساحة حسب التمركز.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "football_intelligence-ai-seed-005",
+        "difficulty": "10",
+        "question": "ما فائدة التمرير العمودي عند توفر خط تمرير آمن؟",
+        "options": [
+          "كسر خطوط الخصم",
+          "إبطاء اللعب دائمًا",
+          "إعادة الكرة للخلف",
+          "تثبيت الجناح"
+        ],
+        "answer": 0,
+        "explanation": "التمرير العمودي قد يكسر الخطوط.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ],
+    "memory_v22": [
+      {
+        "id": "memory_v22-ai-seed-001",
+        "difficulty": "2",
+        "question": "تذكر: 4، 9، 2، 7. ما الرقم الثالث؟",
+        "options": [
+          "4",
+          "9",
+          "2",
+          "7"
+        ],
+        "answer": 2,
+        "explanation": "2.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory_v22-ai-seed-002",
+        "difficulty": "4",
+        "question": "تذكر: نجمة، مربع، دائرة، مثلث. ما الثاني؟",
+        "options": [
+          "نجمة",
+          "مربع",
+          "دائرة",
+          "مثلث"
+        ],
+        "answer": 1,
+        "explanation": "مربع.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory_v22-ai-seed-003",
+        "difficulty": "6",
+        "question": "تذكر: أحمر، أزرق، أبيض، أسود. ما الرابع؟",
+        "options": [
+          "أحمر",
+          "أزرق",
+          "أبيض",
+          "أسود"
+        ],
+        "answer": 3,
+        "explanation": "أسود.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory_v22-ai-seed-004",
+        "difficulty": "8",
+        "question": "تذكر: كتاب، مفتاح، ساعة، قلم. ما الأول؟",
+        "options": [
+          "كتاب",
+          "مفتاح",
+          "ساعة",
+          "قلم"
+        ],
+        "answer": 0,
+        "explanation": "كتاب.",
+        "source": "AI-seed",
+        "approved": true
+      },
+      {
+        "id": "memory_v22-ai-seed-005",
+        "difficulty": "10",
+        "question": "تذكر: 11، 5، 8، 3. ما الأخير؟",
+        "options": [
+          "11",
+          "5",
+          "8",
+          "3"
+        ],
+        "answer": 3,
+        "explanation": "3.",
+        "source": "AI-seed",
+        "approved": true
+      }
+    ]
+  }
+}

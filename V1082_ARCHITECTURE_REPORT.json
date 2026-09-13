@@ -1,0 +1,14 @@
+{
+  "baseline": "V1081_REAL_CHALLENGE_ECONOMY_PRO",
+  "new_version": "V1082_UNIFIED_FACTORY",
+  "runtime_local_js_before": 8,
+  "runtime_local_css_before": 7,
+  "runtime_local_js_after": 1,
+  "runtime_local_css_after": 1,
+  "execution_order_preserved": true,
+  "ui_markup_changed": false,
+  "features_deleted": false,
+  "question_deduplication": "per challenge bank by normalized question text",
+  "firebase_config_changed": false,
+  "legacy_source_archive": "LEGACY_SOURCE_ARCHIVE (ignored by Firebase hosting)"
+}
