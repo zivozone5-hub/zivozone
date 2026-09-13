@@ -1,0 +1,29 @@
+{
+  "version": "PRO-1",
+  "strategy": "curated seed + AI-ready validation pipeline",
+  "question_count_added_per_challenge": 20,
+  "challenge_ids": [
+    "code_v22",
+    "daily",
+    "football",
+    "football_intelligence",
+    "forensic",
+    "horror",
+    "iq",
+    "language_v22",
+    "lateral_v22",
+    "logic",
+    "logic_extreme",
+    "math",
+    "memory",
+    "memory_focus",
+    "memory_v22",
+    "probability_v22",
+    "science",
+    "strategy",
+    "visual_v22"
+  ],
+  "ui_changed": false,
+  "existing_functions_removed": false,
+  "architecture": "additive bank expansion inside existing runtime; no layer merge"
+}
