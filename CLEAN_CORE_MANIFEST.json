@@ -1,0 +1,29 @@
+{
+  "baseline": "V1081 PLAYER_WALLET_MENU_PRO",
+  "architecture": "single local JS core + single local CSS core",
+  "visual_ui_preserved": true,
+  "features_preserved": true,
+  "legacy_sources_archived": true,
+  "merged_js_files": [
+    "zivo-ai.js",
+    "zivozone-runtime.js",
+    "zivo-global-core.js",
+    "zivo-v103-pro.js",
+    "zivo-v104-pro.js",
+    "zivo-v1062-royal.js",
+    "zivo-v1080-core.js",
+    "zivo-v1081-player.js",
+    "sw.js",
+    "zivo-v105-luxury.js"
+  ],
+  "merged_css_files": [
+    "styles.css",
+    "zivo-v103-pro.css",
+    "zivo-v104-pro.css",
+    "zivo-v105-luxury.css",
+    "zivo-v1062-royal.css",
+    "zivo-v1080-core.css",
+    "zivo-v1081-player.css"
+  ],
+  "next_step": "Challenge Question Bank / AI-ready engine / Dark Room can be added to the same core"
+}
