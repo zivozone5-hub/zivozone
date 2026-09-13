@@ -4,7 +4,7 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isOwner() { return signedIn() && request.auth.token.email == 'raefalbtish@gmail.com'; }
     function isSelf(id) { return signedIn() && request.auth.uid == id; }
-    function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastPulseClaim','lastPulseAmount']); }
+    function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode']); }
     function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
     function perfectClaim() {
       return request.resource.data.amount == 10
@@ -41,13 +41,7 @@ service cloud.firestore {
           (request.resource.data.zivo == 10 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.amount == 10 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.status == 'consumed' &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.consumedAt == request.time) ||
-          (request.resource.data.zivo == request.resource.data.lastPulseAmount
-            && request.resource.data.lastPulseAmount in [1,2,3,5]
-            && request.resource.data.lastPulseClaim is string
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/pulseClaims/items/$(request.resource.data.lastPulseClaim)).data.status == 'correct'
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/pulseClaims/items/$(request.resource.data.lastPulseClaim)).data.amount == request.resource.data.lastPulseAmount
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/pulseClaims/items/$(request.resource.data.lastPulseClaim)).data.claimedAt == request.time)
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.consumedAt == request.time)
         );
         allow update: if isOwner() || (isSelf(userId) && validWalletKeys() && (
           (request.resource.data.zivo == resource.data.zivo + 0.5 &&
@@ -56,13 +50,7 @@ service cloud.firestore {
           (request.resource.data.zivo == resource.data.zivo + 10 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.amount == 10 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.status == 'consumed' &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.consumedAt == request.time) ||
-          (request.resource.data.zivo == resource.data.zivo + request.resource.data.lastPulseAmount
-            && request.resource.data.lastPulseAmount in [1,2,3,5]
-            && request.resource.data.lastPulseClaim is string
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/pulseClaims/items/$(request.resource.data.lastPulseClaim)).data.status == 'correct'
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/pulseClaims/items/$(request.resource.data.lastPulseClaim)).data.amount == request.resource.data.lastPulseAmount
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/pulseClaims/items/$(request.resource.data.lastPulseClaim)).data.claimedAt == request.time)
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.consumedAt == request.time)
         ));
         allow delete: if false;
 
@@ -92,27 +80,11 @@ service cloud.firestore {
           allow delete: if false;
         }
 
-
-        match /pulseClaims/items/{pulseId} {
-          allow read: if isOwner() || isSelf(userId);
-          allow create: if isSelf(userId)
-            && !exists(/databases/$(database)/documents/users/$(userId)/zivozone/pulseClaims/items/$(pulseId))
-            && request.resource.data.keys().hasOnly(['questionId','answer','amount','status','claimedAt','createdAt'])
-            && request.resource.data.questionId == pulseId
-            && request.resource.data.answer == get(/databases/$(database)/documents/pulseQuestions/$(pulseId)/private/answer).data.correctOption
-            && request.resource.data.amount == get(/databases/$(database)/documents/pulseQuestions/$(pulseId)/private/answer).data.reward
-            && request.resource.data.amount in [1,2,3,5]
-            && request.resource.data.status == 'correct'
-            && request.resource.data.claimedAt == request.time
-            && get(/databases/$(database)/documents/pulseQuestions/$(pulseId)).data.active == true;
-          allow update,delete: if false;
-        }
-
         match /ledger/{entryId} {
           allow read: if isOwner() || isSelf(userId);
           allow create: if isSelf(userId)
-            && request.resource.data.amount in [0.5, 1, 2, 3, 5, 10]
-            && request.resource.data.type in ['daily_mining','pulse_reward','challenge_reward'];
+            && request.resource.data.amount in [0.5, 10]
+            && request.resource.data.type in ['daily_mining','challenge_reward'];
           allow update,delete: if false;
         }
       }
@@ -127,33 +99,6 @@ service cloud.firestore {
       match /attempts/{attemptId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
       match /gameAttempts/{attemptId} { allow read,create: if isOwner() || isSelf(uid); allow update,delete: if false; }
       match /wallet/{doc} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
-    }
-
-
-
-    match /pulseQuestions/{questionId} {
-      allow read: if signedIn();
-      allow create,update,delete: if isOwner();
-
-      match /private/{secretId} {
-        allow read: if isOwner();
-        allow create,update,delete: if isOwner();
-      }
-    }
-
-    match /reels/{reelId} {
-      allow read: if resource.data.published == true || isOwner();
-      allow create,delete: if isOwner();
-      allow update: if isOwner() || (signedIn()
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes'])
-        && request.resource.data.likes >= 0
-        && (request.resource.data.likes == resource.data.likes + 1
-            || request.resource.data.likes == resource.data.likes - 1));
-      match /likes/{uid} {
-        allow read: if signedIn();
-        allow create,delete: if signedIn() && request.auth.uid == uid;
-        allow update: if false;
-      }
     }
 
     match /questions/{id} { allow read: if signedIn(); allow write: if false; }
