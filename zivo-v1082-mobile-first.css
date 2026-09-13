@@ -188,3 +188,49 @@
   #login-btn{font-size:9px;padding-inline:8px}
   .mobile-nav a span{font-size:7px}
 }
+
+
+/* V1083 Mobile-first refinement — preserve structure, improve hierarchy. */
+@media(max-width:700px){
+  .topbar{height:58px;min-height:58px;padding:7px 10px;gap:7px}
+  .brand{flex:1;min-width:0}
+  .brand-mark{width:37px;height:37px;min-width:37px}
+  .brand-name{font-size:15px}
+  .top-actions{flex:0 0 auto}
+  #login-btn{max-width:118px;min-height:38px;padding:8px 9px;font-size:9px}
+  .z101-economy{margin-top:10px!important}
+  .z101-wallet,.z101-mining{width:100%}
+  .z101-wallet-actions .z101-btn,.z101-mine-action .z101-btn{min-height:40px}
+  .z101-balance{font-size:20px}
+}
+@media(max-width:390px){
+  .brand-name{display:block;font-size:13px}
+  #login-btn{max-width:96px;font-size:8px}
+  .z101-wallet-actions .z101-btn{font-size:9px;padding-inline:8px}
+  .z101-mine-action{min-width:104px!important}
+}
+
+.zivo-forgot-link{border:0;background:none;color:#8bdfff;text-align:center;font:800 11px/1.5 inherit;cursor:pointer;padding:7px 4px;text-decoration:underline;text-underline-offset:3px}.zivo-forgot-link:hover{color:#fff}
+
+/* Dark Room V1083 — cinematic distraction layer. */
+.z19-scanlines{position:absolute;inset:0;pointer-events:none;opacity:.09;background:repeating-linear-gradient(0deg,transparent 0 4px,rgba(255,255,255,.08) 5px);mix-blend-mode:screen;animation:z19scan .18s steps(2) infinite}
+.z19-eye{position:absolute;left:50%;top:48%;width:8px;height:5px;border-radius:50%;background:#f4f4f4;box-shadow:0 0 22px 5px rgba(255,255,255,.35);opacity:.05;animation:z19eye 8s ease-in-out infinite}
+.z19-eye:after{content:"";position:absolute;left:50%;top:50%;width:2px;height:2px;border-radius:50%;background:#080808;transform:translate(-50%,-50%)}
+.z19-flash{position:absolute;inset:0;background:rgba(255,255,255,.0);pointer-events:none}
+.z19-flash.pulse{animation:z19flash .24s ease-out}
+.z19-distraction{position:absolute;left:50%;top:36%;width:min(520px,78vw);transform:translate(-50%,-50%);text-align:center;color:rgba(255,255,255,.13);font:900 11px/1.4 system-ui;letter-spacing:3px;opacity:0;pointer-events:none;text-transform:uppercase}
+.z19-distraction.show{animation:z19distraction 2.8s ease forwards}
+.z19-whisper{z-index:3}
+.z19-bottom,.z19-top{z-index:4}
+@keyframes z19scan{0%{transform:translateY(0)}50%{transform:translateY(3px)}100%{transform:translateY(-2px)}}
+@keyframes z19eye{0%,38%,100%{opacity:.02;transform:translate(-50%,-50%) scale(.7)}44%{opacity:.55;transform:translate(-50%,-50%) scale(1.5)}50%{opacity:.06;transform:translate(-50%,-50%) scale(.9)}82%{opacity:.3}}
+@keyframes z19flash{0%{background:rgba(255,255,255,.0)}18%{background:rgba(255,255,255,.12)}100%{background:rgba(255,255,255,0)}}
+@keyframes z19distraction{0%{opacity:0;filter:blur(7px)}15%{opacity:.8;filter:blur(0)}70%{opacity:.45}100%{opacity:0;filter:blur(4px)}}
+@media(max-width:700px){
+  .z19-whisper{bottom:22%;font-size:13px;width:86vw}
+  .z19-distraction{top:31%;width:88vw;font-size:9px}
+  .z19-top{top:16px;left:16px;right:16px}
+  .z19-bottom{bottom:14px}
+  .v20-shell{width:100%;max-width:none}
+}
+@media(prefers-reduced-motion:reduce){.z19-scanlines,.z19-eye{animation:none}.z19-distraction.show{animation:none;opacity:.3}}
