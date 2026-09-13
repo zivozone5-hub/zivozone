@@ -109,6 +109,11 @@
   Object.assign(T.zh,{pressure:'压力分',streak:'连击',bestStreak:'最佳连击',speedBonus:'速度奖励',timedOut:'超时',pressureHint:'回答越快，奖励越高。',secondsPerQuestion:'每题10秒'});
   Object.assign(T.hi,{pressure:'प्रेशर स्कोर',streak:'स्ट्रीक',bestStreak:'सर्वश्रेष्ठ स्ट्रीक',speedBonus:'स्पीड बोनस',timedOut:'समय समाप्त',pressureHint:'जितनी जल्दी जवाब देंगे, उतना अधिक इनाम मिलेगा।',secondsPerQuestion:'हर प्रश्न के लिए 10 सेकंड'});
   Object.assign(T.es,{pressure:'Puntuación de presión',streak:'Racha',bestStreak:'Mejor racha',speedBonus:'Bono de velocidad',timedOut:'Tiempo agotado',pressureHint:'Cuanto más rápido respondas, mayor será tu recompensa.',secondsPerQuestion:'10 segundos por pregunta'});
+  Object.assign(T.ar,{forgotPassword:'نسيت كلمة السر؟',resetTitle:'استرجاع كلمة السر',resetHint:'اكتب بريدك الإلكتروني المسجّل وبنرسلّك رابط لتعيين كلمة سر جديدة.',sendReset:'إرسال رابط الاسترجاع',resetSent:'إذا كان بريدك مسجّلاً عندنا، رح توصلك رسالة فيها رابط تعيين كلمة سر جديدة خلال دقائق.',resetCloudOnly:'استرجاع كلمة السر متاح فقط للحسابات السحابية المتصلة بخدمة الحساب. جرّب تتأكد من اتصالك بالإنترنت.',backToLogin:'رجوع لتسجيل الدخول'});
+  Object.assign(T.en,{forgotPassword:'Forgot password?',resetTitle:'Reset your password',resetHint:'Enter your registered email and we will send you a link to set a new password.',sendReset:'Send reset link',resetSent:'If that email is registered with us, a password reset link will arrive within a few minutes.',resetCloudOnly:'Password reset is only available for cloud-connected accounts. Please check your internet connection.',backToLogin:'Back to sign in'});
+  Object.assign(T.zh,{forgotPassword:'忘记密码？',resetTitle:'重置密码',resetHint:'输入您注册的邮箱，我们会发送重置密码的链接给您。',sendReset:'发送重置链接',resetSent:'如果该邮箱已注册，几分钟内会收到密码重置链接。',resetCloudOnly:'密码重置仅适用于已连接云端的账户，请检查您的网络连接。',backToLogin:'返回登录'});
+  Object.assign(T.hi,{forgotPassword:'पासवर्ड भूल गए?',resetTitle:'पासवर्ड रीसेट करें',resetHint:'अपना पंजीकृत ईमेल दर्ज करें, हम आपको नया पासवर्ड सेट करने के लिए लिंक भेजेंगे।',sendReset:'रीसेट लिंक भेजें',resetSent:'यदि यह ईमेल हमारे पास पंजीकृत है, तो कुछ मिनटों में पासवर्ड रीसेट लिंक पहुँच जाएगा।',resetCloudOnly:'पासवर्ड रीसेट केवल क्लाउड से जुड़े खातों के लिए उपलब्ध है। कृपया अपना इंटरनेट कनेक्शन जांचें।',backToLogin:'लॉगिन पर वापस जाएँ'});
+  Object.assign(T.es,{forgotPassword:'¿Olvidaste tu contraseña?',resetTitle:'Restablecer tu contraseña',resetHint:'Escribe tu correo registrado y te enviaremos un enlace para establecer una nueva contraseña.',sendReset:'Enviar enlace de restablecimiento',resetSent:'Si ese correo está registrado con nosotros, recibirás un enlace para restablecer la contraseña en unos minutos.',resetCloudOnly:'El restablecimiento de contraseña solo está disponible para cuentas conectadas a la nube. Comprueba tu conexión a internet.',backToLogin:'Volver a iniciar sesión'});
   function get(){return localStorage.getItem(LANG_KEY)||'ar'}
   function set(lang){if(!LANGS.includes(lang))lang='ar';localStorage.setItem(LANG_KEY,lang);document.documentElement.lang=lang;document.documentElement.dir=DIR[lang];window.dispatchEvent(new CustomEvent('zivozone-language',{detail:{lang}}));return lang}
   function tr(key,lang=get()){return (T[lang]&&T[lang][key])||T.ar[key]||key}
@@ -858,6 +863,18 @@ window.ZIVOZONE_V18 = {
     const old=JSON.parse(localStorage.getItem(KEY)||'null');player=old?.player?.email===email?old.player:defaultPlayer(user);saveLocal();emit();return player;
   }
   async function logout(){if(cloud&&auth){try{await auth.signOut()}catch(e){}}user=null;player=null;localStorage.removeItem(KEY);emit()}
+  async function resetPassword(email){
+    email=String(email||'').trim().toLowerCase();
+    if(!/^\S+@\S+\.\S+$/.test(email))throw Error(t('emailError'));
+    if(!cloud||!auth)throw Error(t('resetCloudOnly'));
+    try{
+      await auth.sendPasswordResetEmail(email);
+    }catch(e){
+      // Do not reveal whether an email exists on the platform (account-enumeration protection).
+      if(e && e.code!=='auth/user-not-found')throw Error(firebaseMessage(e.code));
+    }
+    return true;
+  }
   async function track(event,meta={}){
     if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
     try{
@@ -900,7 +917,7 @@ window.ZIVOZONE_V18 = {
 
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
   const isAdmin=()=>String(user?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
-  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  window.ZIVOZONE_AUTH={register,login,logout,resetPassword,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
 
@@ -1032,7 +1049,37 @@ window.ZIVOZONE_V18 = {
   function openModal(html,cls=''){const r=$('#modal-root');r.innerHTML=`<div class="modal-backdrop"><div class="modal-card ${cls}" role="dialog" aria-modal="true">${html}</div></div>`;r.setAttribute('aria-hidden','false');r.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);const bg=r.querySelector('.modal-backdrop');if(bg)bg.onclick=e=>{if(e.target===bg)closeModal()}}
   function openTerms(){let o=document.getElementById('zivo-terms-modal');if(!o){o=document.createElement('div');o.id='zivo-terms-modal';o.className='zivo-legal-overlay';o.innerHTML=`<div class="zivo-legal-card" dir="rtl"><button class="zivo-legal-close">×</button><span class="eyebrow">ZIVOZONE · TERMS</span><h2>شروط استخدام ZIVOZONE</h2><p>آخر تحديث: 11 سبتمبر 2026 · الإصدار: ZIVO-TERMS-2026.09</p><div class="zivo-legal-body"><h3>1. قبول الشروط</h3><p>بإنشاء حساب أو استخدام المنصة، يقر المستخدم بأنه قرأ هذه الشروط ووافق عليها. إذا لم يوافق عليها، فلا يجوز له إنشاء حساب أو استخدام الميزات التي تتطلب حسابًا.</p><h3>2. طبيعة ZIVO</h3><p><b>ZIVO هي وحدة افتراضية داخل منصة ZIVOZONE فقط.</b> لا تمثل عملة قانونية أو وديعة أو سهمًا أو استثمارًا أو ضمانًا ماليًا، ولا يوجد بموجب هذه الشروط حق تلقائي في استبدالها نقدًا أو تحويلها إلى أموال أو عملات خارجية. لا يجوز بيعها أو شراؤها أو تداولها خارج الأنظمة التي تعتمدها ZIVOZONE رسميًا.</p><h3>3. التعدين والمكافآت</h3><p>مكافآت التعدين والتحديات تخضع لقواعد المنصة وحدودها، ويمكن لـ ZIVOZONE تعديل معدلات المكافآت أو إيقافها أو تعليق الحسابات المخالفة لحماية المنصة والمستخدمين. الرصيد المعروض داخل الحساب هو رصيد افتراضي للمنصة.</p><h3>4. الحساب والأمان</h3><p>المستخدم مسؤول عن بيانات تسجيل الدخول وعن الأنشطة التي تتم من حسابه. يمنع إنشاء حسابات أو استخدام أدوات آلية بقصد التلاعب بالمكافآت أو الترتيب أو البيانات.</p><h3>5. الاستخدام المقبول</h3><p>يمنع الاحتيال، واستغلال الثغرات، والهجمات الآلية، وإساءة استخدام المحتوى أو الخدمات، وانتحال صفة المدير أو أي مستخدم آخر، ومحاولة الوصول إلى بيانات غير مصرح بها.</p><h3>6. المحتوى والخدمات</h3><p>قد تتغير الألعاب والتحديات والأخبار والميزات بمرور الوقت. لا نضمن توفر كل خدمة دون انقطاع، ونبذل جهودًا معقولة للحفاظ على استقرار المنصة.</p><h3>7. الأخبار والروابط الخارجية</h3><p>الأخبار والروابط الخارجية مقدمة للعرض والمعلومات، وتخضع للمصادر الخارجية وشروطها. لا تتحمل ZIVOZONE مسؤولية محتوى المواقع الخارجية.</p><h3>8. الخصوصية</h3><p>تُستخدم بيانات الحساب واللعب اللازمة لتشغيل المنصة وحفظ التقدم والأمان والتحليلات التشغيلية وفق سياسة الخصوصية التي تعتمدها ZIVOZONE.</p><h3>9. التعديلات والإنهاء</h3><p>يجوز تحديث الشروط أو تعديل الميزات عند الحاجة. استمرار الاستخدام بعد نشر التحديث يعني قبول الشروط المعدلة ضمن الحدود التي يسمح بها القانون المعمول به.</p><h3>10. القانون والحقوق</h3><p>تُطبَّق هذه الشروط بما لا يخالف القوانين الإلزامية المعمول بها. هذه صياغة تشغيلية عامة وليست بديلاً عن مراجعة محامٍ قبل الإطلاق التجاري أو تقديم خدمات مالية.</p></div><div class="zivo-legal-actions"><button class="btn btn-primary zivo-legal-close">فهمت</button></div></div>`;document.body.appendChild(o);o.querySelectorAll('.zivo-legal-close').forEach(b=>b.onclick=()=>o.remove());o.onclick=e=>{if(e.target===o)o.remove()}}else{o.style.display='grid'}}
   window.ZIVOZONE_OPEN_TERMS=openTerms;
-  function authModal(after){let mode='register';const render=()=>{openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('account')}</span><h2>${mode==='register'?t('register'):t('welcomeBack')}</h2><p class="muted">${mode==='register'?t('registerHint'):t('loginHint')}</p><div class="auth-tabs"><button id="tab-register" class="btn ${mode==='register'?'btn-primary':''}">${t('register')}</button><button id="tab-login" class="btn ${mode==='login'?'btn-primary':''}">${t('signIn')}</button></div><form id="auth-form">${mode==='register'?`<div><label>${t('playerName')}</label><input id="auth-name" minlength="2" required placeholder="${esc(t('yourName'))}"></div><div><label>${t('age')}</label><input id="auth-age" type="number" min="5" max="100" required value="18"></div>`:''}<div><label>${t('email')}</label><input id="auth-email" type="email" required placeholder="${esc(t('emailPlaceholder'))}"></div><div><label>${t('password')}</label><input id="auth-pass" type="password" minlength="6" required placeholder="${esc(t('passwordPlaceholder'))}"></div>${mode==='register'?`<label class="zivo-terms-check"><input id="auth-terms" type="checkbox" required><span>أوافق على <button type="button" id="open-terms" class="zivo-inline-link">شروط استخدام ZIVOZONE</button> وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط وليس نقودًا أو استثمارًا.</span></label>`:''}<button class="btn btn-primary full" type="submit">${mode==='register'?t('createAccount'):t('signIn')}</button></form></div>`);$('#tab-register').onclick=()=>{mode='register';render()};$('#tab-login').onclick=()=>{mode='login';render()};$('#open-terms')?.addEventListener('click',openTerms);$('#auth-form').onsubmit=async e=>{e.preventDefault();try{if(mode==='register')await A.register({name:$('#auth-name').value,age:$('#auth-age').value,email:$('#auth-email').value,password:$('#auth-pass').value,termsAccepted:$('#auth-terms')?.checked===true});else await A.login($('#auth-email').value,$('#auth-pass').value);await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after()}catch(err){toast(err.message||t('firebaseError'),'error')}}};render()}
+  function authModal(after){
+    let mode='register';
+    const render=()=>{
+      const isReset=mode==='reset';
+      const title=mode==='register'?t('register'):mode==='login'?t('welcomeBack'):t('resetTitle');
+      const hint=mode==='register'?t('registerHint'):mode==='login'?t('loginHint'):t('resetHint');
+      openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('account')}</span><h2>${title}</h2><p class="muted">${hint}</p>${isReset?'':`<div class="auth-tabs"><button id="tab-register" class="btn ${mode==='register'?'btn-primary':''}">${t('register')}</button><button id="tab-login" class="btn ${mode==='login'?'btn-primary':''}">${t('signIn')}</button></div>`}<form id="auth-form">${mode==='register'?`<div><label>${t('playerName')}</label><input id="auth-name" minlength="2" required placeholder="${esc(t('yourName'))}"></div><div><label>${t('age')}</label><input id="auth-age" type="number" min="5" max="100" required value="18"></div>`:''}<div><label>${t('email')}</label><input id="auth-email" type="email" required placeholder="${esc(t('emailPlaceholder'))}"></div>${isReset?'':`<div><label>${t('password')}</label><input id="auth-pass" type="password" minlength="6" required placeholder="${esc(t('passwordPlaceholder'))}"></div>`}${mode==='register'?`<label class="zivo-terms-check"><input id="auth-terms" type="checkbox" required><span>أوافق على <button type="button" id="open-terms" class="zivo-inline-link">شروط استخدام ZIVOZONE</button> وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط وليس نقودًا أو استثمارًا.</span></label>`:''}<button class="btn btn-primary full" type="submit">${mode==='register'?t('createAccount'):mode==='login'?t('signIn'):t('sendReset')}</button></form>${mode==='login'?`<button type="button" id="forgot-pass" class="zivo-inline-link zivo-forgot-link">${t('forgotPassword')}</button>`:''}${isReset?`<button type="button" id="back-to-login" class="zivo-inline-link zivo-forgot-link">${t('backToLogin')}</button>`:''}</div>`);
+      $('#tab-register')?.addEventListener('click',()=>{mode='register';render()});
+      $('#tab-login')?.addEventListener('click',()=>{mode='login';render()});
+      $('#open-terms')?.addEventListener('click',openTerms);
+      $('#forgot-pass')?.addEventListener('click',()=>{mode='reset';render()});
+      $('#back-to-login')?.addEventListener('click',()=>{mode='login';render()});
+      $('#auth-form').onsubmit=async e=>{
+        e.preventDefault();
+        try{
+          if(mode==='register'){
+            await A.register({name:$('#auth-name').value,age:$('#auth-age').value,email:$('#auth-email').value,password:$('#auth-pass').value,termsAccepted:$('#auth-terms')?.checked===true});
+            await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after();
+          }else if(mode==='login'){
+            await A.login($('#auth-email').value,$('#auth-pass').value);
+            await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after();
+          }else{
+            await A.resetPassword($('#auth-email').value);
+            toast(t('resetSent'),'success');
+            mode='login';render();
+          }
+        }catch(err){toast(err.message||t('firebaseError'),'error')}
+      };
+    };
+    render();
+  }
   function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
   function adaptiveProfile(id){try{return JSON.parse(localStorage.getItem(`zivo_adaptive_${id}`)||'{\"attempts\":0,\"perfect\":0,\"best\":0,\"last\":0}')}catch(e){return{attempts:0,perfect:0,best:0,last:0}}}
   function recordAdaptiveResult(id,score,total,timedOut){const k=`zivo_adaptive_${id}`;const x=adaptiveProfile(id);x.attempts=(Number(x.attempts)||0)+1;x.last=Math.round((Number(score)||0)/Math.max(1,Number(total)||10)*100);x.best=Math.max(Number(x.best)||0,x.last);if(Number(score)===Number(total)&&!Number(timedOut))x.perfect=(Number(x.perfect)||0)+1;try{localStorage.setItem(k,JSON.stringify(x))}catch(e){}}
