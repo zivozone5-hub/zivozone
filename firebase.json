@@ -15,8 +15,7 @@
       "*.exe",
       "*.ps1",
       "*.sh",
-      "*.com",
-      "LEGACY_SOURCE_ARCHIVE/**"
+      "*.com"
     ],
     "headers": [
       {

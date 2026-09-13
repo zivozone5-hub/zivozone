@@ -125,18 +125,40 @@
       const root=fire.collection('users').doc(u.uid).collection('zivozone');
       const wallet=root.doc('wallet'), claim=root.doc('rewardClaim');
       const ledger=wallet.collection('ledger').doc(('challenge_perfect_'+attemptId).slice(0,100));
-      const result=fire.collection('players').doc(u.uid).collection('results').doc(attemptId.slice(0,100));
+      const playerRef=fire.collection('players').doc(u.uid);
+      const result=playerRef.collection('results').doc(attemptId.slice(0,100));
       await fire.runTransaction(async tx=>{
-        const [ws,ls,cs]=await Promise.all([tx.get(wallet),tx.get(ledger),tx.get(claim)]);
+        const [ws,ls,ps]=await Promise.all([tx.get(wallet),tx.get(ledger),tx.get(playerRef)]);
         if(ls.exists)throw new Error('تم احتساب هذه المحاولة مسبقًا.');
         const current=num(ws.data()?.zivo);
+        const pdata=ps.exists?ps.data()||{}:{};
+        const oldPerfect=Math.max(0,Number(pdata.perfectChallengesCount)||0);
+        const oldEarned=Math.max(0,Number(pdata.challengeZivoEarned)||0);
+        const oldStats=(pdata.challengeStats&&typeof pdata.challengeStats==='object')?pdata.challengeStats:{};
+        const stat=Object.assign({},oldStats[challenge]||{});
+        stat.perfect=(Number(stat.perfect)||0)+1;
+        stat.games=(Number(stat.games)||0)+1;
+        stat.bestScore=Math.max(Number(stat.bestScore)||0,100);
+        const achievements=Array.isArray(pdata.achievements)?pdata.achievements.slice():[];
+        if(!achievements.includes('perfect'))achievements.push('perfect');
+        if(oldPerfect+1>=10&&!achievements.includes('perfect_10'))achievements.push('perfect_10');
         const fv=F().firestore.FieldValue;
         tx.set(claim,{claimId:attemptId,challenge,total,correct,timedOut:0,amount:10,consumedAt:fv.serverTimestamp(),createdAt:fv.serverTimestamp(),status:'consumed',policy:'10_of_10_only'},{merge:true});
         tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
         tx.set(ledger,{type:'challenge_reward',label:`مكافأة تحدي كامل — ${challenge}`,amount:10,eventId:ledger.id,attemptId,challenge,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'client-rules',policy:'10_of_10_only'});
+        tx.set(playerRef,{challengeZivoEarned:oldEarned+10,perfectChallengesCount:oldPerfect+1,perfectChallenges:Array.from(new Set([...(Array.isArray(pdata.perfectChallenges)?pdata.perfectChallenges:[]),challenge])),achievements,challengeStats:{...oldStats,[challenge]:stat},lastPerfectChallenge:{challenge,attemptId,score:100,correct:10,total:10,awardedZivo:10,at:fv.serverTimestamp()},updatedAt:fv.serverTimestamp()},{merge:true});
+        tx.set(result,{challengeId:challenge,score:10,total:10,correct:10,perfect:true,zivoReward:10,serverRewarded:true,attemptId,createdAt:fv.serverTimestamp()},{merge:true});
       });
       await refresh();
-      toast('علامة كاملة 10/10 — تمت إضافة +10 ZIVO إلى المحفظة 🪙');
+      try{await window.ZIVOZONE_AUTH?.refreshPlayer?.();}catch(e){console.warn('ZIVO player refresh after reward',e);}
+      try{
+        const key='zivozone_v31_achievements'; const a=JSON.parse(localStorage.getItem(key)||'{}');
+        a.unlocked=Array.isArray(a.unlocked)?a.unlocked:[]; if(!a.unlocked.includes('perfect'))a.unlocked.push('perfect');
+        a.perfectChallenges=(Number(a.perfectChallenges)||0)+1; if(a.perfectChallenges>=10&&!a.unlocked.includes('perfect_10'))a.unlocked.push('perfect_10');
+        a.updatedAt=Date.now(); localStorage.setItem(key,JSON.stringify(a));
+      }catch(e){}
+      window.dispatchEvent(new CustomEvent('zivozone-perfect-reward',{detail:{challenge,attemptId,zivo:10,correct:10,total:10,achievement:'perfect'}}));
+      toast('علامة كاملة 10/10 — +10 ZIVO + إنجاز محفوظ في ملفك 🏆🪙');
       return true;
     }catch(e){
       console.warn('ZIVO challenge reward',e);
