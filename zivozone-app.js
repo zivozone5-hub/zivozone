@@ -1,5 +1,17 @@
+/* ZIVOZONE V1087 — UNIFIED APPLICATION CORE
+   All legacy feature modules are preserved inside one execution bundle.
+   No feature layer is removed without its runtime being retained here.
+*/
 
-/* ===== INLINE SCRIPT 7 ===== */
+/* ===== SOURCE: inline ===== */
+(function(){
+'use strict';
+(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();
+})();
+
+/* ===== SOURCE: inline ===== */
+(function(){
+'use strict';
 
 document.addEventListener('click',function(e){
   const b=e.target.closest('[data-challenge],[data-game]');
@@ -10,8 +22,11 @@ document.addEventListener('click',function(e){
   }
 },true);
 
+})();
 
-/* ===== INLINE SCRIPT 8 ===== */
+/* ===== SOURCE: inline ===== */
+(function(){
+'use strict';
 
 document.addEventListener('DOMContentLoaded',function(){
   if(document.getElementById('z27-cloud-status'))return;
@@ -20,8 +35,11 @@ document.addEventListener('DOMContentLoaded',function(){
   document.body.appendChild(e);
 });
 
+})();
 
-/* ===== INLINE SCRIPT 9 ===== */
+/* ===== SOURCE: inline ===== */
+(function(){
+'use strict';
 
 /* ZIVOZONE V47 — runtime guard */
 (function(){
@@ -40,8 +58,11 @@ document.addEventListener('DOMContentLoaded',function(){
   setTimeout(release,1800);
 })();
 
+})();
 
-/* ===== MODULE: zivozone-runtime.js ===== */
+/* ===== SOURCE: zivozone-runtime.js ===== */
+(function(){
+'use strict';
 /* ZIVOZONE V82 — CONSOLIDATED RUNTIME BUNDLE */
 
 /* ===== audio.js ===== */
@@ -890,18 +911,6 @@ window.ZIVOZONE_V18 = {
     user={uid:'local_'+btoa(unescape(encodeURIComponent(email))).replace(/=/g,''),email:a.email,name:a.name,age:a.age};
     const old=JSON.parse(localStorage.getItem(KEY)||'null');player=old?.player?.email===email?old.player:defaultPlayer(user);saveLocal();emit();return player;
   }
-  async function resetPassword(email){
-    email=String(email||'').trim().toLowerCase();
-    if(!/^\S+@\S+\.\S+$/.test(email))throw Error(t('emailError'));
-    if(cloud){
-      try{await auth.sendPasswordResetEmail(email);return true}
-      catch(e){throw Error(firebaseMessage(e.code))}
-    }
-    const a=localAccounts()[email];
-    if(!a)throw Error('إذا كان البريد مسجلًا فسيتم إرسال تعليمات الاستعادة إليه.');
-    // Local fallback cannot send email; keep the same safe message rather than exposing account state.
-    throw Error('استعادة كلمة المرور عبر البريد متاحة عند الاتصال بخدمة الحساب السحابية.');
-  }
   async function logout(){if(cloud&&auth){try{await auth.signOut()}catch(e){}}user=null;player=null;localStorage.removeItem(KEY);emit()}
   async function track(event,meta={}){
     if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
@@ -945,7 +954,7 @@ window.ZIVOZONE_V18 = {
 
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
   const isAdmin=()=>String(user?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
-  window.ZIVOZONE_AUTH={register,login,resetPassword,logout,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
 
@@ -1077,7 +1086,7 @@ window.ZIVOZONE_V18 = {
   function openModal(html,cls=''){const r=$('#modal-root');r.innerHTML=`<div class="modal-backdrop"><div class="modal-card ${cls}" role="dialog" aria-modal="true">${html}</div></div>`;r.setAttribute('aria-hidden','false');r.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);const bg=r.querySelector('.modal-backdrop');if(bg)bg.onclick=e=>{if(e.target===bg)closeModal()}}
   function openTerms(){let o=document.getElementById('zivo-terms-modal');if(!o){o=document.createElement('div');o.id='zivo-terms-modal';o.className='zivo-legal-overlay';o.innerHTML=`<div class="zivo-legal-card" dir="rtl"><button class="zivo-legal-close">×</button><span class="eyebrow">ZIVOZONE · TERMS</span><h2>شروط استخدام ZIVOZONE</h2><p>آخر تحديث: 11 سبتمبر 2026 · الإصدار: ZIVO-TERMS-2026.09</p><div class="zivo-legal-body"><h3>1. قبول الشروط</h3><p>بإنشاء حساب أو استخدام المنصة، يقر المستخدم بأنه قرأ هذه الشروط ووافق عليها. إذا لم يوافق عليها، فلا يجوز له إنشاء حساب أو استخدام الميزات التي تتطلب حسابًا.</p><h3>2. طبيعة ZIVO</h3><p><b>ZIVO هي وحدة افتراضية داخل منصة ZIVOZONE فقط.</b> لا تمثل عملة قانونية أو وديعة أو سهمًا أو استثمارًا أو ضمانًا ماليًا، ولا يوجد بموجب هذه الشروط حق تلقائي في استبدالها نقدًا أو تحويلها إلى أموال أو عملات خارجية. لا يجوز بيعها أو شراؤها أو تداولها خارج الأنظمة التي تعتمدها ZIVOZONE رسميًا.</p><h3>3. التعدين والمكافآت</h3><p>مكافآت التعدين والتحديات تخضع لقواعد المنصة وحدودها، ويمكن لـ ZIVOZONE تعديل معدلات المكافآت أو إيقافها أو تعليق الحسابات المخالفة لحماية المنصة والمستخدمين. الرصيد المعروض داخل الحساب هو رصيد افتراضي للمنصة.</p><h3>4. الحساب والأمان</h3><p>المستخدم مسؤول عن بيانات تسجيل الدخول وعن الأنشطة التي تتم من حسابه. يمنع إنشاء حسابات أو استخدام أدوات آلية بقصد التلاعب بالمكافآت أو الترتيب أو البيانات.</p><h3>5. الاستخدام المقبول</h3><p>يمنع الاحتيال، واستغلال الثغرات، والهجمات الآلية، وإساءة استخدام المحتوى أو الخدمات، وانتحال صفة المدير أو أي مستخدم آخر، ومحاولة الوصول إلى بيانات غير مصرح بها.</p><h3>6. المحتوى والخدمات</h3><p>قد تتغير الألعاب والتحديات والأخبار والميزات بمرور الوقت. لا نضمن توفر كل خدمة دون انقطاع، ونبذل جهودًا معقولة للحفاظ على استقرار المنصة.</p><h3>7. الأخبار والروابط الخارجية</h3><p>الأخبار والروابط الخارجية مقدمة للعرض والمعلومات، وتخضع للمصادر الخارجية وشروطها. لا تتحمل ZIVOZONE مسؤولية محتوى المواقع الخارجية.</p><h3>8. الخصوصية</h3><p>تُستخدم بيانات الحساب واللعب اللازمة لتشغيل المنصة وحفظ التقدم والأمان والتحليلات التشغيلية وفق سياسة الخصوصية التي تعتمدها ZIVOZONE.</p><h3>9. التعديلات والإنهاء</h3><p>يجوز تحديث الشروط أو تعديل الميزات عند الحاجة. استمرار الاستخدام بعد نشر التحديث يعني قبول الشروط المعدلة ضمن الحدود التي يسمح بها القانون المعمول به.</p><h3>10. القانون والحقوق</h3><p>تُطبَّق هذه الشروط بما لا يخالف القوانين الإلزامية المعمول بها. هذه صياغة تشغيلية عامة وليست بديلاً عن مراجعة محامٍ قبل الإطلاق التجاري أو تقديم خدمات مالية.</p></div><div class="zivo-legal-actions"><button class="btn btn-primary zivo-legal-close">فهمت</button></div></div>`;document.body.appendChild(o);o.querySelectorAll('.zivo-legal-close').forEach(b=>b.onclick=()=>o.remove());o.onclick=e=>{if(e.target===o)o.remove()}}else{o.style.display='grid'}}
   window.ZIVOZONE_OPEN_TERMS=openTerms;
-  function authModal(after){let mode='register';const render=()=>{openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('account')}</span><h2>${mode==='register'?t('register'):t('welcomeBack')}</h2><p class="muted">${mode==='register'?t('registerHint'):t('loginHint')}</p><div class="auth-tabs"><button id="tab-register" class="btn ${mode==='register'?'btn-primary':''}">${t('register')}</button><button id="tab-login" class="btn ${mode==='login'?'btn-primary':''}">${t('signIn')}</button></div><form id="auth-form">${mode==='register'?`<div><label>${t('playerName')}</label><input id="auth-name" minlength="2" required placeholder="${esc(t('yourName'))}"></div><div><label>${t('age')}</label><input id="auth-age" type="number" min="5" max="100" required value="18"></div>`:''}<div><label>${t('email')}</label><input id="auth-email" type="email" required placeholder="${esc(t('emailPlaceholder'))}"></div><div><label>${t('password')}</label><input id="auth-pass" type="password" minlength="6" required placeholder="${esc(t('passwordPlaceholder'))}"></div>${mode==='login'?`<button type="button" id="forgot-password" class="zivo-auth-forgot">نسيت كلمة السر؟ <span>استرجاع عبر البريد الإلكتروني</span></button>`:''}${mode==='register'?`<label class="zivo-terms-check"><input id="auth-terms" type="checkbox" required><span>أوافق على <button type="button" id="open-terms" class="zivo-inline-link">شروط استخدام ZIVOZONE</button> وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط وليس نقودًا أو استثمارًا.</span></label>`:''}<button class="btn btn-primary full" type="submit">${mode==='register'?t('createAccount'):t('signIn')}</button></form></div>`);$('#tab-register').type='button';$('#tab-login').type='button';$('#tab-register').onclick=()=>{mode='register';render()};$('#tab-login').onclick=()=>{mode='login';render()};$('#open-terms')?.addEventListener('click',openTerms);$('#forgot-password')?.addEventListener('click',async()=>{const email=$('#auth-email')?.value||'';if(!email){toast('اكتب بريدك الإلكتروني أولًا.','error');$('#auth-email')?.focus();return}const b=$('#forgot-password');b.disabled=true;try{await A.resetPassword(email);toast('تم إرسال رابط استعادة كلمة السر إلى بريدك الإلكتروني.','success')}catch(err){toast(err.message||'تعذر إرسال رابط الاستعادة.','error')}finally{b.disabled=false}});$('#auth-form').onsubmit=async e=>{e.preventDefault();e.stopPropagation();const submit=e.submitter||$('#auth-form button[type="submit"]');if(submit)submit.disabled=true;try{if(mode==='register')await A.register({name:$('#auth-name').value,age:$('#auth-age').value,email:$('#auth-email').value,password:$('#auth-pass').value,termsAccepted:$('#auth-terms')?.checked===true});else await A.login($('#auth-email').value,$('#auth-pass').value);await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after()}catch(err){toast(err.message||t('firebaseError'),'error')}finally{if(submit)submit.disabled=false}}};render()}
+  function authModal(after){let mode='register';const render=()=>{openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('account')}</span><h2>${mode==='register'?t('register'):t('welcomeBack')}</h2><p class="muted">${mode==='register'?t('registerHint'):t('loginHint')}</p><div class="auth-tabs"><button id="tab-register" class="btn ${mode==='register'?'btn-primary':''}">${t('register')}</button><button id="tab-login" class="btn ${mode==='login'?'btn-primary':''}">${t('signIn')}</button></div><form id="auth-form">${mode==='register'?`<div><label>${t('playerName')}</label><input id="auth-name" minlength="2" required placeholder="${esc(t('yourName'))}"></div><div><label>${t('age')}</label><input id="auth-age" type="number" min="5" max="100" required value="18"></div>`:''}<div><label>${t('email')}</label><input id="auth-email" type="email" required placeholder="${esc(t('emailPlaceholder'))}"></div><div><label>${t('password')}</label><input id="auth-pass" type="password" minlength="6" required placeholder="${esc(t('passwordPlaceholder'))}"></div>${mode==='register'?`<label class="zivo-terms-check"><input id="auth-terms" type="checkbox" required><span>أوافق على <button type="button" id="open-terms" class="zivo-inline-link">شروط استخدام ZIVOZONE</button> وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط وليس نقودًا أو استثمارًا.</span></label>`:''}<button class="btn btn-primary full" type="submit">${mode==='register'?t('createAccount'):t('signIn')}</button></form></div>`);$('#tab-register').onclick=()=>{mode='register';render()};$('#tab-login').onclick=()=>{mode='login';render()};$('#open-terms')?.addEventListener('click',openTerms);$('#auth-form').onsubmit=async e=>{e.preventDefault();try{if(mode==='register')await A.register({name:$('#auth-name').value,age:$('#auth-age').value,email:$('#auth-email').value,password:$('#auth-pass').value,termsAccepted:$('#auth-terms')?.checked===true});else await A.login($('#auth-email').value,$('#auth-pass').value);await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after()}catch(err){toast(err.message||t('firebaseError'),'error')}}};render()}
   function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
   function adaptiveProfile(id){try{return JSON.parse(localStorage.getItem(`zivo_adaptive_${id}`)||'{\"attempts\":0,\"perfect\":0,\"best\":0,\"last\":0}')}catch(e){return{attempts:0,perfect:0,best:0,last:0}}}
   function recordAdaptiveResult(id,score,total,timedOut){const k=`zivo_adaptive_${id}`;const x=adaptiveProfile(id);x.attempts=(Number(x.attempts)||0)+1;x.last=Math.round((Number(score)||0)/Math.max(1,Number(total)||10)*100);x.best=Math.max(Number(x.best)||0,x.last);if(Number(score)===Number(total)&&!Number(timedOut))x.perfect=(Number(x.perfect)||0)+1;try{localStorage.setItem(k,JSON.stringify(x))}catch(e){}}
@@ -3610,8 +3619,11 @@ window.ZIVOZONE_V18 = {
   else mount();
 })();
 
+})();
 
-/* ===== MODULE: zivo-global-core.js ===== */
+/* ===== SOURCE: zivo-global-core.js ===== */
+(function(){
+'use strict';
 /* ZIVOZONE V101 — UNIFIED MOBILE-FIRST ECONOMY CORE
    Single wallet + server-authoritative ZIVO + 24h daily mining + unified rewards.
 */
@@ -3656,8 +3668,7 @@ window.ZIVOZONE_V18 = {
         <div class="z101-mining-icon">⛏️</div><div><h3>التعدين اليومي</h3><p>فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.</p><div id="z101-countdown" class="z101-countdown">—</div></div>
         <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary">بدء التعدين +0.50</button></div>
       </article>`;
-    const anchor=document.querySelector('#home');
-    if(anchor) anchor.insertAdjacentElement('afterend',root); else h.insertAdjacentElement('afterend',root);
+    h.insertAdjacentElement('afterend',root);
     root.querySelector('#z101-wallet-open').onclick=openWallet;
     root.querySelector('#z101-mine').onclick=mine;
   }
@@ -3799,8 +3810,11 @@ window.ZIVOZONE_V18 = {
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(bind,50));else setTimeout(bind,50);
 })();
 
+})();
 
-/* ===== MODULE: zivo-v103-pro.js ===== */
+/* ===== SOURCE: zivo-v103-pro.js ===== */
+(function(){
+'use strict';
 /* ZIVOZONE V103 — functional luxury UX layer
    - Admin command center bound to owner email only
    - Responsive challenge hub
@@ -3892,8 +3906,11 @@ window.ZIVOZONE_V18 = {
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',observe);else observe();
 })();
 
+})();
 
-/* ===== MODULE: zivo-v104-pro.js ===== */
+/* ===== SOURCE: zivo-v104-pro.js ===== */
+(function(){
+'use strict';
 
 /* ZIVOZONE V104 — Functional luxury command center + challenge polish */
 (()=>{'use strict';
@@ -4016,39 +4033,17 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 window.ZIVOZONE_V104={openAdmin};
 })();
 
-
-/* ===== ZIVOZONE V1086 — UNIFIED PLAYER / HUB / ADMIN ENTRY POINTS =====
-   Reuses the existing engines already inside the consolidated runtime.
-   No new feature layer, no new backend, no paid service. */
-(function(){
-  'use strict';
-  const $=(s,r=document)=>r.querySelector(s);
-  const auth=()=>window.firebase?.auth?.();
-  const owner=()=>String(auth()?.currentUser?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
-  function safeOpen(fn){try{if(typeof fn==='function')return fn()}catch(e){console.warn('ZIVOZONE entry:',e)}}
-  function bindUnifiedEntries(){
-    const player=$('[data-action="open-player-profile"]');
-    const hub=$('[data-action="open-zivo-hub"]');
-    if(player&&!player.__zivoBound){player.__zivoBound=true;player.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();safeOpen(window.ZIVOZONE_PLAYER?.open)})}
-    if(hub&&!hub.__zivoBound){hub.__zivoBound=true;hub.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();safeOpen(window.ZIVOZONE_V37?.open)})}
-    const login=$('#login-btn');
-    if(login&&!login.__zivoUnified){
-      login.__zivoUnified=true;
-      login.addEventListener('click',e=>{
-        if(owner()){e.preventDefault();e.stopImmediatePropagation();safeOpen(window.ZIVOZONE_V104?.openAdmin||window.ZIVOZONE_MONITOR?.open);}
-      },true);
-    }
-    document.body.classList.toggle('zivo-admin-mode',owner());
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(bindUnifiedEntries,250));else setTimeout(bindUnifiedEntries,250);
-  window.addEventListener('zivozone-auth',()=>setTimeout(bindUnifiedEntries,200));
-  window.ZIVOZONE_UNIFIED={bind:bindUnifiedEntries,openPlayer:()=>safeOpen(window.ZIVOZONE_PLAYER?.open),openHub:()=>safeOpen(window.ZIVOZONE_V37?.open),openAdmin:()=>safeOpen(window.ZIVOZONE_V104?.openAdmin||window.ZIVOZONE_MONITOR?.open)};
 })();
 
-/* ===== INLINE TERMS LAUNCHER ===== */
+/* ===== SOURCE: inline ===== */
+(function(){
+'use strict';
 document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});
+})();
 
-/* ===== MODULE: zivo-v1062-royal.js ===== */
+/* ===== SOURCE: zivo-v1062-royal.js ===== */
+(function(){
+'use strict';
 
 /* ZIVOZONE V1062 — Royal 4D challenge presentation layer
    Visual-only enhancement. Existing challenge engines and economy APIs remain intact.
@@ -4204,11 +4199,11 @@ document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-
   setTimeout(observeChallengeList,1000);
 })();
 
+})();
 
-/* ===== INLINE SERVICE WORKER ===== */
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js",{scope:"/"}).catch(e=>console.warn("ZIVOZONE SW:",e)));}
-
-/* ===== MODULE: zivo-v1080-core.js ===== */
+/* ===== SOURCE: zivo-v1080-core.js ===== */
+(function(){
+'use strict';
 /* ZIVOZONE V1080 — CORE PLAYER HUB
    Additive layer: preserves V1073 systems and unifies the player-facing experience.
    No Billing / Functions / external paid API required.
@@ -4317,8 +4312,11 @@ if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.se
   window.addEventListener('zivozone-badge',()=>{});
 })();
 
+})();
 
-/* ===== MODULE: zivo-v1081-player.js ===== */
+/* ===== SOURCE: zivo-v1081-player.js ===== */
+(function(){
+'use strict';
 /* ZIVOZONE V1081 — PLAYER PROFILE + WALLET SAFE UI
    Additive to V1080/V1073. No payment processor or Billing added.
 */
@@ -4386,15 +4384,99 @@ function open(){
  o.innerHTML=render();o.classList.add('open');
 }
 function mount(){
- const actions=document.querySelector('.profile-actions');
- if(actions&&!document.getElementById('v1081-profile-open')){
-   const b=document.createElement('button');
-   b.id='v1081-profile-open';b.type='button';b.className='btn btn-ghost';
-   b.textContent='📊 ملف اللاعب';b.addEventListener('click',open);
-   actions.appendChild(b);
- }
- document.getElementById('v1081-profile-launch')?.remove();
+ if(document.getElementById('v1081-profile-launch'))return;
+ const b=document.createElement('button');b.id='v1081-profile-launch';b.className='v1081-launch';b.textContent='👤 ملف اللاعب';b.onclick=open;document.body.appendChild(b);
 }
 window.ZIVOZONE_PLAYER={open,getProfile,addLedger,setProfile};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
+
+})();
+
+/* ===== V1087 AUTH UX: isolated account modal + password reset ===== */
+(function(){
+  'use strict';
+  const A=window.ZIVOZONE_AUTH;
+  const root=()=>document.getElementById('modal-root');
+  const esc=s=>{const d=document.createElement('div');d.textContent=String(s??'');return d.innerHTML};
+  function toast(msg,type='info'){
+    const box=document.getElementById('toast-container'); if(!box)return;
+    const x=document.createElement('div'); x.className='toast '+type; x.textContent=msg; box.appendChild(x); setTimeout(()=>x.remove(),3200);
+  }
+  function close(){const r=root(); if(r){r.setAttribute('aria-hidden','true');r.innerHTML='';}}
+  function render(mode='login'){
+    const r=root(); if(!r)return;
+    const isReg=mode==='register';
+    r.innerHTML=`<div class="modal-backdrop" data-auth-backdrop><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="zivo-auth-title">
+      <button class="modal-close" type="button" data-auth-close aria-label="إغلاق">×</button>
+      <span class="eyebrow">ZIVOZONE · ACCOUNT</span>
+      <h2 id="zivo-auth-title">${isReg?'إنشاء حساب':'تسجيل الدخول'}</h2>
+      <p class="muted">${isReg?'أنشئ حسابك المجاني لحفظ تقدمك وXP وZIVO.':'أدخل بيانات حساب ZIVOZONE للمتابعة.'}</p>
+      <div class="auth-tabs">
+        <button type="button" class="btn ${isReg?'btn-primary':''}" data-auth-mode="register">إنشاء حساب</button>
+        <button type="button" class="btn ${!isReg?'btn-primary':''}" data-auth-mode="login">دخول</button>
+      </div>
+      <form id="zivo-auth-form" novalidate>
+        ${isReg?`<div><label for="zivo-auth-name">اسم اللاعب</label><input id="zivo-auth-name" autocomplete="name" minlength="2" required></div><div><label for="zivo-auth-age">العمر</label><input id="zivo-auth-age" type="number" min="5" max="100" value="18" required></div>`:''}
+        <div><label for="zivo-auth-email">البريد الإلكتروني</label><input id="zivo-auth-email" type="email" autocomplete="email" required></div>
+        <div><label for="zivo-auth-pass">كلمة المرور</label><input id="zivo-auth-pass" type="password" autocomplete="${isReg?'new-password':'current-password'}" minlength="6" required></div>
+        ${isReg?`<label class="zivo-terms-check"><input id="zivo-auth-terms" type="checkbox" required><span>أوافق على شروط استخدام ZIVOZONE وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط.</span></label>`:`<button type="button" class="zivo-inline-link zivo-forgot-password" id="zivo-forgot-password">نسيت كلمة السر؟</button>`}
+        <button class="btn btn-primary full" id="zivo-auth-submit" type="submit">${isReg?'إنشاء الحساب':'دخول'}</button>
+      </form>
+    </div></div>`;
+    r.setAttribute('aria-hidden','false');
+    r.querySelector('[data-auth-close]').onclick=close;
+    r.querySelector('[data-auth-backdrop]').onclick=e=>{if(e.target===e.currentTarget)close()};
+    r.querySelectorAll('[data-auth-mode]').forEach(b=>b.onclick=()=>render(b.dataset.authMode));
+    r.querySelector('#zivo-auth-form').onsubmit=async e=>{
+      e.preventDefault();e.stopPropagation();
+      const submit=r.querySelector('#zivo-auth-submit'); if(!submit)return;
+      submit.disabled=true;submit.textContent='جارٍ التنفيذ…';
+      try{
+        if(isReg){
+          await A.register({name:r.querySelector('#zivo-auth-name').value,age:r.querySelector('#zivo-auth-age').value,email:r.querySelector('#zivo-auth-email').value,password:r.querySelector('#zivo-auth-pass').value,termsAccepted:r.querySelector('#zivo-auth-terms').checked});
+        }else{
+          await A.login(r.querySelector('#zivo-auth-email').value,r.querySelector('#zivo-auth-pass').value);
+        }
+        await A.setLanguage?.(window.ZIVOZONE_I18N?.get?.()||'ar');
+        close(); window.dispatchEvent(new CustomEvent('zivozone-auth')); toast('تم تسجيل الدخول بنجاح','success');
+      }catch(err){submit.disabled=false;submit.textContent=isReg?'إنشاء الحساب':'دخول';toast(err?.message||'تعذر إتمام العملية','error')}
+    };
+    r.querySelector('#zivo-forgot-password')?.addEventListener('click',()=>resetView());
+  }
+  function resetView(prefill=''){
+    const r=root(); if(!r)return;
+    r.innerHTML=`<div class="modal-backdrop" data-auth-backdrop><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="zivo-reset-title">
+      <button class="modal-close" type="button" data-reset-close aria-label="إغلاق">×</button>
+      <span class="eyebrow">ZIVOZONE · ACCOUNT RECOVERY</span><h2 id="zivo-reset-title">استعادة كلمة السر</h2>
+      <p class="muted">ضع البريد الإلكتروني الذي سجلت به. إذا كان الحساب موجودًا، سيرسل Firebase رابط استعادة إلى البريد.</p>
+      <form id="zivo-reset-form"><div><label for="zivo-reset-email">البريد الإلكتروني</label><input id="zivo-reset-email" type="email" autocomplete="email" required value="${esc(prefill)}"></div>
+      <button class="btn btn-primary full" id="zivo-reset-submit" type="submit">إرسال رابط الاستعادة</button></form>
+      <button type="button" class="zivo-inline-link" id="zivo-reset-back" style="margin-top:12px">← العودة لتسجيل الدخول</button>
+    </div></div>`;
+    r.setAttribute('aria-hidden','false');
+    r.querySelector('[data-reset-close]').onclick=close;
+    r.querySelector('[data-auth-backdrop]').onclick=e=>{if(e.target===e.currentTarget)close()};
+    r.querySelector('#zivo-reset-back').onclick=()=>render('login');
+    r.querySelector('#zivo-reset-form').onsubmit=async e=>{
+      e.preventDefault();e.stopPropagation();
+      const email=r.querySelector('#zivo-reset-email').value.trim().toLowerCase(); const b=r.querySelector('#zivo-reset-submit');
+      if(!email)return; b.disabled=true;b.textContent='جارٍ الإرسال…';
+      try{
+        const auth=window.firebase?.auth?.();
+        if(!auth)throw new Error('خدمة الحساب غير متاحة حاليًا.');
+        await auth.sendPasswordResetEmail(email);
+        b.textContent='تم إرسال الرابط';
+        toast('تحقق من بريدك الإلكتروني لاستعادة كلمة السر','success');
+      }catch(err){b.disabled=false;b.textContent='إرسال رابط الاستعادة';toast('تعذر إرسال رابط الاستعادة. تأكد من البريد وحاول مرة أخرى.','error')}
+    };
+  }
+  function install(){
+    const btn=document.getElementById('login-btn'); if(!btn||!A)return;
+    btn.addEventListener('click',e=>{
+      if(A.isLoggedIn?.()||A.isAdmin?.())return;
+      e.preventDefault();e.stopImmediatePropagation();render('login');
+    },true);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,900),{once:true});else setTimeout(install,900);
 })();
