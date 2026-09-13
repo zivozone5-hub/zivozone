@@ -1,0 +1,190 @@
+
+/* ============================================================
+   ZIVOZONE V1082 — MOBILE-FIRST UI REFINEMENT
+   Goal: simplify navigation without changing application logic.
+   Existing IDs, sections, launchers and runtime remain intact.
+============================================================ */
+
+/* ---------- Desktop: calmer, tighter header ---------- */
+.topbar{
+  min-height:64px;
+  padding:10px clamp(14px,2.4vw,30px);
+  gap:clamp(12px,1.8vw,24px);
+}
+.main-nav{
+  gap:clamp(9px,1.25vw,18px);
+  min-width:0;
+}
+.main-nav a{
+  font-size:13px;
+  white-space:nowrap;
+}
+.top-actions{gap:6px;min-width:0}
+.top-actions select{min-width:88px;padding:8px}
+#login-btn{white-space:nowrap}
+.zivo-v87-quickdock,
+.zivo-v81-open{display:none!important}
+
+/* ---------- Mobile: one clean header ---------- */
+@media (max-width:700px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  body{padding-bottom:86px}
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:10000;
+    min-height:56px;
+    height:56px;
+    padding:7px 10px;
+    gap:8px;
+    background:rgba(5,7,14,.94);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+  }
+
+  .brand{gap:7px;min-width:0}
+  .brand-mark{
+    width:36px;height:36px;
+    min-width:36px;
+    border-radius:11px;
+    font-size:19px;
+  }
+  .brand-name{
+    font-size:16px;
+    letter-spacing:.6px;
+  }
+
+  /* Remove secondary controls from the first viewport. */
+  .top-actions{margin-inline-start:auto;gap:6px}
+  .top-actions .firebase-status,
+  #audio-toggle,
+  #language-select{display:none!important}
+
+  #login-btn{
+    min-height:38px;
+    max-width:none;
+    padding:8px 10px;
+    border-radius:11px;
+    font-size:10px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .main-nav{display:none!important}
+
+  /* Mobile bottom navigation becomes the primary app navigation. */
+  .mobile-nav{
+    position:fixed;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    left:7px;right:7px;bottom:7px;
+    z-index:12000;
+    min-height:64px;
+    padding:5px;
+    padding-bottom:max(5px,env(safe-area-inset-bottom));
+    border:1px solid rgba(255,255,255,.11);
+    border-radius:18px;
+    background:rgba(8,10,20,.96);
+    backdrop-filter:blur(22px);
+    box-shadow:0 14px 45px rgba(0,0,0,.48);
+  }
+  .mobile-nav a{
+    min-width:0;
+    min-height:52px;
+    border-radius:12px;
+    color:#8f98b5;
+    font-size:18px;
+    gap:2px;
+    transition:background .18s ease,color .18s ease,transform .18s ease;
+  }
+  .mobile-nav a span{
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:8px;
+    font-weight:800;
+  }
+  .mobile-nav a.active{
+    color:#fff;
+    background:rgba(124,108,255,.14);
+  }
+  .mobile-nav a:active{transform:scale(.96)}
+
+  /* Give every primary mobile section a little more breathing room. */
+  .section{padding:34px 12px}
+  .hero{
+    min-height:0;
+    padding-top:28px;
+    gap:24px;
+  }
+  .hero p{font-size:14px;line-height:1.8}
+  .hero-stats{gap:5px}
+  .hero-stats b{font-size:21px}
+  .hero-stats span{font-size:9px}
+
+  .hero-orb-wrap{min-height:220px}
+  .hero-orb{width:190px;height:190px}
+  .hero-orb span{font-size:88px}
+  .float-tag{padding:5px 8px;font-size:9px}
+
+  .section-heading{
+    margin-bottom:18px;
+    gap:10px;
+  }
+  .section-heading h2{font-size:1.45rem}
+  .section-heading .btn{flex:0 0 auto}
+
+  /* News rails: retain the live functionality, reduce visual weight. */
+  .zivo-news-stack{margin:8px 0 12px;gap:6px}
+  .zivo-news-rail{height:45px;border-radius:11px}
+  .zivo-rail-head{
+    min-width:116px;
+    padding:0 7px;
+    gap:4px;
+  }
+  .zivo-rail-title{font-size:9px}
+  .zivo-rail-live,.zivo-rail-badge{font-size:7px;padding:4px 5px}
+  .zivo-news-item{font-size:10px}
+  .zivo-rail-sequence{gap:20px;padding:0 12px}
+
+  /* Challenge cards: full-width touch target, no tiny button target. */
+  .challenge-list{gap:9px}
+  .challenge-card{
+    grid-template-columns:64px minmax(0,1fr)!important;
+    min-height:116px!important;
+    border-radius:15px!important;
+  }
+  .challenge-visual{
+    width:64px!important;
+    min-height:116px!important;
+    height:auto!important;
+    border-radius:0!important;
+  }
+  .challenge-copy{padding:10px 9px!important}
+  .challenge-copy h3{font-size:13px!important}
+  .challenge-copy p{font-size:9px!important}
+  .challenge-card>.btn{
+    grid-column:2!important;
+    width:calc(100% - 18px)!important;
+    max-width:none!important;
+    min-height:30px!important;
+    margin:0 9px 9px!important;
+  }
+
+  .identity-panel,.profile-panel,.ai-panel{
+    padding:16px;
+    border-radius:17px;
+  }
+
+  /* The single services menu remains available on mobile, but the
+     floating legacy presentation is not shown. */
+  #zivo-single-menu{display:none!important}
+  .zivo-v87-quickdock,.zivo-v81-open{display:none!important}
+}
+
+@media(max-width:380px){
+  .brand-name{display:none}
+  #login-btn{font-size:9px;padding-inline:8px}
+  .mobile-nav a span{font-size:7px}
+}

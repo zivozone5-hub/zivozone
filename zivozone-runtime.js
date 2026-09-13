@@ -859,25 +859,13 @@ window.ZIVOZONE_V18 = {
     }catch(e){console.warn('Event save:',e);return false}
   }
   async function update(patch){
-    if(!player)return null;
-    player={...player,...patch,language:patch.language||player.language||window.ZIVOZONE_I18N?.get?.()||'ar'};saveLocal();
-    if(cloud&&db&&!String(player.uid).startsWith('local_')){
-      try{
-        const safe={...patch};
-        ['zivo','coins'].forEach(k=>delete safe[k]);
-        if(Object.keys(safe).length)await db.collection('players').doc(player.uid).set({...safe,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-      }catch(e){console.warn('Firestore update:',e)}
-    }
+    if(!player)return null;player={...player,...patch,language:patch.language||player.language||window.ZIVOZONE_I18N?.get?.()||'ar'};saveLocal();
+    if(cloud&&db&&!String(player.uid).startsWith('local_')){try{const safe={...patch};['xp','zivo','coins','wins','gamesPlayed','level'].forEach(k=>delete safe[k]);if(Object.keys(safe).length)await db.collection('players').doc(player.uid).set({...safe,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch(e){console.warn('Firestore update:',e)}}
     emit();return player;
   }
   async function saveResult(result){
     if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
     try{await db.collection('players').doc(user.uid).collection('results').add({...result,createdAt:firebase.firestore.FieldValue.serverTimestamp()});return true}catch(e){console.warn('Result save:',e);return false}
-  }
-  async function refreshPlayer(){
-    if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return player;
-    try{const snap=await db.collection('players').doc(user.uid).get();if(snap.exists){player={uid:user.uid,...snap.data()};saveLocal();emit()}}catch(e){console.warn('Firestore player refresh:',e)}
-    return player;
   }
   async function setLanguage(lang){if(player){player.language=lang;saveLocal();if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({language:lang},{merge:true})}catch(e){}}emit()}}
   const isLoggedIn=()=>!!user&&!!player;
@@ -901,7 +889,7 @@ window.ZIVOZONE_V18 = {
 
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
   const isAdmin=()=>String(user?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
-  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,refreshPlayer,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
 
@@ -937,13 +925,7 @@ window.ZIVOZONE_V18 = {
   const toast=(msg,type='info')=>{const box=$('#toast-container');if(!box)return;const x=document.createElement('div');x.className='toast '+type;x.textContent=msg;box.appendChild(x);setTimeout(()=>x.remove(),3200)};
   const loadState=()=>{try{state={...state,...JSON.parse(localStorage.getItem(LS)||'{}')}}catch(e){}};
   const saveState=()=>{state.level=Math.floor((Number(state.xp)||0)/100)+1;try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}};
-  function syncFromPlayer(){
-    const p=A.getPlayer();if(!p)return;
-    const wallet=window.ZIVOZONE_ECONOMY?.getWallet?.();
-    const walletCoins=wallet&&Number.isFinite(Number(wallet.zivo))?Number(wallet.zivo):Number(p.coins)||0;
-    state={...state,xp:Number(p.xp)||0,coins:walletCoins,wins:Number(p.wins)||0,gamesPlayed:Number(p.gamesPlayed)||0,level:Number(p.level)||1,bestStreak:Number(p.bestStreak)||Number(state.bestStreak)||0};
-    saveState();
-  }
+  function syncFromPlayer(){const p=A.getPlayer();if(!p)return;state={...state,xp:Number(p.xp)||0,coins:Number(p.coins)||0,wins:Number(p.wins)||0,gamesPlayed:Number(p.gamesPlayed)||0,level:Number(p.level)||1,bestStreak:Number(p.bestStreak)||Number(state.bestStreak)||0};saveState()}
   function profile(){const p=A.getPlayer(),u=A.getUser?.(),admin=A.isAdmin?.()||String(u?.email||'').trim().toLowerCase()===ADMIN_EMAIL,l=state.level||1,base=(l-1)*100,prog=Math.max(0,Math.min(100,state.xp-base));$('#profile-name').textContent=admin?ADMIN_NAME:(p?.name||t('guest'));$('#profile-email').textContent=admin?`${u?.email||''} · ADMIN`:(p?.email||t('guestText'));$('#profile-level').textContent=admin?'ADMIN':l;$('#profile-xp').textContent=admin?'—':state.xp;$('#profile-coins').textContent=admin?'—':state.coins;$('#profile-wins').textContent=admin?'—':state.wins;$('#profile-best-streak').textContent=admin?'—':(state.bestStreak||0);$('#player-level-chip').textContent=admin?'ADMIN':`${t('level')} ${l}`;$('#xp-progress').style.width=admin?'100%':prog+'%';$('#logout-btn').hidden=!(A.isLoggedIn()||admin);$('#login-btn').textContent=admin?'👑 ADMIN':A.isLoggedIn()?`👤 ${p?.name||t('profile')}`:t('login')}
   async function reward(xp,coins=0,win=true){state.xp+=Math.max(0,Number(xp)||0);if(win)state.wins++;state.gamesPlayed++;saveState();if(A.isLoggedIn())await A.update({xp:state.xp,wins:state.wins,gamesPlayed:state.gamesPlayed,level:state.level});profile()}
   function closeModal(){clearQuestionTimer();clearIdentityTimer();const r=$('#modal-root');r.setAttribute('aria-hidden','true');r.innerHTML=''}
@@ -2137,8 +2119,7 @@ window.ZIVOZONE_V18 = {
     ['first_step','FIRST STEP','أول تحدي','🎯',s=>s.games>=1],
     ['speed','10 SECONDS','أجبت قبل انتهاء الوقت','⚡',s=>s.challengeStats&&Object.values(s.challengeStats).some(v=>v.games>0)],
     ['ten_games','TEN RUNS','10 ألعاب مكتملة','🔥',s=>s.games>=10],
-    ['perfect','PERFECT RUN','نتيجة كاملة 10/10 في تحدٍ','💎',s=>Number(s.perfectChallengesCount||0)>=1||s.bestScore>=100],
-    ['perfect_10','PERFECT ×10','حققت 10 نتائج كاملة','👑',s=>Number(s.perfectChallengesCount||0)>=10],
+    ['perfect','PERFECT RUN','نتيجة كاملة في تحدٍ','💎',s=>s.bestScore>=100],
     ['streak','STREAK','بنيت سلسلة لعب','🔗',s=>s.streak>=3],
     ['veteran','VETERAN','25 لعبة مكتملة','🏆',s=>s.games>=25],
     ['dark','DARK SURVIVOR','دخلت الغرفة المظلمة','🌑',s=>Object.keys(s.challengeStats||{}).some(k=>/horror|dark|رعب|مظلم/i.test(k))]
@@ -2188,7 +2169,6 @@ window.ZIVOZONE_V18 = {
   }
   window.ZIVOZONE_V31={state,open,share};
   window.addEventListener('zivozone-progress',()=>{state()});
-  window.addEventListener('zivozone-perfect-reward',()=>{state();card()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
 
@@ -3573,50 +3553,3 @@ window.ZIVOZONE_V18 = {
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount,{once:true});
   else mount();
 })();
-
-
-
-/* ============================================================
-   ZIVOZONE CHALLENGE QUESTION BANK PRO ENGINE
-   Additive integration: existing challenge UI and handlers remain.
-   ============================================================ */
-(function(){
-"use strict";
-const KEY_ALIASES={
-  "logic-extreme":"logic_extreme","logicextreme":"logic_extreme",
-  "memory-focus":"memory_focus","football-intelligence":"football_intelligence",
-  "memory-v22":"memory_v22"
-};
-const Bank={
-  data:Object.create(null), seen:Object.create(null),
-  normalize(k){return KEY_ALIASES[String(k||"").toLowerCase()]||String(k||"").toLowerCase();},
-  register(k,arr){
-    if(!Array.isArray(arr))return 0;
-    k=this.normalize(k); this.data[k]=this.data[k]||[];
-    const m=new Map(this.data[k].map(x=>[x.id||x.question,x]));
-    for(const q of arr){
-      if(q&&q.question&&Array.isArray(q.options)&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length)
-        m.set(q.id||q.question,q);
-    }
-    this.data[k]=[...m.values()]; return this.data[k].length;
-  },
-  registerAll(obj){Object.entries(obj||{}).forEach(([k,v])=>this.register(k,v));},
-  select(k,n=10){
-    k=this.normalize(k); const a=(this.data[k]||[]).slice();
-    if(!a.length)return [];
-    const s=this.seen[k]||new Set();
-    let fresh=a.filter(q=>!s.has(q.id||q.question));
-    if(fresh.length<n){s.clear();fresh=a.slice();}
-    for(let i=fresh.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[fresh[i],fresh[j]]=[fresh[j],fresh[i]];}
-    const out=fresh.slice(0,n);out.forEach(q=>s.add(q.id||q.question));this.seen[k]=s;return out;
-  },
-  stats(k){const a=this.data[this.normalize(k)]||[];return {total:a.length};}
-};
-window.ZIVOZONE_QUESTION_BANK_PRO=Bank;
-window.ZIVOZONE_GET_BANK_QUESTIONS=(id,n)=>Bank.select(id,n||10);
-window.ZIVOZONE_IMPORT_AI_QUESTIONS=(id,qs)=>Bank.register(id,qs);
-fetch("challenge_question_banks.json",{cache:"no-store"})
- .then(r=>r.ok?r.json():null).then(x=>{if(x&&x.banks)Bank.registerAll(x.banks);})
- .catch(()=>{});
-})();
-
