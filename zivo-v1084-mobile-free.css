@@ -1,0 +1,122 @@
+/* ZIVOZONE V1084 — MOBILE-FIRST + FREE-TIER SAFE UI
+   Additive override. Existing application structure, IDs and engines stay intact.
+   No paid API, external audio file, analytics SDK or new backend is introduced here.
+*/
+
+/* Economy belongs to content, not the header. */
+@media (max-width:700px){
+  #zivo-v101-economy{
+    display:grid!important;
+    position:relative!important;
+    width:calc(100% - 20px)!important;
+    margin:10px auto 16px!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:8px!important;
+    order:initial!important;
+  }
+  #zivo-v101-economy .z101-card{
+    min-height:112px!important;height:auto!important;padding:12px!important;
+    border-radius:16px!important;
+  }
+  #zivo-v101-economy .z101-wallet,
+  #zivo-v101-economy .z101-mining{min-height:112px!important;align-items:center!important}
+  #zivo-v101-economy .z101-wallet{display:grid!important;grid-template-columns:38px 1fr!important;gap:8px!important}
+  #zivo-v101-economy .z101-coin{width:38px!important;height:38px!important;flex-basis:38px!important;font-size:16px!important}
+  #zivo-v101-economy .z101-label{font-size:7px!important}
+  #zivo-v101-economy .z101-balance{font-size:18px!important}
+  #zivo-v101-economy .z101-wallet-actions{grid-column:1/-1!important;margin:2px 0 0!important}
+  #zivo-v101-economy .z101-wallet-actions .z101-btn{width:100%!important;min-height:36px!important;font-size:10px!important}
+  #zivo-v101-economy .z101-mining{display:grid!important;grid-template-columns:34px 1fr!important;gap:7px!important}
+  #zivo-v101-economy .z101-mining-icon{width:34px!important;height:34px!important;display:grid!important;place-items:center!important;font-size:18px!important}
+  #zivo-v101-economy .z101-mining h3{font-size:10px!important}
+  #zivo-v101-economy .z101-countdown{font-size:11px!important}
+  #zivo-v101-economy .z101-mine-action{grid-column:1/-1!important;min-width:0!important;margin:2px 0 0!important}
+  #zivo-v101-economy .z101-mine-action .z101-btn{width:100%!important;min-height:36px!important;font-size:9px!important}
+
+  /* Header: brand + account only. Navigation is the bottom bar. */
+  .topbar{height:54px!important;min-height:54px!important;padding:6px 10px!important;gap:7px!important}
+  .topbar .main-nav,.topbar .z1062-menu{display:none!important}
+  .topbar .top-actions{margin-inline-start:auto!important;gap:6px!important}
+  .topbar .top-actions #zivo-v101-economy{display:none!important}
+  .topbar #login-btn{min-width:74px!important;width:auto!important;max-width:104px!important;min-height:36px!important;padding:7px 9px!important;font-size:9px!important;white-space:nowrap!important}
+  .topbar .brand-mark{width:35px!important;height:35px!important;min-width:35px!important}
+  .topbar .brand-name{font-size:14px!important}
+
+  /* Remove legacy floating launchers on mobile: one navigation system only. */
+  #v1080-launch,#v1081-profile-launch,#v37-open,#v38-open,#v39-open,#zivo-single-menu{display:none!important}
+  #z81-admin-open{display:none!important}
+  #z27-cloud-status,#z43-cloud,#zivo-v21-hud{display:none!important}
+
+  /* Main content becomes a single-column app layout. */
+  main{width:100%!important;overflow:hidden!important}
+  .section{padding:28px 10px!important}
+  .hero{padding:22px 10px 16px!important;gap:15px!important}
+  .hero h1{font-size:clamp(28px,8vw,42px)!important;line-height:1.12!important}
+  .hero p{font-size:12px!important;line-height:1.75!important;max-width:38rem!important}
+  .hero-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important}
+  .hero-actions .btn{min-height:42px!important;font-size:10px!important;padding:8px!important}
+  .hero-orb-wrap{min-height:165px!important}
+  .hero-orb{width:155px!important;height:155px!important}
+  .hero-orb span{font-size:70px!important}
+
+  /* News is compact and readable. */
+  .zivo-news-stack{margin:6px 10px 10px!important;gap:6px!important}
+  .zivo-news-rail{height:40px!important;border-radius:10px!important}
+  .zivo-rail-head{min-width:94px!important;padding:0 6px!important}
+  .zivo-rail-sub,.zivo-rail-status{display:none!important}
+  .zivo-rail-title{font-size:8px!important}
+  .zivo-news-item{font-size:9px!important}
+
+  /* Challenge center: one card per row. No squeezed two-column cards. */
+  #challenge-list{display:grid!important;grid-template-columns:1fr!important;gap:9px!important}
+  #challenge-list .challenge-card.z1062-card{
+    display:grid!important;grid-template-columns:72px minmax(0,1fr)!important;
+    min-height:108px!important;height:auto!important;border-radius:14px!important;
+  }
+  #challenge-list .z1062-visual{width:72px!important;height:100%!important;min-height:108px!important;flex:none!important}
+  #challenge-list .z1062-copy{margin:0!important;padding:10px 9px!important;min-width:0!important}
+  #challenge-list .z1062-badges{gap:3px!important;margin-bottom:4px!important}
+  #challenge-list .z1062-badge{font-size:6.5px!important;padding:3px 4px!important}
+  #challenge-list .z1062-title{font-size:13px!important;line-height:1.25!important}
+  #challenge-list .z1062-desc{font-size:8px!important;line-height:1.45!important;-webkit-line-clamp:2!important}
+
+  /* Dedicated Dark Room entry: always visible, always tappable. */
+  #zivo-dark-room{display:block!important;margin:12px 0 0!important;padding:5px!important;border-radius:16px!important}
+  #zivo-dark-room .section-heading{display:none!important}
+  #zivo-dark-room .z1062-horror-card{
+    display:block!important;position:relative!important;min-height:220px!important;height:220px!important;
+    border-radius:13px!important;overflow:hidden!important;cursor:pointer!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
+  #zivo-dark-room .z1062-horror-card img{width:100%!important;height:100%!important;object-fit:cover!important}
+  #zivo-dark-room .z1062-horror-content{inset:auto 12px 12px!important;z-index:3!important}
+  #zivo-dark-room .z1062-horror-kicker{font-size:7px!important;letter-spacing:1px!important}
+  #zivo-dark-room .z1062-horror-title{font-size:21px!important;margin:3px 0!important}
+  #zivo-dark-room .z1062-horror-text{font-size:8px!important;line-height:1.6!important;max-width:92%!important}
+  #zivo-dark-room .z1062-horror-enter{display:inline-block!important;font-size:8px!important;padding:7px 10px!important;margin-top:5px!important;border-radius:9px!important}
+
+  /* Ads remain placeholders only and do not consume the mobile viewport. */
+  .ad-column{display:none!important}
+  .ad-top,.ad-bottom{min-height:48px!important;padding:8px!important;margin:8px 0!important}
+  .ad-top strong,.ad-bottom strong{font-size:8px!important}
+
+  /* One bottom navigation, no competing floating controls. */
+  .mobile-nav{left:6px!important;right:6px!important;bottom:6px!important;min-height:60px!important;border-radius:16px!important;padding:4px!important}
+  .mobile-nav a{min-height:50px!important;font-size:17px!important;border-radius:11px!important}
+  .mobile-nav a span{font-size:7px!important}
+}
+
+@media(max-width:390px){
+  #zivo-v101-economy{grid-template-columns:1fr 1fr!important}
+  #zivo-v101-economy .z101-card{min-height:104px!important;padding:9px!important}
+  #zivo-v101-economy .z101-balance{font-size:16px!important}
+  .brand-name{font-size:13px!important}
+  .hero-actions{grid-template-columns:1fr!important}
+  #zivo-dark-room .z1062-horror-card{height:205px!important;min-height:205px!important}
+  #zivo-dark-room .z1062-horror-title{font-size:18px!important}
+}
+
+/* Free-tier principle: audio is generated locally by Web Audio/SpeechSynthesis in the existing engine. */
+@media(prefers-reduced-motion:reduce){
+  #zivo-dark-room .z1062-horror-card:before{animation:none!important}
+}
