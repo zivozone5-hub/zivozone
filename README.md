@@ -1,21 +1,19 @@
-# ZIVOZONE V7 Premium
+# ZIVOZONE
 
-Upgrade layer over the existing ZIVOZONE Firebase project.
+منصة ترفيهية تفاعلية (IQ Tests، Horror Room، تحديات يومية، Who am I، قسم رياضي، نظام XP/ZIVO Coin) مبنية بـ HTML/CSS/JS ومتصلة بـ Firebase (Auth, Firestore, App Check).
 
-## Included
-- Existing Firebase Authentication + Firestore persistence preserved.
-- Existing 5-language system preserved: Arabic, English, Chinese, Hindi, Spanish.
-- Expanded challenge engine and reliable event delegation for buttons.
-- Infinite Dark Room mode with 10-question checkpoints and no right/wrong reveal.
-- Strong adaptive stereo horror ambience using Web Audio API.
-- Challenge-specific sound identities.
-- 3D rotating Z brand effects.
-- Live sports news loader using public ESPN site APIs, plus existing TheSportsDB match data.
-- Independent ad presentation/control module.
+- **الموقع الحي:** https://www.zivozone.com
+- **سجل التحديثات الكامل (تاريخي):** [`docs/changelog/`](docs/changelog/CHANGELOG.md)
 
-## Upload
-Replace the existing files in the GitHub Pages root with all files in this folder, including the new `news.js` and `ads.js`.
-Do not change the Firebase configuration in `index.html`.
+## هيكل الملفات
+- `index.html` — الصفحة الرئيسية وترتيب تحميل كل الطبقات
+- `styles.css` — التنسيق الأساسي
+- `zivo-v103-pro.css/js` … `zivo-v1081-player.css/js` — طبقات تطوير متتالية (مرشحة للدمج، راجع `docs/changelog`)
+- `zivozone-runtime.js` — المحرك الرئيسي للتحديات والاقتصاد
+- `zivo-global-core.js`, `zivo-ai.js` — وحدات مساعدة
+- `assets/` — صور، أصوات، أيقونات
+- `data/`, `scripts/` — بيانات الأخبار وسكربت الجلب
+- `firebase.json`, `firestore.rules`, `.firebaserc` — إعدادات Firebase
 
-## Firebase
-No Firebase credentials were changed. Existing Authentication and Firestore collections remain the source of truth for signed-in player data and results.
+## ملاحظة تقنية
+هذا المشروع يحتوي طبقات CSS/JS متعددة متراكمة فوق بعض بدل دمجها بملف واحد. الخطة القادمة (موثقة بمحادثات التطوير) هي دمجها بدون أي تغيير على الشكل أو الوظائف.
