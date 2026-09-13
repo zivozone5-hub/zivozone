@@ -77,16 +77,7 @@
   }
 
   function ensureDarkRoom(){
-    if(document.getElementById('zivo-dark-room')){
-      const existing=document.querySelector('#zivo-dark-room .z1062-horror-card');
-      if(existing && !existing.dataset.zivoBound){
-        existing.dataset.zivoBound='1';
-        const open=()=>window.ZIVOZONE_V20?.start?.('horror');
-        existing.addEventListener('click',open);
-        existing.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}});
-      }
-      return;
-    }
+    if(document.getElementById('zivo-dark-room'))return;
     const challenge=document.getElementById('challenges');
     const list=document.getElementById('challenge-list');
     if(!challenge||!list)return;
@@ -118,15 +109,8 @@
   function moveEconomy(){
     const economy=document.getElementById('zivo-v101-economy');
     const actions=document.querySelector('.topbar .top-actions');
-    const home=document.getElementById('home');
-    if(!economy)return;
-    // Mobile is the primary UX: keep Wallet/Mining in the homepage content,
-    // never inside the already crowded header. Desktop may keep the compact header placement.
-    if(window.matchMedia && window.matchMedia('(max-width:700px)').matches){
-      if(home && economy.parentElement!==home.parentElement) home.insertAdjacentElement('afterend',economy);
-      return;
-    }
-    if(actions && economy.parentElement!==actions) actions.appendChild(economy);
+    if(!economy||!actions)return;
+    if(economy.parentElement!==actions) actions.appendChild(economy);
   }
 
   function topbarPolish(){
