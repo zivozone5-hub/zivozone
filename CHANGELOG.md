@@ -28,3 +28,4 @@
 - **README_V1073_APP_CHECK_KEY_FIX.md** — ZIVOZONE V1073 — App Check key correction
 - **README_V1080_CORE.md** — ZIVOZONE V1080 CORE
 - **README_V1081_PLAYER_WALLET.md** — ZIVOZONE V1081 — Player / Wallet
+- **CHANGELOG_V1091.md** — ZIVOZONE V1091 — Dark Room & Intelligence Core

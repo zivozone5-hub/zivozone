@@ -1156,7 +1156,7 @@ window.ZIVOZONE_V18 = {
     return chosen;
   }
   function guestGate(id){openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('guestMode')}</span><h2>${t('guest')}</h2><p>${t('guestText')}</p><div class="modal-actions"><button class="btn btn-primary" id="continue-guest">${t('continueGuest')}</button><button class="btn btn-ghost" id="create-now">${t('createNow')}</button></div>`);$('#continue-guest').onclick=()=>{closeModal();beginGame(id,true)};$('#create-now').onclick=()=>authModal(()=>beginGame(id,false))}
-  function startGame(id){const src=C.get(id);if(!src){toast(t('noData'),'error');return}if(id==='horror'){openModal(`<div class="horror-warning-card"><span class="eyebrow">${t('horrorWarningTitle')}</span><h2>${t('horrorWarningHeadline')}</h2><p>${t('horrorWarningText')}</p><p class="horror-warning">${t('horrorWarningNight')}</p><div class="modal-actions"><button class="btn btn-primary" id="enter-horror">${t('horrorEnter')}</button><button class="btn btn-ghost" data-close>${t('close')}</button></div></div>`,'horror-modal phase-1');$('#enter-horror').onclick=()=>{closeModal();beginGame('horror',!A.isLoggedIn())};return}beginGame(id,!A.isLoggedIn())}
+  function startGame(id){const src=C.get(id);if(!src){toast(t('noData'),'error');return}if(id==='horror'&&window.ZIVOZONE_DARKROOM_V1091?.start){window.ZIVOZONE_DARKROOM_V1091.start();return}if(id==='horror'){openModal(`<div class="horror-warning-card"><span class="eyebrow">${t('horrorWarningTitle')}</span><h2>${t('horrorWarningHeadline')}</h2><p>${t('horrorWarningText')}</p><p class="horror-warning">${t('horrorWarningNight')}</p><div class="modal-actions"><button class="btn btn-primary" id="enter-horror">${t('horrorEnter')}</button><button class="btn btn-ghost" data-close>${t('close')}</button></div></div>`,'horror-modal phase-1');$('#enter-horror').onclick=()=>{closeModal();beginGame('horror',!A.isLoggedIn())};return}beginGame(id,!A.isLoggedIn())}
   function beginGame(id,guest){const src=C.get(id),horror=id==='horror';game={id,questions:horror?shuffle(src.questions.map(q=>({...q}))):prepareQuestions(id),index:0,score:0,pressureScore:0,streak:0,bestStreak:0,answers:[],guest,locked:false,horrorSignupShown:false,horrorUsed:[],timedOut:0,questionStartedAt:0};if(horror)game.horrorUsed=game.questions.map(q=>q.id);document.body.classList.toggle('horror-active',horror);S().unlock?.();S().startChallenge?.(id);renderQuestion()}
   function currentQ(){return game.questions[game.index]}
   function inputMarkup(q){const isNum=q.type==='number';return `<form id="answer-form" class="input-answer-form"><input id="answer-input" ${isNum?'inputmode="numeric" pattern="[0-9.\\-]+"':''} autocomplete="off" placeholder="${esc(isNum?t('enterNumber'):t('writeAnswer'))}" required><button class="btn btn-primary" type="submit">${t('submitAnswer')}</button></form>`}
@@ -4534,4 +4534,291 @@ function mount(){
 }
 window.ZIVOZONE_PLAYER={open,getProfile,addLedger,setProfile};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+})();
+
+
+/* ============================================================
+   ZIVOZONE V1091 — DARK ROOM & INTELLIGENCE CORE
+   Engineering evolution layer.
+   - Replaces only the Horror/Dark Room entry path.
+   - Preserves existing challenge banks, Auth, Player, Economy,
+     Audio, Firebase and result event contracts.
+   - No external dependencies.
+============================================================ */
+(()=>{
+  'use strict';
+  const C=window.ZIVOZONE_CHALLENGES;
+  const I=window.ZIVOZONE_I18N;
+  const A=()=>window.ZIVOZONE_AUDIO||{};
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const loc=o=>{
+    const l=I?.get?.()||document.documentElement.lang||'ar';
+    return typeof o==='string'?o:(o?.[l]??o?.en??o?.ar??'');
+  };
+  const state={active:false,started:false,index:0,correct:0,timed:0,streak:0,best:0,answers:[],times:[],phaseStats:{},timer:null,deadline:0,questionStarted:0,questions:[]};
+
+  const PHASES=[
+    {key:'OBSERVE',ar:'المراقبة',sub:'READ THE ROOM',hint:'راقب التفاصيل. لا تثق بعينك الأولى.',accent:'cyan'},
+    {key:'REMEMBER',ar:'الذاكرة',sub:'LOCK THE SIGNAL',hint:'احفظ النمط. سيختفي قبل أن تتوقع.',accent:'violet'},
+    {key:'DETECT',ar:'الاكتشاف',sub:'FIND THE ANOMALY',hint:'هناك شيء واحد لا ينتمي إلى المشهد.',accent:'red'},
+    {key:'DECIDE',ar:'القرار',sub:'CHOOSE UNDER PRESSURE',hint:'لا تبحث عن الخوف. ابحث عن المنطق.',accent:'gold'},
+    {key:'SURVIVE',ar:'البقاء',sub:'FINAL THRESHOLD',hint:'آخر مرحلة. الهدوء الآن أهم من السرعة.',accent:'crimson'}
+  ];
+
+  const LINES=[
+    'لا تستعجل… الغرفة تقيس انتباهك قبل إجابتك.',
+    'أغلقت الإشارة. ما تذكرته الآن أهم مما رأيته.',
+    'هناك تفصيل واحد لا ينتمي إلى الصورة.',
+    'الوقت يضغط. المنطق لا.',
+    'المرحلة الأخيرة لا تحتاج شجاعة… تحتاج تركيزًا.'
+  ];
+
+  function phaseFor(i){return Math.min(4,Math.floor(i/2));}
+  function questionPool(){
+    const bank=C?.get?.('horror')||C?.horror;
+    if(!bank||!Array.isArray(bank.questions))return [];
+    const src=bank.questions.filter(q=>q&&q.id);
+    const copy=src.map(q=>({...q,a:Array.isArray(q.a)?q.a.slice():q.a}));
+    for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}
+    return copy.slice(0,10);
+  }
+  function ensure(){
+    let root=document.getElementById('zivo-dark-v1091');
+    if(root)return root;
+    root=document.createElement('div');
+    root.id='zivo-dark-v1091';
+    root.className='z1091-overlay';
+    root.innerHTML=`
+      <div class="z1091-noise"></div><div class="z1091-scan"></div><div class="z1091-vignette"></div>
+      <div class="z1091-glow"></div><div class="z1091-grid"></div>
+      <header class="z1091-top">
+        <div class="z1091-brand"><span class="z1091-dot"></span><span>DARK ROOM</span><small> ZIVOZONE / INTELLIGENCE CORE</small></div>
+        <div class="z1091-top-actions">
+          <button class="z1091-sound" type="button" aria-label="الصوت">🔊</button>
+          <button class="z1091-exit" type="button">خروج</button>
+        </div>
+      </header>
+      <main class="z1091-main">
+        <section class="z1091-intro" data-screen="intro">
+          <div class="z1091-symbol">Z</div>
+          <div class="z1091-kicker">ZIVOZONE // DARK EXPERIENCE</div>
+          <h1>الغرفة المظلمة</h1>
+          <p>تجربة ذكاء نفسية متصاعدة. لا تعتمد على الحظ. لا تكشف الإجابة أثناء الجولة.</p>
+          <div class="z1091-warning"><span>⚠</span><div><b>تجربة اختيارية</b><small>يمكنك الخروج في أي لحظة. أوقف الصوت أو التجربة إذا شعرت بعدم الارتياح.</small></div></div>
+          <button class="z1091-enter" type="button">دخول الغرفة <span>→</span></button>
+          <div class="z1091-meta-line"><span>10 QUESTIONS</span><i></i><span>5 PHASES</span><i></i><span>30s / QUESTION</span></div>
+        </section>
+        <section class="z1091-game" data-screen="game" hidden>
+          <div class="z1091-phasebar">
+            <div><span class="z1091-phase-no">PHASE 01</span><b class="z1091-phase-name">المراقبة</b><small class="z1091-phase-sub">READ THE ROOM</small></div>
+            <div class="z1091-stage"><span>STAGE</span><strong class="z1091-count">01 / 10</strong></div>
+          </div>
+          <div class="z1091-progress"><i></i></div>
+          <div class="z1091-intensity"><span class="z1091-intensity-fill"></span></div>
+          <div class="z1091-scene" aria-hidden="true">
+            <div class="z1091-scene-code">SIGNAL // <span>ACTIVE</span></div>
+            <div class="z1091-symbol-row"></div>
+            <div class="z1091-memory-seq"></div>
+            <div class="z1091-crosshair">+</div>
+            <div class="z1091-scene-status">ANOMALY SCAN</div>
+          </div>
+          <div class="z1091-question-wrap">
+            <div class="z1091-qtop"><span class="z1091-qnum">QUESTION 01</span><span class="z1091-phase-hint">راقب قبل أن تختار</span></div>
+            <h2 class="z1091-question"></h2>
+            <div class="z1091-timer"><strong>30</strong><div><i></i></div><span>SECONDS</span></div>
+            <div class="z1091-options"></div>
+          </div>
+          <div class="z1091-footer"><span>NO IMMEDIATE FEEDBACK</span><span class="z1091-live">● LIVE</span></div>
+        </section>
+        <section class="z1091-result" data-screen="result" hidden>
+          <div class="z1091-result-orbit"><span>Z</span></div>
+          <div class="z1091-kicker">DARK ROOM // SESSION COMPLETE</div>
+          <h2>أنت خرجت من الغرفة.</h2>
+          <div class="z1091-final-score"><small>DARK ROOM SCORE</small><strong>00</strong><em>/100</em></div>
+          <div class="z1091-metrics"></div>
+          <div class="z1091-result-note"></div>
+          <div class="z1091-result-actions"><button class="z1091-retry" type="button">جولة جديدة</button><button class="z1091-result-exit" type="button">العودة إلى ZIVOZONE</button></div>
+        </section>
+      </main>
+    `;
+    document.body.appendChild(root);
+    root.querySelector('.z1091-enter').addEventListener('click',begin);
+    root.querySelector('.z1091-exit').addEventListener('click',stop);
+    root.querySelector('.z1091-result-exit').addEventListener('click',stop);
+    root.querySelector('.z1091-retry').addEventListener('click',()=>{reset();begin(true)});
+    root.querySelector('.z1091-sound').addEventListener('click',async()=>{
+      await A().unlock?.(); A().toggle?.();
+      root.querySelector('.z1091-sound').textContent=A().isEnabled?.()?'🔊':'🔇';
+    });
+    return root;
+  }
+
+  function reset(){
+    clearInterval(state.timer);
+    state.active=false;state.started=false;state.index=0;state.correct=0;state.timed=0;state.streak=0;state.best=0;state.answers=[];state.times=[];state.phaseStats={};state.questions=[];
+  }
+
+  function begin(fromRetry=false){
+    const root=ensure();
+    reset();
+    state.active=true;state.started=true;state.questions=questionPool();
+    if(state.questions.length<10){stop();return}
+    root.classList.add('active','playing');
+    document.body.classList.add('z1091-active');
+    root.querySelector('[data-screen="intro"]').hidden=true;
+    root.querySelector('[data-screen="result"]').hidden=true;
+    root.querySelector('[data-screen="game"]').hidden=false;
+    try{sessionStorage.setItem('zivozone_darkroom_v1091','1')}catch(e){}
+    A().unlock?.(); A().startChallenge?.('horror');
+    A().narrate?.(LINES[0]);
+    render();
+  }
+
+  function start(){
+    const root=ensure();
+    root.classList.add('active');
+    root.querySelector('[data-screen="intro"]').hidden=false;
+    root.querySelector('[data-screen="game"]').hidden=true;
+    root.querySelector('[data-screen="result"]').hidden=true;
+    document.body.classList.add('z1091-active');
+    A().unlock?.();
+  }
+
+  function stop(){
+    clearInterval(state.timer);
+    state.active=false;state.started=false;
+    A().stopChallenge?.();
+    try{window.speechSynthesis?.cancel?.()}catch(e){}
+    const root=document.getElementById('zivo-dark-v1091');
+    if(root)root.classList.remove('active','playing');
+    document.body.classList.remove('z1091-active');
+    try{sessionStorage.removeItem('zivozone_darkroom_v1091')}catch(e){}
+    window.dispatchEvent(new CustomEvent('zivo:darkroom-stopped'));
+  }
+
+  function render(){
+    if(!state.active)return;
+    const q=state.questions[state.index];
+    if(!q){finish();return}
+    const root=ensure(), phase=PHASES[phaseFor(state.index)], p=phaseFor(state.index);
+    root.dataset.phase=String(p+1);
+    root.querySelector('.z1091-phase-no').textContent=`PHASE 0${p+1}`;
+    root.querySelector('.z1091-phase-name').textContent=phase.ar;
+    root.querySelector('.z1091-phase-sub').textContent=phase.sub;
+    root.querySelector('.z1091-count').textContent=`${String(state.index+1).padStart(2,'0')} / 10`;
+    root.querySelector('.z1091-progress i').style.width=`${(state.index/10)*100}%`;
+    root.querySelector('.z1091-intensity-fill').style.width=`${Math.min(100,20+p*20)}%`;
+    root.querySelector('.z1091-qnum').textContent=`QUESTION ${String(state.index+1).padStart(2,'0')}`;
+    root.querySelector('.z1091-phase-hint').textContent=phase.hint;
+    root.querySelector('.z1091-question').textContent=loc(q.q||q.question||'');
+    root.querySelector('.z1091-options').innerHTML=(q.a||[]).map((x,i)=>`<button class="z1091-option" type="button" data-index="${i}"><span>${String.fromCharCode(65+i)}</span><b>${esc(loc(x))}</b></button>`).join('');
+    root.querySelectorAll('.z1091-option').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.index))));
+    buildScene(p);
+    state.questionStarted=performance.now();
+    state.deadline=performance.now()+30000;
+    clearInterval(state.timer);
+    let left=30;
+    const timerEl=root.querySelector('.z1091-timer strong'), fill=root.querySelector('.z1091-timer i');
+    timerEl.textContent=left; fill.style.width='100%';
+    state.timer=setInterval(()=>{
+      left--; timerEl.textContent=Math.max(0,left); fill.style.width=`${Math.max(0,left)/30*100}%`;
+      if(left<=0){clearInterval(state.timer);state.timed++;state.answers.push({id:q.id,ok:false,seconds:30,timedOut:true});state.times.push(30);state.streak=0;A().timeout?.();pulse();setTimeout(()=>{state.index++;render()},260)}
+    },1000);
+    if(p>0)A().phase?.(p+1);
+    if(state.index>0&&state.index%2===0)A().horrorPulse?.(Math.min(5,1+p));
+  }
+
+  function buildScene(p){
+    const root=ensure(), row=root.querySelector('.z1091-symbol-row'), seq=root.querySelector('.z1091-memory-seq');
+    const glyphs=['◈','◇','△','○','□','✦','⊙','⬡','⌁'];
+    row.innerHTML=Array.from({length:5},(_,i)=>`<span class="z1091-glyph g${i}">${glyphs[(i+p*2+state.index)%glyphs.length]}</span>`).join('');
+    seq.textContent='';
+    if(p===0){
+      row.classList.add('observe');seq.classList.remove('show');
+      setTimeout(()=>row.classList.remove('observe'),900);
+    }else if(p===1){
+      row.classList.remove('observe');seq.classList.add('show');
+      seq.textContent=Array.from({length:5},(_,i)=>glyphs[(i*2+state.index+p)%glyphs.length]).join('  ');
+      setTimeout(()=>{if(state.active)seq.classList.add('locked')},1800);
+    }else if(p===2){
+      row.classList.remove('observe');seq.classList.remove('show');
+      const anomaly=(state.index*3+1)%5;row.querySelectorAll('span').forEach((x,i)=>x.classList.toggle('anomaly',i===anomaly));
+    }else if(p===3){
+      row.classList.remove('observe');seq.classList.remove('show');
+      row.innerHTML=`<span class="z1091-signal">SIGNAL</span><span class="z1091-signal danger">DECIDE</span><span class="z1091-signal">TRUST LOGIC</span>`;
+    }else{
+      row.classList.remove('observe');seq.classList.remove('show');
+      row.innerHTML=`<span class="z1091-final-signal">THRESHOLD ${state.index+1}</span>`;
+    }
+    root.querySelector('.z1091-scene-status').textContent=PHASES[p].sub;
+  }
+
+  function answer(index){
+    if(!state.active)return;
+    clearInterval(state.timer);
+    const q=state.questions[state.index], seconds=Math.min(30,(performance.now()-state.questionStarted)/1000);
+    const ok=Number(index)===Number(q.c);
+    state.answers.push({id:q.id,value:index,ok,seconds:+seconds.toFixed(2),phase:phaseFor(state.index)+1});
+    state.times.push(seconds);
+    if(ok){state.correct++;state.streak++;state.best=Math.max(state.best,state.streak);A().correct?.()}else{state.streak=0;A().wrong?.()}
+    const ph=phaseFor(state.index)+1;
+    state.phaseStats[ph]=state.phaseStats[ph]||{correct:0,total:0,time:0};
+    state.phaseStats[ph].total++;state.phaseStats[ph].time+=seconds;if(ok)state.phaseStats[ph].correct++;
+    // No answer reveal during the room.
+    const buttons=ensure().querySelectorAll('.z1091-option');
+    buttons.forEach(b=>b.disabled=true);
+    pulse(ok);
+    setTimeout(()=>{state.index++;render()},420);
+  }
+
+  function pulse(ok=false){
+    const root=ensure();root.classList.remove('pulse-good','pulse-bad','pulse-hard');void root.offsetWidth;
+    root.classList.add(ok?'pulse-good':'pulse-bad');
+    if(state.index>=8)root.classList.add('pulse-hard');
+  }
+
+  async function finish(){
+    clearInterval(state.timer);
+    state.active=false;state.started=false;
+    A().stopChallenge?.();A().success?.();
+    const accuracy=Math.round(state.correct/10*100);
+    const avg=state.times.length?state.times.reduce((a,b)=>a+b,0)/state.times.length:30;
+    const reaction=Math.max(0,Math.min(100,Math.round((1-avg/30)*100)));
+    const pressureTimes=state.times.slice(6);
+    const pressure=Math.max(0,Math.min(100,Math.round((1-(pressureTimes.length?pressureTimes.reduce((a,b)=>a+b,0)/pressureTimes.length:30)/30)*100)));
+    const observation=Math.round(((state.phaseStats[1]?.correct||0)/2)*100);
+    const memory=Math.round(((state.phaseStats[2]?.correct||0)/2)*100);
+    const decision=Math.round(((state.phaseStats[4]?.correct||0)/2)*100);
+    const consistency=Math.max(0,100-Math.round(Math.abs(accuracy-reaction)*.45));
+    const final=Math.round(accuracy*.30+reaction*.15+observation*.10+memory*.10+decision*.10+pressure*.15+consistency*.10);
+    const perfect=state.correct===10&&state.timed===0;
+    const zivoReward=perfect?10:0;
+    const root=ensure();
+    root.querySelector('[data-screen="game"]').hidden=true;
+    root.querySelector('[data-screen="result"]').hidden=false;
+    root.classList.remove('playing');root.dataset.phase='result';
+    root.querySelector('.z1091-final-score strong').textContent=String(final).padStart(2,'0');
+    root.querySelector('.z1091-metrics').innerHTML=[
+      ['ACCURACY',accuracy],['REACTION',reaction],['OBSERVATION',observation],['MEMORY',memory],
+      ['DECISION',decision],['PRESSURE',pressure],['CONSISTENCY',consistency]
+    ].map(([k,v])=>`<div><span>${k}</span><b>${v}</b><i><em style="width:${v}%"></em></i></div>`).join('');
+    root.querySelector('.z1091-result-note').innerHTML=perfect
+      ? `<strong>⚡ PERFECT RUN</strong><span>10/10 — تم اجتياز العتبة كاملة.</span>`
+      : `<strong>${final>=75?'THRESHOLD CLEARED':'RUN TERMINATED'}</strong><span>${state.correct}/10 — الغرفة لا تكشف الإجابات أثناء الجولة.</span>`;
+    root.querySelector('.z1091-result-actions').style.display='flex';
+    try{
+      window.ZIVOZONE_PLAYER?.addProgress?.({id:'horror',score:state.correct,bestStreak:state.best,timedOut:state.timed,questions:10,speedScore:reaction});
+    }catch(e){}
+    const eventId=window.crypto?.randomUUID?.()||('dark1091_'+Date.now()+'_'+Math.random().toString(36).slice(2));
+    window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{
+      challenge:'horror',gameId:'horror',score:state.correct,correct:state.correct,total:10,questions:10,
+      perfect,timedOut:state.timed,xp:Math.max(0,Math.round(final*1.8)),coins:zivoReward,zivoReward,eventId,
+      darkRoomScore:final,accuracy,reactionTimeScore:reaction,observation,memory,decision,pressure,consistency
+    }}));
+    if(window.ZIVOZONE_AUTH?.isLoggedIn?.()){
+      try{await window.ZIVOZONE_AUTH.saveResult?.({challengeId:'horror',score:state.correct,total:10,xp:Math.max(0,Math.round(final*1.8)),coins:zivoReward,timedOut:state.timed,bestStreak:state.best,darkRoomScore:final,guest:false,language:I?.get?.()||'ar'})}catch(e){}
+    }
+  }
+
+  window.ZIVOZONE_DARKROOM_V1091={start,stop,begin,reset,state};
 })();
