@@ -3861,7 +3861,7 @@ window.ZIVOZONE_V18 = {
     const d=db(); if(!u||!d)return;
     const ref=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
     const snap=await ref.get();
-    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'zivozone-economy-v1089'},{merge:false});
+    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'zivozone-economy-v1093'},{merge:false});
   }
 
   async function refresh(){
@@ -3902,7 +3902,8 @@ window.ZIVOZONE_V18 = {
     try{
       const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
       const mining=d.collection('users').doc(u.uid).collection('zivozone').doc('mining');
-      const ledger=wallet.collection('ledger').doc('mining_'+new Date().toISOString().slice(0,10));
+      // V1093: rolling 24h mining ledger. Do not key the claim by calendar day.
+      const ledger=wallet.collection('ledger').doc('mining_'+Date.now());
       await d.runTransaction(async tx=>{
         const [ws,ms,ls]=await Promise.all([tx.get(wallet),tx.get(mining),tx.get(ledger)]);
         const now=Date.now(), previous=ms.exists?(ms.data()?.nextMiningAt):null, prevMs=previous?.toMillis?.()||Number(previous)||0;
@@ -3910,9 +3911,9 @@ window.ZIVOZONE_V18 = {
         if(ls.exists){const err=new Error('already_claimed_today');err.code='MINE_ALREADY_TODAY';throw err}
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
-        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1089'},{merge:true});
-        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000),amount:0.5,version:'v1089'},{merge:true});
-        tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'zivozone-v1089'});
+        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1093'},{merge:true});
+        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000+15000),amount:0.5,version:'v1093'},{merge:true});
+        tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'zivozone-v1093'});
       });
       await refresh();
       toast(zt('mineSuccessToast'));
@@ -3946,8 +3947,8 @@ window.ZIVOZONE_V18 = {
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
         tx.set(claim,{claimId:attemptId,challenge,total,correct,timedOut:0,amount:10,consumedAt:fv.serverTimestamp(),createdAt:fv.serverTimestamp(),status:'consumed',policy:'10_of_10_only'},{merge:true});
-        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1089'},{merge:true});
-        tx.set(ledger,{type:'challenge_reward',label:'challenge_reward',challenge,amount:10,eventId:ledger.id,attemptId,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'zivozone-v1089',policy:'10_of_10_only'});
+        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1093'},{merge:true});
+        tx.set(ledger,{type:'challenge_reward',label:'challenge_reward',challenge,amount:10,eventId:ledger.id,attemptId,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'zivozone-v1093',policy:'10_of_10_only'});
       });
       await refresh();
       toast(zt('rewardSuccessToast'));
@@ -4949,4 +4950,71 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   }
 
   window.ZIVOZONE_DARKROOM_V1091={start,stop,begin,reset,state};
+})();
+
+/* ============================================================
+   ZIVOZONE V1093 — CORE STABILITY PATCH
+   Scope: reliability only. No new product features and no homepage redesign.
+   - Establishes a single runtime version marker.
+   - Adds a scoped news-rail observer so dynamically injected news is cleaned
+     and timed without a document-wide observer.
+   - Exposes a lightweight diagnostic snapshot for QA/admin debugging.
+============================================================ */
+(() => {
+  'use strict';
+  const VERSION = 'V1093 CORE STABILITY';
+  window.ZIVOZONE_CORE_VERSION = VERSION;
+
+  function newsRefresh(){
+    try {
+      window.ZIVOZONE_V85_NEWS?.clean?.();
+      window.ZIVOZONE_V85_NEWS?.speed?.();
+    } catch (_) {}
+  }
+
+  function bindNewsObserver(){
+    const roots = document.querySelectorAll('.zivo-sports-rail, .zivo-general-rail');
+    if (!roots.length || window.__zivo1093NewsObservers) return;
+    window.__zivo1093NewsObservers = [];
+    roots.forEach(root => {
+      const observer = new MutationObserver(() => {
+        clearTimeout(root.__z1093Timer);
+        root.__z1093Timer = setTimeout(newsRefresh, 40);
+      });
+      observer.observe(root, {childList:true, subtree:true});
+      window.__zivo1093NewsObservers.push(observer);
+    });
+    newsRefresh();
+  }
+
+  function diagnostics(){
+    const auth = window.firebase?.auth?.();
+    const user = auth?.currentUser || null;
+    return {
+      version: VERSION,
+      online: navigator.onLine,
+      firebase: !!window.firebase,
+      auth: !!auth,
+      signedIn: !!user,
+      uid: user?.uid || null,
+      newsRails: document.querySelectorAll('.zivo-news-rail').length,
+      challengeCards: document.querySelectorAll('[data-challenge]').length,
+      walletMounted: !!document.getElementById('zivo-v101-economy'),
+      darkRoomMounted: !!document.getElementById('zivo-dark-v1091'),
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  window.ZIVOZONE_CORE_DIAGNOSTICS = diagnostics;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindNewsObserver, {once:true});
+  } else {
+    bindNewsObserver();
+  }
+  window.addEventListener('zivozone:news-updated', () => setTimeout(newsRefresh, 60));
+  window.addEventListener('resize', () => {
+    clearTimeout(window.__z1093Resize);
+    window.__z1093Resize = setTimeout(newsRefresh, 180);
+  }, {passive:true});
 })();
