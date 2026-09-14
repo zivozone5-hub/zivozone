@@ -1194,7 +1194,16 @@ window.ZIVOZONE_V18 = {
     document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
     document.querySelectorAll('.mobile-nav a').forEach(a=>a.addEventListener('click',()=>document.querySelectorAll('.mobile-nav a').forEach(x=>x.classList.toggle('active',x===a))));
   }
-  function bind(){const audioBtn=$('#audio-toggle');if(audioBtn){audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇';audioBtn.onclick=async()=>{await S().unlock?.();S().toggle?.();audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇'}}$('#language-select').value=lang();$('#language-select').onchange=async e=>{I.set(e.target.value);await A.setLanguage(e.target.value);applyLanguage();toast(t('updateDone'),'success')};const accountRoute=()=>A.isAdmin?.()?location.hash='#admin':A.isLoggedIn()?location.hash='#profile':authModal();$('#login-btn').onclick=accountRoute;$$('[data-action="login"]').forEach(b=>b.onclick=accountRoute);$('#ai-form').onsubmit=async e=>{e.preventDefault();const input=$('#ai-input'),v=input.value.trim();if(!v)return;const box=$('#ai-messages');const u=document.createElement('div');u.className='ai-message user';u.textContent=v;box.append(u);input.value='';const b=document.createElement('div');b.className='ai-message bot';b.textContent='…';box.append(b);b.textContent=await askAI(v);box.scrollTop=box.scrollHeight}}
+  function bind(){const audioBtn=$('#audio-toggle');if(audioBtn){audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇';audioBtn.onclick=async()=>{await S().unlock?.();S().toggle?.();audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇'}}$('#language-select').value=lang();$('#language-select').onchange=async e=>{I.set(e.target.value);await A.setLanguage(e.target.value);applyLanguage();toast(t('updateDone'),'success')};const accountRoute=()=>A.isAdmin?.()?location.hash='#admin':A.isLoggedIn()?location.hash='#profile':authModal();$('#login-btn').onclick=accountRoute;$$('[data-action="login"]').forEach(b=>b.onclick=accountRoute);$('#ai-form').onsubmit=async e=>{e.preventDefault();const input=$('#ai-input'),v=input.value.trim();if(!v)return;const box=$('#ai-messages');const u=document.createElement('div');u.className='ai-message user';u.textContent=v;box.append(u);input.value='';const b=document.createElement('div');b.className='ai-message bot';b.textContent='…';box.append(b);b.textContent=await askAI(v);box.scrollTop=box.scrollHeight};
+    const navToggle=$('#zivo-nav-toggle'),mainNav=$('.main-nav');
+    if(navToggle&&mainNav){
+      const setOpen=v=>{document.body.classList.toggle('zivo-nav-open',v);navToggle.setAttribute('aria-expanded',String(v))};
+      navToggle.onclick=()=>setOpen(!document.body.classList.contains('zivo-nav-open'));
+      mainNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setOpen(false)));
+      document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false)});
+      document.addEventListener('click',e=>{if(document.body.classList.contains('zivo-nav-open')&&!mainNav.contains(e.target)&&e.target!==navToggle&&!navToggle.contains(e.target))setOpen(false)});
+    }
+  }
   window.addEventListener('zivozone-auth',e=>{syncFromPlayer();profile();const el=$('#firebase-status');if(el){el.textContent=e.detail?.cloud?'●':'○';el.classList.toggle('online',!!e.detail?.cloud);el.title=e.detail?.cloud?'Firebase connected':'Guest/local mode'}});
   window.addEventListener('zivozone-auth',()=>{A.touchSession?.();A.flushAttempts?.();});
   window.addEventListener('hashchange',()=>A.touchSession?.());

@@ -1435,3 +1435,29 @@ html,body{overflow-x:hidden}
 .v1081-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.v1081-tabs button{padding:12px;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:rgba(255,255,255,.04);color:#fff;font-weight:800;cursor:pointer}.v1081-tabs button.active{background:rgba(255,255,255,.12)}
 .v1081-statline,.v1081-row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}.v1081-statline span,.v1081-row span{opacity:.7}.v1081-balance{text-align:center;font-size:36px;font-weight:950;padding:20px}.v1081-balance small{font-size:13px;opacity:.55}.v1081-empty{padding:20px;text-align:center;opacity:.55}.v1081-notice{padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:14px;opacity:.75;line-height:1.7}.v1081-pack{display:flex;justify-content:space-between;align-items:center;padding:15px;margin-top:8px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.04)}.v1081-pack span{opacity:.5}
 @media(max-width:600px){.v1081-card{padding:16px}.v1081-stats{grid-template-columns:repeat(2,1fr)}#v1081-profile-launch{left:10px;bottom:76px}.v1081-profile{padding-top:8px}}
+
+/* =====================================================================
+   ZIVOZONE V1088 — DEFINITIVE MOBILE NAVIGATION
+   Appended last on purpose: supersedes every earlier conflicting
+   .topbar / .main-nav / .top-actions rule from the historical patch
+   layers above (36 scattered occurrences across 4 sources). This is
+   the single source of truth for topbar behavior going forward.
+   ===================================================================== */
+.topbar{flex-wrap:nowrap!important;gap:10px!important}
+#zivo-nav-toggle{display:none;flex:0 0 auto;width:40px;height:40px;border:1px solid rgba(255,255,255,.14);border-radius:11px;background:rgba(255,255,255,.06);cursor:pointer;align-items:center;justify-content:center;padding:0}
+#zivo-nav-toggle span{display:block;width:18px;height:2px;background:#fff;border-radius:2px;margin:2px auto;transition:.2s}
+body.zivo-nav-open #zivo-nav-toggle span:nth-child(1){transform:translateY(4px) rotate(45deg)}
+body.zivo-nav-open #zivo-nav-toggle span:nth-child(2){opacity:0}
+body.zivo-nav-open #zivo-nav-toggle span:nth-child(3){transform:translateY(-4px) rotate(-45deg)}
+@media(max-width:900px){
+  #zivo-nav-toggle{display:flex!important}
+  .main-nav{display:none!important;position:fixed!important;top:64px!important;inset-inline:10px!important;flex-direction:column!important;align-items:stretch!important;gap:2px!important;width:auto!important;overflow:visible!important;background:#0b0e1b!important;border:1px solid rgba(255,255,255,.12)!important;border-radius:18px!important;padding:10px!important;box-shadow:0 25px 70px rgba(0,0,0,.55)!important;z-index:9999!important}
+  .main-nav a{padding:13px 14px!important;border-radius:12px!important;font-size:14px!important;color:#e7ebf8!important}
+  .main-nav a:hover{background:rgba(255,255,255,.07)!important}
+  body.zivo-nav-open .main-nav{display:flex!important}
+  .top-actions{flex-wrap:nowrap!important}
+  .top-actions select#language-select{max-width:96px}
+}
+@media(max-width:480px){
+  .top-actions #login-btn{font-size:11px!important;padding:9px 10px!important}
+}
