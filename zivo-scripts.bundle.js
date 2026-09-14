@@ -3631,33 +3631,102 @@ window.ZIVOZONE_V18 = {
     if(document.getElementById('zivo-v101-style'))return;
     const s=document.createElement('style');s.id='zivo-v101-style';s.textContent=`
       :root{--z-gold:#ffd43d;--z-gold2:#ffe889;--z-bg:#090d14;--z-panel:#101722}
-      .z101-economy{width:min(1180px,calc(100% - 28px));margin:8px auto 2px;display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:3}
-      .z101-card{border:1px solid rgba(255,215,70,.16);border-radius:14px;background:linear-gradient(145deg,rgba(255,215,70,.07),rgba(255,255,255,.02));box-shadow:0 8px 24px rgba(0,0,0,.16);padding:9px 11px}
-      .z101-wallet{display:flex;align-items:center;gap:9px;min-height:58px}.z101-coin{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#fff7bd,#ffd43d 44%,#9c6700);border:2px solid #ffe889;color:#5b3900;font-weight:1000;font-size:18px;box-shadow:inset 0 2px 5px rgba(255,255,255,.55)}
-      .z101-label{font-size:10px;opacity:.62;font-weight:900}.z101-balance{font-size:18px;font-weight:1000;color:#ffe06a;line-height:1.1;margin-top:4px}.z101-sub{font-size:10px;opacity:.62;margin-top:5px}.z101-wallet-actions{margin-inline-start:auto}.z101-btn{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;border-radius:11px;padding:9px 12px;font-weight:950;cursor:pointer}.z101-btn.primary{background:linear-gradient(90deg,#ffd43d,#ffed8a);color:#17120a;border-color:#ffd43d}.z101-btn:disabled{opacity:.5;cursor:not-allowed}
-      .z101-mining{display:flex;align-items:center;gap:8px;min-height:58px}.z101-mining-icon{font-size:21px}.z101-mining h3{margin:0;font-size:12px}.z101-mining p{margin:2px 0 0;font-size:8px;opacity:.65}.z101-mine-action{margin-inline-start:auto;min-width:132px}.z101-countdown{font-size:13px;font-weight:1000;color:#ffe06a;margin-top:5px;letter-spacing:.5px}.z101-ready{color:#7df0a4}.z101-ledger{margin-top:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px}.z101-ledger-title{font-size:10px;opacity:.6;font-weight:900}.z101-ledger-list{max-height:110px;overflow:auto}.z101-ledger-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px}.z101-ledger-row b{color:#ffe06a}.z101-ledger-row small{grid-column:1/-1;opacity:.45}.z101-note{font-size:9px;opacity:.55;margin-top:9px;line-height:1.5}
-      .z101-overlay{position:fixed;inset:0;z-index:120000;display:none;place-items:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}.z101-overlay.open{display:grid}.z101-modal{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto;background:#0d141f;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px}.z101-modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.z101-modal-close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}.z101-modal h2{margin:0}.z101-modal p{font-size:11px;opacity:.68}.z101-modal-balance{font-size:34px;color:#ffe06a;font-weight:1000;margin:16px 0}.z101-toast{position:fixed;left:16px;bottom:84px;z-index:130000;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 13px;font-weight:900;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}.z101-toast.show{opacity:1;transform:none}
+      @keyframes z101Shine{0%{background-position:-160% 0}100%{background-position:260% 0}}
+      @keyframes z101Pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,212,61,.55),0 10px 28px rgba(0,0,0,.3)}50%{box-shadow:0 0 0 10px rgba(255,212,61,0),0 10px 28px rgba(0,0,0,.3)}}
+      @keyframes z101CoinFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-3px) rotate(4deg)}}
+      .z101-eyebrow{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:900;letter-spacing:1.5px;color:var(--z-gold2)}
+      .z101-eyebrow:before,.z101-eyebrow:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,215,70,.4),transparent)}
+      .z101-showcase{width:min(1180px,calc(100% - 26px));margin:22px auto 0;padding:30px 26px;border-radius:26px;position:relative;overflow:hidden;z-index:3;border:1px solid rgba(255,215,70,.24);background:radial-gradient(circle at 14% 18%,rgba(255,212,61,.13),transparent 42%),radial-gradient(circle at 88% 12%,rgba(255,212,61,.08),transparent 38%),linear-gradient(150deg,#120d05,#0a0704 78%);box-shadow:0 30px 90px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05)}
+      .z101-showcase:after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,212,61,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,212,61,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(circle at 30% 20%,black,transparent 75%);pointer-events:none}
+      .z101-showcase .section-heading{position:relative;z-index:2;display:block;margin-bottom:20px}
+      .z101-showcase .section-heading h2{margin:8px 0 6px;font-size:clamp(22px,3vw,32px);background:linear-gradient(90deg,#ffe06a,#fff7c8 40%,#ffe06a 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+      .z101-showcase .section-heading p{margin:0;max-width:640px}
+      .z101-economy{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      .z101-card{position:relative;overflow:hidden;border:1px solid rgba(255,215,70,.28);border-radius:20px;background:linear-gradient(160deg,rgba(255,215,70,.14),rgba(255,255,255,.02) 55%);box-shadow:0 14px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);padding:22px 24px;transition:transform .2s ease,box-shadow .2s ease}
+      .z101-card:hover{transform:translateY(-2px);box-shadow:0 20px 50px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.08)}
+      .z101-wallet{display:flex;align-items:center;gap:18px;min-height:96px}
+      .z101-coin{width:70px;height:70px;flex:0 0 70px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#fff7bd,#ffd43d 44%,#9c6700);border:2px solid #ffe889;color:#5b3900;font-weight:1000;font-size:32px;box-shadow:inset 0 2px 6px rgba(255,255,255,.6),0 0 28px rgba(255,212,61,.4);animation:z101CoinFloat 3.4s ease-in-out infinite}
+      .z101-label{font-size:10.5px;opacity:.7;font-weight:900;letter-spacing:1px}
+      .z101-balance{font-size:34px;font-weight:1000;line-height:1.15;margin-top:4px;background:linear-gradient(90deg,#ffe06a 0%,#fff7c8 22%,#ffe06a 44%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:z101Shine 4.5s linear infinite}
+      .z101-sub{font-size:11px;opacity:.65;margin-top:5px}
+      .z101-wallet-actions{margin-inline-start:auto}
+      .z101-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;border-radius:13px;padding:13px 18px;min-height:46px;font-weight:950;font-size:13px;cursor:pointer}
+      .z101-btn.primary{background:linear-gradient(90deg,#ffd43d,#ffed8a);color:#17120a;border-color:#ffd43d}
+      .z101-btn:disabled{opacity:.55;cursor:not-allowed}
+      .z101-mining{display:flex;align-items:center;gap:16px;min-height:96px}
+      .z101-mining-icon{font-size:38px;filter:drop-shadow(0 0 12px rgba(255,212,61,.45))}
+      .z101-mining h3{margin:0;font-size:15px}
+      .z101-mining p{margin:4px 0 0;font-size:11px;opacity:.68}
+      .z101-mine-action{margin-inline-start:auto;min-width:150px}
+      .z101-countdown{font-size:14px;font-weight:1000;color:#ffe06a;margin-top:6px;letter-spacing:.5px}
+      .z101-ready{color:#7df0a4;animation:z101Pulse 1.8s ease-in-out infinite;border-radius:8px}
+      .z101-mine-action:has(+ *),.z101-mine-action{}
+      #z101-mine:not(:disabled){animation:z101Pulse 2.4s ease-in-out infinite}
+      .z101-ledger{margin-top:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px}
+      .z101-ledger-title{font-size:10px;opacity:.6;font-weight:900}
+      .z101-ledger-list{max-height:110px;overflow:auto}
+      .z101-ledger-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px}
+      .z101-ledger-row b{color:#ffe06a}
+      .z101-ledger-row small{grid-column:1/-1;opacity:.45}
+      .z101-note{font-size:9px;opacity:.55;margin-top:9px;line-height:1.5}
+      .z101-overlay{position:fixed;inset:0;z-index:120000;display:none;place-items:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}
+      .z101-overlay.open{display:grid}
+      .z101-modal{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto;background:#0d141f;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px}
+      .z101-modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+      .z101-modal-close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}
+      .z101-modal h2{margin:0}
+      .z101-modal p{font-size:11px;opacity:.68}
+      .z101-modal-balance{font-size:34px;color:#ffe06a;font-weight:1000;margin:16px 0}
+      .z101-toast{position:fixed;left:16px;bottom:84px;z-index:130000;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 13px;font-weight:900;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}
+      .z101-toast.show{opacity:1;transform:none}
       /* remove old floating economy / quick docks so there is exactly one wallet */
       #zivo-global-wallet,#zivo-v85-open,#zivo-v85-economy,#zivo-v81-open,#zivo-v81-economy,#zivo-v80-open,#z80-admin-open,#zivo-v87-quickdock,#v26-open,#zivo-v24-balance,#z25-wallet-btn{display:none!important} #z81-admin-open{display:flex!important}
-      @media(max-width:760px){.z101-economy{grid-template-columns:1fr 1fr;width:calc(100% - 14px);margin-top:5px;gap:6px}.z101-card{padding:8px;border-radius:13px}.z101-wallet{min-height:52px}.z101-coin{width:34px;height:34px;flex-basis:34px;font-size:16px}.z101-balance{font-size:16px}.z101-label{font-size:8px}.z101-sub{font-size:7px}.z101-wallet-actions{display:none}.z101-mining{align-items:center;min-height:52px}.z101-mining-icon{font-size:18px}.z101-mining p{display:none}.z101-mine-action{min-width:82px}.z101-btn{padding:7px 7px;font-size:9px}.z101-countdown{font-size:11px}.z101-mining h3{font-size:10px}}
+      @media(max-width:760px){
+        .z101-showcase{padding:20px 16px;border-radius:20px;margin-top:14px}
+        .z101-showcase .section-heading{margin-bottom:14px}
+        .z101-economy{grid-template-columns:1fr;gap:8px}
+        .z101-card{padding:15px 16px;border-radius:17px}
+        .z101-wallet,.z101-mining{min-height:auto;flex-wrap:wrap}
+        .z101-coin{width:50px;height:50px;flex-basis:50px;font-size:22px}
+        .z101-balance{font-size:24px}
+        .z101-label{font-size:9px}
+        .z101-sub{font-size:9px}
+        .z101-wallet-actions{margin-inline-start:0;width:100%}
+        .z101-wallet-actions .z101-btn{width:100%}
+        .z101-mining-icon{font-size:26px}
+        .z101-mining p{display:none}
+        .z101-mine-action{margin-inline-start:0;width:100%;min-width:0}
+        .z101-mine-action .z101-btn{width:100%}
+        .z101-countdown{font-size:12px}
+        .z101-mining h3{font-size:12.5px}
+      }
     `;document.head.appendChild(s);
   }
 
   function mountHub(){
     injectStyle();
     if(document.getElementById('zivo-v101-economy'))return;
-    const h=document.querySelector('header.topbar');if(!h)return;
-    const root=document.createElement('section');root.id='zivo-v101-economy';root.className='z101-economy';root.setAttribute('aria-label','ZIVO Economy');
+    const anchor=document.getElementById('home')||document.querySelector('header.topbar');if(!anchor)return;
+    const root=document.createElement('section');root.id='zivo-v101-economy';root.className='z101-showcase';root.setAttribute('aria-label','ZIVO Economy');
     root.innerHTML=`
-      <article class="z101-card z101-wallet">
-        <div class="z101-coin">Z</div><div><div class="z101-label">ZIVO WALLET</div><div id="z101-balance" class="z101-balance">0 ZIVO</div><div id="z101-wallet-status" class="z101-sub">سجّل الدخول لحفظ رصيدك ومكافآتك.</div></div>
-        <div class="z101-wallet-actions"><button id="z101-wallet-open" class="z101-btn">المحفظة</button></div>
-      </article>
-      <article class="z101-card z101-mining">
-        <div class="z101-mining-icon">⛏️</div><div><h3>التعدين اليومي</h3><p>فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.</p><div id="z101-countdown" class="z101-countdown">—</div></div>
-        <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary">بدء التعدين +0.50</button></div>
-      </article>`;
-    h.insertAdjacentElement('afterend',root);
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow z101-eyebrow">⭐ اقتصاد ZIVO الحصري ⭐</span>
+          <h2>اربح ZIVO وأنت تلعب</h2>
+          <p class="muted">محفظة حقيقية، وتعدين يومي، ومكافأة فورية على كل علامة كاملة — كل عملية محمية على مستوى خادم ZIVOZONE.</p>
+        </div>
+      </div>
+      <div class="z101-economy">
+        <article class="z101-card z101-wallet">
+          <div class="z101-coin">Z</div><div><div class="z101-label">ZIVO WALLET</div><div id="z101-balance" class="z101-balance">0 ZIVO</div><div id="z101-wallet-status" class="z101-sub">سجّل الدخول لحفظ رصيدك ومكافآتك.</div></div>
+          <div class="z101-wallet-actions"><button id="z101-wallet-open" class="z101-btn">💰 المحفظة</button></div>
+        </article>
+        <article class="z101-card z101-mining">
+          <div class="z101-mining-icon">⛏️</div><div><h3>التعدين اليومي</h3><p>فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.</p><div id="z101-countdown" class="z101-countdown">—</div></div>
+          <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary">بدء التعدين +0.50</button></div>
+        </article>
+      </div>`;
+    anchor.insertAdjacentElement('afterend',root);
     root.querySelector('#z101-wallet-open').onclick=openWallet;
     root.querySelector('#z101-mine').onclick=mine;
   }
