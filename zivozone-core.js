@@ -1,155 +1,15 @@
-/* ZIVOZONE V1082 — UNIFIED APPLICATION CORE
-   Runtime concatenation preserves the original script execution order.
-   Modules remain internally separated for maintainability. */
+/* ZIVOZONE V1096 — TRUE CLEAN CORE RUNTIME */
+/* =====================================================================
+   ZIVOZONE MERGED SCRIPT BUNDLE (v1083 Phase 3)
+   Consolidated from 7 sequentially-loaded scripts, in the EXACT original
+   execution order, each still wrapped in its own original IIFE, so
+   runtime behavior is unchanged. Originals kept in
+   docs/archive/js-pre-merge/ for rollback.
+   Note: zivo-v105-luxury.js was NOT part of this merge — it was never
+   loaded by index.html in the original site (dead/unused file).
+   ===================================================================== */
 
-
-/* ===== MODULE: zivo-ai.js ===== */
-/* ZIVOZONE V1070 — Real ZIVO AI bridge
- * Firebase AI Logic + Gemini Developer API.
- * No Gemini API key is stored in the client.
- */
-import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
-import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-ai.js';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check.js';
-
-(() => {
-  const cfg = window.ZIVOZONE_FIREBASE_CONFIG;
-  const LIMIT = 10;
-  const DAY = new Date().toISOString().slice(0, 10);
-  const KEY = `zivo_ai_usage_${DAY}`;
-  let chat = null;
-  let model = null;
-  let ready = false;
-  let lastError = '';
-
-  function usage() {
-    const n = Number(localStorage.getItem(KEY) || 0);
-    return Number.isFinite(n) ? n : 0;
-  }
-  function bump() { localStorage.setItem(KEY, String(usage() + 1)); }
-
-  function playerContext() {
-    const s = window.ZIVOZONE_STATE || window.ZIVOZONE_PLAYER || {};
-    return {
-      level: Number(s.level || 1),
-      xp: Number(s.xp || 0),
-      zivo: Number(s.coins ?? s.zivo ?? 0),
-      gamesPlayed: Number(s.gamesPlayed || 0),
-      wins: Number(s.wins || 0),
-      bestStreak: Number(s.bestStreak || 0)
-    };
-  }
-
-  function systemInstruction() {
-    const lang = document.documentElement.lang === 'en' ? 'English' : 'Arabic';
-    return `You are ZIVO AI, the official smart assistant inside ZIVOZONE.
-Answer naturally, accurately, briefly and helpfully. Default language: ${lang}.
-ZIVOZONE is a digital platform for challenges, games, sports, learning and virtual ZIVO rewards.
-ZIVO is a virtual in-platform balance, not cash, an investment, or a promise of financial return.
-Do not invent ZIVOZONE features, balances, rules, news, prices or account data.
-When discussing the user's progress, use only the player context supplied in the current request.
-Do not claim to have browsed live news unless live web/news data is actually supplied.
-For medical, legal, financial or safety-critical questions, give cautious general information and recommend an appropriate qualified professional when needed.
-Keep responses suitable for a broad audience and avoid collecting unnecessary personal data.`;
-  }
-
-  async function init() {
-    if (!cfg?.projectId) throw new Error('Missing Firebase configuration');
-    // Use the single default Firebase app. The previous build created a second
-    // named app while the legacy runtime had already initialized Firebase,
-    // which could result in App Check being initialized on a different app.
-    let app;
-    const apps = getApps();
-    if (apps.length) app = getApp();
-    else app = initializeApp(cfg);
-
-    // ZIVOZONE V1070 — App Check is mandatory for Firebase AI Logic.
-    // The same public reCAPTCHA Enterprise SCORE-based site key must be registered
-    // for the ZIVOZONE WEB app in Firebase Console and allowed for the production domain.
-    const appCheckKey = String(window.ZIVOZONE_SECURITY?.appCheckSiteKey || '').trim();
-    if (!appCheckKey || appCheckKey.startsWith('<') || appCheckKey.includes('<script')) {
-      throw new Error('مفتاح reCAPTCHA Enterprise غير مضبوط. تأكد أن المفتاح SCORE-based نفسه مسجل في Firebase App Check وأن نطاق الموقع مسموح في Google Cloud.');
-    }
-
-    let appCheck = window.ZIVOZONE_AI_APP_CHECK;
-    if (!appCheck) {
-      appCheck = initializeAppCheck(app, {
-        provider: new ReCaptchaEnterpriseProvider(appCheckKey),
-        isTokenAutoRefreshEnabled: true
-      });
-      window.ZIVOZONE_AI_APP_CHECK = appCheck;
-    }
-
-    // Do not create the AI client until a real App Check token exists.
-    // This prevents the old "AppCheck: ReCAPTCHA error" from reaching AI Logic.
-    let tokenResult;
-    try {
-      tokenResult = await getToken(appCheck, false);
-      if (!tokenResult?.token) throw new Error('لم يتم إصدار App Check token.');
-    } catch (firstError) {
-      console.warn('ZIVO AI App Check first token attempt failed; refreshing once.', firstError);
-      tokenResult = await getToken(appCheck, true);
-      if (!tokenResult?.token) throw new Error('فشل إصدار App Check token. تحقق من reCAPTCHA Enterprise site key والدومين.');
-    }
-
-    window.ZIVOZONE_APP_CHECK = appCheck;
-    window.ZIVOZONE_APP_CHECK_READY = true;
-
-    const ai = getAI(app, { backend: new GoogleAIBackend() });
-    model = getGenerativeModel(ai, {
-      model: window.ZIVOZONE_AI_CONFIG?.model || 'gemini-3.5-flash-lite',
-      systemInstruction: systemInstruction(),
-      generationConfig: {
-        temperature: 0.55,
-        maxOutputTokens: 500
-      }
-    });
-    chat = model.startChat();
-    ready = true;
-    lastError = '';
-    window.dispatchEvent(new CustomEvent('zivo-ai-status', { detail: { ready: true, used: usage(), limit: LIMIT } }));
-    return true;
-  }
-
-  async function ask(message) {
-    const text = String(message || '').trim().slice(0, 1000);
-    if (!text) return '';
-    if (!navigator.onLine) throw new Error('لا يوجد اتصال بالإنترنت حاليًا.');
-    if (usage() >= LIMIT) throw new Error(`وصلت إلى الحد المجاني اليومي (${LIMIT} رسائل). عد غدًا.`);
-    if (!ready) await init();
-
-    const ctx = playerContext();
-    const prompt = `Player context: level=${ctx.level}, xp=${ctx.xp}, zivo=${ctx.zivo}, gamesPlayed=${ctx.gamesPlayed}, wins=${ctx.wins}, bestStreak=${ctx.bestStreak}.
-User message: ${text}`;
-    bump();
-    const result = await chat.sendMessage(prompt);
-    const reply = result?.response?.text?.() || '';
-    if (!reply) throw new Error('لم يصل رد من ZIVO AI.');
-    window.dispatchEvent(new CustomEvent('zivo-ai-usage', { detail: { used: usage(), limit: LIMIT } }));
-    return reply.trim();
-  }
-
-  async function resetChat() {
-    if (!ready) await init();
-    chat = model.startChat();
-  }
-
-  window.ZIVOZONE_REAL_AI = {
-    ask,
-    init,
-    resetChat,
-    getStatus: () => ({ ready, used: usage(), limit: LIMIT, lastError })
-  };
-
-  init().catch(err => {
-    lastError = err?.message || String(err);
-    console.warn('ZIVO AI initialization:', err);
-    window.dispatchEvent(new CustomEvent('zivo-ai-status', { detail: { ready: false, used: usage(), limit: LIMIT, error: lastError } }));
-  });
-})();
-
-
-/* ===== MODULE: zivozone-runtime.js ===== */
+/* ---- SOURCE: zivozone-runtime.js ---- */
 /* ZIVOZONE V82 — CONSOLIDATED RUNTIME BUNDLE */
 
 /* ===== audio.js ===== */
@@ -250,6 +110,16 @@ User message: ${text}`;
   Object.assign(T.zh,{pressure:'压力分',streak:'连击',bestStreak:'最佳连击',speedBonus:'速度奖励',timedOut:'超时',pressureHint:'回答越快，奖励越高。',secondsPerQuestion:'每题10秒'});
   Object.assign(T.hi,{pressure:'प्रेशर स्कोर',streak:'स्ट्रीक',bestStreak:'सर्वश्रेष्ठ स्ट्रीक',speedBonus:'स्पीड बोनस',timedOut:'समय समाप्त',pressureHint:'जितनी जल्दी जवाब देंगे, उतना अधिक इनाम मिलेगा।',secondsPerQuestion:'हर प्रश्न के लिए 10 सेकंड'});
   Object.assign(T.es,{pressure:'Puntuación de presión',streak:'Racha',bestStreak:'Mejor racha',speedBonus:'Bono de velocidad',timedOut:'Tiempo agotado',pressureHint:'Cuanto más rápido respondas, mayor será tu recompensa.',secondsPerQuestion:'10 segundos por pregunta'});
+  Object.assign(T.ar,{forgotPassword:'نسيت كلمة السر؟',resetTitle:'استرجاع كلمة السر',resetHint:'اكتب بريدك الإلكتروني المسجّل وبنرسلّك رابط لتعيين كلمة سر جديدة.',sendReset:'إرسال رابط الاسترجاع',resetSent:'إذا كان بريدك مسجّلاً عندنا، رح توصلك رسالة فيها رابط تعيين كلمة سر جديدة خلال دقائق.',resetCloudOnly:'استرجاع كلمة السر متاح فقط للحسابات السحابية المتصلة بخدمة الحساب. جرّب تتأكد من اتصالك بالإنترنت.',backToLogin:'رجوع لتسجيل الدخول'});
+  Object.assign(T.en,{forgotPassword:'Forgot password?',resetTitle:'Reset your password',resetHint:'Enter your registered email and we will send you a link to set a new password.',sendReset:'Send reset link',resetSent:'If that email is registered with us, a password reset link will arrive within a few minutes.',resetCloudOnly:'Password reset is only available for cloud-connected accounts. Please check your internet connection.',backToLogin:'Back to sign in'});
+  Object.assign(T.zh,{forgotPassword:'忘记密码？',resetTitle:'重置密码',resetHint:'输入您注册的邮箱，我们会发送重置密码的链接给您。',sendReset:'发送重置链接',resetSent:'如果该邮箱已注册，几分钟内会收到密码重置链接。',resetCloudOnly:'密码重置仅适用于已连接云端的账户，请检查您的网络连接。',backToLogin:'返回登录'});
+  Object.assign(T.hi,{forgotPassword:'पासवर्ड भूल गए?',resetTitle:'पासवर्ड रीसेट करें',resetHint:'अपना पंजीकृत ईमेल दर्ज करें, हम आपको नया पासवर्ड सेट करने के लिए लिंक भेजेंगे।',sendReset:'रीसेट लिंक भेजें',resetSent:'यदि यह ईमेल हमारे पास पंजीकृत है, तो कुछ मिनटों में पासवर्ड रीसेट लिंक पहुँच जाएगा।',resetCloudOnly:'पासवर्ड रीसेट केवल क्लाउड से जुड़े खातों के लिए उपलब्ध है। कृपया अपना इंटरनेट कनेक्शन जांचें।',backToLogin:'लॉगिन पर वापस जाएँ'});
+  Object.assign(T.es,{forgotPassword:'¿Olvidaste tu contraseña?',resetTitle:'Restablecer tu contraseña',resetHint:'Escribe tu correo registrado y te enviaremos un enlace para establecer una nueva contraseña.',sendReset:'Enviar enlace de restablecimiento',resetSent:'Si ese correo está registrado con nosotros, recibirás un enlace para restablecer la contraseña en unos minutos.',resetCloudOnly:'El restablecimiento de contraseña solo está disponible para cuentas conectadas a la nube. Comprueba tu conexión a internet.',backToLogin:'Volver a iniciar sesión'});
+  Object.assign(T.ar,{economyEyebrow:'⭐ اقتصاد ZIVO الحصري ⭐',economyTitle:'اربح ZIVO وأنت تلعب',economySubtitle:'محفظة حقيقية، وتعدين يومي، ومكافأة فورية على كل علامة كاملة — كل عملية محمية على مستوى خادم ZIVOZONE.',walletLabel:'محفظة ZIVO',walletLoginHint:'سجّل الدخول لحفظ رصيدك ومكافآتك.',walletAccountPrefix:'الحساب: ',walletOpenBtn:'💰 المحفظة',miningTitle:'التعدين اليومي',miningDesc:'فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.',mineStartBtn:'بدء التعدين +0.50',mineLoginBtn:'تسجيل الدخول للتعدين',mineAccountRequired:'الحساب مطلوب',mineAvailableNow:'متاح الآن',mineActiveBtn:'التعدين مفعّل',mineAdminBtn:'حساب الإدارة',mineSuccessToast:'تم التعدين بنجاح! +0.50 ZIVO ⛏️',mineErrorToast:'تعذر تفعيل التعدين الآن.',mineAdminBlocked:'حساب الإدارة لا يدخل في نظام التعدين.',mineNotYetAvailable:'التعدين غير متاح بعد.',mineAlreadyToday:'تم احتساب تعدين اليوم بالفعل.',rewardSuccessToast:'علامة كاملة 10/10 — تمت إضافة +10 ZIVO إلى المحفظة 🪙',walletModalLabel:'اقتصاد ZIVOZONE',walletModalTitle:'محفظة ZIVO',walletModalDesc:'رصيد ZIVO داخل المنصة. كل إضافة تمر عبر خادم ZIVOZONE وتظهر في سجل المعاملات.',walletModalLedgerTitle:'آخر المعاملات',walletModalNote:'XP منفصل عن ZIVO. وZIVO منفصل عن Tickets. هذه العملة حاليًا عملة افتراضية داخل المنصة وليست أموالًا نقدية.',ledgerEmpty:'لا توجد معاملات بعد.',ledgerFallbackLabel:'معاملة',ledgerMiningLabel:'التعدين اليومي',ledgerRewardLabelPrefix:'مكافأة تحدي كامل — '});
+  Object.assign(T.en,{economyEyebrow:'⭐ EXCLUSIVE ZIVO ECONOMY ⭐',economyTitle:'Earn ZIVO as you play',economySubtitle:'A real wallet, daily mining, and an instant reward on every perfect score — every transaction is protected at the ZIVOZONE server level.',walletLabel:'ZIVO WALLET',walletLoginHint:'Sign in to save your balance and rewards.',walletAccountPrefix:'Account: ',walletOpenBtn:'💰 Wallet',miningTitle:'Daily mining',miningDesc:'Mine once every 24 hours and get a small ZIVO reward.',mineStartBtn:'Start mining +0.50',mineLoginBtn:'Sign in to mine',mineAccountRequired:'Account required',mineAvailableNow:'Available now',mineActiveBtn:'Mining active',mineAdminBtn:'Admin account',mineSuccessToast:'Mining successful! +0.50 ZIVO ⛏️',mineErrorToast:'Could not activate mining right now.',mineAdminBlocked:'Admin accounts do not take part in the mining system.',mineNotYetAvailable:'Mining is not available yet.',mineAlreadyToday:'The mining reward for today has already been claimed.',rewardSuccessToast:'Perfect 10/10 — +10 ZIVO added to your wallet 🪙',walletModalLabel:'ZIVOZONE ECONOMY',walletModalTitle:'ZIVO Wallet',walletModalDesc:'Your ZIVO balance on the platform. Every addition passes through the ZIVOZONE server and appears in the transaction log.',walletModalLedgerTitle:'Recent transactions',walletModalNote:'XP is separate from ZIVO, and ZIVO is separate from Tickets. This currency is currently a virtual in-platform balance, not real money.',ledgerEmpty:'No transactions yet.',ledgerFallbackLabel:'Transaction',ledgerMiningLabel:'Daily mining',ledgerRewardLabelPrefix:'Perfect challenge reward — '});
+  Object.assign(T.zh,{economyEyebrow:'⭐ ZIVO 专属经济系统 ⭐',economyTitle:'边玩边赚 ZIVO',economySubtitle:'真实钱包、每日挖矿，满分即时奖励——每笔交易都受 ZIVOZONE 服务器保护。',walletLabel:'ZIVO 钱包',walletLoginHint:'登录以保存您的余额和奖励。',walletAccountPrefix:'账户：',walletOpenBtn:'💰 钱包',miningTitle:'每日挖矿',miningDesc:'每24小时可挖矿一次，获得少量 ZIVO 奖励。',mineStartBtn:'开始挖矿 +0.50',mineLoginBtn:'登录后挖矿',mineAccountRequired:'需要账户',mineAvailableNow:'现在可用',mineActiveBtn:'挖矿进行中',mineAdminBtn:'管理员账户',mineSuccessToast:'挖矿成功！+0.50 ZIVO ⛏️',mineErrorToast:'暂时无法开始挖矿。',mineAdminBlocked:'管理员账户不参与挖矿系统。',mineNotYetAvailable:'挖矿尚未开放。',mineAlreadyToday:'今日挖矿已完成。',rewardSuccessToast:'满分 10/10 — 已添加 +10 ZIVO 到您的钱包 🪙',walletModalLabel:'ZIVOZONE 经济系统',walletModalTitle:'ZIVO 钱包',walletModalDesc:'您在平台上的 ZIVO 余额。每次增加都会经过 ZIVOZONE 服务器并显示在交易记录中。',walletModalLedgerTitle:'最近交易',walletModalNote:'XP 与 ZIVO 是分开的，ZIVO 与 Tickets 也是分开的。此货币目前只是平台内的虚拟余额，并非真实货币。',ledgerEmpty:'暂无交易记录。',ledgerFallbackLabel:'交易',ledgerMiningLabel:'每日挖矿',ledgerRewardLabelPrefix:'满分挑战奖励 — '});
+  Object.assign(T.hi,{economyEyebrow:'⭐ एक्सक्लूसिव ZIVO इकोनॉमी ⭐',economyTitle:'खेलते हुए ZIVO कमाएँ',economySubtitle:'असली वॉलेट, डेली माइनिंग, और हर परफेक्ट स्कोर पर तुरंत इनाम — हर लेनदेन ZIVOZONE सर्वर स्तर पर सुरक्षित है।',walletLabel:'ZIVO वॉलेट',walletLoginHint:'अपना बैलेंस और इनाम बचाने के लिए लॉगिन करें।',walletAccountPrefix:'अकाउंट: ',walletOpenBtn:'💰 वॉलेट',miningTitle:'डेली माइनिंग',miningDesc:'हर 24 घंटे में एक बार माइन करें और थोड़ा ZIVO इनाम पाएं।',mineStartBtn:'माइनिंग शुरू करें +0.50',mineLoginBtn:'माइन करने के लिए लॉगिन करें',mineAccountRequired:'अकाउंट चाहिए',mineAvailableNow:'अभी उपलब्ध',mineActiveBtn:'माइनिंग सक्रिय',mineAdminBtn:'एडमिन अकाउंट',mineSuccessToast:'माइनिंग सफल! +0.50 ZIVO ⛏️',mineErrorToast:'अभी माइनिंग शुरू नहीं हो सकी।',mineAdminBlocked:'एडमिन अकाउंट माइनिंग सिस्टम में शामिल नहीं होते।',mineNotYetAvailable:'माइनिंग अभी उपलब्ध नहीं है।',mineAlreadyToday:'आज की माइनिंग पहले ही ली जा चुकी है।',rewardSuccessToast:'परफेक्ट 10/10 — आपके वॉलेट में +10 ZIVO जोड़ा गया 🪙',walletModalLabel:'ZIVOZONE इकोनॉमी',walletModalTitle:'ZIVO वॉलेट',walletModalDesc:'प्लेटफ़ॉर्म पर आपका ZIVO बैलेंस। हर जोड़ ZIVOZONE सर्वर से होकर गुजरता है और लेनदेन लॉग में दिखता है।',walletModalLedgerTitle:'हाल के लेनदेन',walletModalNote:'XP, ZIVO से अलग है, और ZIVO, Tickets से अलग है। यह करेंसी फ़िलहाल केवल प्लेटफ़ॉर्म के अंदर की वर्चुअल बैलेंस है, असली पैसा नहीं।',ledgerEmpty:'अभी तक कोई लेनदेन नहीं।',ledgerFallbackLabel:'लेनदेन',ledgerMiningLabel:'डेली माइनिंग',ledgerRewardLabelPrefix:'परफेक्ट चैलेंज इनाम — '});
+  Object.assign(T.es,{economyEyebrow:'⭐ ECONOMÍA EXCLUSIVA ZIVO ⭐',economyTitle:'Gana ZIVO mientras juegas',economySubtitle:'Una billetera real, minería diaria y una recompensa instantánea en cada puntuación perfecta — cada transacción está protegida a nivel del servidor de ZIVOZONE.',walletLabel:'BILLETERA ZIVO',walletLoginHint:'Inicia sesión para guardar tu saldo y recompensas.',walletAccountPrefix:'Cuenta: ',walletOpenBtn:'💰 Billetera',miningTitle:'Minería diaria',miningDesc:'Mina una vez cada 24 horas y obtén una pequeña recompensa en ZIVO.',mineStartBtn:'Empezar a minar +0.50',mineLoginBtn:'Inicia sesión para minar',mineAccountRequired:'Cuenta requerida',mineAvailableNow:'Disponible ahora',mineActiveBtn:'Minería activa',mineAdminBtn:'Cuenta de administrador',mineSuccessToast:'¡Minería exitosa! +0.50 ZIVO ⛏️',mineErrorToast:'No se pudo activar la minería en este momento.',mineAdminBlocked:'Las cuentas de administrador no participan en el sistema de minería.',mineNotYetAvailable:'La minería aún no está disponible.',mineAlreadyToday:'La minería de hoy ya fue reclamada.',rewardSuccessToast:'Puntuación perfecta 10/10 — se añadieron +10 ZIVO a tu billetera 🪙',walletModalLabel:'ECONOMÍA ZIVOZONE',walletModalTitle:'Billetera ZIVO',walletModalDesc:'Tu saldo de ZIVO en la plataforma. Cada adición pasa por el servidor de ZIVOZONE y aparece en el registro de transacciones.',walletModalLedgerTitle:'Transacciones recientes',walletModalNote:'El XP es independiente del ZIVO, y el ZIVO es independiente de los Tickets. Esta moneda es actualmente un saldo virtual dentro de la plataforma, no dinero real.',ledgerEmpty:'Aún no hay transacciones.',ledgerFallbackLabel:'Transacción',ledgerMiningLabel:'Minería diaria',ledgerRewardLabelPrefix:'Recompensa por desafío perfecto — '});
   function get(){return localStorage.getItem(LANG_KEY)||'ar'}
   function set(lang){if(!LANGS.includes(lang))lang='ar';localStorage.setItem(LANG_KEY,lang);document.documentElement.lang=lang;document.documentElement.dir=DIR[lang];window.dispatchEvent(new CustomEvent('zivozone-language',{detail:{lang}}));return lang}
   function tr(key,lang=get()){return (T[lang]&&T[lang][key])||T.ar[key]||key}
@@ -284,7 +154,27 @@ User message: ${text}`;
     Q('iq-07','choice',O('ثلاثة أشخاص يقولون: علي أطول من سامر، سامر أطول من ليث. من الأقصر؟','Ali is taller than Samer, and Samer is taller than Laith. Who is shortest?','阿里比萨默尔高，萨默尔比莱思高。谁最矮？','अली समीर से लंबा है और समीर लैथ से लंबा है। सबसे छोटा कौन?','Ali es más alto que Samer y Samer que Laith. ¿Quién es el más bajo?'),[O('علي','Ali'),O('سامر','Samer'),O('ليث','Laith'),O('لا يمكن معرفة ذلك','Cannot know')],2,7),
     Q('iq-08','number',O('أدخل العدد: 1، 1، 2، 3، 5، 8، ؟','Enter the next number: 1, 1, 2, 3, 5, 8, ?','输入下一个数字：1、1、2、3、5、8、？','अगली संख्या दर्ज करें: 1, 1, 2, 3, 5, 8, ?','Introduce el siguiente número: 1, 1, 2, 3, 5, 8, ?'),[],13,8,{answer:'13'}),
     Q('iq-09','choice',O('إذا كان لديك 12 عملة، واحدة مزيفة أثقل، وبميزان كفتين و3 وزنات فقط، ما الحد الأقصى لعدد العملات التي يمكنك تمييزها؟','With 12 coins, one counterfeit heavier, a balance scale and only 3 weighings, how many coins can be guaranteed distinguishable?','12枚硬币中一枚更重的假币，用天平称3次，最多可保证识别多少枚？','12 सिक्कों में एक भारी नकली है; तराजू और केवल 3 तौल में अधिकतम कितने सिक्कों को निश्चित रूप से पहचान सकते हैं?','Con 12 monedas y una falsa más pesada, ¿cuántas puedes distinguir con certeza usando 3 pesadas?'),[O('6','6'),O('9','9'),O('12','12'),O('18','18')],2,9),
-    Q('iq-10','choice',O('لغز صعب: لديك 100 سجين ومفتاح واحد ومصباح، ويمكن لكل سجين دخول الغرفة مرة واحدة. ما الفكرة القياسية التي تضمن معرفة أن الجميع دخلوا؟','Hard puzzle: 100 prisoners, one key and one lamp; each prisoner enters once. What standard strategy guarantees knowing everyone has entered?','难题：100名囚犯、一个钥匙和一盏灯，每人只进一次。什么标准策略能保证知道所有人都进入过？','कठिन पहेली: 100 कैदी, एक चाबी और एक लैंप; हर कैदी एक बार कमरे में जाता है। कौन सी मानक रणनीति सुनिश्चित करती है कि सभी अंदर आ चुके हैं?','Acertijo difícil: 100 presos, una llave y una lámpara; cada preso entra una vez. ¿Qué estrategia estándar garantiza saber que todos entraron?'),[O('عدّاد عشوائي','Random counter'),O('سجين قائد يعد إشارات المصباح','A designated counter counts lamp signals'),O('إطفاء المصباح دائمًا','Always keep it off'),O('لا توجد طريقة','There is no way')],1,10)
+    Q('iq-10','choice',O('لغز صعب: لديك 100 سجين ومفتاح واحد ومصباح، ويمكن لكل سجين دخول الغرفة مرة واحدة. ما الفكرة القياسية التي تضمن معرفة أن الجميع دخلوا؟','Hard puzzle: 100 prisoners, one key and one lamp; each prisoner enters once. What standard strategy guarantees knowing everyone has entered?','难题：100名囚犯、一个钥匙和一盏灯，每人只进一次。什么标准策略能保证知道所有人都进入过？','कठिन पहेली: 100 कैदी, एक चाबी और एक लैंप; हर कैदी एक बार कमरे में जाता है। कौन सी मानक रणनीति सुनिश्चित करती है कि सभी अंदर आ चुके हैं?','Acertijo difícil: 100 presos, una llave y una lámpara; cada preso entra una vez. ¿Qué estrategia estándar garantiza saber que todos entraron?'),[O('عدّاد عشوائي','Random counter','随机计数器','यादृच्छिक काउंटर','Contador aleatorio'),O('سجين قائد يعد إشارات المصباح','A designated counter counts lamp signals','指定的计数者统计灯的信号','एक निर्धारित काउंटर लैंप के संकेत गिनता है','Un contador designado cuenta las señales de la lámpara'),O('إطفاء المصباح دائمًا','Always keep it off','始终关灯','हमेशा इसे बंद रखना','Mantenerla siempre apagada'),O('لا توجد طريقة','There is no way','没有办法','कोई तरीका नहीं है','No hay manera')],1,10),
+    Q('iq-11','choice',O('ما العدد التالي: 5، 10، 20، 40، ؟','What comes next: 5, 10, 20, 40, ?','下一个数字：5、10、20、40、？','अगली संख्या: 5, 10, 20, 40, ?','¿Qué sigue: 5, 10, 20, 40, ?'),[O('80','80','80','80','80'),O('60','60','60','60','60'),O('45','45','45','45','45'),O('100','100','100','100','100')],0,1),
+    Q('iq-12','choice',O('أكمل التسلسل: 100، 90، 81، 73، ؟ (الفروق تقل بمقدار 1 في كل مرة)','Complete: 100, 90, 81, 73, ? (differences shrink by 1 each time)','完成数列：100、90、81、73、？（每次差值减少1）','पूरा करें: 100, 90, 81, 73, ? (हर बार अंतर 1 कम होता है)','Completa: 100, 90, 81, 73, ? (las diferencias disminuyen en 1 cada vez)'),[O('64','64','64','64','64'),O('66','66','66','66','66'),O('68','68','68','68','68'),O('70','70','70','70','70')],1,3),
+    Q('iq-13','choice',O('"كتاب" إلى "مكتبة" مثل "دواء" إلى ؟','"Book" is to "library" as "medicine" is to ?','"书"对"图书馆"就像"药"对？','"किताब" का "पुस्तकालय" से वही संबंध है जो "दवा" का किससे है?','"Libro" es a "biblioteca" como "medicina" es a ?'),[O('صيدلية','Pharmacy','药房','फार्मेसी','Farmacia'),O('مستشفى','Hospital','医院','अस्पताल','Hospital'),O('طبيب','Doctor','医生','डॉक्टर','Médico'),O('مريض','Patient','病人','मरीज़','Paciente')],0,2),
+    Q('iq-14','choice',O('ما العنصر الغريب: تفاح، موز، جزر، عنب؟','Which is the odd one out: apple, banana, carrot, grape?','哪个是异类：苹果、香蕉、胡萝卜、葡萄？','कौन सा अलग है: सेब, केला, गाजर, अंगूर?','¿Cuál es el diferente: manzana, plátano, zanahoria, uva?'),[O('تفاح','Apple','苹果','सेब','Manzana'),O('موز','Banana','香蕉','केला','Plátano'),O('جزر','Carrot','胡萝卜','गाजर','Zanahoria'),O('عنب','Grape','葡萄','अंगूर','Uva')],2,2),
+    Q('iq-15','choice',O('كل A هي B، ولا شيء من B هو C. هل يمكن أن يكون بعض A هو C؟','All A are B, and no B is C. Can some A be C?','所有A都是B，没有B是C。可能有些A是C吗？','सभी A, B हैं, और कोई B, C नहीं है। क्या कुछ A, C हो सकते हैं?','Todo A es B, y ningún B es C. ¿Puede algún A ser C?'),[O('نعم','Yes','可能','हां','Sí'),O('لا','No','不可能','नहीं','No'),O('ربما دائمًا','Always maybe','总是也许','हमेशा शायद','Siempre tal vez'),O('غير محدد','Undetermined','无法确定','अनिश्चित','Indeterminado')],1,4),
+    Q('iq-16','choice',O('أكمل: 2، 6، 12، 20، 30، ؟','Complete: 2, 6, 12, 20, 30, ?','完成数列：2、6、12、20、30、？','पूरा करें: 2, 6, 12, 20, 30, ?','Completa: 2, 6, 12, 20, 30, ?'),[O('36','36','36','36','36'),O('40','40','40','40','40'),O('42','42','42','42','42'),O('44','44','44','44','44')],2,4),
+    Q('iq-17','choice',O('مرادف كلمة "سعيد"؟','Synonym of "happy"?','"快乐"的同义词是？','"खुश" का पर्यायवाची?','¿Sinónimo de "feliz"?'),[O('حزين','Sad','悲伤','उदास','Triste'),O('فرح','Joyful','喜悦','प्रसन्न','Alegre'),O('غاضب','Angry','生气','गुस्सा','Enojado'),O('خائف','Afraid','害怕','डरा हुआ','Asustado')],1,1),
+    Q('iq-18','choice',O('أكمل: 7، 14، 28، 56، ؟','Complete: 7, 14, 28, 56, ?','完成数列：7、14、28、56、？','पूरा करें: 7, 14, 28, 56, ?','Completa: 7, 14, 28, 56, ?'),[O('100','100','100','100','100'),O('110','110','110','110','110'),O('112','112','112','112','112'),O('120','120','120','120','120')],2,3),
+    Q('iq-19','choice',O('إذا هطل المطر ابتلّت الأرض. الأرض غير مبتلّة. ماذا نستنتج؟','If it rains, the ground gets wet. The ground is not wet. What can we conclude?','如果下雨，地面会湿。地面没有湿。我们能得出什么结论？','यदि बारिश होती है, ज़मीन गीली हो जाती है। ज़मीन गीली नहीं है। हम क्या निष्कर्ष निकाल सकते हैं?','Si llueve, el suelo se moja. El suelo no está mojado. ¿Qué se puede concluir?'),[O('هطل المطر','It rained','下雨了','बारिश हुई','Llovió'),O('لم يهطل المطر','It did not rain','没有下雨','बारिश नहीं हुई','No llovió'),O('لا يمكن التحديد','Cannot be determined','无法确定','निर्धारित नहीं किया जा सकता','No se puede determinar'),O('هطل مطر خفيف','It rained lightly','下了小雨','हल्की बारिश हुई','Llovió ligeramente')],1,5),
+    Q('iq-20','choice',O('ما العنصر الغريب من حيث الشكل: مربع، مستطيل، دائرة، معين؟','Which shape is the odd one out: square, rectangle, circle, rhombus?','哪个图形是异类：正方形、长方形、圆形、菱形？','कौन सा आकार अलग है: वर्ग, आयत, वृत्त, समचतुर्भुज?','¿Qué figura es la diferente: cuadrado, rectángulo, círculo, rombo?'),[O('مربع','Square','正方形','वर्ग','Cuadrado'),O('مستطيل','Rectangle','长方形','आयत','Rectángulo'),O('دائرة','Circle','圆形','वृत्त','Círculo'),O('معين','Rhombus','菱形','समचतुर्भुज','Rombo')],2,3),
+    Q('iq-21','choice',O('أكمل: 81، 27، 9، 3، ؟','Complete: 81, 27, 9, 3, ?','完成数列：81、27、9、3、？','पूरा करें: 81, 27, 9, 3, ?','Completa: 81, 27, 9, 3, ?'),[O('0','0','0','0','0'),O('1','1','1','1','1'),O('2','2','2','2','2'),O('3','3','3','3','3')],1,2),
+    Q('iq-22','choice',O('"يد" إلى "إصبع" مثل "قدم" إلى ؟','"Hand" is to "finger" as "foot" is to ?','"手"对"手指"就像"脚"对？','"हाथ" का "उंगली" से वही संबंध है जो "पैर" का किससे है?','"Mano" es a "dedo" como "pie" es a ?'),[O('كعب','Heel','脚跟','एड़ी','Talón'),O('إصبع القدم','Toe','脚趾','पैर की उंगली','Dedo del pie'),O('ركبة','Knee','膝盖','घुटना','Rodilla'),O('ساق','Leg','腿','टांग','Pierna')],1,2),
+    Q('iq-23','choice',O('أكمل: 3، 9، 27، 81، ؟','Complete: 3, 9, 27, 81, ?','完成数列：3、9、27、81、？','पूरा करें: 3, 9, 27, 81, ?','Completa: 3, 9, 27, 81, ?'),[O('162','162','162','162','162'),O('220','220','220','220','220'),O('243','243','243','243','243'),O('250','250','250','250','250')],2,3),
+    Q('iq-24','choice',O('كل المهندسين يدرسون الرياضيات. سامي يدرس الرياضيات. هل سامي مهندس بالضرورة؟','All engineers study math. Sami studies math. Must Sami be an engineer?','所有工程师都学数学。萨米学数学。萨米一定是工程师吗？','सभी इंजीनियर गणित पढ़ते हैं। सामी गणित पढ़ता है। क्या सामी अनिवार्य रूप से इंजीनियर है?','Todos los ingenieros estudian matemáticas. Sami estudia matemáticas. ¿Debe Sami ser ingeniero?'),[O('نعم','Yes','是','हां','Sí'),O('لا','No','不一定','नहीं','No'),O('دائمًا','Always','总是','हमेशा','Siempre'),O('غير ذلك','Other','其他','अन्य','Otro')],1,5),
+    Q('iq-25','choice',O('أكمل متتالية المربعات: 1، 4، 9، 16، 25، ؟','Complete the squares sequence: 1, 4, 9, 16, 25, ?','完成平方数列：1、4、9、16、25、？','वर्गों का क्रम पूरा करें: 1, 4, 9, 16, 25, ?','Completa la secuencia de cuadrados: 1, 4, 9, 16, 25, ?'),[O('30','30','30','30','30'),O('32','32','32','32','32'),O('36','36','36','36','36'),O('49','49','49','49','49')],2,4),
+    Q('iq-26','choice',O('ما العنصر الغريب: قلم، ورقة، كتاب، سيارة؟','Which is the odd one out: pen, paper, book, car?','哪个是异类：钢笔、纸、书、汽车？','कौन सा अलग है: कलम, कागज़, किताब, कार?','¿Cuál es el diferente: bolígrafo, papel, libro, coche?'),[O('قلم','Pen','钢笔','कलम','Bolígrafo'),O('ورقة','Paper','纸','कागज़','Papel'),O('كتاب','Book','书','किताब','Libro'),O('سيارة','Car','汽车','कार','Coche')],3,1),
+    Q('iq-27','choice',O('أكمل متتالية فيبوناتشي: 2، 3، 5، 8، 13، ؟','Complete the Fibonacci sequence: 2, 3, 5, 8, 13, ?','完成斐波那契数列：2、3、5、8、13、？','फिबोनाची क्रम पूरा करें: 2, 3, 5, 8, 13, ?','Completa la secuencia de Fibonacci: 2, 3, 5, 8, 13, ?'),[O('18','18','18','18','18'),O('20','20','20','20','20'),O('21','21','21','21','21'),O('23','23','23','23','23')],2,5),
+    Q('iq-28','choice',O('"شمس" إلى "نهار" مثل "قمر" إلى ؟','"Sun" is to "day" as "moon" is to ?','"太阳"对"白天"就像"月亮"对？','"सूरज" का "दिन" से वही संबंध है जो "चाँद" का किससे है?','"Sol" es a "día" como "luna" es a ?'),[O('نجمة','Star','星星','तारा','Estrella'),O('ليل','Night','夜晚','रात','Noche'),O('سحابة','Cloud','云','बादल','Nube'),O('غروب','Sunset','日落','सूर्यास्त','Atardecer')],1,2),
+    Q('iq-29','number',O('احسب: نصف نصف 80، ثم أضف 5','Calculate: half of half of 80, then add 5','计算：80的一半的一半，再加5','गणना करें: 80 के आधे का आधा, फिर 5 जोड़ें','Calcula: la mitad de la mitad de 80, luego suma 5'),[],25,3,{answer:'25'}),
+    Q('iq-30','choice',O('بعض الطيور لا تطير. البطريق طائر. هل البطريق يطير بالضرورة؟','Some birds cannot fly. A penguin is a bird. Must a penguin fly?','有些鸟不会飞。企鹅是鸟。企鹅一定会飞吗？','कुछ पक्षी उड़ नहीं सकते। पेंगुइन एक पक्षी है। क्या पेंगुइन का उड़ना अनिवार्य है?','Algunas aves no vuelan. El pingüino es un ave. ¿Debe volar necesariamente?'),[O('نعم','Yes','是','हां','Sí'),O('لا','No','不一定','नहीं','No'),O('دائمًا','Always','总是','हमेशा','Siempre'),O('غير معروف','Unknown','未知','अज्ञात','Desconocido')],1,4)
   ]};
 
   bank.science={id:'science',icon:'🔬',xp:100,title:O('مختبر العلوم','Science Lab','科学实验室','विज्ञान लैब','Laboratorio de ciencia'),desc:O('علوم متنوعة مع أسئلة تطبيقية لا تعتمد على الحفظ فقط.','Mixed science with applied questions, not pure memorization.','综合科学与应用题，而非单纯记忆。','विविध विज्ञान और अनुप्रयोग आधारित प्रश्न।','Ciencia variada con preguntas aplicadas.'),questions:[
@@ -297,7 +187,27 @@ User message: ${text}`;
     Q('sc-07','number',O('إذا كان نصف العمر لمادة 8 ساعات، فما النسبة المتبقية بعد 24 ساعة؟ اكتبها كنسبة مئوية.','If a substance has an 8-hour half-life, what percentage remains after 24 hours? Enter a percent.','某物质半衰期为8小时，24小时后剩余百分比是多少？','यदि किसी पदार्थ का अर्ध-आयु 8 घंटे है, 24 घंटे बाद कितना प्रतिशत बचेगा?','Si la vida media es de 8 horas, ¿qué porcentaje queda tras 24 horas?'),[],12.5,8,{answer:'12.5'}),
     Q('sc-08','choice',O('في دائرة كهربائية على التوالي، إذا انقطع أحد المصابيح، ماذا يحدث عادةً؟','In a series circuit, if one lamp breaks, what usually happens?','串联电路中一个灯泡断路通常会怎样？','श्रृंखला परिपथ में एक बल्ब टूट जाए तो सामान्यतः क्या होता है?','En un circuito en serie, si una lámpara se rompe, ¿qué suele pasar?'),[O('البقية تبقى تعمل طبيعيًا','The rest work normally'),O('تنطفئ الدائرة كلها','The whole circuit goes off'),O('تزداد الإضاءة دائمًا','Brightness always increases'),O('لا شيء','Nothing')],1,8),
     Q('sc-09','choice',O('أي مبدأ يفسر أن الضغط يقل عندما تزداد سرعة السائل في جريان مستقر؟','Which principle explains lower pressure at higher fluid speed in steady flow?','稳定流动中速度越高压力越低由什么原理解释？','स्थिर प्रवाह में गति बढ़ने पर दबाव घटने का सिद्धांत क्या है?','¿Qué principio explica que la presión baje al aumentar la velocidad de un fluido?'),[O('أرخميدس','Archimedes'),O('برنولي','Bernoulli'),O('نيوتن الأول','Newton I'),O('كولوم','Coulomb')],1,9),
-    Q('sc-10','choice',O('في نظام مغلق، إذا زادت الإنتروبي بشكل طبيعي، أي اتجاه للعمليات هو الأكثر توافقًا مع القانون الثاني للديناميكا الحرارية؟','In a closed system, increasing entropy naturally corresponds to which direction?','封闭系统中熵自然增加对应哪种过程方向？','बंद तंत्र में एंट्रॉपी का स्वाभाविक बढ़ना किस दिशा से मेल खाता है?','En un sistema cerrado, el aumento natural de entropía corresponde a qué dirección?'),[O('نحو حالات أقل احتمالًا','Toward less probable states'),O('نحو حالات أكثر عشوائية/احتمالًا','Toward more probable, more dispersed states'),O('نحو طاقة صفرية','Toward zero energy'),O('نحو سرعة الضوء','Toward light speed')],1,10)
+    Q('sc-10','choice',O('في نظام مغلق، إذا زادت الإنتروبي بشكل طبيعي، أي اتجاه للعمليات هو الأكثر توافقًا مع القانون الثاني للديناميكا الحرارية؟','In a closed system, increasing entropy naturally corresponds to which direction?','封闭系统中熵自然增加对应哪种过程方向？','बंद तंत्र में एंट्रॉपी का स्वाभाविक बढ़ना किस दिशा से मेल खाता है?','En un sistema cerrado, el aumento natural de entropía corresponde a qué dirección?'),[O('نحو حالات أقل احتمالًا','Toward less probable states','趋向低概率状态','कम संभावित अवस्थाओं की ओर','Hacia estados menos probables'),O('نحو حالات أكثر عشوائية/احتمالًا','Toward more probable, more dispersed states','趋向更混乱、更高概率的状态','अधिक संभावित, अधिक बिखरी अवस्थाओं की ओर','Hacia estados más probables y dispersos'),O('نحو طاقة صفرية','Toward zero energy','趋向零能量','शून्य ऊर्जा की ओर','Hacia energía cero'),O('نحو سرعة الضوء','Toward light speed','趋向光速','प्रकाश की गति की ओर','Hacia la velocidad de la luz')],1,10),
+    Q('sc-11','choice',O('ما الغاز الذي تحتاجه النباتات لصنع غذائها بعملية التمثيل الضوئي؟','What gas do plants need for photosynthesis?','植物进行光合作用需要哪种气体？','प्रकाश संश्लेषण के लिए पौधों को किस गैस की आवश्यकता होती है?','¿Qué gas necesitan las plantas para la fotosíntesis?'),[O('ثاني أكسيد الكربون','Carbon dioxide','二氧化碳','कार्बन डाइऑक्साइड','Dióxido de carbono'),O('الأكسجين','Oxygen','氧气','ऑक्सीजन','Oxígeno'),O('النيتروجين','Nitrogen','氮气','नाइट्रोजन','Nitrógeno'),O('الهيدروجين','Hydrogen','氢气','हाइड्रोजन','Hidrógeno')],0,1),
+    Q('sc-12','choice',O('ما أقرب كوكب للشمس؟','Which planet is closest to the Sun?','哪颗行星离太阳最近？','सूर्य के सबसे निकट कौन सा ग्रह है?','¿Qué planeta está más cerca del Sol?'),[O('الزهرة','Venus','金星','शुक्र','Venus'),O('عطارد','Mercury','水星','बुध','Mercurio'),O('الأرض','Earth','地球','पृथ्वी','Tierra'),O('المريخ','Mars','火星','मंगल','Marte')],1,1),
+    Q('sc-13','choice',O('ما وحدة قياس القوة في النظام الدولي؟','What is the SI unit of force?','国际单位制中力的单位是？','बल की SI इकाई क्या है?','¿Cuál es la unidad de fuerza en el SI?'),[O('واط','Watt','瓦特','वाट','Vatio'),O('نيوتن','Newton','牛顿','न्यूटन','Newton'),O('جول','Joule','焦耳','जूल','Julio'),O('باسكال','Pascal','帕斯卡','पास्कल','Pascal')],1,2),
+    Q('sc-14','choice',O('كم عدد عظام جسم الإنسان البالغ تقريبًا؟','About how many bones does an adult human body have?','成年人体大约有多少块骨头？','एक वयस्क मानव शरीर में लगभग कितनी हड्डियाँ होती हैं?','¿Cuántos huesos tiene aproximadamente el cuerpo humano adulto?'),[O('186','186','186','186','186'),O('196','196','196','196','196'),O('206','206','206','206','206'),O('216','216','216','216','216')],2,3),
+    Q('sc-15','choice',O('ما الغاز الأكثر وفرة في الغلاف الجوي للأرض؟','What is the most abundant gas in the atmosphere of Earth?','地球大气中含量最多的气体是？','पृथ्वी के वायुमंडल में सबसे प्रचुर गैस कौन सी है?','¿Cuál es el gas más abundante en la atmósfera terrestre?'),[O('الأكسجين','Oxygen','氧气','ऑक्सीजन','Oxígeno'),O('النيتروجين','Nitrogen','氮气','नाइट्रोजन','Nitrógeno'),O('ثاني أكسيد الكربون','Carbon dioxide','二氧化碳','कार्बन डाइऑक्साइड','Dióxido de carbono'),O('الأرجون','Argon','氩气','आर्गन','Argón')],1,2),
+    Q('sc-16','choice',O('ما رمز عنصر الذهب في الجدول الدوري؟','What is the symbol for gold on the periodic table?','元素周期表中金的符号是？','आवर्त सारणी में सोने का प्रतीक क्या है?','¿Cuál es el símbolo del oro en la tabla periódica?'),[O('Ag','Ag','Ag','Ag','Ag'),O('Au','Au','Au','Au','Au'),O('Fe','Fe','Fe','Fe','Fe'),O('Gd','Gd','Gd','Gd','Gd')],1,2),
+    Q('sc-17','choice',O('أي عضو مسؤول عن ضخ الدم في جسم الإنسان؟','Which organ pumps blood through the human body?','人体中哪个器官负责泵血？','मानव शरीर में रक्त पंप करने वाला अंग कौन सा है?','¿Qué órgano bombea la sangre en el cuerpo humano?'),[O('الكبد','Liver','肝脏','यकृत','Hígado'),O('القلب','Heart','心脏','हृदय','Corazón'),O('الرئة','Lung','肺','फेफड़ा','Pulmón'),O('الكلية','Kidney','肾脏','गुर्दा','Riñón')],1,1),
+    Q('sc-18','choice',O('ما سرعة الضوء تقريبًا بالكيلومتر في الثانية؟','About how fast is the speed of light, in km/s?','光速大约是多少公里/秒？','प्रकाश की गति लगभग कितने किमी/सेकंड है?','¿Cuál es aproximadamente la velocidad de la luz en km/s?'),[O('150,000','150,000','150,000','150,000','150,000'),O('300,000','300,000','300,000','300,000','300,000'),O('450,000','450,000','450,000','450,000','450,000'),O('600,000','600,000','600,000','600,000','600,000')],1,4),
+    Q('sc-19','choice',O('أي مما يلي عنصر وليس مركبًا؟','Which of these is an element, not a compound?','以下哪个是元素而非化合物？','इनमें से कौन सा एक तत्व है, यौगिक नहीं?','¿Cuál de estos es un elemento, no un compuesto?'),[O('الماء','Water','水','पानी','Agua'),O('ملح الطعام','Table salt','食盐','टेबल नमक','Sal de mesa'),O('الأكسجين','Oxygen','氧气','ऑक्सीजन','Oxígeno'),O('ثاني أكسيد الكربون','Carbon dioxide','二氧化碳','कार्बन डाइऑक्साइड','Dióxido de carbono')],2,3),
+    Q('sc-20','choice',O('ما اسم العملية التي يتحول فيها الماء من سائل إلى غاز؟','What is it called when water turns from liquid to gas?','水从液态变为气态的过程叫什么？','पानी का तरल से गैस में बदलना क्या कहलाता है?','¿Cómo se llama cuando el agua pasa de líquido a gas?'),[O('التكاثف','Condensation','凝结','संघनन','Condensación'),O('التبخر','Evaporation','蒸发','वाष्पीकरण','Evaporación'),O('الانصهار','Melting','熔化','पिघलना','Fusión'),O('التجمد','Freezing','冻结','जमना','Congelación')],1,2),
+    Q('sc-21','choice',O('كم عدد الكروموسومات في الخلية البشرية العادية؟','How many chromosomes are in a normal human cell?','正常人体细胞中有多少条染色体？','एक सामान्य मानव कोशिका में कितने गुणसूत्र होते हैं?','¿Cuántos cromosomas hay en una célula humana normal?'),[O('23','23','23','23','23'),O('44','44','44','44','44'),O('46','46','46','46','46'),O('48','48','48','48','48')],2,5),
+    Q('sc-22','choice',O('ما القوة المسؤولة عن سقوط الأجسام نحو الأرض؟','What force causes objects to fall toward Earth?','是什么力使物体落向地球？','कौन सा बल वस्तुओं को पृथ्वी की ओर गिराता है?','¿Qué fuerza hace que los objetos caigan hacia la Tierra?'),[O('الجاذبية','Gravity','重力','गुरुत्वाकर्षण','Gravedad'),O('الاحتكاك','Friction','摩擦力','घर्षण','Fricción'),O('المغناطيسية','Magnetism','磁力','चुंबकत्व','Magnetismo'),O('الكهرباء الساكنة','Static electricity','静电','स्थैतिक बिजली','Electricidad estática')],0,1),
+    Q('sc-23','choice',O('ما درجة غليان الماء عند مستوى سطح البحر بالمئوية؟','What is the boiling point of water at sea level in Celsius?','海平面上水的沸点是多少摄氏度？','समुद्र तल पर पानी का क्वथनांक सेल्सियस में क्या है?','¿Cuál es el punto de ebullición del agua a nivel del mar en Celsius?'),[O('90','90','90','90','90'),O('95','95','95','95','95'),O('100','100','100','100','100'),O('110','110','110','110','110')],2,1),
+    Q('sc-24','choice',O('أي طبقات الأرض هي الأقرب للسطح؟','Which layer of the Earth is closest to the surface?','地球的哪一层最靠近地表？','पृथ्वी की कौन सी परत सतह के सबसे निकट है?','¿Qué capa de la Tierra está más cerca de la superficie?'),[O('اللب','Core','地核','क्रोड','Núcleo'),O('الوشاح','Mantle','地幔','मेंटल','Manto'),O('القشرة','Crust','地壳','भूपर्पटी','Corteza'),O('النواة الخارجية','Outer core','外核','बाहरी क्रोड','Núcleo externo')],2,4),
+    Q('sc-25','choice',O('أي جزيء يحمل المعلومات الوراثية في الكائنات الحية؟','Which molecule carries genetic information in living things?','哪种分子携带生物体的遗传信息？','किस अणु में जीवों की आनुवंशिक जानकारी होती है?','¿Qué molécula lleva la información genética en los seres vivos?'),[O('RNA','RNA','RNA','RNA','RNA'),O('DNA','DNA','DNA','DNA','DNA'),O('ATP','ATP','ATP','ATP','ATP'),O('بروتين','Protein','蛋白质','प्रोटीन','Proteína')],1,3),
+    Q('sc-26','choice',O('ما وحدة قياس التيار الكهربائي؟','What is the unit of electric current?','电流的单位是什么？','विद्युत धारा की इकाई क्या है?','¿Cuál es la unidad de corriente eléctrica?'),[O('فولت','Volt','伏特','वोल्ट','Voltio'),O('أوم','Ohm','欧姆','ओम','Ohmio'),O('أمبير','Ampere','安培','एम्पीयर','Amperio'),O('واط','Watt','瓦特','वाट','Vatio')],2,3),
+    Q('sc-27','choice',O('أي كوكب يُعرف بالكوكب الأحمر؟','Which planet is known as the Red Planet?','哪颗行星被称为红色星球？','किस ग्रह को लाल ग्रह कहा जाता है?','¿Qué planeta se conoce como el Planeta Rojo?'),[O('الزهرة','Venus','金星','शुक्र','Venus'),O('المريخ','Mars','火星','मंगल','Marte'),O('المشتري','Jupiter','木星','बृहस्पति','Júpiter'),O('زحل','Saturn','土星','शनि','Saturno')],1,1),
+    Q('sc-28','choice',O('ما نوع الرابطة الكيميائية التي تتشكل بمشاركة الإلكترونات بين ذرتين؟','What type of chemical bond forms when two atoms share electrons?','两个原子共享电子形成的化学键叫什么？','जब दो परमाणु इलेक्ट्रॉन साझा करते हैं तो कौन सा रासायनिक बंधन बनता है?','¿Qué tipo de enlace químico se forma cuando dos átomos comparten electrones?'),[O('أيونية','Ionic','离子键','आयनिक','Iónico'),O('تساهمية','Covalent','共价键','सहसंयोजक','Covalente'),O('فلزية','Metallic','金属键','धात्विक','Metálico'),O('هيدروجينية','Hydrogen bond','氢键','हाइड्रोजन बंध','Puente de hidrógeno')],1,6),
+    Q('sc-29','number',O('ما تسارع الجاذبية الأرضية تقريبًا؟ (م/ث²، إلى أقرب عدد صحيح)','What is the gravitational acceleration, approximately? (m/s², nearest whole number)','地球重力加速度大约是多少？（米/秒²，取整数）','पृथ्वी का गुरुत्वीय त्वरण लगभग कितना है? (मी/से², निकटतम पूर्णांक)','¿Cuál es la aceleración de la gravedad terrestre, aproximadamente? (m/s², entero más cercano)'),[],10,4,{answer:'10'}),
+    Q('sc-30','choice',O('ما اسم العملية التي تستخدمها الخلايا لتحرير الطاقة من الجلوكوز؟','What is the process cells use to release energy from glucose called?','细胞用来从葡萄糖中释放能量的过程叫什么？','कोशिकाएं ग्लूकोज़ से ऊर्जा मुक्त करने के लिए किस प्रक्रिया का उपयोग करती हैं?','¿Cómo se llama el proceso que usan las células para liberar energía de la glucosa?'),[O('التمثيل الضوئي','Photosynthesis','光合作用','प्रकाश संश्लेषण','Fotosíntesis'),O('التنفس الخلوي','Cellular respiration','细胞呼吸','कोशिकीय श्वसन','Respiración celular'),O('التخمر فقط','Fermentation only','仅发酵','केवल किण्वन','Solo fermentación'),O('الانقسام الخلوي','Cell division','细胞分裂','कोशिका विभाजन','División celular')],1,5)
   ]};
 
   bank.daily={id:'daily',icon:'⚡',xp:70,title:O('تحدي ZIVO اليومي','ZIVO Daily','ZIVO 每日挑战','ZIVO दैनिक','Desafío diario ZIVO'),desc:O('جلسة سريعة تتغير كل يوم وتمنع التكرار قدر الإمكان.','A fast session that rotates questions and minimizes repeats.','每日轮换并尽量避免重复。','तेज़ दैनिक सत्र और न्यूनतम दोहराव।','Sesión rápida con rotación y mínimos repetidos.'),questions:[
@@ -387,40 +297,50 @@ User message: ${text}`;
 
   const fill=(id,items)=>{bank[id].questions=items.map((x,i)=>Q(`${id}-${String(i+1).padStart(2,'0')}`,x.type,O(x.ar,x.en,x.zh||x.en,x.hi||x.en,x.es||x.en),x.answers||[],x.c||0,x.d,x.extra||{}))};
   fill('memory',[
-    {type:'choice',ar:'رتب الأرقام ذهنيًا ثم اختر الترتيب الصحيح: 7،2،9،4',en:'Remember 7,2,9,4. Which order is correct?',answers:[O('7294','7294'),O('2749','2749'),O('7942','7942'),O('9274','9274')],c:0,d:1},
-    {type:'number',ar:'احفظ 3،8،1،6 ثم أدخل الرقم الثالث.',en:'Remember 3,8,1,6 then enter the third number.',c:1,d:2,extra:{answer:'1'}},
-    {type:'choice',ar:'ما العنصر المختلف في السلسلة: دائرة، مثلث، دائرة، مربع؟',en:'Which item breaks the pattern: circle, triangle, circle, square?',answers:[O('الأول','First'),O('الثاني','Second'),O('الثالث','Third'),O('الرابع','Fourth')],c:3,d:3},
-    {type:'number',ar:'إذا حفظت 14،22،31،40، ما مجموع الرقمين الأوسطين؟',en:'Remember 14,22,31,40. Sum the two middle values.',c:53,d:4,extra:{answer:'53'}},
-    {type:'choice',ar:'تذكر التسلسل: أحمر، أزرق، أخضر، أصفر. ما اللون الثاني؟',en:'Remember: red, blue, green, yellow. What was second?',answers:[O('أحمر','Red'),O('أزرق','Blue'),O('أخضر','Green'),O('أصفر','Yellow')],c:1,d:5},
-    {type:'input',ar:'احفظ 6-1-9-3 ثم اكتبها معكوسة.',en:'Remember 6-1-9-3 then type it reversed.',c:0,d:6,extra:{answer:'3916'}},
-    {type:'choice',ar:'أي سلسلة تطابق النمط الذي رأيته: ▲ ● ■ ▲ ● ؟',en:'Which completes the pattern: ▲ ● ■ ▲ ● ?',answers:[O('▲','▲'),O('●','●'),O('■','■'),O('◆','◆')],c:2,d:7},
-    {type:'number',ar:'احفظ 17،4،29،8،11. ما حاصل 17+8؟',en:'Remember 17,4,29,8,11. What is 17+8?',c:25,d:8,extra:{answer:'25'}},
-    {type:'choice',ar:'أي رقم كان في الموقع الرابع في التسلسل: 5،12،3،19،7،2؟',en:'Which number was fourth in: 5,12,3,19,7,2?',answers:[O('3','3'),O('12','12'),O('19','19'),O('7','7')],c:2,d:9},
-    {type:'input',ar:'تذكر 4-8-2-7-1 ثم اكتب الرقمين الأول والأخير متجاورين.',en:'Remember 4-8-2-7-1 then enter the first and last digits together.',c:0,d:10,extra:{answer:'41'}}
+    {type:'choice',ar:'رتب الأرقام ذهنيًا ثم اختر الترتيب الصحيح: 7،2،9،4',en:'Remember 7,2,9,4. Which order is correct?',zh:'记住 7,2,9,4。正确的顺序是？',hi:'7,2,9,4 याद रखें। सही क्रम कौन सा है?',es:'Recuerda 7,2,9,4. ¿Cuál es el orden correcto?',answers:[O('7294','7294','7294','7294','7294'),O('2749','2749','2749','2749','2749'),O('7942','7942','7942','7942','7942'),O('9274','9274','9274','9274','9274')],c:0,d:1},
+    {type:'number',ar:'احفظ 3،8،1،6 ثم أدخل الرقم الثالث.',en:'Remember 3,8,1,6 then enter the third number.',zh:'记住 3,8,1,6，然后输入第三个数字。',hi:'3,8,1,6 याद रखें, फिर तीसरी संख्या दर्ज करें।',es:'Recuerda 3,8,1,6 y luego escribe el tercer número.',c:1,d:2,extra:{answer:'1'}},
+    {type:'choice',ar:'ما العنصر المختلف في السلسلة: دائرة، مثلث، دائرة، مربع؟',en:'Which item breaks the pattern: circle, triangle, circle, square?',zh:'哪一项打破了规律：圆形、三角形、圆形、正方形？',hi:'कौन सा तत्व पैटर्न तोड़ता है: वृत्त, त्रिकोण, वृत्त, वर्ग?',es:'¿Qué elemento rompe el patrón: círculo, triángulo, círculo, cuadrado?',answers:[O('الأول','First','第一个','पहला','El primero'),O('الثاني','Second','第二个','दूसरा','El segundo'),O('الثالث','Third','第三个','तीसरा','El tercero'),O('الرابع','Fourth','第四个','चौथा','El cuarto')],c:3,d:3},
+    {type:'number',ar:'إذا حفظت 14،22،31،40، ما مجموع الرقمين الأوسطين؟',en:'Remember 14,22,31,40. Sum the two middle values.',zh:'记住 14,22,31,40。求中间两个数之和。',hi:'14,22,31,40 याद रखें। बीच के दो मानों का योग करें।',es:'Recuerda 14,22,31,40. Suma los dos valores centrales.',c:53,d:4,extra:{answer:'53'}},
+    {type:'choice',ar:'تذكر التسلسل: أحمر، أزرق، أخضر، أصفر. ما اللون الثاني؟',en:'Remember: red, blue, green, yellow. What was second?',zh:'记住顺序：红、蓝、绿、黄。第二个是什么颜色？',hi:'क्रम याद रखें: लाल, नीला, हरा, पीला। दूसरा कौन सा था?',es:'Recuerda: rojo, azul, verde, amarillo. ¿Cuál fue el segundo?',answers:[O('أحمر','Red','红色','लाल','Rojo'),O('أزرق','Blue','蓝色','नीला','Azul'),O('أخضر','Green','绿色','हरा','Verde'),O('أصفر','Yellow','黄色','पीला','Amarillo')],c:1,d:5},
+    {type:'input',ar:'احفظ 6-1-9-3 ثم اكتبها معكوسة.',en:'Remember 6-1-9-3 then type it reversed.',zh:'记住 6-1-9-3，然后倒序输入。',hi:'6-1-9-3 याद रखें, फिर इसे उल्टा लिखें।',es:'Recuerda 6-1-9-3 y luego escríbelo al revés.',c:0,d:6,extra:{answer:'3916'}},
+    {type:'choice',ar:'أي سلسلة تطابق النمط الذي رأيته: ▲ ● ■ ▲ ● ؟',en:'Which completes the pattern: ▲ ● ■ ▲ ● ?',zh:'哪个能补全规律：▲ ● ■ ▲ ● ？',hi:'पैटर्न को कौन पूरा करता है: ▲ ● ■ ▲ ● ?',es:'¿Qué completa el patrón: ▲ ● ■ ▲ ● ?',answers:[O('▲','▲','▲','▲','▲'),O('●','●','●','●','●'),O('■','■','■','■','■'),O('◆','◆','◆','◆','◆')],c:2,d:7},
+    {type:'number',ar:'احفظ 17،4،29،8،11. ما حاصل 17+8؟',en:'Remember 17,4,29,8,11. What is 17+8?',zh:'记住 17,4,29,8,11。17+8 等于多少？',hi:'17,4,29,8,11 याद रखें। 17+8 कितना है?',es:'Recuerda 17,4,29,8,11. ¿Cuánto es 17+8?',c:25,d:8,extra:{answer:'25'}},
+    {type:'choice',ar:'أي رقم كان في الموقع الرابع في التسلسل: 5،12،3،19،7،2؟',en:'Which number was fourth in: 5,12,3,19,7,2?',zh:'在 5,12,3,19,7,2 中，第四个数字是？',hi:'5,12,3,19,7,2 में चौथी संख्या कौन सी थी?',es:'¿Qué número estaba en cuarto lugar en: 5,12,3,19,7,2?',answers:[O('3','3','3','3','3'),O('12','12','12','12','12'),O('19','19','19','19','19'),O('7','7','7','7','7')],c:2,d:9},
+    {type:'input',ar:'تذكر 4-8-2-7-1 ثم اكتب الرقمين الأول والأخير متجاورين.',en:'Remember 4-8-2-7-1 then enter the first and last digits together.',zh:'记住 4-8-2-7-1，然后把第一个和最后一个数字连起来输入。',hi:'4-8-2-7-1 याद रखें, फिर पहला और आखिरी अंक साथ में लिखें।',es:'Recuerda 4-8-2-7-1 y luego escribe el primer y el último dígito juntos.',c:0,d:10,extra:{answer:'41'}}
   ]);
   fill('strategy',[
-    {type:'choice',ar:'لديك 10 وحدات طاقة ومهمتان: الأولى 7 والثانية 6. لا يمكنك تنفيذ إلا واحدة الآن. اختر المهمة الأعلى عائدًا إذا كان عائد الأولى 20 والثانية 24.',en:'You have 10 energy; tasks cost 7 and 6. Rewards are 20 and 24. Which is better now?',answers:[O('الأولى','First'),O('الثانية','Second'),O('أي واحدة','Either'),O('لا تنفذ','None')],c:1,d:1},
-    {type:'choice',ar:'خصمك يملك سرعة أعلى لكن دفاعه ضعيف. ما الخطة الأكثر منطقية؟',en:'Opponent is faster but has weak defense. Best plan?',answers:[O('هجوم سريع مع تغيير الاتجاه','Fast attack with direction changes'),O('الانتظار فقط','Only wait'),O('إبطاء كل شيء','Slow everything'),O('عدم التحرك','Do not move')],c:0,d:2},
-    {type:'number',ar:'ميزانية 50، تكلفة القرار الأول 18 والثاني 17. كم يتبقى إذا اخترت الاثنين؟',en:'Budget 50; costs 18 and 17. How much remains after both?',c:15,d:3,extra:{answer:'15'}},
-    {type:'choice',ar:'في لعبة موارد، المخزون ممتلئ تقريبًا وظهر عنصر نادر مؤقت. ماذا تفعل؟',en:'Inventory is nearly full and a rare temporary item appears. Best move?',answers:[O('تتجاهله','Ignore it'),O('تستبدل عنصرًا منخفض القيمة','Replace a low-value item'),O('تنتظر حتى يختفي','Wait'),O('تغلق اللعبة','Quit')],c:1,d:4},
-    {type:'choice',ar:'إذا كان خصمك يكرر نفس الهجوم، ما أفضل استجابة استراتيجية؟',en:'If an opponent repeats the same attack, best strategic response?',answers:[O('التكيف واستغلال النمط','Adapt and exploit the pattern'),O('تكرار نفس الخطأ','Repeat the same mistake'),O('التوقف','Stop'),O('التخمين العشوائي','Random guess')],c:0,d:5},
-    {type:'choice',ar:'لديك 3 أدوار فقط: اجمع معلومات، نفذ، ثم صحح. ما الترتيب الأفضل غالبًا؟',en:'You have 3 turns: gather info, act, correct. Best order?',answers:[O('معلومات ← تنفيذ ← تصحيح','Info → act → correct'),O('تصحيح ← تنفيذ ← معلومات','Correct → act → info'),O('تنفيذ فقط','Act only'),O('عشوائي','Random')],c:0,d:6},
-    {type:'number',ar:'موردك 100 وينخفض 15% كل جولة. بعد جولتين كم تقريبًا؟',en:'A resource of 100 falls by 15% each round. After two rounds?',c:72.25,d:7,extra:{answer:'72.25'}},
-    {type:'choice',ar:'خصمك يحاول دفعك لاتخاذ قرار سريع عندما تكون معلوماتك ناقصة. ما الأفضل؟',en:'Opponent pressures you to decide quickly with incomplete information. Best move?',answers:[O('تأخير القرار لجمع معلومة حاسمة','Delay to gather a decisive fact'),O('الاندفاع','Rush'),O('التخلي عن الخطة','Abandon plan'),O('اختيار عشوائي','Random choice')],c:0,d:8},
-    {type:'choice',ar:'في وضع 2 مقابل 1، ما الذي يزيد الخيارات؟',en:'In a 2-v-1 situation, what increases options?',answers:[O('تثبيت المدافع ثم تغيير الزاوية','Fix the defender then change angle'),O('الوقوف','Stand still'),O('إخفاء المساحة','Hide space'),O('التراجع دائمًا','Always retreat')],c:0,d:9},
-    {type:'choice',ar:'لديك معلومتان صحيحتان وواحدة مشكوك بها. قرارك عالي المخاطر. ما النهج الأفضل؟',en:'Two facts are reliable and one is uncertain. High-risk decision. Best approach?',answers:[O('ابن القرار على المؤكد واختبر المشكوك','Base on reliable facts and test the uncertain one'),O('تجاهل كل شيء','Ignore everything'),O('اعتمد على المشكوك فقط','Use the uncertain fact only'),O('تخمين','Guess')],c:0,d:10}
+    {type:'choice',ar:'لديك 10 وحدات طاقة ومهمتان: الأولى 7 والثانية 6. لا يمكنك تنفيذ إلا واحدة الآن. اختر المهمة الأعلى عائدًا إذا كان عائد الأولى 20 والثانية 24.',en:'You have 10 energy; tasks cost 7 and 6. Rewards are 20 and 24. Which is better now?',zh:'你有10点能量；任务花费分别为7和6，回报分别为20和24。现在哪个更划算？',hi:'आपके पास 10 एनर्जी है; कार्यों की लागत 7 और 6 है, इनाम 20 और 24 हैं। अभी कौन बेहतर है?',es:'Tienes 10 de energía; las tareas cuestan 7 y 6. Las recompensas son 20 y 24. ¿Cuál conviene ahora?',answers:[O('الأولى','First','第一个','पहला','La primera'),O('الثانية','Second','第二个','दूसरा','La segunda'),O('أي واحدة','Either','任意一个','कोई भी','Cualquiera'),O('لا تنفذ','None','都不做','कोई नहीं','Ninguna')],c:1,d:1},
+    {type:'choice',ar:'خصمك يملك سرعة أعلى لكن دفاعه ضعيف. ما الخطة الأكثر منطقية؟',en:'Opponent is faster but has weak defense. Best plan?',zh:'对手速度更快但防御较弱，最合理的策略是？',hi:'प्रतिद्वंद्वी तेज़ है लेकिन उसका बचाव कमजोर है। सबसे अच्छी योजना क्या है?',es:'El rival es más rápido pero su defensa es débil. ¿Mejor plan?',answers:[O('هجوم سريع مع تغيير الاتجاه','Fast attack with direction changes','快速进攻并变换方向','दिशा बदलते हुए तेज़ हमला','Ataque rápido cambiando de dirección'),O('الانتظار فقط','Only wait','只是等待','केवल इंतज़ार करना','Solo esperar'),O('إبطاء كل شيء','Slow everything','放慢一切','सब कुछ धीमा करना','Ralentizar todo'),O('عدم التحرك','Do not move','静止不动','हिलना नहीं','No moverse')],c:0,d:2},
+    {type:'number',ar:'ميزانية 50، تكلفة القرار الأول 18 والثاني 17. كم يتبقى إذا اخترت الاثنين؟',en:'Budget 50; costs 18 and 17. How much remains after both?',zh:'预算为50，两项决策成本分别为18和17，两者都选后剩多少？',hi:'बजट 50 है; लागत 18 और 17 है। दोनों चुनने पर कितना बचेगा?',es:'Presupuesto de 50; los costos son 18 y 17. ¿Cuánto queda si eliges ambos?',c:15,d:3,extra:{answer:'15'}},
+    {type:'choice',ar:'في لعبة موارد، المخزون ممتلئ تقريبًا وظهر عنصر نادر مؤقت. ماذا تفعل؟',en:'Inventory is nearly full and a rare temporary item appears. Best move?',zh:'库存快满了，出现了一个稀有的限时物品，你会怎么做？',hi:'इन्वेंटरी लगभग भरी है और एक दुर्लभ अस्थायी वस्तु दिखी है। सबसे अच्छा कदम क्या है?',es:'El inventario está casi lleno y aparece un objeto raro temporal. ¿Mejor movimiento?',answers:[O('تتجاهله','Ignore it','忽略它','उसे नज़रअंदाज़ करें','Ignorarlo'),O('تستبدل عنصرًا منخفض القيمة','Replace a low-value item','替换一个低价值物品','कम मूल्य की वस्तु बदलें','Reemplazar un objeto de bajo valor'),O('تنتظر حتى يختفي','Wait','等它消失','गायब होने तक इंतज़ार करें','Esperar a que desaparezca'),O('تغلق اللعبة','Quit','退出游戏','गेम बंद करें','Cerrar el juego')],c:1,d:4},
+    {type:'choice',ar:'إذا كان خصمك يكرر نفس الهجوم، ما أفضل استجابة استراتيجية؟',en:'If an opponent repeats the same attack, best strategic response?',zh:'如果对手反复使用同一招式，最好的策略反应是？',hi:'यदि प्रतिद्वंद्वी बार-बार वही हमला करता है, तो सबसे अच्छी रणनीतिक प्रतिक्रिया क्या है?',es:'Si el rival repite el mismo ataque, ¿mejor respuesta estratégica?',answers:[O('التكيف واستغلال النمط','Adapt and exploit the pattern','适应并利用规律','अनुकूलन करें और पैटर्न का लाभ उठाएं','Adaptarse y explotar el patrón'),O('تكرار نفس الخطأ','Repeat the same mistake','重复同样的错误','वही गलती दोहराना','Repetir el mismo error'),O('التوقف','Stop','停止','रुक जाना','Detenerse'),O('التخمين العشوائي','Random guess','随机猜测','यादृच्छिक अनुमान','Adivinar al azar')],c:0,d:5},
+    {type:'choice',ar:'لديك 3 أدوار فقط: اجمع معلومات، نفذ، ثم صحح. ما الترتيب الأفضل غالبًا؟',en:'You have 3 turns: gather info, act, correct. Best order?',zh:'你只有3个回合：收集信息、行动、修正。最佳顺序通常是？',hi:'आपके पास केवल 3 चालें हैं: जानकारी जुटाएं, कार्य करें, सुधारें। सबसे अच्छा क्रम क्या है?',es:'Tienes 3 turnos: reunir información, actuar, corregir. ¿Mejor orden?',answers:[O('معلومات ← تنفيذ ← تصحيح','Info → act → correct','信息→行动→修正','जानकारी → कार्य → सुधार','Información → actuar → corregir'),O('تصحيح ← تنفيذ ← معلومات','Correct → act → info','修正→行动→信息','सुधार → कार्य → जानकारी','Corregir → actuar → información'),O('تنفيذ فقط','Act only','仅行动','केवल कार्य','Solo actuar'),O('عشوائي','Random','随机','यादृच्छिक','Aleatorio')],c:0,d:6},
+    {type:'number',ar:'موردك 100 وينخفض 15% كل جولة. بعد جولتين كم تقريبًا؟',en:'A resource of 100 falls by 15% each round. After two rounds?',zh:'一项资源为100，每轮下降15%，两轮后大约剩多少？',hi:'एक संसाधन 100 है और हर राउंड में 15% घटता है। दो राउंड बाद लगभग कितना बचेगा?',es:'Un recurso de 100 baja 15% cada ronda. ¿Cuánto queda tras dos rondas?',c:72.25,d:7,extra:{answer:'72.25'}},
+    {type:'choice',ar:'خصمك يحاول دفعك لاتخاذ قرار سريع عندما تكون معلوماتك ناقصة. ما الأفضل؟',en:'Opponent pressures you to decide quickly with incomplete information. Best move?',zh:'对手在信息不全时逼你快速决策，最好的做法是？',hi:'प्रतिद्वंद्वी अधूरी जानकारी में आपको जल्दी फैसला लेने पर मजबूर करता है। सबसे अच्छा कदम क्या है?',es:'El rival te presiona a decidir rápido con información incompleta. ¿Mejor movimiento?',answers:[O('تأخير القرار لجمع معلومة حاسمة','Delay to gather a decisive fact','推迟决策以收集关键信息','निर्णायक जानकारी जुटाने के लिए देरी करें','Retrasar para reunir un dato decisivo'),O('الاندفاع','Rush','冲动行事','जल्दबाज़ी करना','Precipitarse'),O('التخلي عن الخطة','Abandon plan','放弃计划','योजना छोड़ना','Abandonar el plan'),O('اختيار عشوائي','Random choice','随机选择','यादृच्छिक चयन','Elección al azar')],c:0,d:8},
+    {type:'choice',ar:'في وضع 2 مقابل 1، ما الذي يزيد الخيارات؟',en:'In a 2-v-1 situation, what increases options?',zh:'在2对1的局面中，什么能增加选择空间？',hi:'2 बनाम 1 की स्थिति में, विकल्प क्या बढ़ाता है?',es:'En una situación de 2 contra 1, ¿qué aumenta las opciones?',answers:[O('تثبيت المدافع ثم تغيير الزاوية','Fix the defender then change angle','固定防守者后改变角度','डिफेंडर को स्थिर कर कोण बदलना','Fijar al defensor y cambiar el ángulo'),O('الوقوف','Stand still','站着不动','खड़े रहना','Quedarse quieto'),O('إخفاء المساحة','Hide space','隐藏空间','जगह छिपाना','Ocultar el espacio'),O('التراجع دائمًا','Always retreat','总是后退','हमेशा पीछे हटना','Retroceder siempre')],c:0,d:9},
+    {type:'choice',ar:'لديك معلومتان صحيحتان وواحدة مشكوك بها. قرارك عالي المخاطر. ما النهج الأفضل؟',en:'Two facts are reliable and one is uncertain. High-risk decision. Best approach?',zh:'两条信息可靠，一条存疑，这是一个高风险决策，最好的方法是？',hi:'दो तथ्य विश्वसनीय हैं और एक संदिग्ध है। यह उच्च-जोखिम निर्णय है। सबसे अच्छा तरीका क्या है?',es:'Dos datos son fiables y uno es incierto. Decisión de alto riesgo. ¿Mejor enfoque?',answers:[O('ابن القرار على المؤكد واختبر المشكوك','Base on reliable facts and test the uncertain one','以可靠信息为基础，验证存疑信息','विश्वसनीय तथ्यों पर आधारित रहें और संदिग्ध को परखें','Basarse en lo fiable y comprobar lo incierto'),O('تجاهل كل شيء','Ignore everything','忽略一切','सब कुछ नज़रअंदाज़ करें','Ignorar todo'),O('اعتمد على المشكوك فقط','Use the uncertain fact only','只依赖存疑信息','केवल संदिग्ध तथ्य पर निर्भर रहें','Confiar solo en lo incierto'),O('تخمين','Guess','猜测','अनुमान लगाना','Adivinar')],c:0,d:10}
   ]);
   fill('math',[
-    {type:'number',ar:'احسب: 48 ÷ 6 + 7',en:'Calculate: 48 ÷ 6 + 7',c:15,d:1,extra:{answer:'15'}},
-    {type:'number',ar:'إذا كان 3x=27، فما x؟',en:'If 3x=27, what is x?',c:9,d:2,extra:{answer:'9'}},
-    {type:'choice',ar:'أي كسر أكبر؟',en:'Which fraction is largest?',answers:[O('3/8','3/8'),O('5/12','5/12'),O('4/9','4/9'),O('7/16','7/16')],c:2,d:3},
-    {type:'number',ar:'مساحة مستطيل 12×7؟',en:'Area of a 12×7 rectangle?',c:84,d:4,extra:{answer:'84'}},
-    {type:'choice',ar:'ما العدد الذي إذا زاد 20% أصبح 72؟',en:'What number becomes 72 after a 20% increase?',answers:[O('54','54'),O('60','60'),O('64','64'),O('66','66')],c:1,d:5},
-    {type:'number',ar:'حل: 2x+5=19',en:'Solve: 2x+5=19',c:7,d:6,extra:{answer:'7'}},
-    {type:'choice',ar:'ما مجموع الزوايا الداخلية لمسدس؟',en:'Sum of interior angles of a hexagon?',answers:[O('540°','540°'),O('600°','600°'),O('720°','720°'),O('900°','900°')],c:0,d:7},
-    {type:'number',ar:'إذا كان المتوسط لـ 8 و12 و16 وx يساوي 14، فما x؟',en:'Mean of 8,12,16,x is 14. Find x.',c:20,d:8,extra:{answer:'20'}},
-    {type:'choice',ar:'حل المعادلة: x²=81 مع x موجب.',en:'Solve x²=81 for positive x.',answers:[O('7','7'),O('8','8'),O('9','9'),O('10','10')],c:2,d:9},
-    {type:'number',ar:'متتالية حسابية تبدأ 7 وفرقها 13. ما الحد العاشر؟',en:'Arithmetic sequence starts at 7 with common difference 13. 10th term?',c:124,d:10,extra:{answer:'124'}}
+    {type:'number',ar:'احسب: 48 ÷ 6 + 7',en:'Calculate: 48 ÷ 6 + 7',zh:'计算：48 ÷ 6 + 7',hi:'गणना करें: 48 ÷ 6 + 7',es:'Calcula: 48 ÷ 6 + 7',c:15,d:1,extra:{answer:'15'}},
+    {type:'number',ar:'إذا كان 3x=27، فما x؟',en:'If 3x=27, what is x?',zh:'如果 3x=27，x 是多少？',hi:'यदि 3x=27, तो x क्या है?',es:'Si 3x=27, ¿cuál es x?',c:9,d:2,extra:{answer:'9'}},
+    {type:'choice',ar:'أي كسر أكبر؟',en:'Which fraction is largest?',zh:'哪个分数最大？',hi:'कौन सा भिन्न सबसे बड़ा है?',es:'¿Qué fracción es mayor?',answers:[O('3/8','3/8','3/8','3/8','3/8'),O('5/12','5/12','5/12','5/12','5/12'),O('4/9','4/9','4/9','4/9','4/9'),O('7/16','7/16','7/16','7/16','7/16')],c:2,d:3},
+    {type:'number',ar:'مساحة مستطيل 12×7؟',en:'Area of a 12×7 rectangle?',zh:'12×7 矩形的面积是多少？',hi:'12×7 आयत का क्षेत्रफल?',es:'¿Área de un rectángulo de 12×7?',c:84,d:4,extra:{answer:'84'}},
+    {type:'choice',ar:'ما العدد الذي إذا زاد 20% أصبح 72؟',en:'What number becomes 72 after a 20% increase?',zh:'哪个数增加20%后变成72？',hi:'कौन सी संख्या 20% बढ़ने पर 72 हो जाती है?',es:'¿Qué número se convierte en 72 tras un aumento del 20%?',answers:[O('54','54','54','54','54'),O('60','60','60','60','60'),O('64','64','64','64','64'),O('66','66','66','66','66')],c:1,d:5},
+    {type:'number',ar:'حل: 2x+5=19',en:'Solve: 2x+5=19',zh:'解方程：2x+5=19',hi:'हल करें: 2x+5=19',es:'Resuelve: 2x+5=19',c:7,d:6,extra:{answer:'7'}},
+    {type:'choice',ar:'ما مجموع الزوايا الداخلية لمسدس؟',en:'Sum of interior angles of a hexagon?',zh:'六边形内角和是多少？',hi:'षट्भुज के आंतरिक कोणों का योग?',es:'¿Suma de los ángulos internos de un hexágono?',answers:[O('540°','540°','540°','540°','540°'),O('600°','600°','600°','600°','600°'),O('720°','720°','720°','720°','720°'),O('900°','900°','900°','900°','900°')],c:2,d:7},
+    {type:'number',ar:'إذا كان المتوسط لـ 8 و12 و16 وx يساوي 14، فما x؟',en:'Mean of 8,12,16,x is 14. Find x.',zh:'8、12、16、x 的平均数是14，求x。',hi:'8,12,16,x का औसत 14 है। x ज्ञात करें।',es:'La media de 8,12,16,x es 14. Halla x.',c:20,d:8,extra:{answer:'20'}},
+    {type:'choice',ar:'حل المعادلة: x²=81 مع x موجب.',en:'Solve x²=81 for positive x.',zh:'解方程 x²=81（x为正数）。',hi:'x²=81 हल करें (x धनात्मक है)।',es:'Resuelve x²=81 para x positivo.',answers:[O('7','7','7','7','7'),O('8','8','8','8','8'),O('9','9','9','9','9'),O('10','10','10','10','10')],c:2,d:9},
+    {type:'number',ar:'متتالية حسابية تبدأ 7 وفرقها 13. ما الحد العاشر؟',en:'Arithmetic sequence starts at 7 with common difference 13. 10th term?',zh:'等差数列首项为7，公差为13，第10项是多少？',hi:'समांतर श्रेणी 7 से शुरू होती है और सार्व अंतर 13 है। 10वां पद क्या है?',es:'Una sucesión aritmética empieza en 7 con diferencia 13. ¿Décimo término?',c:124,d:10,extra:{answer:'124'}},
+    {type:'number',ar:'احسب: (9×4) - (36÷3)',en:'Calculate: (9×4) - (36÷3)',zh:'计算：(9×4) - (36÷3)',hi:'गणना करें: (9×4) - (36÷3)',es:'Calcula: (9×4) - (36÷3)',c:24,d:1,extra:{answer:'24'}},
+    {type:'choice',ar:'أي عدد أولي من التالية؟',en:'Which of these is prime?',zh:'以下哪个是质数？',hi:'इनमें से कौन सी अभाज्य संख्या है?',es:'¿Cuál de estos es primo?',answers:[O('21','21','21','21','21'),O('33','33','33','33','33'),O('41','41','41','41','41'),O('49','49','49','49','49')],c:2,d:2},
+    {type:'number',ar:'نسبة 15 إلى 60 كنسبة مئوية؟',en:'What percentage is 15 out of 60?',zh:'15占60的百分之多少？',hi:'15, 60 का कितना प्रतिशत है?',es:'¿Qué porcentaje es 15 de 60?',c:25,d:3,extra:{answer:'25'}},
+    {type:'choice',ar:'محيط دائرة نصف قطرها 7 (استخدم π≈22/7)؟',en:'Circumference of a circle with radius 7 (use π≈22/7)?',zh:'半径为7的圆的周长是多少（π取22/7）？',hi:'त्रिज्या 7 वाले वृत्त की परिधि (π≈22/7 का उपयोग करें)?',es:'¿Circunferencia de un círculo de radio 7 (usa π≈22/7)?',answers:[O('22','22','22','22','22'),O('44','44','44','44','44'),O('36','36','36','36','36'),O('49','49','49','49','49')],c:1,d:4},
+    {type:'number',ar:'حل: (x/4)+3=10',en:'Solve: (x/4)+3=10',zh:'解方程：(x/4)+3=10',hi:'हल करें: (x/4)+3=10',es:'Resuelve: (x/4)+3=10',c:28,d:5,extra:{answer:'28'}},
+    {type:'choice',ar:'أي الأعداد التالية زوجي وقابل للقسمة على 3؟',en:'Which number is even and divisible by 3?',zh:'以下哪个数既是偶数又能被3整除？',hi:'कौन सी संख्या सम है और 3 से विभाज्य है?',es:'¿Qué número es par y divisible entre 3?',answers:[O('14','14','14','14','14'),O('18','18','18','18','18'),O('20','20','20','20','20'),O('22','22','22','22','22')],c:1,d:6},
+    {type:'number',ar:'حجم مكعب طول ضلعه 4؟',en:'Volume of a cube with side length 4?',zh:'边长为4的立方体体积是多少？',hi:'भुजा 4 वाले घन का आयतन?',es:'¿Volumen de un cubo con lado 4?',c:64,d:7,extra:{answer:'64'}},
+    {type:'choice',ar:'أي كسر يساوي 0.75؟',en:'Which fraction equals 0.75?',zh:'哪个分数等于0.75？',hi:'कौन सा भिन्न 0.75 के बराबर है?',es:'¿Qué fracción equivale a 0.75?',answers:[O('2/3','2/3','2/3','2/3','2/3'),O('3/4','3/4','3/4','3/4','3/4'),O('4/5','4/5','4/5','4/5','4/5'),O('5/6','5/6','5/6','5/6','5/6')],c:1,d:8},
+    {type:'number',ar:'إذا سار قطار 60 كم بسرعة 40 كم/س، كم ساعة استغرق (بالدقائق: قرّب)؟',en:'A train travels 60 km at 40 km/h. How many minutes did it take (round)?',zh:'火车以40公里/小时行驶60公里，用了多少分钟（四舍五入）？',hi:'एक ट्रेन 40 किमी/घंटा की गति से 60 किमी चलती है। इसमें कितने मिनट लगे (गोल करें)?',es:'Un tren recorre 60 km a 40 km/h. ¿Cuántos minutos tardó (redondea)?',c:90,d:9,extra:{answer:'90'}},
+    {type:'choice',ar:'ما ناتج 7! ÷ 5! (مضروب)؟',en:'What is 7! ÷ 5! (factorial)?',zh:'7! ÷ 5! 的结果是多少（阶乘）？',hi:'7! ÷ 5! (फैक्टोरियल) का परिणाम क्या है?',es:'¿Cuánto es 7! ÷ 5! (factorial)?',answers:[O('12','12','12','12','12'),O('35','35','35','35','35'),O('42','42','42','42','42'),O('49','49','49','49','49')],c:2,d:10}
   ]);
 
   // V53 — Forensic Lab: cinematic detective case (non-graphic)
@@ -821,8 +741,13 @@ window.ZIVOZONE_V18 = {
     } catch (error) {
       console.warn('ZIVOZONE news feed:', error);
       if (cached) { render(cached.data); return cached.data; }
-      render({ sports: [], general: [], updatedAt: null });
-      return null;
+      const fallback={updatedAt:Date.now(),sports:[
+        {headline:'أخبار كرة القدم العالمية والعربية — اضغط لفتح آخر الأخبار',source:'ZIVO SPORTS',url:'https://news.google.com/search?q=%D9%83%D8%B1%D8%A9%20%D8%A7%D9%84%D9%82%D8%AF%D9%85&hl=ar&gl=JO&ceid=JO%3Aar'}
+      ],general:[
+        {headline:'آخر أخبار الأردن والعالم العربي والدولي — اضغط لفتح الأخبار',source:'ZIVOZONE NEWS',url:'https://news.google.com/?hl=ar&gl=JO&ceid=JO%3Aar'}
+      ]};
+      render(fallback);
+      return fallback;
     }
   }
 
@@ -839,7 +764,7 @@ window.ZIVOZONE_V18 = {
     });
   }
 
-  window.ZIVOZONE_NEWS = { load, loadJordan: () => load(false), refresh: () => load(true) };
+  window.ZIVOZONE_NEWS = { load, loadJordan: (target, l) => load(false), refresh: () => load(true) };
   window.ZIVOZONE_SPORTS_TICKER = { load, refresh: () => load(true) };
 
   document.addEventListener('DOMContentLoaded', () => setTimeout(() => load(false), 250));
@@ -999,6 +924,18 @@ window.ZIVOZONE_V18 = {
     const old=JSON.parse(localStorage.getItem(KEY)||'null');player=old?.player?.email===email?old.player:defaultPlayer(user);saveLocal();emit();return player;
   }
   async function logout(){if(cloud&&auth){try{await auth.signOut()}catch(e){}}user=null;player=null;localStorage.removeItem(KEY);emit()}
+  async function resetPassword(email){
+    email=String(email||'').trim().toLowerCase();
+    if(!/^\S+@\S+\.\S+$/.test(email))throw Error(t('emailError'));
+    if(!cloud||!auth)throw Error(t('resetCloudOnly'));
+    try{
+      await auth.sendPasswordResetEmail(email);
+    }catch(e){
+      // Do not reveal whether an email exists on the platform (account-enumeration protection).
+      if(e && e.code!=='auth/user-not-found')throw Error(firebaseMessage(e.code));
+    }
+    return true;
+  }
   async function track(event,meta={}){
     if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
     try{
@@ -1011,25 +948,33 @@ window.ZIVOZONE_V18 = {
     }catch(e){console.warn('Event save:',e);return false}
   }
   async function update(patch){
-    if(!player)return null;
-    player={...player,...patch,language:patch.language||player.language||window.ZIVOZONE_I18N?.get?.()||'ar'};saveLocal();
-    if(cloud&&db&&!String(player.uid).startsWith('local_')){
-      try{
-        const safe={...patch};
-        ['zivo','coins'].forEach(k=>delete safe[k]);
-        if(Object.keys(safe).length)await db.collection('players').doc(player.uid).set({...safe,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-      }catch(e){console.warn('Firestore update:',e)}
-    }
+    if(!player)return null;player={...player,...patch,language:patch.language||player.language||window.ZIVOZONE_I18N?.get?.()||'ar'};saveLocal();
+    if(cloud&&db&&!String(player.uid).startsWith('local_')){try{const safe={...patch};['xp','zivo','coins','wins','gamesPlayed','level'].forEach(k=>delete safe[k]);if(Object.keys(safe).length)await db.collection('players').doc(player.uid).set({...safe,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch(e){console.warn('Firestore update:',e)}}
     emit();return player;
   }
   async function saveResult(result){
     if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
     try{await db.collection('players').doc(user.uid).collection('results').add({...result,createdAt:firebase.firestore.FieldValue.serverTimestamp()});return true}catch(e){console.warn('Result save:',e);return false}
   }
-  async function refreshPlayer(){
-    if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return player;
-    try{const snap=await db.collection('players').doc(user.uid).get();if(snap.exists){player={uid:user.uid,...snap.data()};saveLocal();emit()}}catch(e){console.warn('Firestore player refresh:',e)}
-    return player;
+  // V1094 canonical progression writer. Economy fields are deliberately excluded.
+  async function savePlayerProgress(progress={}){
+    if(!player)return false;
+    const safe={
+      xp:Math.max(0,Number(progress.xp)||0),
+      level:Math.max(1,Number(progress.level)||1),
+      games:Number(progress.games)||0,
+      gamesPlayed:Number(progress.gamesPlayed)||Number(progress.games)||0,
+      bestScore:Math.max(0,Number(progress.bestScore)||0),
+      bestStreak:Math.max(0,Number(progress.bestStreak)||0),
+      streak:Math.max(0,Number(progress.streak)||0),
+      progressionVersion:'v1094'
+    };
+    player={...player,...safe};saveLocal();
+    if(cloud&&db&&!String(player.uid).startsWith('local_')){
+      try{await db.collection('players').doc(player.uid).set({...safe,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});return true}
+      catch(e){console.warn('Firestore progression save:',e);return false}
+    }
+    return false;
   }
   async function setLanguage(lang){if(player){player.language=lang;saveLocal();if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({language:lang},{merge:true})}catch(e){}}emit()}}
   const isLoggedIn=()=>!!user&&!!player;
@@ -1053,7 +998,7 @@ window.ZIVOZONE_V18 = {
 
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
   const isAdmin=()=>String(user?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
-  window.ZIVOZONE_AUTH={register,login,logout,update,saveResult,refreshPlayer,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  window.ZIVOZONE_AUTH={register,login,logout,resetPassword,update,saveResult,savePlayerProgress,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
 
@@ -1089,13 +1034,7 @@ window.ZIVOZONE_V18 = {
   const toast=(msg,type='info')=>{const box=$('#toast-container');if(!box)return;const x=document.createElement('div');x.className='toast '+type;x.textContent=msg;box.appendChild(x);setTimeout(()=>x.remove(),3200)};
   const loadState=()=>{try{state={...state,...JSON.parse(localStorage.getItem(LS)||'{}')}}catch(e){}};
   const saveState=()=>{state.level=Math.floor((Number(state.xp)||0)/100)+1;try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}};
-  function syncFromPlayer(){
-    const p=A.getPlayer();if(!p)return;
-    const wallet=window.ZIVOZONE_ECONOMY?.getWallet?.();
-    const walletCoins=wallet&&Number.isFinite(Number(wallet.zivo))?Number(wallet.zivo):Number(p.coins)||0;
-    state={...state,xp:Number(p.xp)||0,coins:walletCoins,wins:Number(p.wins)||0,gamesPlayed:Number(p.gamesPlayed)||0,level:Number(p.level)||1,bestStreak:Number(p.bestStreak)||Number(state.bestStreak)||0};
-    saveState();
-  }
+  function syncFromPlayer(){const p=A.getPlayer();if(!p)return;state={...state,xp:Number(p.xp)||0,coins:Number(p.coins)||0,wins:Number(p.wins)||0,gamesPlayed:Number(p.gamesPlayed)||0,level:Number(p.level)||1,bestStreak:Number(p.bestStreak)||Number(state.bestStreak)||0};saveState()}
   function profile(){const p=A.getPlayer(),u=A.getUser?.(),admin=A.isAdmin?.()||String(u?.email||'').trim().toLowerCase()===ADMIN_EMAIL,l=state.level||1,base=(l-1)*100,prog=Math.max(0,Math.min(100,state.xp-base));$('#profile-name').textContent=admin?ADMIN_NAME:(p?.name||t('guest'));$('#profile-email').textContent=admin?`${u?.email||''} · ADMIN`:(p?.email||t('guestText'));$('#profile-level').textContent=admin?'ADMIN':l;$('#profile-xp').textContent=admin?'—':state.xp;$('#profile-coins').textContent=admin?'—':state.coins;$('#profile-wins').textContent=admin?'—':state.wins;$('#profile-best-streak').textContent=admin?'—':(state.bestStreak||0);$('#player-level-chip').textContent=admin?'ADMIN':`${t('level')} ${l}`;$('#xp-progress').style.width=admin?'100%':prog+'%';$('#logout-btn').hidden=!(A.isLoggedIn()||admin);$('#login-btn').textContent=admin?'👑 ADMIN':A.isLoggedIn()?`👤 ${p?.name||t('profile')}`:t('login')}
   async function reward(xp,coins=0,win=true){state.xp+=Math.max(0,Number(xp)||0);if(win)state.wins++;state.gamesPlayed++;saveState();if(A.isLoggedIn())await A.update({xp:state.xp,wins:state.wins,gamesPlayed:state.gamesPlayed,level:state.level});profile()}
   function closeModal(){clearQuestionTimer();clearIdentityTimer();const r=$('#modal-root');r.setAttribute('aria-hidden','true');r.innerHTML=''}
@@ -1191,7 +1130,37 @@ window.ZIVOZONE_V18 = {
   function openModal(html,cls=''){const r=$('#modal-root');r.innerHTML=`<div class="modal-backdrop"><div class="modal-card ${cls}" role="dialog" aria-modal="true">${html}</div></div>`;r.setAttribute('aria-hidden','false');r.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModal);const bg=r.querySelector('.modal-backdrop');if(bg)bg.onclick=e=>{if(e.target===bg)closeModal()}}
   function openTerms(){let o=document.getElementById('zivo-terms-modal');if(!o){o=document.createElement('div');o.id='zivo-terms-modal';o.className='zivo-legal-overlay';o.innerHTML=`<div class="zivo-legal-card" dir="rtl"><button class="zivo-legal-close">×</button><span class="eyebrow">ZIVOZONE · TERMS</span><h2>شروط استخدام ZIVOZONE</h2><p>آخر تحديث: 11 سبتمبر 2026 · الإصدار: ZIVO-TERMS-2026.09</p><div class="zivo-legal-body"><h3>1. قبول الشروط</h3><p>بإنشاء حساب أو استخدام المنصة، يقر المستخدم بأنه قرأ هذه الشروط ووافق عليها. إذا لم يوافق عليها، فلا يجوز له إنشاء حساب أو استخدام الميزات التي تتطلب حسابًا.</p><h3>2. طبيعة ZIVO</h3><p><b>ZIVO هي وحدة افتراضية داخل منصة ZIVOZONE فقط.</b> لا تمثل عملة قانونية أو وديعة أو سهمًا أو استثمارًا أو ضمانًا ماليًا، ولا يوجد بموجب هذه الشروط حق تلقائي في استبدالها نقدًا أو تحويلها إلى أموال أو عملات خارجية. لا يجوز بيعها أو شراؤها أو تداولها خارج الأنظمة التي تعتمدها ZIVOZONE رسميًا.</p><h3>3. التعدين والمكافآت</h3><p>مكافآت التعدين والتحديات تخضع لقواعد المنصة وحدودها، ويمكن لـ ZIVOZONE تعديل معدلات المكافآت أو إيقافها أو تعليق الحسابات المخالفة لحماية المنصة والمستخدمين. الرصيد المعروض داخل الحساب هو رصيد افتراضي للمنصة.</p><h3>4. الحساب والأمان</h3><p>المستخدم مسؤول عن بيانات تسجيل الدخول وعن الأنشطة التي تتم من حسابه. يمنع إنشاء حسابات أو استخدام أدوات آلية بقصد التلاعب بالمكافآت أو الترتيب أو البيانات.</p><h3>5. الاستخدام المقبول</h3><p>يمنع الاحتيال، واستغلال الثغرات، والهجمات الآلية، وإساءة استخدام المحتوى أو الخدمات، وانتحال صفة المدير أو أي مستخدم آخر، ومحاولة الوصول إلى بيانات غير مصرح بها.</p><h3>6. المحتوى والخدمات</h3><p>قد تتغير الألعاب والتحديات والأخبار والميزات بمرور الوقت. لا نضمن توفر كل خدمة دون انقطاع، ونبذل جهودًا معقولة للحفاظ على استقرار المنصة.</p><h3>7. الأخبار والروابط الخارجية</h3><p>الأخبار والروابط الخارجية مقدمة للعرض والمعلومات، وتخضع للمصادر الخارجية وشروطها. لا تتحمل ZIVOZONE مسؤولية محتوى المواقع الخارجية.</p><h3>8. الخصوصية</h3><p>تُستخدم بيانات الحساب واللعب اللازمة لتشغيل المنصة وحفظ التقدم والأمان والتحليلات التشغيلية وفق سياسة الخصوصية التي تعتمدها ZIVOZONE.</p><h3>9. التعديلات والإنهاء</h3><p>يجوز تحديث الشروط أو تعديل الميزات عند الحاجة. استمرار الاستخدام بعد نشر التحديث يعني قبول الشروط المعدلة ضمن الحدود التي يسمح بها القانون المعمول به.</p><h3>10. القانون والحقوق</h3><p>تُطبَّق هذه الشروط بما لا يخالف القوانين الإلزامية المعمول بها. هذه صياغة تشغيلية عامة وليست بديلاً عن مراجعة محامٍ قبل الإطلاق التجاري أو تقديم خدمات مالية.</p></div><div class="zivo-legal-actions"><button class="btn btn-primary zivo-legal-close">فهمت</button></div></div>`;document.body.appendChild(o);o.querySelectorAll('.zivo-legal-close').forEach(b=>b.onclick=()=>o.remove());o.onclick=e=>{if(e.target===o)o.remove()}}else{o.style.display='grid'}}
   window.ZIVOZONE_OPEN_TERMS=openTerms;
-  function authModal(after){let mode='register';const render=()=>{openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('account')}</span><h2>${mode==='register'?t('register'):t('welcomeBack')}</h2><p class="muted">${mode==='register'?t('registerHint'):t('loginHint')}</p><div class="auth-tabs"><button id="tab-register" class="btn ${mode==='register'?'btn-primary':''}">${t('register')}</button><button id="tab-login" class="btn ${mode==='login'?'btn-primary':''}">${t('signIn')}</button></div><form id="auth-form">${mode==='register'?`<div><label>${t('playerName')}</label><input id="auth-name" minlength="2" required placeholder="${esc(t('yourName'))}"></div><div><label>${t('age')}</label><input id="auth-age" type="number" min="5" max="100" required value="18"></div>`:''}<div><label>${t('email')}</label><input id="auth-email" type="email" required placeholder="${esc(t('emailPlaceholder'))}"></div><div><label>${t('password')}</label><input id="auth-pass" type="password" minlength="6" required placeholder="${esc(t('passwordPlaceholder'))}"></div>${mode==='register'?`<label class="zivo-terms-check"><input id="auth-terms" type="checkbox" required><span>أوافق على <button type="button" id="open-terms" class="zivo-inline-link">شروط استخدام ZIVOZONE</button> وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط وليس نقودًا أو استثمارًا.</span></label>`:''}<button class="btn btn-primary full" type="submit">${mode==='register'?t('createAccount'):t('signIn')}</button></form></div>`);$('#tab-register').onclick=()=>{mode='register';render()};$('#tab-login').onclick=()=>{mode='login';render()};$('#open-terms')?.addEventListener('click',openTerms);$('#auth-form').onsubmit=async e=>{e.preventDefault();try{if(mode==='register')await A.register({name:$('#auth-name').value,age:$('#auth-age').value,email:$('#auth-email').value,password:$('#auth-pass').value,termsAccepted:$('#auth-terms')?.checked===true});else await A.login($('#auth-email').value,$('#auth-pass').value);await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after()}catch(err){toast(err.message||t('firebaseError'),'error')}}};render()}
+  function authModal(after){
+    let mode='register';
+    const render=()=>{
+      const isReset=mode==='reset';
+      const title=mode==='register'?t('register'):mode==='login'?t('welcomeBack'):t('resetTitle');
+      const hint=mode==='register'?t('registerHint'):mode==='login'?t('loginHint'):t('resetHint');
+      openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('account')}</span><h2>${title}</h2><p class="muted">${hint}</p>${isReset?'':`<div class="auth-tabs"><button id="tab-register" class="btn ${mode==='register'?'btn-primary':''}">${t('register')}</button><button id="tab-login" class="btn ${mode==='login'?'btn-primary':''}">${t('signIn')}</button></div>`}<form id="auth-form">${mode==='register'?`<div><label>${t('playerName')}</label><input id="auth-name" minlength="2" required placeholder="${esc(t('yourName'))}"></div><div><label>${t('age')}</label><input id="auth-age" type="number" min="5" max="100" required value="18"></div>`:''}<div><label>${t('email')}</label><input id="auth-email" type="email" required placeholder="${esc(t('emailPlaceholder'))}"></div>${isReset?'':`<div><label>${t('password')}</label><input id="auth-pass" type="password" minlength="6" required placeholder="${esc(t('passwordPlaceholder'))}"></div>`}${mode==='register'?`<label class="zivo-terms-check"><input id="auth-terms" type="checkbox" required><span>أوافق على <button type="button" id="open-terms" class="zivo-inline-link">شروط استخدام ZIVOZONE</button> وسياسة الاستخدام، وأفهم أن ZIVO رصيد افتراضي داخل المنصة فقط وليس نقودًا أو استثمارًا.</span></label>`:''}<button class="btn btn-primary full" type="submit">${mode==='register'?t('createAccount'):mode==='login'?t('signIn'):t('sendReset')}</button></form>${mode==='login'?`<button type="button" id="forgot-pass" class="zivo-inline-link zivo-forgot-link">${t('forgotPassword')}</button>`:''}${isReset?`<button type="button" id="back-to-login" class="zivo-inline-link zivo-forgot-link">${t('backToLogin')}</button>`:''}</div>`);
+      $('#tab-register')?.addEventListener('click',()=>{mode='register';render()});
+      $('#tab-login')?.addEventListener('click',()=>{mode='login';render()});
+      $('#open-terms')?.addEventListener('click',openTerms);
+      $('#forgot-pass')?.addEventListener('click',()=>{mode='reset';render()});
+      $('#back-to-login')?.addEventListener('click',()=>{mode='login';render()});
+      $('#auth-form').onsubmit=async e=>{
+        e.preventDefault();
+        try{
+          if(mode==='register'){
+            await A.register({name:$('#auth-name').value,age:$('#auth-age').value,email:$('#auth-email').value,password:$('#auth-pass').value,termsAccepted:$('#auth-terms')?.checked===true});
+            await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after();
+          }else if(mode==='login'){
+            await A.login($('#auth-email').value,$('#auth-pass').value);
+            await A.setLanguage(lang());closeModal();syncFromPlayer();profile();toast(t('success'),'success');if(after)after();
+          }else{
+            await A.resetPassword($('#auth-email').value);
+            toast(t('resetSent'),'success');
+            mode='login';render();
+          }
+        }catch(err){toast(err.message||t('firebaseError'),'error')}
+      };
+    };
+    render();
+  }
   function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
   function adaptiveProfile(id){try{return JSON.parse(localStorage.getItem(`zivo_adaptive_${id}`)||'{\"attempts\":0,\"perfect\":0,\"best\":0,\"last\":0}')}catch(e){return{attempts:0,perfect:0,best:0,last:0}}}
   function recordAdaptiveResult(id,score,total,timedOut){const k=`zivo_adaptive_${id}`;const x=adaptiveProfile(id);x.attempts=(Number(x.attempts)||0)+1;x.last=Math.round((Number(score)||0)/Math.max(1,Number(total)||10)*100);x.best=Math.max(Number(x.best)||0,x.last);if(Number(score)===Number(total)&&!Number(timedOut))x.perfect=(Number(x.perfect)||0)+1;try{localStorage.setItem(k,JSON.stringify(x))}catch(e){}}
@@ -1213,7 +1182,7 @@ window.ZIVOZONE_V18 = {
     return chosen;
   }
   function guestGate(id){openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('guestMode')}</span><h2>${t('guest')}</h2><p>${t('guestText')}</p><div class="modal-actions"><button class="btn btn-primary" id="continue-guest">${t('continueGuest')}</button><button class="btn btn-ghost" id="create-now">${t('createNow')}</button></div>`);$('#continue-guest').onclick=()=>{closeModal();beginGame(id,true)};$('#create-now').onclick=()=>authModal(()=>beginGame(id,false))}
-  function startGame(id){const src=C.get(id);if(!src){toast(t('noData'),'error');return}if(id==='horror'){openModal(`<div class="horror-warning-card"><span class="eyebrow">${t('horrorWarningTitle')}</span><h2>${t('horrorWarningHeadline')}</h2><p>${t('horrorWarningText')}</p><p class="horror-warning">${t('horrorWarningNight')}</p><div class="modal-actions"><button class="btn btn-primary" id="enter-horror">${t('horrorEnter')}</button><button class="btn btn-ghost" data-close>${t('close')}</button></div></div>`,'horror-modal phase-1');$('#enter-horror').onclick=()=>{closeModal();beginGame('horror',!A.isLoggedIn())};return}beginGame(id,!A.isLoggedIn())}
+  function startGame(id){const src=C.get(id);if(!src){toast(t('noData'),'error');return}if(id==='horror'&&window.ZIVOZONE_DARKROOM_V1091?.start){window.ZIVOZONE_DARKROOM_V1091.start();return}if(id==='horror'){openModal(`<div class="horror-warning-card"><span class="eyebrow">${t('horrorWarningTitle')}</span><h2>${t('horrorWarningHeadline')}</h2><p>${t('horrorWarningText')}</p><p class="horror-warning">${t('horrorWarningNight')}</p><div class="modal-actions"><button class="btn btn-primary" id="enter-horror">${t('horrorEnter')}</button><button class="btn btn-ghost" data-close>${t('close')}</button></div></div>`,'horror-modal phase-1');$('#enter-horror').onclick=()=>{closeModal();beginGame('horror',!A.isLoggedIn())};return}beginGame(id,!A.isLoggedIn())}
   function beginGame(id,guest){const src=C.get(id),horror=id==='horror';game={id,questions:horror?shuffle(src.questions.map(q=>({...q}))):prepareQuestions(id),index:0,score:0,pressureScore:0,streak:0,bestStreak:0,answers:[],guest,locked:false,horrorSignupShown:false,horrorUsed:[],timedOut:0,questionStartedAt:0};if(horror)game.horrorUsed=game.questions.map(q=>q.id);document.body.classList.toggle('horror-active',horror);S().unlock?.();S().startChallenge?.(id);renderQuestion()}
   function currentQ(){return game.questions[game.index]}
   function inputMarkup(q){const isNum=q.type==='number';return `<form id="answer-form" class="input-answer-form"><input id="answer-input" ${isNum?'inputmode="numeric" pattern="[0-9.\\-]+"':''} autocomplete="off" placeholder="${esc(isNum?t('enterNumber'):t('writeAnswer'))}" required><button class="btn btn-primary" type="submit">${t('submitAnswer')}</button></form>`}
@@ -1301,7 +1270,16 @@ window.ZIVOZONE_V18 = {
     document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
     document.querySelectorAll('.mobile-nav a').forEach(a=>a.addEventListener('click',()=>document.querySelectorAll('.mobile-nav a').forEach(x=>x.classList.toggle('active',x===a))));
   }
-  function bind(){const audioBtn=$('#audio-toggle');if(audioBtn){audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇';audioBtn.onclick=async()=>{await S().unlock?.();S().toggle?.();audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇'}}$('#language-select').value=lang();$('#language-select').onchange=async e=>{I.set(e.target.value);await A.setLanguage(e.target.value);applyLanguage();toast(t('updateDone'),'success')};const accountRoute=()=>A.isAdmin?.()?location.hash='#admin':A.isLoggedIn()?location.hash='#profile':authModal();$('#login-btn').onclick=accountRoute;$$('[data-action="login"]').forEach(b=>b.onclick=accountRoute);$('#ai-form').onsubmit=async e=>{e.preventDefault();const input=$('#ai-input'),v=input.value.trim();if(!v)return;const box=$('#ai-messages');const u=document.createElement('div');u.className='ai-message user';u.textContent=v;box.append(u);input.value='';const b=document.createElement('div');b.className='ai-message bot';b.textContent='…';box.append(b);b.textContent=await askAI(v);box.scrollTop=box.scrollHeight}}
+  function bind(){const audioBtn=$('#audio-toggle');if(audioBtn){audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇';audioBtn.onclick=async()=>{await S().unlock?.();S().toggle?.();audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇'}}$('#language-select').value=lang();$('#language-select').onchange=async e=>{I.set(e.target.value);await A.setLanguage(e.target.value);applyLanguage();toast(t('updateDone'),'success')};const accountRoute=()=>A.isAdmin?.()?location.hash='#admin':A.isLoggedIn()?location.hash='#profile':authModal();$('#login-btn').onclick=accountRoute;$$('[data-action="login"]').forEach(b=>b.onclick=accountRoute);$('#ai-form').onsubmit=async e=>{e.preventDefault();const input=$('#ai-input'),v=input.value.trim();if(!v)return;const box=$('#ai-messages');const u=document.createElement('div');u.className='ai-message user';u.textContent=v;box.append(u);input.value='';const b=document.createElement('div');b.className='ai-message bot';b.textContent='…';box.append(b);b.textContent=await askAI(v);box.scrollTop=box.scrollHeight};
+    const navToggle=$('#zivo-nav-toggle'),mainNav=$('.main-nav');
+    if(navToggle&&mainNav){
+      const setOpen=v=>{document.body.classList.toggle('zivo-nav-open',v);navToggle.setAttribute('aria-expanded',String(v))};
+      navToggle.onclick=()=>setOpen(!document.body.classList.contains('zivo-nav-open'));
+      mainNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setOpen(false)));
+      document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false)});
+      document.addEventListener('click',e=>{if(document.body.classList.contains('zivo-nav-open')&&!mainNav.contains(e.target)&&e.target!==navToggle&&!navToggle.contains(e.target))setOpen(false)});
+    }
+  }
   window.addEventListener('zivozone-auth',e=>{syncFromPlayer();profile();const el=$('#firebase-status');if(el){el.textContent=e.detail?.cloud?'●':'○';el.classList.toggle('online',!!e.detail?.cloud);el.title=e.detail?.cloud?'Firebase connected':'Guest/local mode'}});
   window.addEventListener('zivozone-auth',()=>{A.touchSession?.();A.flushAttempts?.();});
   window.addEventListener('hashchange',()=>A.touchSession?.());
@@ -1499,6 +1477,61 @@ window.ZIVOZONE_V18 = {
     }catch(e){}
     state.osc=[];state.ctx=null;state.master=null;
   }
+  function restoreSession(saved){
+    reset();
+    state.active=true;state.started=true;state.index=Math.max(0,Number(saved.index)||0);
+    state.correct=Math.max(0,Number(saved.correct)||0);state.timed=Math.max(0,Number(saved.timed)||0);
+    state.streak=Math.max(0,Number(saved.streak)||0);state.best=Math.max(0,Number(saved.best)||0);
+    state.answers=Array.isArray(saved.answers)?saved.answers:[];state.times=Array.isArray(saved.times)?saved.times:[];
+    state.phaseStats=saved.phaseStats&&typeof saved.phaseStats==='object'?saved.phaseStats:{};
+    state.questions=Array.isArray(saved.questions)?saved.questions:questionPool();
+    if(state.questions.length<10){reset();clearSession();return false}
+    const root=ensure();root.classList.add('active','playing');document.body.classList.add('z1091-active');
+    root.querySelector('[data-screen="intro"]').hidden=true;root.querySelector('[data-screen="result"]').hidden=true;root.querySelector('[data-screen="gate"]').hidden=true;root.querySelector('[data-screen="game"]').hidden=false;
+    return true;
+  }
+
+  function showGate(){
+    const root=ensure();
+    clearInterval(state.timer);
+    state.active=true;state.started=false;
+    writeSession();
+    root.classList.add('active');root.classList.remove('playing');document.body.classList.add('z1091-active');
+    root.querySelector('[data-screen="intro"]').hidden=true;root.querySelector('[data-screen="game"]').hidden=true;root.querySelector('[data-screen="result"]').hidden=true;root.querySelector('[data-screen="gate"]').hidden=false;
+    root.dataset.phase='gate';
+    drFootstep(); setTimeout(()=>drWhisper(),260);
+    try{A().stopChallenge?.();}catch(e){}
+    try{window.speechSynthesis?.cancel?.()}catch(e){}
+  }
+
+  function openAuthGate(mode){
+    const root=ensure();
+    root.querySelector('[data-screen="gate"]').hidden=false;
+    root.classList.remove('playing');
+    const btn=document.getElementById('login-btn');
+    if(btn){
+      btn.dataset.z1091AuthMode=mode;
+      btn.click();
+      if(mode==='login'){
+        setTimeout(()=>document.getElementById('tab-login')?.click(),90);
+      }
+    }else{
+      root.querySelector('[data-screen="gate"]').hidden=false;
+    }
+  }
+
+  function resumeAfterAuth(){
+    const saved=readSession();
+    if(!saved?.locked || !isLoggedIn())return;
+    if(!restoreSession(saved))return;
+    clearSession();
+    const root=ensure();
+    root.querySelector('[data-screen="gate"]').hidden=true;
+    A().unlock?.();A().startChallenge?.('horror');
+    A().narrate?.('تمت استعادة الجلسة. أكمل من حيث توقفت.');
+    setTimeout(()=>render(),180);
+  }
+
   function start(){
     ensureUI();
     state.active=true;state.index=1;state.answered=0;state.phase=1;state.startedAt=Date.now();
@@ -2289,8 +2322,7 @@ window.ZIVOZONE_V18 = {
     ['first_step','FIRST STEP','أول تحدي','🎯',s=>s.games>=1],
     ['speed','10 SECONDS','أجبت قبل انتهاء الوقت','⚡',s=>s.challengeStats&&Object.values(s.challengeStats).some(v=>v.games>0)],
     ['ten_games','TEN RUNS','10 ألعاب مكتملة','🔥',s=>s.games>=10],
-    ['perfect','PERFECT RUN','نتيجة كاملة 10/10 في تحدٍ','💎',s=>Number(s.perfectChallengesCount||0)>=1||s.bestScore>=100],
-    ['perfect_10','PERFECT ×10','حققت 10 نتائج كاملة','👑',s=>Number(s.perfectChallengesCount||0)>=10],
+    ['perfect','PERFECT RUN','نتيجة كاملة في تحدٍ','💎',s=>s.bestScore>=100],
     ['streak','STREAK','بنيت سلسلة لعب','🔗',s=>s.streak>=3],
     ['veteran','VETERAN','25 لعبة مكتملة','🏆',s=>s.games>=25],
     ['dark','DARK SURVIVOR','دخلت الغرفة المظلمة','🌑',s=>Object.keys(s.challengeStats||{}).some(k=>/horror|dark|رعب|مظلم/i.test(k))]
@@ -2340,7 +2372,6 @@ window.ZIVOZONE_V18 = {
   }
   window.ZIVOZONE_V31={state,open,share};
   window.addEventListener('zivozone-progress',()=>{state()});
-  window.addEventListener('zivozone-perfect-reward',()=>{state();card()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
 
@@ -3726,55 +3757,7 @@ window.ZIVOZONE_V18 = {
   else mount();
 })();
 
-
-
-/* ============================================================
-   ZIVOZONE CHALLENGE QUESTION BANK PRO ENGINE
-   Additive integration: existing challenge UI and handlers remain.
-   ============================================================ */
-(function(){
-"use strict";
-const KEY_ALIASES={
-  "logic-extreme":"logic_extreme","logicextreme":"logic_extreme",
-  "memory-focus":"memory_focus","football-intelligence":"football_intelligence",
-  "memory-v22":"memory_v22"
-};
-const Bank={
-  data:Object.create(null), seen:Object.create(null),
-  normalize(k){return KEY_ALIASES[String(k||"").toLowerCase()]||String(k||"").toLowerCase();},
-  register(k,arr){
-    if(!Array.isArray(arr))return 0;
-    k=this.normalize(k); this.data[k]=this.data[k]||[];
-    const m=new Map(this.data[k].map(x=>[x.id||x.question,x]));
-    for(const q of arr){
-      if(q&&q.question&&Array.isArray(q.options)&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length)
-        m.set(q.id||q.question,q);
-    }
-    this.data[k]=[...m.values()]; return this.data[k].length;
-  },
-  registerAll(obj){Object.entries(obj||{}).forEach(([k,v])=>this.register(k,v));},
-  select(k,n=10){
-    k=this.normalize(k); const a=(this.data[k]||[]).slice();
-    if(!a.length)return [];
-    const s=this.seen[k]||new Set();
-    let fresh=a.filter(q=>!s.has(q.id||q.question));
-    if(fresh.length<n){s.clear();fresh=a.slice();}
-    for(let i=fresh.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[fresh[i],fresh[j]]=[fresh[j],fresh[i]];}
-    const out=fresh.slice(0,n);out.forEach(q=>s.add(q.id||q.question));this.seen[k]=s;return out;
-  },
-  stats(k){const a=this.data[this.normalize(k)]||[];return {total:a.length};}
-};
-window.ZIVOZONE_QUESTION_BANK_PRO=Bank;
-window.ZIVOZONE_GET_BANK_QUESTIONS=(id,n)=>Bank.select(id,n||10);
-window.ZIVOZONE_IMPORT_AI_QUESTIONS=(id,qs)=>Bank.register(id,qs);
-fetch("challenge_question_banks.json",{cache:"no-store"})
- .then(r=>r.ok?r.json():null).then(x=>{if(x&&x.banks)Bank.registerAll(x.banks);})
- .catch(()=>{});
-})();
-
-
-
-/* ===== MODULE: zivo-global-core.js ===== */
+/* ---- SOURCE: zivo-global-core.js ---- */
 /* ZIVOZONE V101 — UNIFIED MOBILE-FIRST ECONOMY CORE
    Single wallet + server-authoritative ZIVO + 24h daily mining + unified rewards.
 */
@@ -3784,6 +3767,7 @@ fetch("challenge_question_banks.json",{cache:"no-store"})
   const auth=()=>{try{return F()?.auth?.()||null}catch(_){return null}};
   const db=()=>{try{return F()?.firestore?.()||null}catch(_){return null}};
   const user=()=>auth()?.currentUser||null;
+  const zt=k=>{try{return window.zivoT?window.zivoT(k):(window.ZIVOZONE_I18N?.tr?.(k)||k)}catch(_){return k}};
   const state={uid:null,zivo:0,ledger:[],nextMiningAt:0,loading:false};
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const num=v=>Math.max(0,Number(v)||0);
@@ -3793,42 +3777,112 @@ fetch("challenge_question_banks.json",{cache:"no-store"})
     if(document.getElementById('zivo-v101-style'))return;
     const s=document.createElement('style');s.id='zivo-v101-style';s.textContent=`
       :root{--z-gold:#ffd43d;--z-gold2:#ffe889;--z-bg:#090d14;--z-panel:#101722}
-      .z101-economy{width:min(1180px,calc(100% - 28px));margin:8px auto 2px;display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:3}
-      .z101-card{border:1px solid rgba(255,215,70,.16);border-radius:14px;background:linear-gradient(145deg,rgba(255,215,70,.07),rgba(255,255,255,.02));box-shadow:0 8px 24px rgba(0,0,0,.16);padding:9px 11px}
-      .z101-wallet{display:flex;align-items:center;gap:9px;min-height:58px}.z101-coin{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#fff7bd,#ffd43d 44%,#9c6700);border:2px solid #ffe889;color:#5b3900;font-weight:1000;font-size:18px;box-shadow:inset 0 2px 5px rgba(255,255,255,.55)}
-      .z101-label{font-size:10px;opacity:.62;font-weight:900}.z101-balance{font-size:18px;font-weight:1000;color:#ffe06a;line-height:1.1;margin-top:4px}.z101-sub{font-size:10px;opacity:.62;margin-top:5px}.z101-wallet-actions{margin-inline-start:auto}.z101-btn{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;border-radius:11px;padding:9px 12px;font-weight:950;cursor:pointer}.z101-btn.primary{background:linear-gradient(90deg,#ffd43d,#ffed8a);color:#17120a;border-color:#ffd43d}.z101-btn:disabled{opacity:.5;cursor:not-allowed}
-      .z101-mining{display:flex;align-items:center;gap:8px;min-height:58px}.z101-mining-icon{font-size:21px}.z101-mining h3{margin:0;font-size:12px}.z101-mining p{margin:2px 0 0;font-size:8px;opacity:.65}.z101-mine-action{margin-inline-start:auto;min-width:132px}.z101-countdown{font-size:13px;font-weight:1000;color:#ffe06a;margin-top:5px;letter-spacing:.5px}.z101-ready{color:#7df0a4}.z101-ledger{margin-top:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px}.z101-ledger-title{font-size:10px;opacity:.6;font-weight:900}.z101-ledger-list{max-height:110px;overflow:auto}.z101-ledger-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px}.z101-ledger-row b{color:#ffe06a}.z101-ledger-row small{grid-column:1/-1;opacity:.45}.z101-note{font-size:9px;opacity:.55;margin-top:9px;line-height:1.5}
-      .z101-overlay{position:fixed;inset:0;z-index:120000;display:none;place-items:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}.z101-overlay.open{display:grid}.z101-modal{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto;background:#0d141f;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px}.z101-modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.z101-modal-close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}.z101-modal h2{margin:0}.z101-modal p{font-size:11px;opacity:.68}.z101-modal-balance{font-size:34px;color:#ffe06a;font-weight:1000;margin:16px 0}.z101-toast{position:fixed;left:16px;bottom:84px;z-index:130000;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 13px;font-weight:900;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}.z101-toast.show{opacity:1;transform:none}
+      @keyframes z101Shine{0%{background-position:-160% 0}100%{background-position:260% 0}}
+      @keyframes z101Pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,212,61,.55),0 10px 28px rgba(0,0,0,.3)}50%{box-shadow:0 0 0 10px rgba(255,212,61,0),0 10px 28px rgba(0,0,0,.3)}}
+      @keyframes z101CoinFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-3px) rotate(4deg)}}
+      .z101-eyebrow{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:900;letter-spacing:1.5px;color:var(--z-gold2)}
+      .z101-eyebrow:before,.z101-eyebrow:after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,215,70,.4),transparent)}
+      .z101-showcase{width:min(1180px,calc(100% - 26px));margin:22px auto 0;padding:30px 26px;border-radius:26px;position:relative;overflow:hidden;z-index:3;border:1px solid rgba(255,215,70,.24);background:radial-gradient(circle at 14% 18%,rgba(255,212,61,.13),transparent 42%),radial-gradient(circle at 88% 12%,rgba(255,212,61,.08),transparent 38%),linear-gradient(150deg,#120d05,#0a0704 78%);box-shadow:0 30px 90px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05)}
+      .z101-showcase:after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,212,61,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,212,61,.035) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(circle at 30% 20%,black,transparent 75%);pointer-events:none}
+      .z101-showcase .section-heading{position:relative;z-index:2;display:block;margin-bottom:20px}
+      .z101-showcase .section-heading h2{margin:8px 0 6px;font-size:clamp(22px,3vw,32px);background:linear-gradient(90deg,#ffe06a,#fff7c8 40%,#ffe06a 80%);-webkit-background-clip:text;background-clip:text;color:transparent}
+      .z101-showcase .section-heading p{margin:0;max-width:640px}
+      .z101-economy{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+      .z101-card{position:relative;overflow:hidden;border:1px solid rgba(255,215,70,.28);border-radius:20px;background:linear-gradient(160deg,rgba(255,215,70,.14),rgba(255,255,255,.02) 55%);box-shadow:0 14px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);padding:22px 24px;transition:transform .2s ease,box-shadow .2s ease}
+      .z101-card:hover{transform:translateY(-2px);box-shadow:0 20px 50px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.08)}
+      .z101-wallet{display:flex;align-items:center;gap:18px;min-height:96px}
+      .z101-coin{width:70px;height:70px;flex:0 0 70px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 25%,#fff7bd,#ffd43d 44%,#9c6700);border:2px solid #ffe889;color:#5b3900;font-weight:1000;font-size:32px;box-shadow:inset 0 2px 6px rgba(255,255,255,.6),0 0 28px rgba(255,212,61,.4);animation:z101CoinFloat 3.4s ease-in-out infinite}
+      .z101-label{font-size:10.5px;opacity:.7;font-weight:900;letter-spacing:1px}
+      .z101-balance{font-size:34px;font-weight:1000;line-height:1.15;margin-top:4px;background:linear-gradient(90deg,#ffe06a 0%,#fff7c8 22%,#ffe06a 44%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:z101Shine 4.5s linear infinite}
+      .z101-sub{font-size:11px;opacity:.65;margin-top:5px}
+      .z101-wallet-actions{margin-inline-start:auto}
+      .z101-btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#fff;border-radius:13px;padding:13px 18px;min-height:46px;font-weight:950;font-size:13px;cursor:pointer}
+      .z101-btn.primary{background:linear-gradient(90deg,#ffd43d,#ffed8a);color:#17120a;border-color:#ffd43d}
+      .z101-btn:disabled{opacity:.55;cursor:not-allowed}
+      .z101-mining{display:flex;align-items:center;gap:16px;min-height:96px}
+      .z101-mining-icon{font-size:38px;filter:drop-shadow(0 0 12px rgba(255,212,61,.45))}
+      .z101-mining h3{margin:0;font-size:15px}
+      .z101-mining p{margin:4px 0 0;font-size:11px;opacity:.68}
+      .z101-mine-action{margin-inline-start:auto;min-width:150px}
+      .z101-countdown{font-size:14px;font-weight:1000;color:#ffe06a;margin-top:6px;letter-spacing:.5px}
+      .z101-ready{color:#7df0a4;animation:z101Pulse 1.8s ease-in-out infinite;border-radius:8px}
+      .z101-mine-action:has(+ *),.z101-mine-action{}
+      #z101-mine:not(:disabled){animation:z101Pulse 2.4s ease-in-out infinite}
+      .z101-ledger{margin-top:12px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px}
+      .z101-ledger-title{font-size:10px;opacity:.6;font-weight:900}
+      .z101-ledger-list{max-height:110px;overflow:auto}
+      .z101-ledger-row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px}
+      .z101-ledger-row b{color:#ffe06a}
+      .z101-ledger-row small{grid-column:1/-1;opacity:.45}
+      .z101-note{font-size:9px;opacity:.55;margin-top:9px;line-height:1.5}
+      .z101-overlay{position:fixed;inset:0;z-index:120000;display:none;place-items:center;padding:16px;background:rgba(0,0,0,.72);backdrop-filter:blur(12px)}
+      .z101-overlay.open{display:grid}
+      .z101-modal{width:min(720px,calc(100vw - 28px));max-height:88vh;overflow:auto;background:#0d141f;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:18px}
+      .z101-modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+      .z101-modal-close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:22px;cursor:pointer}
+      .z101-modal h2{margin:0}
+      .z101-modal p{font-size:11px;opacity:.68}
+      .z101-modal-balance{font-size:34px;color:#ffe06a;font-weight:1000;margin:16px 0}
+      .z101-toast{position:fixed;left:16px;bottom:84px;z-index:130000;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 13px;font-weight:900;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}
+      .z101-toast.show{opacity:1;transform:none}
       /* remove old floating economy / quick docks so there is exactly one wallet */
       #zivo-global-wallet,#zivo-v85-open,#zivo-v85-economy,#zivo-v81-open,#zivo-v81-economy,#zivo-v80-open,#z80-admin-open,#zivo-v87-quickdock,#v26-open,#zivo-v24-balance,#z25-wallet-btn{display:none!important} #z81-admin-open{display:flex!important}
-      @media(max-width:760px){.z101-economy{grid-template-columns:1fr 1fr;width:calc(100% - 14px);margin-top:5px;gap:6px}.z101-card{padding:8px;border-radius:13px}.z101-wallet{min-height:52px}.z101-coin{width:34px;height:34px;flex-basis:34px;font-size:16px}.z101-balance{font-size:16px}.z101-label{font-size:8px}.z101-sub{font-size:7px}.z101-wallet-actions{display:none}.z101-mining{align-items:center;min-height:52px}.z101-mining-icon{font-size:18px}.z101-mining p{display:none}.z101-mine-action{min-width:82px}.z101-btn{padding:7px 7px;font-size:9px}.z101-countdown{font-size:11px}.z101-mining h3{font-size:10px}}
+      @media(max-width:760px){
+        .z101-showcase{padding:20px 16px;border-radius:20px;margin-top:14px}
+        .z101-showcase .section-heading{margin-bottom:14px}
+        .z101-economy{grid-template-columns:1fr;gap:8px}
+        .z101-card{padding:15px 16px;border-radius:17px}
+        .z101-wallet,.z101-mining{min-height:auto;flex-wrap:wrap}
+        .z101-coin{width:50px;height:50px;flex-basis:50px;font-size:22px}
+        .z101-balance{font-size:24px}
+        .z101-label{font-size:9px}
+        .z101-sub{font-size:9px}
+        .z101-wallet-actions{margin-inline-start:0;width:100%}
+        .z101-wallet-actions .z101-btn{width:100%}
+        .z101-mining-icon{font-size:26px}
+        .z101-mining p{display:none}
+        .z101-mine-action{margin-inline-start:0;width:100%;min-width:0}
+        .z101-mine-action .z101-btn{width:100%}
+        .z101-countdown{font-size:12px}
+        .z101-mining h3{font-size:12.5px}
+      }
     `;document.head.appendChild(s);
   }
 
   function mountHub(){
     injectStyle();
     if(document.getElementById('zivo-v101-economy'))return;
-    const h=document.querySelector('header.topbar');if(!h)return;
-    const root=document.createElement('section');root.id='zivo-v101-economy';root.className='z101-economy';root.setAttribute('aria-label','ZIVO Economy');
+    const anchor=document.getElementById('home')||document.querySelector('header.topbar');if(!anchor)return;
+    const root=document.createElement('section');root.id='zivo-v101-economy';root.className='z101-showcase';root.setAttribute('aria-label','ZIVO Economy');
     root.innerHTML=`
-      <article class="z101-card z101-wallet">
-        <div class="z101-coin">Z</div><div><div class="z101-label">ZIVO WALLET</div><div id="z101-balance" class="z101-balance">0 ZIVO</div><div id="z101-wallet-status" class="z101-sub">سجّل الدخول لحفظ رصيدك ومكافآتك.</div></div>
-        <div class="z101-wallet-actions"><button id="z101-wallet-open" class="z101-btn">المحفظة</button></div>
-      </article>
-      <article class="z101-card z101-mining">
-        <div class="z101-mining-icon">⛏️</div><div><h3>التعدين اليومي</h3><p>فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.</p><div id="z101-countdown" class="z101-countdown">—</div></div>
-        <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary">بدء التعدين +0.50</button></div>
-      </article>`;
-    h.insertAdjacentElement('afterend',root);
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow z101-eyebrow" data-i18n="economyEyebrow">${esc(zt('economyEyebrow'))}</span>
+          <h2 data-i18n="economyTitle">${esc(zt('economyTitle'))}</h2>
+          <p class="muted" data-i18n="economySubtitle">${esc(zt('economySubtitle'))}</p>
+        </div>
+      </div>
+      <div class="z101-economy">
+        <article class="z101-card z101-wallet">
+          <div class="z101-coin">Z</div><div><div class="z101-label" data-i18n="walletLabel">${esc(zt('walletLabel'))}</div><div id="z101-balance" class="z101-balance">0 ZIVO</div><div id="z101-wallet-status" class="z101-sub" data-i18n="walletLoginHint">${esc(zt('walletLoginHint'))}</div></div>
+          <div class="z101-wallet-actions"><button id="z101-wallet-open" class="z101-btn" data-i18n="walletOpenBtn">${esc(zt('walletOpenBtn'))}</button></div>
+        </article>
+        <article class="z101-card z101-mining">
+          <div class="z101-mining-icon">⛏️</div><div><h3 data-i18n="miningTitle">${esc(zt('miningTitle'))}</h3><p data-i18n="miningDesc">${esc(zt('miningDesc'))}</p><div id="z101-countdown" class="z101-countdown">—</div></div>
+          <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary" data-i18n="mineStartBtn">${esc(zt('mineStartBtn'))}</button></div>
+        </article>
+      </div>`;
+    anchor.insertAdjacentElement('afterend',root);
     root.querySelector('#z101-wallet-open').onclick=openWallet;
     root.querySelector('#z101-mine').onclick=mine;
+    window.addEventListener('zivozone-language',()=>{syncUI()});
   }
 
   async function ensureWalletForUser(u){
     const d=db(); if(!u||!d)return;
     const ref=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
     const snap=await ref.get();
-    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'spark-client-rules'},{merge:false});
+    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'zivozone-economy-v1094'},{merge:false});
   }
 
   async function refresh(){
@@ -3849,41 +3903,46 @@ fetch("challenge_question_banks.json",{cache:"no-store"})
     const bal=`${Number(state.zivo).toFixed(state.zivo%1?2:0)} ZIVO`;
     document.querySelectorAll('#z101-balance,[data-v101-balance]').forEach(x=>x.textContent=bal);
     const p=document.getElementById('profile-coins');if(p)p.textContent=String(state.zivo);
-    const status=document.getElementById('z101-wallet-status');if(status)status.textContent=user()?`الحساب: ${user().email||'مستخدم ZIVOZONE'}`:'سجّل الدخول لحفظ رصيدك ومكافآتك.';
+    const status=document.getElementById('z101-wallet-status');if(status)status.textContent=user()?`${zt('walletAccountPrefix')}${user().email||'ZIVOZONE'}`:zt('walletLoginHint');
     updateMiningUI();
   }
   function updateMiningUI(){
     const b=document.getElementById('z101-mine'),c=document.getElementById('z101-countdown');if(!b||!c)return;
-    if(!user()){b.textContent='تسجيل الدخول للتعدين';b.disabled=false;c.textContent='الحساب مطلوب';return;} if(user().email?.toLowerCase()==='raefalbtish@gmail.com'){b.textContent='حساب الإدارة';b.disabled=true;c.textContent='ADMIN';return;}
+    if(!user()){b.textContent=zt('mineLoginBtn');b.disabled=false;c.textContent=zt('mineAccountRequired');return;} if(user().email?.toLowerCase()==='raefalbtish@gmail.com'){b.textContent=zt('mineAdminBtn');b.disabled=true;c.textContent='ADMIN';return;}
     const left=Math.max(0,(state.nextMiningAt||0)-Date.now());
-    if(left<=0){b.textContent='بدء التعدين +0.50';b.disabled=false;c.textContent='متاح الآن';c.classList.add('z101-ready')}
-    else{b.textContent='التعدين مفعّل';b.disabled=true;c.classList.remove('z101-ready');c.textContent=formatMs(left)}
+    if(left<=0){b.textContent=zt('mineStartBtn');b.disabled=false;c.textContent=zt('mineAvailableNow');c.classList.add('z101-ready')}
+    else{b.textContent=zt('mineActiveBtn');b.disabled=true;c.classList.remove('z101-ready');c.textContent=formatMs(left)}
   }
   function formatMs(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
 
   async function mine(){
     const u=user(),d=db();
     if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return}
-    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
+    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast(zt('mineAdminBlocked'));return}
     const b=document.getElementById('z101-mine');if(b)b.disabled=true;
     try{
       const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
       const mining=d.collection('users').doc(u.uid).collection('zivozone').doc('mining');
-      const ledger=wallet.collection('ledger').doc('mining_'+new Date().toISOString().slice(0,10));
+      // V1093: rolling 24h mining ledger. Do not key the claim by calendar day.
+      const ledger=wallet.collection('ledger').doc('mining_'+Date.now());
       await d.runTransaction(async tx=>{
         const [ws,ms,ls]=await Promise.all([tx.get(wallet),tx.get(mining),tx.get(ledger)]);
         const now=Date.now(), previous=ms.exists?(ms.data()?.nextMiningAt):null, prevMs=previous?.toMillis?.()||Number(previous)||0;
-        if(prevMs>now)throw new Error('التعدين غير متاح بعد.');
-        if(ls.exists)throw new Error('تم احتساب تعدين اليوم بالفعل.');
+        if(prevMs>now){const err=new Error('not_yet_available');err.code='MINE_NOT_YET';throw err}
+        if(ls.exists){const err=new Error('already_claimed_today');err.code='MINE_ALREADY_TODAY';throw err}
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
-        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
-        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000),amount:0.5,version:'spark-v1057'},{merge:true});
-        tx.set(ledger,{type:'daily_mining',label:'التعدين اليومي',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'client-rules'});
+        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1094'},{merge:true});
+        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000+15000),amount:0.5,version:'v1094'},{merge:true});
+        tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'zivozone-v1094'});
       });
       await refresh();
-      toast('تم التعدين بنجاح! +0.50 ZIVO ⛏️');
-    }catch(e){console.warn('ZIVO mining:',e);toast(e?.message||'تعذر تفعيل التعدين الآن.');await refresh()}
+      toast(zt('mineSuccessToast'));
+    }catch(e){
+      console.warn('ZIVO mining:',e);
+      const msg=e?.code==='MINE_NOT_YET'?zt('mineNotYetAvailable'):e?.code==='MINE_ALREADY_TODAY'?zt('mineAlreadyToday'):zt('mineErrorToast');
+      toast(msg);await refresh();
+    }
   }
 
   async function reward(amount,type,label,meta={}){ return false; }
@@ -3902,44 +3961,22 @@ fetch("challenge_question_banks.json",{cache:"no-store"})
       const root=fire.collection('users').doc(u.uid).collection('zivozone');
       const wallet=root.doc('wallet'), claim=root.doc('rewardClaim');
       const ledger=wallet.collection('ledger').doc(('challenge_perfect_'+attemptId).slice(0,100));
-      const playerRef=fire.collection('players').doc(u.uid);
-      const result=playerRef.collection('results').doc(attemptId.slice(0,100));
+      const result=fire.collection('players').doc(u.uid).collection('results').doc(attemptId.slice(0,100));
       await fire.runTransaction(async tx=>{
-        const [ws,ls,ps]=await Promise.all([tx.get(wallet),tx.get(ledger),tx.get(playerRef)]);
-        if(ls.exists)throw new Error('تم احتساب هذه المحاولة مسبقًا.');
+        const [ws,ls,cs]=await Promise.all([tx.get(wallet),tx.get(ledger),tx.get(claim)]);
+        if(ls.exists){const err=new Error('already_claimed');err.code='REWARD_ALREADY_CLAIMED';throw err}
         const current=num(ws.data()?.zivo);
-        const pdata=ps.exists?ps.data()||{}:{};
-        const oldPerfect=Math.max(0,Number(pdata.perfectChallengesCount)||0);
-        const oldEarned=Math.max(0,Number(pdata.challengeZivoEarned)||0);
-        const oldStats=(pdata.challengeStats&&typeof pdata.challengeStats==='object')?pdata.challengeStats:{};
-        const stat=Object.assign({},oldStats[challenge]||{});
-        stat.perfect=(Number(stat.perfect)||0)+1;
-        stat.games=(Number(stat.games)||0)+1;
-        stat.bestScore=Math.max(Number(stat.bestScore)||0,100);
-        const achievements=Array.isArray(pdata.achievements)?pdata.achievements.slice():[];
-        if(!achievements.includes('perfect'))achievements.push('perfect');
-        if(oldPerfect+1>=10&&!achievements.includes('perfect_10'))achievements.push('perfect_10');
         const fv=F().firestore.FieldValue;
         tx.set(claim,{claimId:attemptId,challenge,total,correct,timedOut:0,amount:10,consumedAt:fv.serverTimestamp(),createdAt:fv.serverTimestamp(),status:'consumed',policy:'10_of_10_only'},{merge:true});
-        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
-        tx.set(ledger,{type:'challenge_reward',label:`مكافأة تحدي كامل — ${challenge}`,amount:10,eventId:ledger.id,attemptId,challenge,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'client-rules',policy:'10_of_10_only'});
-        tx.set(playerRef,{challengeZivoEarned:oldEarned+10,perfectChallengesCount:oldPerfect+1,perfectChallenges:Array.from(new Set([...(Array.isArray(pdata.perfectChallenges)?pdata.perfectChallenges:[]),challenge])),achievements,challengeStats:{...oldStats,[challenge]:stat},lastPerfectChallenge:{challenge,attemptId,score:100,correct:10,total:10,awardedZivo:10,at:fv.serverTimestamp()},updatedAt:fv.serverTimestamp()},{merge:true});
-        tx.set(result,{challengeId:challenge,score:10,total:10,correct:10,perfect:true,zivoReward:10,serverRewarded:true,attemptId,createdAt:fv.serverTimestamp()},{merge:true});
+        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1094'},{merge:true});
+        tx.set(ledger,{type:'challenge_reward',label:'challenge_reward',challenge,amount:10,eventId:ledger.id,attemptId,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'zivozone-v1094',policy:'10_of_10_only'});
       });
       await refresh();
-      try{await window.ZIVOZONE_AUTH?.refreshPlayer?.();}catch(e){console.warn('ZIVO player refresh after reward',e);}
-      try{
-        const key='zivozone_v31_achievements'; const a=JSON.parse(localStorage.getItem(key)||'{}');
-        a.unlocked=Array.isArray(a.unlocked)?a.unlocked:[]; if(!a.unlocked.includes('perfect'))a.unlocked.push('perfect');
-        a.perfectChallenges=(Number(a.perfectChallenges)||0)+1; if(a.perfectChallenges>=10&&!a.unlocked.includes('perfect_10'))a.unlocked.push('perfect_10');
-        a.updatedAt=Date.now(); localStorage.setItem(key,JSON.stringify(a));
-      }catch(e){}
-      window.dispatchEvent(new CustomEvent('zivozone-perfect-reward',{detail:{challenge,attemptId,zivo:10,correct:10,total:10,achievement:'perfect'}}));
-      toast('علامة كاملة 10/10 — +10 ZIVO + إنجاز محفوظ في ملفك 🏆🪙');
+      toast(zt('rewardSuccessToast'));
       return true;
     }catch(e){
       console.warn('ZIVO challenge reward',e);
-      if(String(e?.message||'').includes('مسبقًا')){await refresh();return true}
+      if(e?.code==='REWARD_ALREADY_CLAIMED'){await refresh();return true}
       return false;
     }
   }
@@ -3950,13 +3987,20 @@ fetch("challenge_question_banks.json",{cache:"no-store"})
     let o=document.getElementById('z101-wallet-modal');
     if(!o){
       o=document.createElement('div');o.id='z101-wallet-modal';o.className='z101-overlay';
-      o.innerHTML=`<div class="z101-modal" dir="rtl"><div class="z101-modal-head"><div><div class="z101-label">ZIVOZONE ECONOMY</div><h2>محفظة ZIVO</h2></div><button class="z101-modal-close">×</button></div><div id="z101-modal-balance" class="z101-modal-balance">0 ZIVO</div><p>رصيد ZIVO داخل المنصة. كل إضافة تمر عبر خادم ZIVOZONE وتظهر في سجل المعاملات.</p><div class="z101-ledger"><div class="z101-ledger-title">آخر المعاملات</div><div id="z101-modal-ledger" class="z101-ledger-list"></div></div><div class="z101-note">XP منفصل عن ZIVO. وZIVO منفصل عن Tickets. هذه العملة حاليًا عملة افتراضية داخل المنصة وليست أموالًا نقدية.</div></div>`;
-      document.body.appendChild(o);o.querySelector('.z101-modal-close').onclick=()=>o.classList.remove('open');o.onclick=e=>{if(e.target===o)o.classList.remove('open')};
+      document.body.appendChild(o);o.onclick=e=>{if(e.target===o)o.classList.remove('open')};
     }
+    o.innerHTML=`<div class="z101-modal" dir="${document.documentElement.dir||'rtl'}"><div class="z101-modal-head"><div><div class="z101-label">${esc(zt('walletModalLabel'))}</div><h2>${esc(zt('walletModalTitle'))}</h2></div><button class="z101-modal-close">×</button></div><div id="z101-modal-balance" class="z101-modal-balance">0 ZIVO</div><p>${esc(zt('walletModalDesc'))}</p><div class="z101-ledger"><div class="z101-ledger-title">${esc(zt('walletModalLedgerTitle'))}</div><div id="z101-modal-ledger" class="z101-ledger-list"></div></div><div class="z101-note">${esc(zt('walletModalNote'))}</div></div>`;
+    o.querySelector('.z101-modal-close').onclick=()=>o.classList.remove('open');
     o.classList.add('open');
     o.querySelector('#z101-modal-balance').textContent=`${Number(state.zivo).toFixed(state.zivo%1?2:0)} ZIVO`;
+    const ledgerLabel=x=>{
+      if(x.type==='daily_mining')return zt('ledgerMiningLabel');
+      if(x.type==='challenge_reward')return `${zt('ledgerRewardLabelPrefix')}${esc(x.challenge||'')}`;
+      return x.label||x.type||zt('ledgerFallbackLabel');
+    };
     const list=o.querySelector('#z101-modal-ledger');
-    list.innerHTML=state.ledger.length?state.ledger.map(x=>`<div class="z101-ledger-row"><span>${esc(x.label||x.type||'معاملة')}</span><b>${Number(x.amount)>0?'+':''}${Number(x.amount)||0}</b><small>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleString('ar-JO'):'—'}</small></div>`).join(''):'<p>لا توجد معاملات بعد.</p>';
+    const locale=(document.documentElement.lang==='ar')?'ar-JO':(document.documentElement.lang||'en');
+    list.innerHTML=state.ledger.length?state.ledger.map(x=>`<div class="z101-ledger-row"><span>${ledgerLabel(x)}</span><b>${Number(x.amount)>0?'+':''}${Number(x.amount)||0}</b><small>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleString(locale):'—'}</small></div>`).join(''):`<p>${esc(zt('ledgerEmpty'))}</p>`;
   }
 
   function bind(){
@@ -3975,7 +4019,7 @@ fetch("challenge_question_banks.json",{cache:"no-store"})
     const eventId=String(d.eventId||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,100); if(!eventId||processed.has(eventId))return;
     processed.add(eventId); rewardChallenge({...d,total:10,correct:10,timedOut:0,attemptId:eventId,eventId});
   }
-  ['zivozone-result','zivozone-progress','zivozone:game-complete','zivozone:challenge-result','zivozone:progress-updated'].forEach(n=>addEventListener(n,onChallenge,true));
+  ['zivozone-result'].forEach(n=>addEventListener(n,onChallenge,true));
 
   window.ZIVOZONE_ECONOMY={open:openWallet,refresh,rewardPerfect:rewardChallenge,credit:reward,getWallet:()=>({...state}),mine};
   window.ZIVOZONE_ZIVO={wallet:state,refresh,reward,mine,rewardChallenge};
@@ -3983,8 +4027,7 @@ fetch("challenge_question_banks.json",{cache:"no-store"})
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(bind,50));else setTimeout(bind,50);
 })();
 
-
-/* ===== MODULE: zivo-v103-pro.js ===== */
+/* ---- SOURCE: zivo-v103-pro.js ---- */
 /* ZIVOZONE V103 — functional luxury UX layer
    - Admin command center bound to owner email only
    - Responsive challenge hub
@@ -4076,9 +4119,7 @@ fetch("challenge_question_banks.json",{cache:"no-store"})
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',observe);else observe();
 })();
 
-
-/* ===== MODULE: zivo-v104-pro.js ===== */
-
+/* ---- SOURCE: zivo-v104-pro.js ---- */
 /* ZIVOZONE V104 — Functional luxury command center + challenge polish */
 (()=>{'use strict';
 const ADMIN='raefalbtish@gmail.com';
@@ -4200,9 +4241,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 window.ZIVOZONE_V104={openAdmin};
 })();
 
-
-/* ===== MODULE: zivo-v1062-royal.js ===== */
-
+/* ---- SOURCE: zivo-v1062-royal.js ---- */
 /* ZIVOZONE V1062 — Royal 4D challenge presentation layer
    Visual-only enhancement. Existing challenge engines and economy APIs remain intact.
 */
@@ -4311,10 +4350,48 @@ window.ZIVOZONE_V104={openAdmin};
   }
 
   function moveEconomy(){
+    /* V1089: the full Economy Hub belongs in the page flow.
+       Only a compact, live wallet status belongs in the header. */
     const economy=document.getElementById('zivo-v101-economy');
     const actions=document.querySelector('.topbar .top-actions');
-    if(!economy||!actions)return;
-    if(economy.parentElement!==actions) actions.appendChild(economy);
+    if(!actions)return;
+    if(economy && economy.parentElement===actions){
+      const home=document.getElementById('home');
+      if(home && economy!==home.nextElementSibling) home.insertAdjacentElement('afterend',economy);
+    }
+    let chip=document.getElementById('zivo-header-wallet');
+    if(!chip){
+      chip=document.createElement('button');
+      chip.id='zivo-header-wallet';chip.type='button';chip.className='z1089-wallet-chip';
+      chip.setAttribute('aria-label','ZIVO Wallet');
+      chip.innerHTML='<span class="z1089-coin">Z</span><span class="z1089-wallet-copy"><small>ZIVO</small><strong id="z1089-header-balance">0</strong></span>';
+      const login=document.getElementById('login-btn');
+      actions.insertBefore(chip,login||null);
+      chip.addEventListener('click',()=>window.ZIVOZONE_ECONOMY?.open?.());
+    }
+    const bal=document.getElementById('z101-balance')?.textContent||'0';
+    const m=String(bal).match(/[0-9]+(?:\.[0-9]+)?/);
+    const out=document.getElementById('z1089-header-balance');
+    if(out)out.textContent=m?m[0]:'0';
+  }
+
+  function polishHeaderV1089(){
+    const h=document.querySelector('.topbar'); if(!h)return;
+    h.classList.add('z1089-header');
+    const nav=h.querySelector('.main-nav');
+    const sync=()=>{
+      const current=(location.hash||'#home').split('?')[0];
+      nav?.querySelectorAll('a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===current));
+    };
+    sync();
+    if(!h.dataset.v1089Bound){
+      h.dataset.v1089Bound='1';
+      window.addEventListener('hashchange',sync);
+      nav?.addEventListener('click',()=>document.body.classList.remove('zivo-nav-open'));
+      document.addEventListener('click',e=>{
+        if(e.target.closest('#zivo-header-wallet')) setTimeout(()=>window.ZIVOZONE_ECONOMY?.refresh?.(),0);
+      });
+    }
   }
 
   function topbarPolish(){
@@ -4333,7 +4410,7 @@ window.ZIVOZONE_V104={openAdmin};
   }
 
   function apply(){
-    enhanceCards();moveEconomy();topbarPolish();
+    enhanceCards();moveEconomy();polishHeaderV1089();
   }
   let queued=false;
   const schedule=()=>{
@@ -4357,8 +4434,7 @@ window.ZIVOZONE_V104={openAdmin};
   setTimeout(observeChallengeList,1000);
 })();
 
-
-/* ===== MODULE: zivo-v1080-core.js ===== */
+/* ---- SOURCE: zivo-v1080-core.js ---- */
 /* ZIVOZONE V1080 — CORE PLAYER HUB
    Additive layer: preserves V1073 systems and unifies the player-facing experience.
    No Billing / Functions / external paid API required.
@@ -4380,7 +4456,7 @@ window.ZIVOZONE_V104={openAdmin};
   function read(k,f){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch(e){return f}}
   function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
   function player(){
-    const p=window.ZIVOZONE_V21?.get?.()||{};
+    const p=window.ZIVOZONE_AUTH?.getPlayer?.()||window.ZIVOZONE_V21?.get?.()||{};
     const e=window.ZIVOZONE_ECONOMY?.getWallet?.()||{};
     return {
       level:Number(p.level)||1,xp:Number(p.xp)||0,games:Number(p.games)||0,
@@ -4467,8 +4543,7 @@ window.ZIVOZONE_V104={openAdmin};
   window.addEventListener('zivozone-badge',()=>{});
 })();
 
-
-/* ===== MODULE: zivo-v1081-player.js ===== */
+/* ---- SOURCE: zivo-v1081-player.js ---- */
 /* ZIVOZONE V1081 — PLAYER PROFILE + WALLET SAFE UI
    Additive to V1080/V1073. No payment processor or Billing added.
 */
@@ -4544,38 +4619,503 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 
 
-/* ===== ZIVOZONE V1082 — INTEGRITY / QUESTION NORMALIZER ===== */
+/* ============================================================
+   ZIVOZONE V1091 — DARK ROOM & INTELLIGENCE CORE
+   Engineering evolution layer.
+   - Replaces only the Horror/Dark Room entry path.
+   - Preserves existing challenge banks, Auth, Player, Economy,
+     Audio, Firebase and result event contracts.
+   - No external dependencies.
+============================================================ */
 (()=>{
   'use strict';
-  const norm=s=>String(s??'').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\p{L}\p{N}]+/gu,'');
-  const text=q=>typeof q?.q==='string'?q.q:(typeof q?.question==='string'?q.question:(q?.q?.ar||q?.q?.en||q?.question?.ar||q?.question?.en||''));
-  const stable=(s)=>norm(text(s));
-  function cleanBank(b){
-    if(!b||!Array.isArray(b.questions))return;
-    const seen=new Set(), out=[];
-    for(const q of b.questions){
-      if(!q||!text(q))continue;
-      const key=stable(q);
-      if(!key||seen.has(key))continue;
-      seen.add(key);
-      if(!q.id)q.id='q_'+Math.random().toString(36).slice(2,10);
-      out.push(q);
-    }
-    b.questions=out;
-    b.questionBankSize=out.length;
-    b.questionBankVersion='V1082-UNIFIED';
+  const C=window.ZIVOZONE_CHALLENGES;
+  const I=window.ZIVOZONE_I18N;
+  const A=()=>window.ZIVOZONE_AUDIO||{};
+  const DR_AUDIO={ambient:null,heartbeat:null,muted:false};
+  function drAudio(name,volume=0.5){
+    if(DR_AUDIO.muted)return;
+    const files={laugh:'assets/audio/horror_laugh.mp3'};
+    const src=files[name]; if(!src)return;
+    try{const a=new Audio(src);a.volume=Math.max(0,Math.min(1,volume));a.play().catch(()=>{});if(name==='ambient'){a.loop=true;DR_AUDIO.ambient=a;}return a}catch(e){return null}
   }
-  function run(){
-    const C=window.ZIVOZONE_CHALLENGES;
-    if(!C)return;
-    Object.keys(C).forEach(k=>cleanBank(C[k]));
+  function drTone(freq=70,duration=.18,type='sine',gain=.05){
+    try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const c=new AC(),o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=freq;g.gain.value=gain;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+duration);o.stop(c.currentTime+duration);setTimeout(()=>c.close().catch(()=>{}),duration*1000+100)}catch(e){}
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});
-  else run();
-  window.ZIVOZONE_CORE={
-    version:'1082-unified',
-    cleanQuestionBanks:run,
-    getQuestionBank(id){const b=window.ZIVOZONE_CHALLENGES?.[id];return b?.questions||[];},
-    emitResult(detail){window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{...detail,eventId:detail?.eventId||crypto.randomUUID?.()||('z_'+Date.now())}}));}
+  function drFootstep(){drTone(58,.12,'triangle',.07);setTimeout(()=>drTone(48,.10,'triangle',.055),85)}
+  function drDoor(){drTone(42,.8,'sawtooth',.045);setTimeout(()=>drTone(86,.22,'sine',.035),420)}
+  function drHeartbeat(){drTone(52,.12,'sine',.07);setTimeout(()=>drTone(44,.11,'sine',.06),145)}
+  function drWhisper(){
+    if(DR_AUDIO.muted)return;
+    try{const u=new SpeechSynthesisUtterance(['لا تستعجل','انظر مرة أخرى','ركز','هل أنت متأكد؟'][Math.floor(Math.random()*4)]);u.lang='ar-SA';u.rate=.68;u.pitch=.45;u.volume=.28;window.speechSynthesis?.speak(u)}catch(e){}
+  }
+  function drStopAudio(){try{DR_AUDIO.ambient?.pause();DR_AUDIO.ambient=null;window.speechSynthesis?.cancel?.()}catch(e){}}
+
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const loc=o=>{
+    const l=I?.get?.()||document.documentElement.lang||'ar';
+    return typeof o==='string'?o:(o?.[l]??o?.en??o?.ar??'');
   };
+  const state={active:false,started:false,index:0,correct:0,timed:0,streak:0,best:0,answers:[],times:[],phaseStats:{},timer:null,deadline:0,questionStarted:0,questions:[]};
+  const GUEST_LIMIT=5;
+  const SESSION_KEY='zivozone_darkroom_v1091_session';
+  const isLoggedIn=()=>!!(window.ZIVOZONE_AUTH?.isLoggedIn?.() || window.firebase?.auth?.()?.currentUser);
+  const readSession=()=>{try{const raw=sessionStorage.getItem(SESSION_KEY);return raw?JSON.parse(raw):null}catch(e){return null}};
+  const writeSession=()=>{try{sessionStorage.setItem(SESSION_KEY,JSON.stringify({locked:true,index:state.index,correct:state.correct,timed:state.timed,streak:state.streak,best:state.best,answers:state.answers,times:state.times,phaseStats:state.phaseStats,questions:state.questions,questionStarted:state.questionStarted,ts:Date.now()}))}catch(e){}};
+  const clearSession=()=>{try{sessionStorage.removeItem(SESSION_KEY)}catch(e){}};
+
+  const PHASES=[
+    {key:'OBSERVE',ar:'المراقبة',sub:'READ THE ROOM',hint:'راقب التفاصيل. لا تثق بعينك الأولى.',accent:'cyan'},
+    {key:'REMEMBER',ar:'الذاكرة',sub:'LOCK THE SIGNAL',hint:'احفظ النمط. سيختفي قبل أن تتوقع.',accent:'violet'},
+    {key:'DETECT',ar:'الاكتشاف',sub:'FIND THE ANOMALY',hint:'هناك شيء واحد لا ينتمي إلى المشهد.',accent:'red'},
+    {key:'DECIDE',ar:'القرار',sub:'CHOOSE UNDER PRESSURE',hint:'لا تبحث عن الخوف. ابحث عن المنطق.',accent:'gold'},
+    {key:'SURVIVE',ar:'البقاء',sub:'FINAL THRESHOLD',hint:'آخر مرحلة. الهدوء الآن أهم من السرعة.',accent:'crimson'}
+  ];
+
+  const LINES=[
+    'لا تستعجل… الغرفة تقيس انتباهك قبل إجابتك.',
+    'أغلقت الإشارة. ما تذكرته الآن أهم مما رأيته.',
+    'هناك تفصيل واحد لا ينتمي إلى الصورة.',
+    'الوقت يضغط. المنطق لا.',
+    'المرحلة الأخيرة لا تحتاج شجاعة… تحتاج تركيزًا.'
+  ];
+
+  function phaseFor(i){return Math.min(4,Math.floor(i/2));}
+  function questionPool(){
+    const M=(ar,en)=>({ar,en});
+    const qs=[
+      {id:'dr92_01',q:M('أمامك خمسة رموز. بعد لحظات سيختفي أحدها. أي رمز تعتقد أنه تغيّر؟', 'Five symbols appear. One will change. Which one do you think changed?'),a:[M('◇','◇'),M('△','△'),M('○','○'),M('✦','✦')],c:1,d:5,mode:'observe'},
+      {id:'dr92_02',q:M('تظهر السلسلة: 4 — 9 — 2 — 7 — 1. ما الرقم الثاني من النهاية؟','The sequence is 4 — 9 — 2 — 7 — 1. What is the second-to-last number?'),a:[M('9','9'),M('2','2'),M('7','7'),M('1','1')],c:2,d:6,mode:'memory'},
+      {id:'dr92_03',q:M('أي عنصر يقطع النمط: ◈ ◇ ◈ ◇ ◈ ؟','Which element breaks the pattern: ◈ ◇ ◈ ◇ ◈ ?'),a:[M('◇','◇'),M('◈','◈'),M('○','○'),M('△','△')],c:0,d:5,mode:'detect'},
+      {id:'dr92_04',q:M('لديك 30 ثانية. خيار آمن واضح أمامك وخيار أسرع لكنه غير مؤكد. ماذا تختار؟','You have 30 seconds. One option is clear and safe; another is faster but uncertain. What do you choose?'),a:[M('الخيار الواضح','The clear option'),M('الأسرع دائمًا','Always the faster one'),M('الاختيار عشوائيًا','Choose randomly'),M('انتظر حتى ينتهي الوقت','Wait until time runs out')],c:0,d:6,mode:'decide'},
+      {id:'dr92_05',q:M('ظهر الرمز ⬡ لمدة قصيرة ثم اختفى. ما الرمز الذي كان بجانبه في السلسلة المعروضة؟','The symbol ⬡ appeared briefly. Which symbol was next to it in the displayed sequence?'),a:[M('○','○'),M('⌁','⌁'),M('◇','◇'),M('□','□')],c:2,d:7,mode:'memory'},
+      {id:'dr92_06',q:M('تغيّرت الإضاءة، لكن ترتيب الرموز بقي نفسه. ما الذي يجب أن تثق به؟','The lighting changed, but the symbol order stayed the same. What should you trust?'),a:[M('ترتيب المعلومات','The information order'),M('الخوف فقط','Fear alone'),M('الصوت فقط','Sound alone'),M('التخمين','A guess')],c:0,d:7,mode:'observe'},
+      {id:'dr92_07',q:M('ثلاثة إشارات: SIGNAL / SILENCE / SIGNAL. أيها يمثل الانقطاع؟','Three signals: SIGNAL / SILENCE / SIGNAL. Which represents the interruption?'),a:[M('الأولى','The first'),M('الصمت','Silence'),M('الثالثة','The third'),M('لا شيء','None')],c:1,d:8,mode:'detect'},
+      {id:'dr92_08',q:M('أنت تحت ضغط الوقت. ما القرار الأفضل في سؤال لا تملك له دليلًا؟','Under time pressure, what is best when you have no evidence for an answer?'),a:[M('استخدم ما ظهر في التجربة بدل التخمين العشوائي','Use evidence from the experience rather than random guessing'),M('اختر الأسرع','Pick the fastest'),M('غيّر إجابتك بلا سبب','Change it without reason'),M('توقف عن اللعب','Stop playing')],c:0,d:8,mode:'decide'},
+      {id:'dr92_09',q:M('في آخر غرفة، ترى رمزًا رأيته في البداية لكن بإضاءة مختلفة. ما الاختبار الحقيقي هنا؟','At the end, you see a symbol from the beginning under different lighting. What is the real test?'),a:[M('هل تتذكر التفاصيل أم تعتمد على الانطباع؟','Whether you remember details or rely on impression'),M('هل تخاف من الظلام؟','Whether you fear darkness'),M('هل تسمع الصوت؟','Whether you hear the sound'),M('هل تضغط بسرعة؟','Whether you click quickly')],c:0,d:9,mode:'survive'},
+      {id:'dr92_10',q:M('آخر قرار: لديك معلومة مؤكدة وأخرى تبدو مخيفة لكنها غير مؤكدة. أيهما تبني عليه قرارك؟','Final decision: one fact is certain and another feels frightening but is unconfirmed. Which should guide your decision?'),a:[M('المعلومة المؤكدة','The confirmed fact'),M('الأكثر رعبًا','The scariest one'),M('الصوت الأعلى','The loudest sound'),M('الحدس وحده','Instinct alone')],c:0,d:10,mode:'survive'}
+    ];
+    return qs.sort(()=>Math.random()-.5);
+  }
+  function ensure(){
+    let root=document.getElementById('zivo-dark-v1091');
+    if(root)return root;
+    root=document.createElement('div');
+    root.id='zivo-dark-v1091';
+    root.className='z1091-overlay';
+    root.innerHTML=`
+      <div class="z1091-noise"></div><div class="z1091-scan"></div><div class="z1091-event" aria-live="polite"></div><div class="z1091-vignette"></div>
+      <div class="z1091-glow"></div><div class="z1091-grid"></div>
+      <header class="z1091-top">
+        <div class="z1091-brand"><span class="z1091-dot"></span><span>DARK ROOM</span><small> ZIVOZONE / INTELLIGENCE CORE</small></div>
+        <div class="z1091-top-actions">
+          <button class="z1091-sound" type="button" aria-label="الصوت">🔊</button>
+          <button class="z1091-exit" type="button">خروج</button>
+        </div>
+      </header>
+      <main class="z1091-main">
+        <section class="z1091-intro" data-screen="intro">
+          <div class="z1091-symbol">Z</div>
+          <div class="z1091-kicker">ZIVOZONE // DARK EXPERIENCE</div>
+          <h1>الغرفة المظلمة</h1>
+          <p>تجربة ذكاء نفسية متصاعدة. لا تعتمد على الحظ. لا تكشف الإجابة أثناء الجولة.</p>
+          <div class="z1091-warning"><span>⚠</span><div><b>تجربة اختيارية</b><small>يمكنك الخروج في أي لحظة. أوقف الصوت أو التجربة إذا شعرت بعدم الارتياح.</small></div></div>
+          <button class="z1091-enter" type="button">دخول الغرفة <span>→</span></button>
+          <div class="z1091-meta-line"><span>10 QUESTIONS</span><i></i><span>5 PHASES</span><i></i><span>30s / QUESTION</span></div>
+        </section>
+        <section class="z1091-game" data-screen="game" hidden>
+          <div class="z1091-phasebar">
+            <div><span class="z1091-phase-no">PHASE 01</span><b class="z1091-phase-name">المراقبة</b><small class="z1091-phase-sub">READ THE ROOM</small></div>
+            <div class="z1091-stage"><span>STAGE</span><strong class="z1091-count">01 / 10</strong></div>
+          </div>
+          <div class="z1091-progress"><i></i></div>
+          <div class="z1091-intensity"><span class="z1091-intensity-fill"></span></div>
+          <div class="z1091-scene" aria-hidden="true">
+            <div class="z1091-scene-code">SIGNAL // <span>ACTIVE</span></div>
+            <div class="z1091-symbol-row"></div>
+            <div class="z1091-memory-seq"></div>
+            <div class="z1091-crosshair">+</div>
+            <div class="z1091-scene-status">ANOMALY SCAN</div>
+          </div>
+          <div class="z1091-question-wrap">
+            <div class="z1091-qtop"><span class="z1091-qnum">QUESTION 01</span><span class="z1091-phase-hint">راقب قبل أن تختار</span></div>
+            <h2 class="z1091-question"></h2>
+            <div class="z1091-timer"><strong>30</strong><div><i></i></div><span>SECONDS</span></div>
+            <div class="z1091-options"></div>
+          </div>
+          <div class="z1091-footer"><span>NO IMMEDIATE FEEDBACK</span><span class="z1091-live">● LIVE</span></div>
+        </section>
+        <section class="z1091-gate" data-screen="gate" hidden aria-modal="true" role="dialog" aria-labelledby="z1091-gate-title">
+          <div class="z1091-gate-signal">ACCESS // LIMITED</div>
+          <div class="z1091-gate-orb">Z</div>
+          <div class="z1091-kicker">DARK ROOM // SESSION LOCKED</div>
+          <h2 id="z1091-gate-title">الغرفة توقفت.</h2>
+          <p class="z1091-gate-main">لقد وصلت إلى الحد المسموح للزائر. التجربة لم تنتهِ… لكنها لا تسمح لك بالعبور إلى المرحلة التالية دون حساب.</p>
+          <div class="z1091-gate-terminal"><span>ACCESS LEVEL:</span><b>GUEST / LIMITED</b><span>SESSION:</span><b>PAUSED</b><span>IDENTITY:</span><b>REQUIRED</b></div>
+          <div class="z1091-gate-actions">
+            <button class="z1091-gate-register" type="button">إنشاء حساب والمتابعة</button>
+            <button class="z1091-gate-login" type="button">تسجيل الدخول</button>
+            <button class="z1091-gate-exit" type="button">الخروج من الغرفة</button>
+          </div>
+          <small class="z1091-gate-note">سيتم حفظ تقدم هذه الجلسة وإعادته بعد تسجيل الدخول.</small>
+        </section>
+        <section class="z1091-result" data-screen="result" hidden>
+          <div class="z1091-result-orbit"><span>Z</span></div>
+          <div class="z1091-kicker">DARK ROOM // SESSION COMPLETE</div>
+          <h2>أنت خرجت من الغرفة.</h2>
+          <div class="z1091-final-score"><small>DARK ROOM SCORE</small><strong>00</strong><em>/100</em></div>
+          <div class="z1091-metrics"></div>
+          <div class="z1091-result-note"></div>
+          <div class="z1091-result-actions"><button class="z1091-retry" type="button">جولة جديدة</button><button class="z1091-result-exit" type="button">العودة إلى ZIVOZONE</button></div>
+        </section>
+      </main>
+    `;
+    document.body.appendChild(root);
+    root.querySelector('.z1091-enter').addEventListener('click',begin);
+    root.querySelector('.z1091-exit').addEventListener('click',stop);
+    root.querySelector('.z1091-result-exit').addEventListener('click',stop);
+    root.querySelector('.z1091-retry').addEventListener('click',()=>{reset();begin(true)});
+    root.querySelector('.z1091-gate-register').addEventListener('click',()=>openAuthGate('register'));
+    root.querySelector('.z1091-gate-login').addEventListener('click',()=>openAuthGate('login'));
+    root.querySelector('.z1091-gate-exit').addEventListener('click',()=>{clearSession();stop()});
+    root.querySelector('.z1091-sound').addEventListener('click',async()=>{
+      await A().unlock?.(); A().toggle?.();
+      DR_AUDIO.muted=!!(A().isEnabled?.()===false); if(DR_AUDIO.muted)drStopAudio(); root.querySelector('.z1091-sound').textContent=DR_AUDIO.muted?'🔇':'🔊';
+    });
+    return root;
+  }
+
+  function reset(){
+    clearInterval(state.timer);
+    state.active=false;state.started=false;state.index=0;state.correct=0;state.timed=0;state.streak=0;state.best=0;state.answers=[];state.times=[];state.phaseStats={};state.questions=[];
+  }
+
+  function begin(fromRetry=false){
+    const root=ensure();
+    if(!isLoggedIn()){
+      const saved=readSession();
+      if(saved?.locked){restoreSession(saved);showGate();return}
+    }
+    reset();
+    state.active=true;state.started=true;state.questions=questionPool();
+    if(state.questions.length<10){stop();return}
+    root.classList.add('active','playing');
+    document.body.classList.add('z1091-active');
+    root.querySelector('[data-screen="intro"]').hidden=true;
+    root.querySelector('[data-screen="result"]').hidden=true;
+    root.querySelector('[data-screen="game"]').hidden=false;
+    try{sessionStorage.setItem('zivozone_darkroom_v1091','1')}catch(e){}
+    A().unlock?.(); A().startChallenge?.('horror');
+    drDoor();
+    A().narrate?.(LINES[0]);
+    render();
+  }
+
+  function start(){
+    const root=ensure();
+    const saved=readSession();
+    if(!isLoggedIn() && saved?.locked){showGate();return}
+    root.classList.add('active');
+    root.querySelector('[data-screen="intro"]').hidden=false;
+    root.querySelector('[data-screen="game"]').hidden=true;
+    root.querySelector('[data-screen="gate"]').hidden=true;
+    root.querySelector('[data-screen="result"]').hidden=true;
+    document.body.classList.add('z1091-active');
+    A().unlock?.();
+  }
+
+  function stop(){
+    clearInterval(state.timer);
+    state.active=false;state.started=false;
+    A().stopChallenge?.(); drStopAudio();
+    try{window.speechSynthesis?.cancel?.()}catch(e){}
+    const root=document.getElementById('zivo-dark-v1091');
+    if(root)root.classList.remove('active','playing');
+    document.body.classList.remove('z1091-active');
+    try{sessionStorage.removeItem('zivozone_darkroom_v1091')}catch(e){}
+    window.dispatchEvent(new CustomEvent('zivo:darkroom-stopped'));
+  }
+
+  function render(){
+    if(!state.active)return;
+    if(!isLoggedIn() && state.index>=GUEST_LIMIT){showGate();return}
+    const q=state.questions[state.index];
+    if(!q){finish();return}
+    const root=ensure(), phase=PHASES[phaseFor(state.index)], p=phaseFor(state.index);
+    const previousPhase=Number(root.dataset.phase||'0');
+    root.dataset.phase=String(p+1);
+    if(previousPhase && previousPhase!==p+1){drFootstep();setTimeout(drDoor,180);const ev=root.querySelector('.z1091-event');if(ev){ev.textContent=phase.key+' // SIGNAL SHIFT';root.classList.remove('event-signal');void root.offsetWidth;root.classList.add('event-signal');}}
+    root.querySelector('.z1091-phase-no').textContent=`PHASE 0${p+1}`;
+    root.querySelector('.z1091-phase-name').textContent=phase.ar;
+    root.querySelector('.z1091-phase-sub').textContent=phase.sub;
+    root.querySelector('.z1091-count').textContent=`${String(state.index+1).padStart(2,'0')} / 10`;
+    root.querySelector('.z1091-progress i').style.width=`${(state.index/10)*100}%`;
+    root.querySelector('.z1091-intensity-fill').style.width=`${Math.min(100,20+p*20)}%`;
+    root.querySelector('.z1091-qnum').textContent=`QUESTION ${String(state.index+1).padStart(2,'0')}`;
+    root.querySelector('.z1091-phase-hint').textContent=phase.hint;
+    root.querySelector('.z1091-question').textContent=loc(q.q||q.question||'');
+    root.querySelector('.z1091-options').innerHTML=(q.a||[]).map((x,i)=>`<button class="z1091-option" type="button" data-index="${i}"><span>${String.fromCharCode(65+i)}</span><b>${esc(loc(x))}</b></button>`).join('');
+    root.querySelectorAll('.z1091-option').forEach(b=>b.addEventListener('click',()=>answer(Number(b.dataset.index))));
+    buildScene(p);
+    state.questionStarted=performance.now();
+    state.deadline=performance.now()+30000;
+    clearInterval(state.timer);
+    let left=30;
+    const timerEl=root.querySelector('.z1091-timer strong'), fill=root.querySelector('.z1091-timer i');
+    timerEl.textContent=left; fill.style.width='100%';
+    state.timer=setInterval(()=>{
+      left--; timerEl.textContent=Math.max(0,left); fill.style.width=`${Math.max(0,left)/30*100}%`;
+      if(left===15)drHeartbeat(); if(left===8){drHeartbeat(); setTimeout(drFootstep,260)} if(left<=0){clearInterval(state.timer);state.timed++;state.answers.push({id:q.id,ok:false,seconds:30,timedOut:true});state.times.push(30);state.streak=0;A().timeout?.();pulse();setTimeout(()=>{state.index++;render()},260)}
+    },1000);
+    if(p>0)A().phase?.(p+1);
+    if(state.index>0&&state.index%2===0)A().horrorPulse?.(Math.min(5,1+p));
+  }
+
+  function buildScene(p){
+    const root=ensure(), row=root.querySelector('.z1091-symbol-row'), seq=root.querySelector('.z1091-memory-seq');
+    const glyphs=['◈','◇','△','○','□','✦','⊙','⬡','⌁'];
+    row.innerHTML=Array.from({length:5},(_,i)=>`<span class="z1091-glyph g${i}">${glyphs[(i+p*2+state.index)%glyphs.length]}</span>`).join('');
+    seq.textContent='';
+    if(p===0){
+      row.classList.add('observe');seq.classList.remove('show');
+      setTimeout(()=>row.classList.remove('observe'),900);
+    }else if(p===1){
+      row.classList.remove('observe');seq.classList.add('show');
+      seq.textContent=Array.from({length:5},(_,i)=>glyphs[(i*2+state.index+p)%glyphs.length]).join('  ');
+      setTimeout(()=>{if(state.active)seq.classList.add('locked')},1800);
+    }else if(p===2){
+      row.classList.remove('observe');seq.classList.remove('show');
+      const anomaly=(state.index*3+1)%5;row.querySelectorAll('span').forEach((x,i)=>x.classList.toggle('anomaly',i===anomaly));
+    }else if(p===3){
+      row.classList.remove('observe');seq.classList.remove('show');
+      row.innerHTML=`<span class="z1091-signal">SIGNAL</span><span class="z1091-signal danger">DECIDE</span><span class="z1091-signal">TRUST LOGIC</span>`;
+    }else{
+      row.classList.remove('observe');seq.classList.remove('show');
+      row.innerHTML=`<span class="z1091-final-signal">THRESHOLD ${state.index+1}</span>`;
+    }
+    root.querySelector('.z1091-scene-status').textContent=PHASES[p].sub;
+  }
+
+  function answer(index){
+    if(!state.active)return;
+    clearInterval(state.timer);
+    const q=state.questions[state.index], seconds=Math.min(30,(performance.now()-state.questionStarted)/1000);
+    const ok=Number(index)===Number(q.c);
+    state.answers.push({id:q.id,value:index,ok,seconds:+seconds.toFixed(2),phase:phaseFor(state.index)+1});
+    state.times.push(seconds);
+    if(ok){state.correct++;state.streak++;state.best=Math.max(state.best,state.streak);A().correct?.();drTone(170,.18,'sine',.045)}else{state.streak=0;A().wrong?.();drFootstep();setTimeout(drWhisper,180);if(state.index>=2)drAudio('laugh',.20)}
+    const ph=phaseFor(state.index)+1;
+    state.phaseStats[ph]=state.phaseStats[ph]||{correct:0,total:0,time:0};
+    state.phaseStats[ph].total++;state.phaseStats[ph].time+=seconds;if(ok)state.phaseStats[ph].correct++;
+    // No answer reveal during the room.
+    const buttons=ensure().querySelectorAll('.z1091-option');
+    buttons.forEach(b=>b.disabled=true);
+    pulse(ok);
+    setTimeout(()=>{state.index++;render()},420);
+  }
+
+  function pulse(ok=false){
+    const root=ensure();root.classList.remove('pulse-good','pulse-bad','pulse-hard');void root.offsetWidth;
+    root.classList.add(ok?'pulse-good':'pulse-bad');
+    if(state.index>=8)root.classList.add('pulse-hard');
+  }
+
+  async function finish(){
+    clearInterval(state.timer);
+    clearSession();
+    state.active=false;state.started=false;
+    A().stopChallenge?.();A().success?.(); drDoor(); setTimeout(()=>drStopAudio(),1100);
+    const accuracy=Math.round(state.correct/10*100);
+    const avg=state.times.length?state.times.reduce((a,b)=>a+b,0)/state.times.length:30;
+    const reaction=Math.max(0,Math.min(100,Math.round((1-avg/30)*100)));
+    const pressureTimes=state.times.slice(6);
+    const pressure=Math.max(0,Math.min(100,Math.round((1-(pressureTimes.length?pressureTimes.reduce((a,b)=>a+b,0)/pressureTimes.length:30)/30)*100)));
+    const observation=Math.round(((state.phaseStats[1]?.correct||0)/2)*100);
+    const memory=Math.round(((state.phaseStats[2]?.correct||0)/2)*100);
+    const decision=Math.round(((state.phaseStats[4]?.correct||0)/2)*100);
+    const consistency=Math.max(0,100-Math.round(Math.abs(accuracy-reaction)*.45));
+    const final=Math.round(accuracy*.30+reaction*.15+observation*.10+memory*.10+decision*.10+pressure*.15+consistency*.10);
+    const perfect=state.correct===10&&state.timed===0;
+    const zivoReward=perfect?10:0;
+    const root=ensure();
+    root.querySelector('[data-screen="game"]').hidden=true;
+    root.querySelector('[data-screen="result"]').hidden=false;
+    root.classList.remove('playing');root.dataset.phase='result';
+    root.querySelector('.z1091-final-score strong').textContent=String(final).padStart(2,'0');
+    root.querySelector('.z1091-metrics').innerHTML=[
+      ['ACCURACY',accuracy],['REACTION',reaction],['OBSERVATION',observation],['MEMORY',memory],
+      ['DECISION',decision],['PRESSURE',pressure],['CONSISTENCY',consistency]
+    ].map(([k,v])=>`<div><span>${k}</span><b>${v}</b><i><em style="width:${v}%"></em></i></div>`).join('');
+    root.querySelector('.z1091-result-note').innerHTML=perfect
+      ? `<strong>⚡ PERFECT RUN</strong><span>10/10 — تم اجتياز العتبة كاملة.</span>`
+      : `<strong>${final>=75?'THRESHOLD CLEARED':'RUN TERMINATED'}</strong><span>${state.correct}/10 — الغرفة لا تكشف الإجابات أثناء الجولة.</span>`;
+    root.querySelector('.z1091-result-actions').style.display='flex';
+    try{
+      window.ZIVOZONE_PLAYER?.addProgress?.({id:'horror',score:state.correct,bestStreak:state.best,timedOut:state.timed,questions:10,speedScore:reaction});
+    }catch(e){}
+    const eventId=window.crypto?.randomUUID?.()||('dark1091_'+Date.now()+'_'+Math.random().toString(36).slice(2));
+    window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{
+      challenge:'horror',gameId:'horror',score:state.correct,correct:state.correct,total:10,questions:10,
+      perfect,timedOut:state.timed,xp:Math.max(0,Math.round(final*1.8)),coins:zivoReward,zivoReward,eventId,
+      darkRoomScore:final,accuracy,reactionTimeScore:reaction,observation,memory,decision,pressure,consistency
+    }}));
+    if(window.ZIVOZONE_AUTH?.isLoggedIn?.()){
+      try{await window.ZIVOZONE_AUTH.saveResult?.({challengeId:'horror',score:state.correct,total:10,xp:Math.max(0,Math.round(final*1.8)),coins:zivoReward,timedOut:state.timed,bestStreak:state.best,darkRoomScore:final,guest:false,language:I?.get?.()||'ar'})}catch(e){}
+    }
+  }
+
+  if(!window.__z1091AuthGateBound){
+    window.__z1091AuthGateBound=true;
+    window.addEventListener('zivozone-auth',()=>setTimeout(resumeAfterAuth,250));
+    try{window.firebase?.auth?.()?.onAuthStateChanged?.(()=>setTimeout(resumeAfterAuth,250))}catch(e){}
+  }
+
+  window.ZIVOZONE_DARKROOM_V1091={start,stop,begin,reset,state};
+})();
+
+/* ============================================================
+   ZIVOZONE V1094 — CLEAN CORE PATCH
+   Scope: reliability only. No new product features and no homepage redesign.
+   - Establishes a single runtime version marker.
+   - Adds a scoped news-rail observer so dynamically injected news is cleaned
+     and timed without a document-wide observer.
+   - Exposes a lightweight diagnostic snapshot for QA/admin debugging.
+============================================================ */
+(() => {
+  'use strict';
+  const VERSION = 'V1094 CLEAN CORE';
+  window.ZIVOZONE_CORE_VERSION = VERSION;
+
+  function newsRefresh(){
+    try {
+      window.ZIVOZONE_V85_NEWS?.clean?.();
+      window.ZIVOZONE_V85_NEWS?.speed?.();
+    } catch (_) {}
+  }
+
+  function bindNewsObserver(){
+    const roots = document.querySelectorAll('.zivo-sports-rail, .zivo-general-rail');
+    if (!roots.length || window.__zivo1094NewsObservers) return;
+    window.__zivo1094NewsObservers = [];
+    roots.forEach(root => {
+      const observer = new MutationObserver(() => {
+        clearTimeout(root.__z1094Timer);
+        root.__z1094Timer = setTimeout(newsRefresh, 40);
+      });
+      observer.observe(root, {childList:true, subtree:true});
+      window.__zivo1094NewsObservers.push(observer);
+    });
+    newsRefresh();
+  }
+
+  function diagnostics(){
+    const auth = window.firebase?.auth?.();
+    const user = auth?.currentUser || null;
+    return {
+      version: VERSION,
+      online: navigator.onLine,
+      firebase: !!window.firebase,
+      auth: !!auth,
+      signedIn: !!user,
+      uid: user?.uid || null,
+      newsRails: document.querySelectorAll('.zivo-news-rail').length,
+      challengeCards: document.querySelectorAll('[data-challenge]').length,
+      walletMounted: !!document.getElementById('zivo-v101-economy'),
+      darkRoomMounted: !!document.getElementById('zivo-dark-v1091'),
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  window.ZIVOZONE_CORE_DIAGNOSTICS = diagnostics;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindNewsObserver, {once:true});
+  } else {
+    bindNewsObserver();
+  }
+  window.addEventListener('zivozone:news-updated', () => setTimeout(newsRefresh, 60));
+  window.addEventListener('resize', () => {
+    clearTimeout(window.__z1094Resize);
+    window.__z1094Resize = setTimeout(newsRefresh, 180);
+  }, {passive:true});
+})();
+/* ============================================================
+   ZIVOZONE V1095 — PLAYER CORE
+   Canonical player state adapter.
+   Goal: one player-facing source of truth while preserving legacy APIs.
+============================================================ */
+(function(){
+  'use strict';
+  const KEY='zivozone_player_core_v1095';
+  const VERSION='v1095';
+  const DEFAULT={uid:null,name:'ZIVO Player',email:'',age:null,level:1,xp:0,zivo:0,coins:0,wins:0,gamesPlayed:0,games:0,bestScore:0,bestStreak:0,streak:0,questionsAnswered:0,timedOut:0,stats:{intelligence:0,speed:0,focus:0,memory:0,courage:0},history:[],daily:{date:'',done:false},language:'ar',schemaVersion:VERSION};
+  const clone=()=>JSON.parse(JSON.stringify(DEFAULT));
+  const num=(v,d=0)=>Number.isFinite(Number(v))?Number(v):d;
+  function read(){try{const p=JSON.parse(localStorage.getItem(KEY)||'null');return p&&typeof p==='object'?normalize(p):null}catch(e){return null}}
+  function write(p){try{localStorage.setItem(KEY,JSON.stringify(normalize(p)));return true}catch(e){return false}}
+  function normalize(input){
+    const p=Object.assign(clone(),input||{});
+    p.level=Math.max(1,Math.min(100,Math.floor(num(p.level,1))));
+    p.xp=Math.max(0,num(p.xp));
+    p.zivo=Math.max(0,num(p.zivo,num(p.coins)));
+    p.coins=p.zivo;
+    p.gamesPlayed=Math.max(0,Math.floor(num(p.gamesPlayed,num(p.games))));p.games=p.gamesPlayed;
+    p.bestScore=Math.max(0,num(p.bestScore));p.bestStreak=Math.max(0,num(p.bestStreak));p.streak=Math.max(0,num(p.streak));
+    p.questionsAnswered=Math.max(0,Math.floor(num(p.questionsAnswered)));
+    p.timedOut=Math.max(0,Math.floor(num(p.timedOut)));
+    p.stats=Object.assign({},DEFAULT.stats,p.stats||{});
+    p.history=Array.isArray(p.history)?p.history.slice(-50):[];
+    p.daily=Object.assign({},DEFAULT.daily,p.daily||{});
+    p.schemaVersion=VERSION;
+    return p;
+  }
+  function fromLegacy(){
+    const candidates=[];
+    try{candidates.push(JSON.parse(localStorage.getItem('zivozone_player_v17')||'null'))}catch(e){}
+    try{candidates.push(JSON.parse(localStorage.getItem('zivozone_v21_progress')||'null'))}catch(e){}
+    try{candidates.push(JSON.parse(localStorage.getItem('zivozone_v29_profile')||'null'))}catch(e){}
+    const auth=window.ZIVOZONE_AUTH?.getPlayer?.(); if(auth)candidates.push(auth);
+    const best=candidates.filter(Boolean).sort((a,b)=>(num(b.xp,b.totalXP)-num(a.xp,a.totalXP)))[0]||{};
+    const p=normalize({uid:best.uid||best.id||null,name:best.name||best.displayName,email:best.email||'',age:best.age,
+      level:best.level,xp:num(best.xp,best.totalXP),zivo:num(best.zivo,best.coins),coins:num(best.coins,best.zivo),
+      wins:best.wins,gamesPlayed:num(best.gamesPlayed,best.games),games:num(best.games,best.gamesPlayed),bestScore:best.bestScore,
+      bestStreak:best.bestStreak,streak:best.streak,questionsAnswered:best.questionsAnswered,timedOut:best.timedOut,
+      stats:best.stats,history:best.history,daily:best.daily,language:best.language});
+    write(p);return p;
+  }
+  function get(){return read()||fromLegacy()}
+  function merge(patch){const p=normalize(Object.assign({},get(),patch||{}));write(p);window.dispatchEvent(new CustomEvent('zivo:player-core-updated',{detail:p}));return p}
+  async function syncCloud(p){
+    try{if(window.ZIVOZONE_AUTH?.savePlayerProgress)return await window.ZIVOZONE_AUTH.savePlayerProgress(p)}catch(e){console.warn('V1095 player sync:',e)}
+    return false;
+  }
+  async function setProgress(patch){const p=merge(patch);await syncCloud(p);return p}
+  function snapshot(){const p=get();return Object.freeze(JSON.parse(JSON.stringify(p)))}
+  function record(result){
+    const r=result||{}, score=Math.max(0,num(r.score)), xp=Math.max(0,num(r.xp)), timed=Math.max(0,Math.floor(num(r.timedOut))),
+      streak=Math.max(0,num(r.bestStreak,r.streak)), questions=Math.max(0,Math.floor(num(r.total,r.questions)));
+    const p=get();p.xp+=xp;p.level=Math.max(1,Math.min(100,Math.floor(Math.sqrt(p.xp/25))+1));p.gamesPlayed++;p.games=p.gamesPlayed;
+    p.questionsAnswered+=questions;p.timedOut+=timed;p.bestScore=Math.max(p.bestScore,score);p.bestStreak=Math.max(p.bestStreak,streak);p.streak=Math.max(p.streak,streak);
+    p.history.push({at:new Date().toISOString(),challenge:String(r.challengeId||r.challenge||r.id||'challenge'),score,xp,streak,timedOut:timed});p.history=p.history.slice(-50);
+    write(p);window.dispatchEvent(new CustomEvent('zivozone:player-core-recorded',{detail:p}));return p;
+  }
+  function migrate(){const existing=read();if(existing)return existing;return fromLegacy()}
+  window.ZIVOZONE_PLAYER_CORE={version:VERSION,get,snapshot,merge,setProgress,record,migrate,KEY};
+  // Compatibility: legacy player readers now resolve to the canonical record.
+  const oldPlayer=window.ZIVOZONE_PLAYER||{};
+  window.ZIVOZONE_PLAYER=Object.assign({},oldPlayer,{get,snapshot,save:p=>merge(p),record,version:VERSION});
+  if(window.ZIVOZONE_V21){
+    window.ZIVOZONE_V21.get=get;
+    window.ZIVOZONE_V21.record=async r=>{const p=record(r);await syncCloud(p);return p};
+    window.ZIVOZONE_V21.sync=async()=>syncCloud(get());
+  }
+  if(window.ZIVOZONE_AUTH){
+    const originalGet=window.ZIVOZONE_AUTH.getPlayer;
+    window.ZIVOZONE_AUTH.getPlayer=()=>{
+      const cloudPlayer=originalGet?.();
+      if(cloudPlayer){merge(cloudPlayer);}
+      return get();
+    };
+  }
+  migrate();
 })();
