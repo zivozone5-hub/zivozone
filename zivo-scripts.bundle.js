@@ -740,8 +740,13 @@ window.ZIVOZONE_V18 = {
     } catch (error) {
       console.warn('ZIVOZONE news feed:', error);
       if (cached) { render(cached.data); return cached.data; }
-      render({ sports: [], general: [], updatedAt: null });
-      return null;
+      const fallback={updatedAt:Date.now(),sports:[
+        {headline:'أخبار كرة القدم العالمية والعربية — اضغط لفتح آخر الأخبار',source:'ZIVO SPORTS',url:'https://news.google.com/search?q=%D9%83%D8%B1%D8%A9%20%D8%A7%D9%84%D9%82%D8%AF%D9%85&hl=ar&gl=JO&ceid=JO%3Aar'}
+      ],general:[
+        {headline:'آخر أخبار الأردن والعالم العربي والدولي — اضغط لفتح الأخبار',source:'ZIVOZONE NEWS',url:'https://news.google.com/?hl=ar&gl=JO&ceid=JO%3Aar'}
+      ]};
+      render(fallback);
+      return fallback;
     }
   }
 
@@ -758,7 +763,7 @@ window.ZIVOZONE_V18 = {
     });
   }
 
-  window.ZIVOZONE_NEWS = { load, loadJordan: () => load(false), refresh: () => load(true) };
+  window.ZIVOZONE_NEWS = { load, loadJordan: (target, l) => load(false), refresh: () => load(true) };
   window.ZIVOZONE_SPORTS_TICKER = { load, refresh: () => load(true) };
 
   document.addEventListener('DOMContentLoaded', () => setTimeout(() => load(false), 250));
@@ -1473,6 +1478,7 @@ window.ZIVOZONE_V18 = {
     root.classList.add('active');root.classList.remove('playing');document.body.classList.add('z1091-active');
     root.querySelector('[data-screen="intro"]').hidden=true;root.querySelector('[data-screen="game"]').hidden=true;root.querySelector('[data-screen="result"]').hidden=true;root.querySelector('[data-screen="gate"]').hidden=false;
     root.dataset.phase='gate';
+    drFootstep(); setTimeout(()=>drWhisper(),260);
     try{A().stopChallenge?.();}catch(e){}
     try{window.speechSynthesis?.cancel?.()}catch(e){}
   }
@@ -4604,6 +4610,25 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const C=window.ZIVOZONE_CHALLENGES;
   const I=window.ZIVOZONE_I18N;
   const A=()=>window.ZIVOZONE_AUDIO||{};
+  const DR_AUDIO={ambient:null,heartbeat:null,muted:false};
+  function drAudio(name,volume=0.5){
+    if(DR_AUDIO.muted)return;
+    const files={laugh:'assets/audio/horror_laugh.mp3'};
+    const src=files[name]; if(!src)return;
+    try{const a=new Audio(src);a.volume=Math.max(0,Math.min(1,volume));a.play().catch(()=>{});if(name==='ambient'){a.loop=true;DR_AUDIO.ambient=a;}return a}catch(e){return null}
+  }
+  function drTone(freq=70,duration=.18,type='sine',gain=.05){
+    try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const c=new AC(),o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=freq;g.gain.value=gain;o.connect(g);g.connect(c.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+duration);o.stop(c.currentTime+duration);setTimeout(()=>c.close().catch(()=>{}),duration*1000+100)}catch(e){}
+  }
+  function drFootstep(){drTone(58,.12,'triangle',.07);setTimeout(()=>drTone(48,.10,'triangle',.055),85)}
+  function drDoor(){drTone(42,.8,'sawtooth',.045);setTimeout(()=>drTone(86,.22,'sine',.035),420)}
+  function drHeartbeat(){drTone(52,.12,'sine',.07);setTimeout(()=>drTone(44,.11,'sine',.06),145)}
+  function drWhisper(){
+    if(DR_AUDIO.muted)return;
+    try{const u=new SpeechSynthesisUtterance(['لا تستعجل','انظر مرة أخرى','ركز','هل أنت متأكد؟'][Math.floor(Math.random()*4)]);u.lang='ar-SA';u.rate=.68;u.pitch=.45;u.volume=.28;window.speechSynthesis?.speak(u)}catch(e){}
+  }
+  function drStopAudio(){try{DR_AUDIO.ambient?.pause();DR_AUDIO.ambient=null;window.speechSynthesis?.cancel?.()}catch(e){}}
+
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const loc=o=>{
     const l=I?.get?.()||document.documentElement.lang||'ar';
@@ -4635,12 +4660,20 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
   function phaseFor(i){return Math.min(4,Math.floor(i/2));}
   function questionPool(){
-    const bank=C?.get?.('horror')||C?.horror;
-    if(!bank||!Array.isArray(bank.questions))return [];
-    const src=bank.questions.filter(q=>q&&q.id);
-    const copy=src.map(q=>({...q,a:Array.isArray(q.a)?q.a.slice():q.a}));
-    for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}
-    return copy.slice(0,10);
+    const M=(ar,en)=>({ar,en});
+    const qs=[
+      {id:'dr92_01',q:M('أمامك خمسة رموز. بعد لحظات سيختفي أحدها. أي رمز تعتقد أنه تغيّر؟', 'Five symbols appear. One will change. Which one do you think changed?'),a:[M('◇','◇'),M('△','△'),M('○','○'),M('✦','✦')],c:1,d:5,mode:'observe'},
+      {id:'dr92_02',q:M('تظهر السلسلة: 4 — 9 — 2 — 7 — 1. ما الرقم الثاني من النهاية؟','The sequence is 4 — 9 — 2 — 7 — 1. What is the second-to-last number?'),a:[M('9','9'),M('2','2'),M('7','7'),M('1','1')],c:2,d:6,mode:'memory'},
+      {id:'dr92_03',q:M('أي عنصر يقطع النمط: ◈ ◇ ◈ ◇ ◈ ؟','Which element breaks the pattern: ◈ ◇ ◈ ◇ ◈ ?'),a:[M('◇','◇'),M('◈','◈'),M('○','○'),M('△','△')],c:0,d:5,mode:'detect'},
+      {id:'dr92_04',q:M('لديك 30 ثانية. خيار آمن واضح أمامك وخيار أسرع لكنه غير مؤكد. ماذا تختار؟','You have 30 seconds. One option is clear and safe; another is faster but uncertain. What do you choose?'),a:[M('الخيار الواضح','The clear option'),M('الأسرع دائمًا','Always the faster one'),M('الاختيار عشوائيًا','Choose randomly'),M('انتظر حتى ينتهي الوقت','Wait until time runs out')],c:0,d:6,mode:'decide'},
+      {id:'dr92_05',q:M('ظهر الرمز ⬡ لمدة قصيرة ثم اختفى. ما الرمز الذي كان بجانبه في السلسلة المعروضة؟','The symbol ⬡ appeared briefly. Which symbol was next to it in the displayed sequence?'),a:[M('○','○'),M('⌁','⌁'),M('◇','◇'),M('□','□')],c:2,d:7,mode:'memory'},
+      {id:'dr92_06',q:M('تغيّرت الإضاءة، لكن ترتيب الرموز بقي نفسه. ما الذي يجب أن تثق به؟','The lighting changed, but the symbol order stayed the same. What should you trust?'),a:[M('ترتيب المعلومات','The information order'),M('الخوف فقط','Fear alone'),M('الصوت فقط','Sound alone'),M('التخمين','A guess')],c:0,d:7,mode:'observe'},
+      {id:'dr92_07',q:M('ثلاثة إشارات: SIGNAL / SILENCE / SIGNAL. أيها يمثل الانقطاع؟','Three signals: SIGNAL / SILENCE / SIGNAL. Which represents the interruption?'),a:[M('الأولى','The first'),M('الصمت','Silence'),M('الثالثة','The third'),M('لا شيء','None')],c:1,d:8,mode:'detect'},
+      {id:'dr92_08',q:M('أنت تحت ضغط الوقت. ما القرار الأفضل في سؤال لا تملك له دليلًا؟','Under time pressure, what is best when you have no evidence for an answer?'),a:[M('استخدم ما ظهر في التجربة بدل التخمين العشوائي','Use evidence from the experience rather than random guessing'),M('اختر الأسرع','Pick the fastest'),M('غيّر إجابتك بلا سبب','Change it without reason'),M('توقف عن اللعب','Stop playing')],c:0,d:8,mode:'decide'},
+      {id:'dr92_09',q:M('في آخر غرفة، ترى رمزًا رأيته في البداية لكن بإضاءة مختلفة. ما الاختبار الحقيقي هنا؟','At the end, you see a symbol from the beginning under different lighting. What is the real test?'),a:[M('هل تتذكر التفاصيل أم تعتمد على الانطباع؟','Whether you remember details or rely on impression'),M('هل تخاف من الظلام؟','Whether you fear darkness'),M('هل تسمع الصوت؟','Whether you hear the sound'),M('هل تضغط بسرعة؟','Whether you click quickly')],c:0,d:9,mode:'survive'},
+      {id:'dr92_10',q:M('آخر قرار: لديك معلومة مؤكدة وأخرى تبدو مخيفة لكنها غير مؤكدة. أيهما تبني عليه قرارك؟','Final decision: one fact is certain and another feels frightening but is unconfirmed. Which should guide your decision?'),a:[M('المعلومة المؤكدة','The confirmed fact'),M('الأكثر رعبًا','The scariest one'),M('الصوت الأعلى','The loudest sound'),M('الحدس وحده','Instinct alone')],c:0,d:10,mode:'survive'}
+    ];
+    return qs.sort(()=>Math.random()-.5);
   }
   function ensure(){
     let root=document.getElementById('zivo-dark-v1091');
@@ -4649,7 +4682,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     root.id='zivo-dark-v1091';
     root.className='z1091-overlay';
     root.innerHTML=`
-      <div class="z1091-noise"></div><div class="z1091-scan"></div><div class="z1091-vignette"></div>
+      <div class="z1091-noise"></div><div class="z1091-scan"></div><div class="z1091-event" aria-live="polite"></div><div class="z1091-vignette"></div>
       <div class="z1091-glow"></div><div class="z1091-grid"></div>
       <header class="z1091-top">
         <div class="z1091-brand"><span class="z1091-dot"></span><span>DARK ROOM</span><small> ZIVOZONE / INTELLIGENCE CORE</small></div>
@@ -4725,7 +4758,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     root.querySelector('.z1091-gate-exit').addEventListener('click',()=>{clearSession();stop()});
     root.querySelector('.z1091-sound').addEventListener('click',async()=>{
       await A().unlock?.(); A().toggle?.();
-      root.querySelector('.z1091-sound').textContent=A().isEnabled?.()?'🔊':'🔇';
+      DR_AUDIO.muted=!!(A().isEnabled?.()===false); if(DR_AUDIO.muted)drStopAudio(); root.querySelector('.z1091-sound').textContent=DR_AUDIO.muted?'🔇':'🔊';
     });
     return root;
   }
@@ -4751,6 +4784,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     root.querySelector('[data-screen="game"]').hidden=false;
     try{sessionStorage.setItem('zivozone_darkroom_v1091','1')}catch(e){}
     A().unlock?.(); A().startChallenge?.('horror');
+    drDoor();
     A().narrate?.(LINES[0]);
     render();
   }
@@ -4771,7 +4805,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function stop(){
     clearInterval(state.timer);
     state.active=false;state.started=false;
-    A().stopChallenge?.();
+    A().stopChallenge?.(); drStopAudio();
     try{window.speechSynthesis?.cancel?.()}catch(e){}
     const root=document.getElementById('zivo-dark-v1091');
     if(root)root.classList.remove('active','playing');
@@ -4786,7 +4820,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const q=state.questions[state.index];
     if(!q){finish();return}
     const root=ensure(), phase=PHASES[phaseFor(state.index)], p=phaseFor(state.index);
+    const previousPhase=Number(root.dataset.phase||'0');
     root.dataset.phase=String(p+1);
+    if(previousPhase && previousPhase!==p+1){drFootstep();setTimeout(drDoor,180);const ev=root.querySelector('.z1091-event');if(ev){ev.textContent=phase.key+' // SIGNAL SHIFT';root.classList.remove('event-signal');void root.offsetWidth;root.classList.add('event-signal');}}
     root.querySelector('.z1091-phase-no').textContent=`PHASE 0${p+1}`;
     root.querySelector('.z1091-phase-name').textContent=phase.ar;
     root.querySelector('.z1091-phase-sub').textContent=phase.sub;
@@ -4807,7 +4843,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     timerEl.textContent=left; fill.style.width='100%';
     state.timer=setInterval(()=>{
       left--; timerEl.textContent=Math.max(0,left); fill.style.width=`${Math.max(0,left)/30*100}%`;
-      if(left<=0){clearInterval(state.timer);state.timed++;state.answers.push({id:q.id,ok:false,seconds:30,timedOut:true});state.times.push(30);state.streak=0;A().timeout?.();pulse();setTimeout(()=>{state.index++;render()},260)}
+      if(left===15)drHeartbeat(); if(left===8){drHeartbeat(); setTimeout(drFootstep,260)} if(left<=0){clearInterval(state.timer);state.timed++;state.answers.push({id:q.id,ok:false,seconds:30,timedOut:true});state.times.push(30);state.streak=0;A().timeout?.();pulse();setTimeout(()=>{state.index++;render()},260)}
     },1000);
     if(p>0)A().phase?.(p+1);
     if(state.index>0&&state.index%2===0)A().horrorPulse?.(Math.min(5,1+p));
@@ -4845,7 +4881,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     const ok=Number(index)===Number(q.c);
     state.answers.push({id:q.id,value:index,ok,seconds:+seconds.toFixed(2),phase:phaseFor(state.index)+1});
     state.times.push(seconds);
-    if(ok){state.correct++;state.streak++;state.best=Math.max(state.best,state.streak);A().correct?.()}else{state.streak=0;A().wrong?.()}
+    if(ok){state.correct++;state.streak++;state.best=Math.max(state.best,state.streak);A().correct?.();drTone(170,.18,'sine',.045)}else{state.streak=0;A().wrong?.();drFootstep();setTimeout(drWhisper,180);if(state.index>=2)drAudio('laugh',.20)}
     const ph=phaseFor(state.index)+1;
     state.phaseStats[ph]=state.phaseStats[ph]||{correct:0,total:0,time:0};
     state.phaseStats[ph].total++;state.phaseStats[ph].time+=seconds;if(ok)state.phaseStats[ph].correct++;
@@ -4866,7 +4902,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     clearInterval(state.timer);
     clearSession();
     state.active=false;state.started=false;
-    A().stopChallenge?.();A().success?.();
+    A().stopChallenge?.();A().success?.(); drDoor(); setTimeout(()=>drStopAudio(),1100);
     const accuracy=Math.round(state.correct/10*100);
     const avg=state.times.length?state.times.reduce((a,b)=>a+b,0)/state.times.length:30;
     const reaction=Math.max(0,Math.min(100,Math.round((1-avg/30)*100)));

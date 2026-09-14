@@ -1594,3 +1594,25 @@ radial-gradient(circle at 50% 100%,rgba(0,30,60,.16),transparent 45%),#020307;co
 @media(prefers-reduced-motion:reduce){.z1091-noise,.z1091-scan,.z1091-glow,.z1091-symbol-row.observe .z1091-glyph,.z1091-final-signal{animation:none!important}.z1091-option{transition:none}}
 @keyframes z1091noise{0%{transform:translate(0,0)}25%{transform:translate(1%,-1%)}50%{transform:translate(-1%,1%)}75%{transform:translate(-2%,-1%)}100%{transform:translate(1%,2%)}}
 @keyframes z1091breath{0%,100%{opacity:.45}50%{opacity:1}}@keyframes z1091reveal{0%{opacity:0;transform:scale(.75);filter:blur(5px)}100%{opacity:1;transform:scale(1);filter:blur(0)}}@keyframes z1091memory{0%{opacity:0;filter:blur(6px)}15%{opacity:1;filter:blur(0)}72%{opacity:1}100%{opacity:.2}}@keyframes z1091final{0%,100%{opacity:.45}50%{opacity:1}}@keyframes z1091hit{0%,100%{opacity:1}50%{opacity:.72}}@keyframes z1091good{0%,100%{opacity:1}50%{opacity:.4}}
+
+
+/* ============================================================
+   V1092 DARK ROOM SIGNATURE EXPERIENCE
+   Deeper psychological atmosphere; no scream/no white-noise audio.
+============================================================ */
+.z1091-overlay::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:6;opacity:0;background:radial-gradient(circle at 50% 48%,transparent 18%,rgba(255,20,45,.18) 100%);mix-blend-mode:screen}
+.z1091-overlay.event-hit::after{animation:z1092Hit .45s ease}
+.z1091-event{position:absolute;left:50%;top:15%;transform:translateX(-50%);z-index:20;pointer-events:none;color:rgba(220,236,255,.7);font:800 9px ui-monospace,monospace;letter-spacing:4px;text-transform:uppercase;opacity:0;text-shadow:0 0 18px rgba(50,180,255,.45)}
+.z1091-overlay.event-signal .z1091-event{animation:z1092Signal 1.2s ease}
+.z1091-overlay[data-phase="5"] .z1091-scene{box-shadow:inset 0 0 110px rgba(255,20,40,.08),0 0 80px rgba(0,0,0,.7)}
+.z1091-overlay[data-phase="5"] .z1091-scene-code span{color:#ff586a}
+.z1091-overlay[data-phase="5"] .z1091-crosshair{animation:z1092Cross 2.2s ease-in-out infinite}
+.z1091-overlay.playing .z1091-scene:before{animation:z1092Breath 4.5s ease-in-out infinite}
+.z1091-overlay.playing .z1091-scene{transition:filter .5s,box-shadow .5s,transform .5s}
+.z1091-overlay.playing .z1091-scene:hover{filter:brightness(1.03)}
+@keyframes z1092Hit{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
+@keyframes z1092Signal{0%{opacity:0;filter:blur(7px)}25%{opacity:.8;filter:blur(0)}70%{opacity:.45}100%{opacity:0}}
+@keyframes z1092Breath{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.8;transform:scale(1.025)}}
+@keyframes z1092Cross{0%,100%{opacity:.25;transform:scale(.9)}50%{opacity:.7;transform:scale(1.12)}}
+@media(max-width:700px){.z1091-event{top:11%;font-size:8px;letter-spacing:3px}.z1091-overlay.playing .z1091-scene{min-height:128px}}
+@media(prefers-reduced-motion:reduce){.z1091-overlay::after,.z1091-event,.z1091-overlay.playing .z1091-scene:before,.z1091-crosshair{animation:none!important}}
