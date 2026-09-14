@@ -955,6 +955,26 @@ window.ZIVOZONE_V18 = {
     if(!cloud||!db||!user||String(user.uid).startsWith('local_'))return false;
     try{await db.collection('players').doc(user.uid).collection('results').add({...result,createdAt:firebase.firestore.FieldValue.serverTimestamp()});return true}catch(e){console.warn('Result save:',e);return false}
   }
+  // V1094 canonical progression writer. Economy fields are deliberately excluded.
+  async function savePlayerProgress(progress={}){
+    if(!player)return false;
+    const safe={
+      xp:Math.max(0,Number(progress.xp)||0),
+      level:Math.max(1,Number(progress.level)||1),
+      games:Number(progress.games)||0,
+      gamesPlayed:Number(progress.gamesPlayed)||Number(progress.games)||0,
+      bestScore:Math.max(0,Number(progress.bestScore)||0),
+      bestStreak:Math.max(0,Number(progress.bestStreak)||0),
+      streak:Math.max(0,Number(progress.streak)||0),
+      progressionVersion:'v1094'
+    };
+    player={...player,...safe};saveLocal();
+    if(cloud&&db&&!String(player.uid).startsWith('local_')){
+      try{await db.collection('players').doc(player.uid).set({...safe,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});return true}
+      catch(e){console.warn('Firestore progression save:',e);return false}
+    }
+    return false;
+  }
   async function setLanguage(lang){if(player){player.language=lang;saveLocal();if(cloud&&db&&!String(player.uid).startsWith('local_')){try{await db.collection('players').doc(player.uid).set({language:lang},{merge:true})}catch(e){}}emit()}}
   const isLoggedIn=()=>!!user&&!!player;
   async function touchSession(){
@@ -977,7 +997,7 @@ window.ZIVOZONE_V18 = {
 
   async function init(){loadLocal();await initFirebase();ready=true;emit()}
   const isAdmin=()=>String(user?.email||'').trim().toLowerCase()==='raefalbtish@gmail.com';
-  window.ZIVOZONE_AUTH={register,login,logout,resetPassword,update,saveResult,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
+  window.ZIVOZONE_AUTH={register,login,logout,resetPassword,update,saveResult,savePlayerProgress,track,touchSession,flushAttempts,setLanguage,getUser:()=>user,getPlayer:()=>player,isAdmin,isLoggedIn,init,ready:()=>ready,isCloud:()=>cloud};
   init();
 })();
 
@@ -3861,7 +3881,7 @@ window.ZIVOZONE_V18 = {
     const d=db(); if(!u||!d)return;
     const ref=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
     const snap=await ref.get();
-    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'zivozone-economy-v1093'},{merge:false});
+    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'zivozone-economy-v1094'},{merge:false});
   }
 
   async function refresh(){
@@ -3911,9 +3931,9 @@ window.ZIVOZONE_V18 = {
         if(ls.exists){const err=new Error('already_claimed_today');err.code='MINE_ALREADY_TODAY';throw err}
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
-        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1093'},{merge:true});
-        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000+15000),amount:0.5,version:'v1093'},{merge:true});
-        tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'zivozone-v1093'});
+        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1094'},{merge:true});
+        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000+15000),amount:0.5,version:'v1094'},{merge:true});
+        tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'zivozone-v1094'});
       });
       await refresh();
       toast(zt('mineSuccessToast'));
@@ -3947,8 +3967,8 @@ window.ZIVOZONE_V18 = {
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
         tx.set(claim,{claimId:attemptId,challenge,total,correct,timedOut:0,amount:10,consumedAt:fv.serverTimestamp(),createdAt:fv.serverTimestamp(),status:'consumed',policy:'10_of_10_only'},{merge:true});
-        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1093'},{merge:true});
-        tx.set(ledger,{type:'challenge_reward',label:'challenge_reward',challenge,amount:10,eventId:ledger.id,attemptId,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'zivozone-v1093',policy:'10_of_10_only'});
+        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1094'},{merge:true});
+        tx.set(ledger,{type:'challenge_reward',label:'challenge_reward',challenge,amount:10,eventId:ledger.id,attemptId,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'zivozone-v1094',policy:'10_of_10_only'});
       });
       await refresh();
       toast(zt('rewardSuccessToast'));
@@ -4435,7 +4455,7 @@ window.ZIVOZONE_V104={openAdmin};
   function read(k,f){try{return JSON.parse(localStorage.getItem(k)||JSON.stringify(f))}catch(e){return f}}
   function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
   function player(){
-    const p=window.ZIVOZONE_V21?.get?.()||{};
+    const p=window.ZIVOZONE_AUTH?.getPlayer?.()||window.ZIVOZONE_V21?.get?.()||{};
     const e=window.ZIVOZONE_ECONOMY?.getWallet?.()||{};
     return {
       level:Number(p.level)||1,xp:Number(p.xp)||0,games:Number(p.games)||0,
@@ -4953,7 +4973,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 
 /* ============================================================
-   ZIVOZONE V1093 — CORE STABILITY PATCH
+   ZIVOZONE V1094 — CLEAN CORE PATCH
    Scope: reliability only. No new product features and no homepage redesign.
    - Establishes a single runtime version marker.
    - Adds a scoped news-rail observer so dynamically injected news is cleaned
@@ -4962,7 +4982,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 ============================================================ */
 (() => {
   'use strict';
-  const VERSION = 'V1093 CORE STABILITY';
+  const VERSION = 'V1094 CLEAN CORE';
   window.ZIVOZONE_CORE_VERSION = VERSION;
 
   function newsRefresh(){
@@ -4974,15 +4994,15 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
   function bindNewsObserver(){
     const roots = document.querySelectorAll('.zivo-sports-rail, .zivo-general-rail');
-    if (!roots.length || window.__zivo1093NewsObservers) return;
-    window.__zivo1093NewsObservers = [];
+    if (!roots.length || window.__zivo1094NewsObservers) return;
+    window.__zivo1094NewsObservers = [];
     roots.forEach(root => {
       const observer = new MutationObserver(() => {
-        clearTimeout(root.__z1093Timer);
-        root.__z1093Timer = setTimeout(newsRefresh, 40);
+        clearTimeout(root.__z1094Timer);
+        root.__z1094Timer = setTimeout(newsRefresh, 40);
       });
       observer.observe(root, {childList:true, subtree:true});
-      window.__zivo1093NewsObservers.push(observer);
+      window.__zivo1094NewsObservers.push(observer);
     });
     newsRefresh();
   }
@@ -5014,7 +5034,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   }
   window.addEventListener('zivozone:news-updated', () => setTimeout(newsRefresh, 60));
   window.addEventListener('resize', () => {
-    clearTimeout(window.__z1093Resize);
-    window.__z1093Resize = setTimeout(newsRefresh, 180);
+    clearTimeout(window.__z1094Resize);
+    window.__z1094Resize = setTimeout(newsRefresh, 180);
   }, {passive:true});
 })();
