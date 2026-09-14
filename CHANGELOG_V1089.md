@@ -1,20 +1,24 @@
-# ZIVOZONE V1089 — CLEAN CORE
+# ZIVOZONE V1089 — Clean Engineering Shell
 
-## Purpose
-V1089 is the engineering-hardening release derived from V1088 MOBILE NAV. V1088 remains the recovery reference; V1089 is the candidate baseline.
+## Goal
+V1089 is a structural cleanup release, not a feature expansion. The visual identity, routes, challenge content, and existing public IDs are preserved.
 
-## Applied fixes
-- Dark Room guest checkpoint no longer offers “Continue as Guest” after the registration gate.
-- Wallet UI state is synchronized to the authoritative ZIVO economy balance instead of the legacy `coins` value.
-- Added a single integration/orchestration contract (`zivo-core-v1089.js`).
-- Removed legacy floating navigation/economy UI elements at runtime.
-- Added runtime diagnostics for Auth/Economy contracts.
-- Added a full-card click contract for challenge/game cards.
-- Service worker cache bumped to V1089 and includes the new core file.
-- Firebase Hosting excludes `docs/**` from production deployment; historical engineering files remain in the package.
+## Changes
+- Reworked the header into a single responsive presentation layer for desktop, tablet, and mobile.
+- Removed the full ZIVO Economy Hub from the header; the page keeps the full economy section while the header shows only a compact live wallet chip.
+- Added active-route highlighting and cleaner mobile navigation behavior.
+- Replaced the old text crown header mark with the real ZIVO app icon asset.
+- Bumped asset cache-busting and Service Worker shell to V1089.
+- Excluded `docs/**` from Firebase Hosting deployment so historical archives are not public runtime assets.
+- Updated visible economy mode/version labels to V1089 naming without changing the economy contract.
+- Preserved existing IDs and handlers for compatibility with the current application.
 
-## Important architecture rule
-Firestore remains the authoritative balance store. LocalStorage may be used for UX preferences, language, audio state, adaptive question history, and guest-only progress, but must not become the source of truth for ZIVO balance.
+## Intentionally not changed
+- Home page content and visual identity.
+- XP/ZIVO/Tickets separation.
+- Challenge banks and routes.
+- Firebase project configuration.
+- Existing authentication flow.
 
-## Candidate baseline status
-V1089 is a CANDIDATE BASELINE pending live Firebase QA: Auth, Mining, Wallet persistence, 10/10 reward, duplicate reward attempt, Dark Room guest gate, news rails, and mobile breakpoints.
+## Known next-stage engineering
+The client-side ZIVO reward path still requires a server-authoritative callable/Cloud Function before ZIVO can be treated as a high-value or cash-equivalent asset. V1089 does not pretend to solve that without a backend deployment.
