@@ -1,0 +1,42 @@
+{
+  "version": "V1089-CLEAN-CORE",
+  "source": "V1088_MOBILE_NAV",
+  "files": {
+    "index.html": {
+      "bytes": 16913,
+      "sha256": "2f7d6d8bf35efdfdff835986580fc91cd1f613ca36516071410388580f3a8fdf"
+    },
+    "zivo-scripts.bundle.js": {
+      "bytes": 505571,
+      "sha256": "36cd44b935805746ade6f4bd09f8a8353a1ed285726e3e843e053e90a67ee744"
+    },
+    "zivo-core-v1089.js": {
+      "bytes": 2866,
+      "sha256": "51356a773bc5a87f2f26231cd4029667504f24d5f7c968f49059195689af8411"
+    },
+    "zivo-styles.bundle.css": {
+      "bytes": 181283,
+      "sha256": "f01dbb05f014ebbfd9719340e383f4158a181a3246fd10a36c500bb435836d92"
+    },
+    "sw.js": {
+      "bytes": 1017,
+      "sha256": "8f3b7942d553cec1a98008f7fd865bc95d066122eae48d9f68b8f7c4ab85e99e"
+    },
+    "firebase.json": {
+      "bytes": 630,
+      "sha256": "461b29fe40af3d3277ba09680dcfbc19147805b75788bbe8e2be84f1d769faf8"
+    },
+    "firestore.rules": {
+      "bytes": 6791,
+      "sha256": "72807da7f12dd81055e0c24a717e59da953cd5fc999f11631893c4e67d2743e4"
+    },
+    "README_V1089_CLEAN_CORE.md": {
+      "bytes": 893,
+      "sha256": "0a38a59c4746d947eb528cd043b312228dca0ddf1629ee0e7bb00bf06a2fcefa"
+    },
+    "CHANGELOG_V1089.md": {
+      "bytes": 1349,
+      "sha256": "86942576a5bbcc28f66cc15c65eda53d9b84e1a3374fa839b00a8e39bc921a6a"
+    }
+  }
+}

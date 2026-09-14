@@ -9,19 +9,14 @@
       "**/.*",
       "**/node_modules/**",
       "scripts/**",
-      ".github/**",
       "docs/**",
+      ".github/**",
       "*.bat",
       "*.cmd",
       "*.exe",
       "*.ps1",
       "*.sh",
-      "*.com",
-      "archive/**",
-      "**/*.bat",
-      "**/*.cmd",
-      "**/*.exe",
-      "**/*.ps1"
+      "*.com"
     ],
     "headers": [
       {
@@ -37,8 +32,5 @@
   },
   "firestore": {
     "rules": "firestore.rules"
-  },
-  "storage": {
-    "rules": "storage.rules"
   }
 }
