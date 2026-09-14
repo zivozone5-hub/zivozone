@@ -3751,7 +3751,7 @@ window.ZIVOZONE_V18 = {
     const d=db(); if(!u||!d)return;
     const ref=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
     const snap=await ref.get();
-    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'spark-client-rules'},{merge:false});
+    if(!snap.exists) await ref.set({zivo:0,createdAt:F().firestore.FieldValue.serverTimestamp(),updatedAt:F().firestore.FieldValue.serverTimestamp(),mode:'zivozone-economy-v1089'},{merge:false});
   }
 
   async function refresh(){
@@ -3800,9 +3800,9 @@ window.ZIVOZONE_V18 = {
         if(ls.exists){const err=new Error('already_claimed_today');err.code='MINE_ALREADY_TODAY';throw err}
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
-        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
-        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000),amount:0.5,version:'spark-v1057'},{merge:true});
-        tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'client-rules'});
+        tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1089'},{merge:true});
+        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000),amount:0.5,version:'v1089'},{merge:true});
+        tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'zivozone-v1089'});
       });
       await refresh();
       toast(zt('mineSuccessToast'));
@@ -3836,8 +3836,8 @@ window.ZIVOZONE_V18 = {
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
         tx.set(claim,{claimId:attemptId,challenge,total,correct,timedOut:0,amount:10,consumedAt:fv.serverTimestamp(),createdAt:fv.serverTimestamp(),status:'consumed',policy:'10_of_10_only'},{merge:true});
-        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
-        tx.set(ledger,{type:'challenge_reward',label:'challenge_reward',challenge,amount:10,eventId:ledger.id,attemptId,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'client-rules',policy:'10_of_10_only'});
+        tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1089'},{merge:true});
+        tx.set(ledger,{type:'challenge_reward',label:'challenge_reward',challenge,amount:10,eventId:ledger.id,attemptId,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'zivozone-v1089',policy:'10_of_10_only'});
       });
       await refresh();
       toast(zt('rewardSuccessToast'));
@@ -4218,10 +4218,48 @@ window.ZIVOZONE_V104={openAdmin};
   }
 
   function moveEconomy(){
+    /* V1089: the full Economy Hub belongs in the page flow.
+       Only a compact, live wallet status belongs in the header. */
     const economy=document.getElementById('zivo-v101-economy');
     const actions=document.querySelector('.topbar .top-actions');
-    if(!economy||!actions)return;
-    if(economy.parentElement!==actions) actions.appendChild(economy);
+    if(!actions)return;
+    if(economy && economy.parentElement===actions){
+      const home=document.getElementById('home');
+      if(home && economy!==home.nextElementSibling) home.insertAdjacentElement('afterend',economy);
+    }
+    let chip=document.getElementById('zivo-header-wallet');
+    if(!chip){
+      chip=document.createElement('button');
+      chip.id='zivo-header-wallet';chip.type='button';chip.className='z1089-wallet-chip';
+      chip.setAttribute('aria-label','ZIVO Wallet');
+      chip.innerHTML='<span class="z1089-coin">Z</span><span class="z1089-wallet-copy"><small>ZIVO</small><strong id="z1089-header-balance">0</strong></span>';
+      const login=document.getElementById('login-btn');
+      actions.insertBefore(chip,login||null);
+      chip.addEventListener('click',()=>window.ZIVOZONE_ECONOMY?.open?.());
+    }
+    const bal=document.getElementById('z101-balance')?.textContent||'0';
+    const m=String(bal).match(/[0-9]+(?:\.[0-9]+)?/);
+    const out=document.getElementById('z1089-header-balance');
+    if(out)out.textContent=m?m[0]:'0';
+  }
+
+  function polishHeaderV1089(){
+    const h=document.querySelector('.topbar'); if(!h)return;
+    h.classList.add('z1089-header');
+    const nav=h.querySelector('.main-nav');
+    const sync=()=>{
+      const current=(location.hash||'#home').split('?')[0];
+      nav?.querySelectorAll('a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===current));
+    };
+    sync();
+    if(!h.dataset.v1089Bound){
+      h.dataset.v1089Bound='1';
+      window.addEventListener('hashchange',sync);
+      nav?.addEventListener('click',()=>document.body.classList.remove('zivo-nav-open'));
+      document.addEventListener('click',e=>{
+        if(e.target.closest('#zivo-header-wallet')) setTimeout(()=>window.ZIVOZONE_ECONOMY?.refresh?.(),0);
+      });
+    }
   }
 
   function topbarPolish(){
@@ -4240,7 +4278,7 @@ window.ZIVOZONE_V104={openAdmin};
   }
 
   function apply(){
-    enhanceCards();moveEconomy();topbarPolish();
+    enhanceCards();moveEconomy();topbarPolish();polishHeaderV1089();
   }
   let queued=false;
   const schedule=()=>{

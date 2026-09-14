@@ -10,6 +10,7 @@
       "**/node_modules/**",
       "scripts/**",
       ".github/**",
+      "docs/**",
       "*.bat",
       "*.cmd",
       "*.exe",

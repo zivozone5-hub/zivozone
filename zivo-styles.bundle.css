@@ -1461,3 +1461,82 @@ body.zivo-nav-open #zivo-nav-toggle span:nth-child(3){transform:translateY(-4px)
 @media(max-width:480px){
   .top-actions #login-btn{font-size:11px!important;padding:9px 10px!important}
 }
+
+
+/* =====================================================================
+   ZIVOZONE V1089 — CLEAN HEADER / RESPONSIVE SHELL
+   Presentation-only: preserves existing IDs, routes and handlers.
+   This final layer intentionally replaces the historical header patches.
+   ===================================================================== */
+:root{--z1089-blue:#23b8ff;--z1089-blue2:#5f7dff;--z1089-gold:#ffd84a;--z1089-panel:rgba(5,13,25,.92)}
+.topbar.z1089-header{
+  position:sticky!important;top:0!important;z-index:12000!important;
+  width:100%!important;min-height:72px!important;padding:8px 18px!important;
+  display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;
+  align-items:center!important;gap:16px!important;direction:ltr!important;
+  overflow:visible!important;background:linear-gradient(180deg,rgba(3,9,19,.98),rgba(4,12,23,.93))!important;
+  border-bottom:1px solid rgba(35,184,255,.20)!important;
+  box-shadow:0 10px 38px rgba(0,0,0,.30),inset 0 -1px 0 rgba(255,255,255,.025)!important;
+  backdrop-filter:blur(18px) saturate(125%);
+}
+.topbar.z1089-header .brand{min-width:0!important;gap:10px!important;white-space:nowrap!important}
+.topbar.z1089-header .brand-mark{
+  width:44px!important;height:44px!important;border-radius:13px!important;font-size:0!important;
+  background:linear-gradient(145deg,#eef9ff 0%,#42b7ff 43%,#3c4fff 100%) url('/assets/icons/zivo-192.png') center/cover no-repeat!important;
+  box-shadow:0 0 25px rgba(35,184,255,.32),inset 0 1px 0 rgba(255,255,255,.8)!important;
+}
+.topbar.z1089-header .brand-mark:after{display:none!important}
+.topbar.z1089-header .brand-name{font-size:23px!important;letter-spacing:.35px!important}
+.topbar.z1089-header .main-nav{min-width:0!important;display:flex!important;justify-content:center!important;align-items:center!important;gap:3px!important;direction:rtl!important}
+.topbar.z1089-header .main-nav a{
+  min-height:48px!important;padding:0 13px!important;border:1px solid transparent!important;border-radius:13px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
+  color:#aebbd0!important;font-size:12px!important;font-weight:900!important;white-space:nowrap!important;
+  transition:background .18s ease,color .18s ease,transform .18s ease,border-color .18s ease!important;
+}
+.topbar.z1089-header .main-nav a:before{font-size:14px!important;opacity:.9!important}
+.topbar.z1089-header .main-nav a:hover{color:#fff!important;background:rgba(35,184,255,.08)!important;border-color:rgba(35,184,255,.16)!important}
+.topbar.z1089-header .main-nav a.active{color:#fff!important;background:linear-gradient(180deg,rgba(35,184,255,.16),rgba(35,184,255,.045))!important;border-color:rgba(35,184,255,.34)!important;box-shadow:0 0 22px rgba(35,184,255,.10)!important}
+.topbar.z1089-header .main-nav a.active:after{content:'';position:absolute;bottom:-9px;width:28px;height:3px;border-radius:5px;background:var(--z1089-blue);box-shadow:0 0 12px rgba(35,184,255,.65)}
+.topbar.z1089-header .top-actions{min-width:0!important;gap:7px!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;direction:rtl!important}
+.topbar.z1089-header .firebase-status{width:8px!important;height:8px!important;overflow:hidden!important;color:#29e889!important;font-size:0!important;border-radius:50%!important;box-shadow:0 0 9px rgba(41,232,137,.6)!important}
+.topbar.z1089-header #audio-toggle,.topbar.z1089-header #language-select,.topbar.z1089-header #login-btn{height:42px!important;min-height:42px!important}
+.topbar.z1089-header #audio-toggle{width:42px!important;padding:0!important;border-radius:12px!important}
+.topbar.z1089-header #language-select{min-width:88px!important;padding-inline:10px!important;font-size:11px!important}
+.topbar.z1089-header #login-btn{max-width:148px!important;padding-inline:15px!important;font-size:11px!important;font-weight:950!important;white-space:nowrap!important}
+.z1089-wallet-chip{
+  height:46px!important;min-width:112px!important;padding:5px 10px 5px 7px!important;display:flex!important;align-items:center!important;gap:8px!important;
+  border:1px solid rgba(255,216,74,.42)!important;border-radius:14px!important;background:linear-gradient(145deg,rgba(35,28,4,.72),rgba(8,13,20,.96))!important;
+  color:#fff!important;cursor:pointer!important;box-shadow:0 0 20px rgba(255,216,74,.08),inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+.z1089-coin{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;flex:0 0 34px;background:radial-gradient(circle at 30% 25%,#fff9c7,#ffd84a 48%,#a56f00);color:#5b3a00;font-weight:1000;font-size:17px;box-shadow:0 0 15px rgba(255,216,74,.22)}
+.z1089-wallet-copy{display:grid;line-height:1.05;text-align:right;min-width:0}.z1089-wallet-copy small{font-size:8px;letter-spacing:1px;opacity:.62;font-weight:900}.z1089-wallet-copy strong{font-size:14px;color:#ffe477;font-weight:1000;margin-top:3px}
+#zivo-nav-toggle{display:none!important}
+.topbar.z1089-header #z1062-menu,.topbar.z1089-header .z1062-menu{display:none!important}
+@media(max-width:1100px){
+  .topbar.z1089-header{grid-template-columns:auto minmax(0,1fr) auto!important;gap:9px!important;padding-inline:11px!important}
+  .topbar.z1089-header .main-nav{gap:0!important}.topbar.z1089-header .main-nav a{padding-inline:8px!important;font-size:10px!important}
+  .topbar.z1089-header .brand-name{font-size:20px!important}.topbar.z1089-header #language-select{min-width:76px!important}
+}
+@media(max-width:900px){
+  .topbar.z1089-header{min-height:60px!important;grid-template-columns:auto 1fr auto!important;padding:7px 9px!important;gap:7px!important}
+  .topbar.z1089-header .brand-mark{width:38px!important;height:38px!important;border-radius:11px!important}
+  .topbar.z1089-header .brand-name{font-size:18px!important}
+  #zivo-nav-toggle{display:flex!important;width:40px!important;height:40px!important;order:2!important}
+  .topbar.z1089-header .main-nav{display:none!important;position:fixed!important;top:68px!important;inset-inline:9px!important;max-height:calc(100dvh - 82px)!important;overflow:auto!important;padding:9px!important;display:none!important;flex-direction:column!important;align-items:stretch!important;gap:3px!important;background:rgba(4,10,19,.98)!important;border:1px solid rgba(35,184,255,.24)!important;border-radius:18px!important;box-shadow:0 24px 70px rgba(0,0,0,.60)!important;z-index:13000!important}
+  body.zivo-nav-open .topbar.z1089-header .main-nav{display:flex!important}
+  .topbar.z1089-header .main-nav a{min-height:48px!important;justify-content:flex-start!important;padding:0 15px!important;font-size:13px!important}
+  .topbar.z1089-header .main-nav a.active:after{display:none!important}
+  .topbar.z1089-header .top-actions{gap:4px!important}
+  .topbar.z1089-header .firebase-status,.topbar.z1089-header #audio-toggle,.topbar.z1089-header #language-select{display:none!important}
+  .topbar.z1089-header #login-btn{max-width:92px!important;height:38px!important;min-height:38px!important;padding-inline:9px!important;font-size:9px!important}
+  .z1089-wallet-chip{min-width:72px!important;height:38px!important;border-radius:11px!important;padding:3px 7px 3px 5px!important;gap:5px!important}
+  .z1089-coin{width:28px;height:28px;flex-basis:28px;font-size:14px}.z1089-wallet-copy small{font-size:7px}.z1089-wallet-copy strong{font-size:12px}
+}
+@media(max-width:480px){
+  .topbar.z1089-header{min-height:58px!important;padding:6px 7px!important}
+  .topbar.z1089-header .brand-name{font-size:16px!important}.topbar.z1089-header .brand-mark{width:35px!important;height:35px!important}
+  .topbar.z1089-header #login-btn{max-width:76px!important;font-size:8px!important;padding-inline:7px!important}
+  .z1089-wallet-chip{min-width:64px!important}.z1089-wallet-copy strong{font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){.topbar.z1089-header *{scroll-behavior:auto!important;transition:none!important}}
