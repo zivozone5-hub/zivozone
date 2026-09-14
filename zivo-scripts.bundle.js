@@ -1451,6 +1451,60 @@ window.ZIVOZONE_V18 = {
     }catch(e){}
     state.osc=[];state.ctx=null;state.master=null;
   }
+  function restoreSession(saved){
+    reset();
+    state.active=true;state.started=true;state.index=Math.max(0,Number(saved.index)||0);
+    state.correct=Math.max(0,Number(saved.correct)||0);state.timed=Math.max(0,Number(saved.timed)||0);
+    state.streak=Math.max(0,Number(saved.streak)||0);state.best=Math.max(0,Number(saved.best)||0);
+    state.answers=Array.isArray(saved.answers)?saved.answers:[];state.times=Array.isArray(saved.times)?saved.times:[];
+    state.phaseStats=saved.phaseStats&&typeof saved.phaseStats==='object'?saved.phaseStats:{};
+    state.questions=Array.isArray(saved.questions)?saved.questions:questionPool();
+    if(state.questions.length<10){reset();clearSession();return false}
+    const root=ensure();root.classList.add('active','playing');document.body.classList.add('z1091-active');
+    root.querySelector('[data-screen="intro"]').hidden=true;root.querySelector('[data-screen="result"]').hidden=true;root.querySelector('[data-screen="gate"]').hidden=true;root.querySelector('[data-screen="game"]').hidden=false;
+    return true;
+  }
+
+  function showGate(){
+    const root=ensure();
+    clearInterval(state.timer);
+    state.active=true;state.started=false;
+    writeSession();
+    root.classList.add('active');root.classList.remove('playing');document.body.classList.add('z1091-active');
+    root.querySelector('[data-screen="intro"]').hidden=true;root.querySelector('[data-screen="game"]').hidden=true;root.querySelector('[data-screen="result"]').hidden=true;root.querySelector('[data-screen="gate"]').hidden=false;
+    root.dataset.phase='gate';
+    try{A().stopChallenge?.();}catch(e){}
+    try{window.speechSynthesis?.cancel?.()}catch(e){}
+  }
+
+  function openAuthGate(mode){
+    const root=ensure();
+    root.querySelector('[data-screen="gate"]').hidden=false;
+    root.classList.remove('playing');
+    const btn=document.getElementById('login-btn');
+    if(btn){
+      btn.dataset.z1091AuthMode=mode;
+      btn.click();
+      if(mode==='login'){
+        setTimeout(()=>document.getElementById('tab-login')?.click(),90);
+      }
+    }else{
+      root.querySelector('[data-screen="gate"]').hidden=false;
+    }
+  }
+
+  function resumeAfterAuth(){
+    const saved=readSession();
+    if(!saved?.locked || !isLoggedIn())return;
+    if(!restoreSession(saved))return;
+    clearSession();
+    const root=ensure();
+    root.querySelector('[data-screen="gate"]').hidden=true;
+    A().unlock?.();A().startChallenge?.('horror');
+    A().narrate?.('تمت استعادة الجلسة. أكمل من حيث توقفت.');
+    setTimeout(()=>render(),180);
+  }
+
   function start(){
     ensureUI();
     state.active=true;state.index=1;state.answered=0;state.phase=1;state.startedAt=Date.now();
@@ -4556,6 +4610,12 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     return typeof o==='string'?o:(o?.[l]??o?.en??o?.ar??'');
   };
   const state={active:false,started:false,index:0,correct:0,timed:0,streak:0,best:0,answers:[],times:[],phaseStats:{},timer:null,deadline:0,questionStarted:0,questions:[]};
+  const GUEST_LIMIT=5;
+  const SESSION_KEY='zivozone_darkroom_v1091_session';
+  const isLoggedIn=()=>!!(window.ZIVOZONE_AUTH?.isLoggedIn?.() || window.firebase?.auth?.()?.currentUser);
+  const readSession=()=>{try{const raw=sessionStorage.getItem(SESSION_KEY);return raw?JSON.parse(raw):null}catch(e){return null}};
+  const writeSession=()=>{try{sessionStorage.setItem(SESSION_KEY,JSON.stringify({locked:true,index:state.index,correct:state.correct,timed:state.timed,streak:state.streak,best:state.best,answers:state.answers,times:state.times,phaseStats:state.phaseStats,questions:state.questions,questionStarted:state.questionStarted,ts:Date.now()}))}catch(e){}};
+  const clearSession=()=>{try{sessionStorage.removeItem(SESSION_KEY)}catch(e){}};
 
   const PHASES=[
     {key:'OBSERVE',ar:'المراقبة',sub:'READ THE ROOM',hint:'راقب التفاصيل. لا تثق بعينك الأولى.',accent:'cyan'},
@@ -4630,6 +4690,20 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
           </div>
           <div class="z1091-footer"><span>NO IMMEDIATE FEEDBACK</span><span class="z1091-live">● LIVE</span></div>
         </section>
+        <section class="z1091-gate" data-screen="gate" hidden aria-modal="true" role="dialog" aria-labelledby="z1091-gate-title">
+          <div class="z1091-gate-signal">ACCESS // LIMITED</div>
+          <div class="z1091-gate-orb">Z</div>
+          <div class="z1091-kicker">DARK ROOM // SESSION LOCKED</div>
+          <h2 id="z1091-gate-title">الغرفة توقفت.</h2>
+          <p class="z1091-gate-main">لقد وصلت إلى الحد المسموح للزائر. التجربة لم تنتهِ… لكنها لا تسمح لك بالعبور إلى المرحلة التالية دون حساب.</p>
+          <div class="z1091-gate-terminal"><span>ACCESS LEVEL:</span><b>GUEST / LIMITED</b><span>SESSION:</span><b>PAUSED</b><span>IDENTITY:</span><b>REQUIRED</b></div>
+          <div class="z1091-gate-actions">
+            <button class="z1091-gate-register" type="button">إنشاء حساب والمتابعة</button>
+            <button class="z1091-gate-login" type="button">تسجيل الدخول</button>
+            <button class="z1091-gate-exit" type="button">الخروج من الغرفة</button>
+          </div>
+          <small class="z1091-gate-note">سيتم حفظ تقدم هذه الجلسة وإعادته بعد تسجيل الدخول.</small>
+        </section>
         <section class="z1091-result" data-screen="result" hidden>
           <div class="z1091-result-orbit"><span>Z</span></div>
           <div class="z1091-kicker">DARK ROOM // SESSION COMPLETE</div>
@@ -4646,6 +4720,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     root.querySelector('.z1091-exit').addEventListener('click',stop);
     root.querySelector('.z1091-result-exit').addEventListener('click',stop);
     root.querySelector('.z1091-retry').addEventListener('click',()=>{reset();begin(true)});
+    root.querySelector('.z1091-gate-register').addEventListener('click',()=>openAuthGate('register'));
+    root.querySelector('.z1091-gate-login').addEventListener('click',()=>openAuthGate('login'));
+    root.querySelector('.z1091-gate-exit').addEventListener('click',()=>{clearSession();stop()});
     root.querySelector('.z1091-sound').addEventListener('click',async()=>{
       await A().unlock?.(); A().toggle?.();
       root.querySelector('.z1091-sound').textContent=A().isEnabled?.()?'🔊':'🔇';
@@ -4660,6 +4737,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
   function begin(fromRetry=false){
     const root=ensure();
+    if(!isLoggedIn()){
+      const saved=readSession();
+      if(saved?.locked){restoreSession(saved);showGate();return}
+    }
     reset();
     state.active=true;state.started=true;state.questions=questionPool();
     if(state.questions.length<10){stop();return}
@@ -4676,9 +4757,12 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
   function start(){
     const root=ensure();
+    const saved=readSession();
+    if(!isLoggedIn() && saved?.locked){showGate();return}
     root.classList.add('active');
     root.querySelector('[data-screen="intro"]').hidden=false;
     root.querySelector('[data-screen="game"]').hidden=true;
+    root.querySelector('[data-screen="gate"]').hidden=true;
     root.querySelector('[data-screen="result"]').hidden=true;
     document.body.classList.add('z1091-active');
     A().unlock?.();
@@ -4698,6 +4782,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
   function render(){
     if(!state.active)return;
+    if(!isLoggedIn() && state.index>=GUEST_LIMIT){showGate();return}
     const q=state.questions[state.index];
     if(!q){finish();return}
     const root=ensure(), phase=PHASES[phaseFor(state.index)], p=phaseFor(state.index);
@@ -4779,6 +4864,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
   async function finish(){
     clearInterval(state.timer);
+    clearSession();
     state.active=false;state.started=false;
     A().stopChallenge?.();A().success?.();
     const accuracy=Math.round(state.correct/10*100);
@@ -4818,6 +4904,12 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if(window.ZIVOZONE_AUTH?.isLoggedIn?.()){
       try{await window.ZIVOZONE_AUTH.saveResult?.({challengeId:'horror',score:state.correct,total:10,xp:Math.max(0,Math.round(final*1.8)),coins:zivoReward,timedOut:state.timed,bestStreak:state.best,darkRoomScore:final,guest:false,language:I?.get?.()||'ar'})}catch(e){}
     }
+  }
+
+  if(!window.__z1091AuthGateBound){
+    window.__z1091AuthGateBound=true;
+    window.addEventListener('zivozone-auth',()=>setTimeout(resumeAfterAuth,250));
+    try{window.firebase?.auth?.()?.onAuthStateChanged?.(()=>setTimeout(resumeAfterAuth,250))}catch(e){}
   }
 
   window.ZIVOZONE_DARKROOM_V1091={start,stop,begin,reset,state};
