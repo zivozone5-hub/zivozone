@@ -114,6 +114,11 @@
   Object.assign(T.zh,{forgotPassword:'忘记密码？',resetTitle:'重置密码',resetHint:'输入您注册的邮箱，我们会发送重置密码的链接给您。',sendReset:'发送重置链接',resetSent:'如果该邮箱已注册，几分钟内会收到密码重置链接。',resetCloudOnly:'密码重置仅适用于已连接云端的账户，请检查您的网络连接。',backToLogin:'返回登录'});
   Object.assign(T.hi,{forgotPassword:'पासवर्ड भूल गए?',resetTitle:'पासवर्ड रीसेट करें',resetHint:'अपना पंजीकृत ईमेल दर्ज करें, हम आपको नया पासवर्ड सेट करने के लिए लिंक भेजेंगे।',sendReset:'रीसेट लिंक भेजें',resetSent:'यदि यह ईमेल हमारे पास पंजीकृत है, तो कुछ मिनटों में पासवर्ड रीसेट लिंक पहुँच जाएगा।',resetCloudOnly:'पासवर्ड रीसेट केवल क्लाउड से जुड़े खातों के लिए उपलब्ध है। कृपया अपना इंटरनेट कनेक्शन जांचें।',backToLogin:'लॉगिन पर वापस जाएँ'});
   Object.assign(T.es,{forgotPassword:'¿Olvidaste tu contraseña?',resetTitle:'Restablecer tu contraseña',resetHint:'Escribe tu correo registrado y te enviaremos un enlace para establecer una nueva contraseña.',sendReset:'Enviar enlace de restablecimiento',resetSent:'Si ese correo está registrado con nosotros, recibirás un enlace para restablecer la contraseña en unos minutos.',resetCloudOnly:'El restablecimiento de contraseña solo está disponible para cuentas conectadas a la nube. Comprueba tu conexión a internet.',backToLogin:'Volver a iniciar sesión'});
+  Object.assign(T.ar,{economyEyebrow:'⭐ اقتصاد ZIVO الحصري ⭐',economyTitle:'اربح ZIVO وأنت تلعب',economySubtitle:'محفظة حقيقية، وتعدين يومي، ومكافأة فورية على كل علامة كاملة — كل عملية محمية على مستوى خادم ZIVOZONE.',walletLabel:'محفظة ZIVO',walletLoginHint:'سجّل الدخول لحفظ رصيدك ومكافآتك.',walletAccountPrefix:'الحساب: ',walletOpenBtn:'💰 المحفظة',miningTitle:'التعدين اليومي',miningDesc:'فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.',mineStartBtn:'بدء التعدين +0.50',mineLoginBtn:'تسجيل الدخول للتعدين',mineAccountRequired:'الحساب مطلوب',mineAvailableNow:'متاح الآن',mineActiveBtn:'التعدين مفعّل',mineAdminBtn:'حساب الإدارة',mineSuccessToast:'تم التعدين بنجاح! +0.50 ZIVO ⛏️',mineErrorToast:'تعذر تفعيل التعدين الآن.',mineAdminBlocked:'حساب الإدارة لا يدخل في نظام التعدين.',mineNotYetAvailable:'التعدين غير متاح بعد.',mineAlreadyToday:'تم احتساب تعدين اليوم بالفعل.',rewardSuccessToast:'علامة كاملة 10/10 — تمت إضافة +10 ZIVO إلى المحفظة 🪙',walletModalLabel:'اقتصاد ZIVOZONE',walletModalTitle:'محفظة ZIVO',walletModalDesc:'رصيد ZIVO داخل المنصة. كل إضافة تمر عبر خادم ZIVOZONE وتظهر في سجل المعاملات.',walletModalLedgerTitle:'آخر المعاملات',walletModalNote:'XP منفصل عن ZIVO. وZIVO منفصل عن Tickets. هذه العملة حاليًا عملة افتراضية داخل المنصة وليست أموالًا نقدية.',ledgerEmpty:'لا توجد معاملات بعد.',ledgerFallbackLabel:'معاملة',ledgerMiningLabel:'التعدين اليومي',ledgerRewardLabelPrefix:'مكافأة تحدي كامل — '});
+  Object.assign(T.en,{economyEyebrow:'⭐ EXCLUSIVE ZIVO ECONOMY ⭐',economyTitle:'Earn ZIVO as you play',economySubtitle:'A real wallet, daily mining, and an instant reward on every perfect score — every transaction is protected at the ZIVOZONE server level.',walletLabel:'ZIVO WALLET',walletLoginHint:'Sign in to save your balance and rewards.',walletAccountPrefix:'Account: ',walletOpenBtn:'💰 Wallet',miningTitle:'Daily mining',miningDesc:'Mine once every 24 hours and get a small ZIVO reward.',mineStartBtn:'Start mining +0.50',mineLoginBtn:'Sign in to mine',mineAccountRequired:'Account required',mineAvailableNow:'Available now',mineActiveBtn:'Mining active',mineAdminBtn:'Admin account',mineSuccessToast:'Mining successful! +0.50 ZIVO ⛏️',mineErrorToast:'Could not activate mining right now.',mineAdminBlocked:'Admin accounts do not take part in the mining system.',mineNotYetAvailable:'Mining is not available yet.',mineAlreadyToday:'The mining reward for today has already been claimed.',rewardSuccessToast:'Perfect 10/10 — +10 ZIVO added to your wallet 🪙',walletModalLabel:'ZIVOZONE ECONOMY',walletModalTitle:'ZIVO Wallet',walletModalDesc:'Your ZIVO balance on the platform. Every addition passes through the ZIVOZONE server and appears in the transaction log.',walletModalLedgerTitle:'Recent transactions',walletModalNote:'XP is separate from ZIVO, and ZIVO is separate from Tickets. This currency is currently a virtual in-platform balance, not real money.',ledgerEmpty:'No transactions yet.',ledgerFallbackLabel:'Transaction',ledgerMiningLabel:'Daily mining',ledgerRewardLabelPrefix:'Perfect challenge reward — '});
+  Object.assign(T.zh,{economyEyebrow:'⭐ ZIVO 专属经济系统 ⭐',economyTitle:'边玩边赚 ZIVO',economySubtitle:'真实钱包、每日挖矿，满分即时奖励——每笔交易都受 ZIVOZONE 服务器保护。',walletLabel:'ZIVO 钱包',walletLoginHint:'登录以保存您的余额和奖励。',walletAccountPrefix:'账户：',walletOpenBtn:'💰 钱包',miningTitle:'每日挖矿',miningDesc:'每24小时可挖矿一次，获得少量 ZIVO 奖励。',mineStartBtn:'开始挖矿 +0.50',mineLoginBtn:'登录后挖矿',mineAccountRequired:'需要账户',mineAvailableNow:'现在可用',mineActiveBtn:'挖矿进行中',mineAdminBtn:'管理员账户',mineSuccessToast:'挖矿成功！+0.50 ZIVO ⛏️',mineErrorToast:'暂时无法开始挖矿。',mineAdminBlocked:'管理员账户不参与挖矿系统。',mineNotYetAvailable:'挖矿尚未开放。',mineAlreadyToday:'今日挖矿已完成。',rewardSuccessToast:'满分 10/10 — 已添加 +10 ZIVO 到您的钱包 🪙',walletModalLabel:'ZIVOZONE 经济系统',walletModalTitle:'ZIVO 钱包',walletModalDesc:'您在平台上的 ZIVO 余额。每次增加都会经过 ZIVOZONE 服务器并显示在交易记录中。',walletModalLedgerTitle:'最近交易',walletModalNote:'XP 与 ZIVO 是分开的，ZIVO 与 Tickets 也是分开的。此货币目前只是平台内的虚拟余额，并非真实货币。',ledgerEmpty:'暂无交易记录。',ledgerFallbackLabel:'交易',ledgerMiningLabel:'每日挖矿',ledgerRewardLabelPrefix:'满分挑战奖励 — '});
+  Object.assign(T.hi,{economyEyebrow:'⭐ एक्सक्लूसिव ZIVO इकोनॉमी ⭐',economyTitle:'खेलते हुए ZIVO कमाएँ',economySubtitle:'असली वॉलेट, डेली माइनिंग, और हर परफेक्ट स्कोर पर तुरंत इनाम — हर लेनदेन ZIVOZONE सर्वर स्तर पर सुरक्षित है।',walletLabel:'ZIVO वॉलेट',walletLoginHint:'अपना बैलेंस और इनाम बचाने के लिए लॉगिन करें।',walletAccountPrefix:'अकाउंट: ',walletOpenBtn:'💰 वॉलेट',miningTitle:'डेली माइनिंग',miningDesc:'हर 24 घंटे में एक बार माइन करें और थोड़ा ZIVO इनाम पाएं।',mineStartBtn:'माइनिंग शुरू करें +0.50',mineLoginBtn:'माइन करने के लिए लॉगिन करें',mineAccountRequired:'अकाउंट चाहिए',mineAvailableNow:'अभी उपलब्ध',mineActiveBtn:'माइनिंग सक्रिय',mineAdminBtn:'एडमिन अकाउंट',mineSuccessToast:'माइनिंग सफल! +0.50 ZIVO ⛏️',mineErrorToast:'अभी माइनिंग शुरू नहीं हो सकी।',mineAdminBlocked:'एडमिन अकाउंट माइनिंग सिस्टम में शामिल नहीं होते।',mineNotYetAvailable:'माइनिंग अभी उपलब्ध नहीं है।',mineAlreadyToday:'आज की माइनिंग पहले ही ली जा चुकी है।',rewardSuccessToast:'परफेक्ट 10/10 — आपके वॉलेट में +10 ZIVO जोड़ा गया 🪙',walletModalLabel:'ZIVOZONE इकोनॉमी',walletModalTitle:'ZIVO वॉलेट',walletModalDesc:'प्लेटफ़ॉर्म पर आपका ZIVO बैलेंस। हर जोड़ ZIVOZONE सर्वर से होकर गुजरता है और लेनदेन लॉग में दिखता है।',walletModalLedgerTitle:'हाल के लेनदेन',walletModalNote:'XP, ZIVO से अलग है, और ZIVO, Tickets से अलग है। यह करेंसी फ़िलहाल केवल प्लेटफ़ॉर्म के अंदर की वर्चुअल बैलेंस है, असली पैसा नहीं।',ledgerEmpty:'अभी तक कोई लेनदेन नहीं।',ledgerFallbackLabel:'लेनदेन',ledgerMiningLabel:'डेली माइनिंग',ledgerRewardLabelPrefix:'परफेक्ट चैलेंज इनाम — '});
+  Object.assign(T.es,{economyEyebrow:'⭐ ECONOMÍA EXCLUSIVA ZIVO ⭐',economyTitle:'Gana ZIVO mientras juegas',economySubtitle:'Una billetera real, minería diaria y una recompensa instantánea en cada puntuación perfecta — cada transacción está protegida a nivel del servidor de ZIVOZONE.',walletLabel:'BILLETERA ZIVO',walletLoginHint:'Inicia sesión para guardar tu saldo y recompensas.',walletAccountPrefix:'Cuenta: ',walletOpenBtn:'💰 Billetera',miningTitle:'Minería diaria',miningDesc:'Mina una vez cada 24 horas y obtén una pequeña recompensa en ZIVO.',mineStartBtn:'Empezar a minar +0.50',mineLoginBtn:'Inicia sesión para minar',mineAccountRequired:'Cuenta requerida',mineAvailableNow:'Disponible ahora',mineActiveBtn:'Minería activa',mineAdminBtn:'Cuenta de administrador',mineSuccessToast:'¡Minería exitosa! +0.50 ZIVO ⛏️',mineErrorToast:'No se pudo activar la minería en este momento.',mineAdminBlocked:'Las cuentas de administrador no participan en el sistema de minería.',mineNotYetAvailable:'La minería aún no está disponible.',mineAlreadyToday:'La minería de hoy ya fue reclamada.',rewardSuccessToast:'Puntuación perfecta 10/10 — se añadieron +10 ZIVO a tu billetera 🪙',walletModalLabel:'ECONOMÍA ZIVOZONE',walletModalTitle:'Billetera ZIVO',walletModalDesc:'Tu saldo de ZIVO en la plataforma. Cada adición pasa por el servidor de ZIVOZONE y aparece en el registro de transacciones.',walletModalLedgerTitle:'Transacciones recientes',walletModalNote:'El XP es independiente del ZIVO, y el ZIVO es independiente de los Tickets. Esta moneda es actualmente un saldo virtual dentro de la plataforma, no dinero real.',ledgerEmpty:'Aún no hay transacciones.',ledgerFallbackLabel:'Transacción',ledgerMiningLabel:'Minería diaria',ledgerRewardLabelPrefix:'Recompensa por desafío perfecto — '});
   function get(){return localStorage.getItem(LANG_KEY)||'ar'}
   function set(lang){if(!LANGS.includes(lang))lang='ar';localStorage.setItem(LANG_KEY,lang);document.documentElement.lang=lang;document.documentElement.dir=DIR[lang];window.dispatchEvent(new CustomEvent('zivozone-language',{detail:{lang}}));return lang}
   function tr(key,lang=get()){return (T[lang]&&T[lang][key])||T.ar[key]||key}
@@ -3622,6 +3627,7 @@ window.ZIVOZONE_V18 = {
   const auth=()=>{try{return F()?.auth?.()||null}catch(_){return null}};
   const db=()=>{try{return F()?.firestore?.()||null}catch(_){return null}};
   const user=()=>auth()?.currentUser||null;
+  const zt=k=>{try{return window.zivoT?window.zivoT(k):(window.ZIVOZONE_I18N?.tr?.(k)||k)}catch(_){return k}};
   const state={uid:null,zivo:0,ledger:[],nextMiningAt:0,loading:false};
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const num=v=>Math.max(0,Number(v)||0);
@@ -3711,24 +3717,25 @@ window.ZIVOZONE_V18 = {
     root.innerHTML=`
       <div class="section-heading">
         <div>
-          <span class="eyebrow z101-eyebrow">⭐ اقتصاد ZIVO الحصري ⭐</span>
-          <h2>اربح ZIVO وأنت تلعب</h2>
-          <p class="muted">محفظة حقيقية، وتعدين يومي، ومكافأة فورية على كل علامة كاملة — كل عملية محمية على مستوى خادم ZIVOZONE.</p>
+          <span class="eyebrow z101-eyebrow" data-i18n="economyEyebrow">${esc(zt('economyEyebrow'))}</span>
+          <h2 data-i18n="economyTitle">${esc(zt('economyTitle'))}</h2>
+          <p class="muted" data-i18n="economySubtitle">${esc(zt('economySubtitle'))}</p>
         </div>
       </div>
       <div class="z101-economy">
         <article class="z101-card z101-wallet">
-          <div class="z101-coin">Z</div><div><div class="z101-label">ZIVO WALLET</div><div id="z101-balance" class="z101-balance">0 ZIVO</div><div id="z101-wallet-status" class="z101-sub">سجّل الدخول لحفظ رصيدك ومكافآتك.</div></div>
-          <div class="z101-wallet-actions"><button id="z101-wallet-open" class="z101-btn">💰 المحفظة</button></div>
+          <div class="z101-coin">Z</div><div><div class="z101-label" data-i18n="walletLabel">${esc(zt('walletLabel'))}</div><div id="z101-balance" class="z101-balance">0 ZIVO</div><div id="z101-wallet-status" class="z101-sub" data-i18n="walletLoginHint">${esc(zt('walletLoginHint'))}</div></div>
+          <div class="z101-wallet-actions"><button id="z101-wallet-open" class="z101-btn" data-i18n="walletOpenBtn">${esc(zt('walletOpenBtn'))}</button></div>
         </article>
         <article class="z101-card z101-mining">
-          <div class="z101-mining-icon">⛏️</div><div><h3>التعدين اليومي</h3><p>فعّل التعدين مرة كل 24 ساعة واحصل على مكافأة ZIVO صغيرة.</p><div id="z101-countdown" class="z101-countdown">—</div></div>
-          <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary">بدء التعدين +0.50</button></div>
+          <div class="z101-mining-icon">⛏️</div><div><h3 data-i18n="miningTitle">${esc(zt('miningTitle'))}</h3><p data-i18n="miningDesc">${esc(zt('miningDesc'))}</p><div id="z101-countdown" class="z101-countdown">—</div></div>
+          <div class="z101-mine-action"><button id="z101-mine" class="z101-btn primary" data-i18n="mineStartBtn">${esc(zt('mineStartBtn'))}</button></div>
         </article>
       </div>`;
     anchor.insertAdjacentElement('afterend',root);
     root.querySelector('#z101-wallet-open').onclick=openWallet;
     root.querySelector('#z101-mine').onclick=mine;
+    window.addEventListener('zivozone-language',()=>{syncUI()});
   }
 
   async function ensureWalletForUser(u){
@@ -3756,22 +3763,22 @@ window.ZIVOZONE_V18 = {
     const bal=`${Number(state.zivo).toFixed(state.zivo%1?2:0)} ZIVO`;
     document.querySelectorAll('#z101-balance,[data-v101-balance]').forEach(x=>x.textContent=bal);
     const p=document.getElementById('profile-coins');if(p)p.textContent=String(state.zivo);
-    const status=document.getElementById('z101-wallet-status');if(status)status.textContent=user()?`الحساب: ${user().email||'مستخدم ZIVOZONE'}`:'سجّل الدخول لحفظ رصيدك ومكافآتك.';
+    const status=document.getElementById('z101-wallet-status');if(status)status.textContent=user()?`${zt('walletAccountPrefix')}${user().email||'ZIVOZONE'}`:zt('walletLoginHint');
     updateMiningUI();
   }
   function updateMiningUI(){
     const b=document.getElementById('z101-mine'),c=document.getElementById('z101-countdown');if(!b||!c)return;
-    if(!user()){b.textContent='تسجيل الدخول للتعدين';b.disabled=false;c.textContent='الحساب مطلوب';return;} if(user().email?.toLowerCase()==='raefalbtish@gmail.com'){b.textContent='حساب الإدارة';b.disabled=true;c.textContent='ADMIN';return;}
+    if(!user()){b.textContent=zt('mineLoginBtn');b.disabled=false;c.textContent=zt('mineAccountRequired');return;} if(user().email?.toLowerCase()==='raefalbtish@gmail.com'){b.textContent=zt('mineAdminBtn');b.disabled=true;c.textContent='ADMIN';return;}
     const left=Math.max(0,(state.nextMiningAt||0)-Date.now());
-    if(left<=0){b.textContent='بدء التعدين +0.50';b.disabled=false;c.textContent='متاح الآن';c.classList.add('z101-ready')}
-    else{b.textContent='التعدين مفعّل';b.disabled=true;c.classList.remove('z101-ready');c.textContent=formatMs(left)}
+    if(left<=0){b.textContent=zt('mineStartBtn');b.disabled=false;c.textContent=zt('mineAvailableNow');c.classList.add('z101-ready')}
+    else{b.textContent=zt('mineActiveBtn');b.disabled=true;c.classList.remove('z101-ready');c.textContent=formatMs(left)}
   }
   function formatMs(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`}
 
   async function mine(){
     const u=user(),d=db();
     if(!u){document.querySelector('#login-btn,[data-action="login"]')?.click();return}
-    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast('حساب الإدارة لا يدخل في نظام التعدين.');return}
+    if(u.email?.toLowerCase()==='raefalbtish@gmail.com'){toast(zt('mineAdminBlocked'));return}
     const b=document.getElementById('z101-mine');if(b)b.disabled=true;
     try{
       const wallet=d.collection('users').doc(u.uid).collection('zivozone').doc('wallet');
@@ -3780,17 +3787,21 @@ window.ZIVOZONE_V18 = {
       await d.runTransaction(async tx=>{
         const [ws,ms,ls]=await Promise.all([tx.get(wallet),tx.get(mining),tx.get(ledger)]);
         const now=Date.now(), previous=ms.exists?(ms.data()?.nextMiningAt):null, prevMs=previous?.toMillis?.()||Number(previous)||0;
-        if(prevMs>now)throw new Error('التعدين غير متاح بعد.');
-        if(ls.exists)throw new Error('تم احتساب تعدين اليوم بالفعل.');
+        if(prevMs>now){const err=new Error('not_yet_available');err.code='MINE_NOT_YET';throw err}
+        if(ls.exists){const err=new Error('already_claimed_today');err.code='MINE_ALREADY_TODAY';throw err}
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
         tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
         tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000),amount:0.5,version:'spark-v1057'},{merge:true});
-        tx.set(ledger,{type:'daily_mining',label:'التعدين اليومي',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'client-rules'});
+        tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'client-rules'});
       });
       await refresh();
-      toast('تم التعدين بنجاح! +0.50 ZIVO ⛏️');
-    }catch(e){console.warn('ZIVO mining:',e);toast(e?.message||'تعذر تفعيل التعدين الآن.');await refresh()}
+      toast(zt('mineSuccessToast'));
+    }catch(e){
+      console.warn('ZIVO mining:',e);
+      const msg=e?.code==='MINE_NOT_YET'?zt('mineNotYetAvailable'):e?.code==='MINE_ALREADY_TODAY'?zt('mineAlreadyToday'):zt('mineErrorToast');
+      toast(msg);await refresh();
+    }
   }
 
   async function reward(amount,type,label,meta={}){ return false; }
@@ -3812,19 +3823,19 @@ window.ZIVOZONE_V18 = {
       const result=fire.collection('players').doc(u.uid).collection('results').doc(attemptId.slice(0,100));
       await fire.runTransaction(async tx=>{
         const [ws,ls,cs]=await Promise.all([tx.get(wallet),tx.get(ledger),tx.get(claim)]);
-        if(ls.exists)throw new Error('تم احتساب هذه المحاولة مسبقًا.');
+        if(ls.exists){const err=new Error('already_claimed');err.code='REWARD_ALREADY_CLAIMED';throw err}
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
         tx.set(claim,{claimId:attemptId,challenge,total,correct,timedOut:0,amount:10,consumedAt:fv.serverTimestamp(),createdAt:fv.serverTimestamp(),status:'consumed',policy:'10_of_10_only'},{merge:true});
         tx.set(wallet,{zivo:current+10,updatedAt:fv.serverTimestamp(),mode:'spark-client-rules'},{merge:true});
-        tx.set(ledger,{type:'challenge_reward',label:`مكافأة تحدي كامل — ${challenge}`,amount:10,eventId:ledger.id,attemptId,challenge,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'client-rules',policy:'10_of_10_only'});
+        tx.set(ledger,{type:'challenge_reward',label:'challenge_reward',challenge,amount:10,eventId:ledger.id,attemptId,total,correct,timedOut:0,scorePercent:100,createdAt:fv.serverTimestamp(),source:'client-rules',policy:'10_of_10_only'});
       });
       await refresh();
-      toast('علامة كاملة 10/10 — تمت إضافة +10 ZIVO إلى المحفظة 🪙');
+      toast(zt('rewardSuccessToast'));
       return true;
     }catch(e){
       console.warn('ZIVO challenge reward',e);
-      if(String(e?.message||'').includes('مسبقًا')){await refresh();return true}
+      if(e?.code==='REWARD_ALREADY_CLAIMED'){await refresh();return true}
       return false;
     }
   }
@@ -3835,13 +3846,20 @@ window.ZIVOZONE_V18 = {
     let o=document.getElementById('z101-wallet-modal');
     if(!o){
       o=document.createElement('div');o.id='z101-wallet-modal';o.className='z101-overlay';
-      o.innerHTML=`<div class="z101-modal" dir="rtl"><div class="z101-modal-head"><div><div class="z101-label">ZIVOZONE ECONOMY</div><h2>محفظة ZIVO</h2></div><button class="z101-modal-close">×</button></div><div id="z101-modal-balance" class="z101-modal-balance">0 ZIVO</div><p>رصيد ZIVO داخل المنصة. كل إضافة تمر عبر خادم ZIVOZONE وتظهر في سجل المعاملات.</p><div class="z101-ledger"><div class="z101-ledger-title">آخر المعاملات</div><div id="z101-modal-ledger" class="z101-ledger-list"></div></div><div class="z101-note">XP منفصل عن ZIVO. وZIVO منفصل عن Tickets. هذه العملة حاليًا عملة افتراضية داخل المنصة وليست أموالًا نقدية.</div></div>`;
-      document.body.appendChild(o);o.querySelector('.z101-modal-close').onclick=()=>o.classList.remove('open');o.onclick=e=>{if(e.target===o)o.classList.remove('open')};
+      document.body.appendChild(o);o.onclick=e=>{if(e.target===o)o.classList.remove('open')};
     }
+    o.innerHTML=`<div class="z101-modal" dir="${document.documentElement.dir||'rtl'}"><div class="z101-modal-head"><div><div class="z101-label">${esc(zt('walletModalLabel'))}</div><h2>${esc(zt('walletModalTitle'))}</h2></div><button class="z101-modal-close">×</button></div><div id="z101-modal-balance" class="z101-modal-balance">0 ZIVO</div><p>${esc(zt('walletModalDesc'))}</p><div class="z101-ledger"><div class="z101-ledger-title">${esc(zt('walletModalLedgerTitle'))}</div><div id="z101-modal-ledger" class="z101-ledger-list"></div></div><div class="z101-note">${esc(zt('walletModalNote'))}</div></div>`;
+    o.querySelector('.z101-modal-close').onclick=()=>o.classList.remove('open');
     o.classList.add('open');
     o.querySelector('#z101-modal-balance').textContent=`${Number(state.zivo).toFixed(state.zivo%1?2:0)} ZIVO`;
+    const ledgerLabel=x=>{
+      if(x.type==='daily_mining')return zt('ledgerMiningLabel');
+      if(x.type==='challenge_reward')return `${zt('ledgerRewardLabelPrefix')}${esc(x.challenge||'')}`;
+      return x.label||x.type||zt('ledgerFallbackLabel');
+    };
     const list=o.querySelector('#z101-modal-ledger');
-    list.innerHTML=state.ledger.length?state.ledger.map(x=>`<div class="z101-ledger-row"><span>${esc(x.label||x.type||'معاملة')}</span><b>${Number(x.amount)>0?'+':''}${Number(x.amount)||0}</b><small>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleString('ar-JO'):'—'}</small></div>`).join(''):'<p>لا توجد معاملات بعد.</p>';
+    const locale=(document.documentElement.lang==='ar')?'ar-JO':(document.documentElement.lang||'en');
+    list.innerHTML=state.ledger.length?state.ledger.map(x=>`<div class="z101-ledger-row"><span>${ledgerLabel(x)}</span><b>${Number(x.amount)>0?'+':''}${Number(x.amount)||0}</b><small>${x.createdAt?.toDate?x.createdAt.toDate().toLocaleString(locale):'—'}</small></div>`).join(''):`<p>${esc(zt('ledgerEmpty'))}</p>`;
   }
 
   function bind(){
