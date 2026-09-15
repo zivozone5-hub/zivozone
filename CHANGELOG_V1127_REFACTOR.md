@@ -1,0 +1,97 @@
+# ZIVOZONE V1127 → V1128 — Real Refactor (not another patch layer)
+
+This pass fixes the specific pattern that caused the messy topbar and
+the "too many internal operations" feeling: every previous version
+added a new file/rule on top of the old ones instead of removing them.
+This changelog documents exactly what changed, with evidence, so it
+can be audited line by line — nothing here is cosmetic renaming.
+
+## 1. `core/runtime.js` (144KB monolith) is gone — split into real files
+
+The old file was literally 16 historical version-files concatenated
+with `/* ===== CONSOLIDATED CORE SERVICE ===== */` comments between
+them. It has been split into `core/modules/runtime/*.js`, one real
+file per domain: `audio.js`, `i18n.js`, `ads.js`, `auth-core.js`,
+`app-shell.js`, `dedupe.js`, `question-history.js`,
+`server-adapter.js`, `engagement.js`, `live-hud.js`.
+
+**Verified safe:** the extraction was done mechanically (each section
+was already a self-contained `(() => {...})()` block) and diffed
+byte-for-byte against the original file after stripping comments —
+the code inside each function is untouched, only its file location
+changed.
+
+## 2. Six dead modules removed from the page load
+
+Auditing which global objects are actually *called* anywhere in the
+app (as opposed to just defined) found 6 of the 16 extracted modules
+have zero real callers. They are moved to `dev/parked-legacy/` and no
+longer loaded by `index.html`. Full evidence for each is in
+`dev/parked-legacy/README.md`. Net effect: fewer scripts on every
+page load, and no more pointless Firestore health-check network call
+that `cloud-core.js` ran on every signed-in page view for a queue
+that could never be filled.
+
+## 3. Fixed a real bug: in-challenge level could disagree with profile level
+
+`live-hud.js` (the small overlay shown during a challenge) was reading
+a separate tracker (`ZIVOZONE_V21`) that computed XP/level with a
+**different formula** than the canonical player profile
+(`core/modules/player.js`). It now reads
+`window.ZIVOZONE.Player.get()` directly, the same source the profile
+page uses. Same numbers everywhere, always.
+
+## 4. Topbar CSS: 4 conflicting rules → 1 canonical rule
+
+`core/styles/index.css` had the *same* `.topbar` selector redefined
+4 times, each with `!important`, each from a different historical
+"redesign" — two of which explicitly say in their own comments that
+they are "the final layer" / "the single source of truth going
+forward" (V1088 and V1089), yet neither deleted what came before it.
+A third, later attempt (V1089, "CLEAN HEADER / RESPONSIVE SHELL") was
+never even wired up — it only applied to an element carrying the class
+`z1089-header`, which no code anywhere ever adds — so ~74 lines of
+that entire redesign (colors, grid layout, a gold wallet chip) were
+completely inert and have been deleted outright.
+
+The other 3 real, currently-rendering `.topbar` rules were merged
+into one canonical rule holding today's actual computed values (verified
+by resolving the CSS cascade by hand: last-declared `!important` wins
+per property). Visually nothing changes — this is the same topbar,
+just declared once instead of four times, so the next person editing
+it only has one place to look.
+
+**Before:** 4 `.topbar{...}` blocks, 1 dead 74-line skin.
+**After:** 1 `.topbar{...}` block. Verified CSS still parses (balanced
+braces) after the edit.
+
+## 5. What this pass does NOT cover yet (be aware of these)
+
+Being honest about scope — these are real, documented next steps, not
+silently ignored:
+
+- Other duplicated CSS class families found in the same audit
+  (`.challenge-card` × 11, and ~10 more with 3–7 duplicate
+  definitions) follow the exact same pattern as `.topbar` but were
+  not individually resolved in this pass — recommend repeating the
+  same fold-in technique used above, one component at a time, with a
+  visual check after each.
+- `server-adapter.js` (V46) is kept active because `auth.js` calls its
+  `flush()`, but its `submit()` is still never called — see the note
+  at the bottom of `dev/parked-legacy/README.md`.
+- No build tool (Vite/esbuild) was introduced — the site still ships
+  as plain unbundled files, which was a deliberate choice to avoid
+  requiring a Node/npm build step you'd need to run before every
+  deploy. This remains a good next investment if you want smaller,
+  compressed bundles.
+- The hardcoded admin email in `firestore.rules` / `config.js` was
+  flagged in the review but not changed here — that requires a
+  Firebase custom-claim change on the account itself, done from the
+  Firebase console, not just a code edit.
+
+## File map: old → new
+
+| Old | New |
+|---|---|
+| `core/runtime.js` (144KB, 1265 lines) | `core/modules/runtime/{audio,i18n,ads,auth-core,app-shell,dedupe,question-history,server-adapter,engagement,live-hud}.js` |
+| — (6 dead sub-modules inside runtime.js) | `dev/parked-legacy/{rotation-v18,rotation-v22,cloud-progression-v21,cloud-core-v43,score-gate-v45,smart-metrics-v23}.js` |

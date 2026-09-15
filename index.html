@@ -214,7 +214,23 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 </script>
 <script src="core/config.js?v=1127.0"></script>
 <script src="core/modules/question-bank.js?v=1127.0"></script>
-<script src="core/runtime.js?v=1127.0"></script>
+<!-- V1127 refactor: core/runtime.js (a 144KB file pasted together from 16
+     historical version files) has been split into real, separate modules.
+     Dead sub-modules that runtime.js used to load but that nothing in the
+     app ever called (rotation V18/V22, cloud-progression V21, cloud-core
+     V43, score-gate V45, smart-metrics V23) are parked under
+     dev/parked-legacy/ and intentionally NOT loaded here.
+     See CHANGELOG_V1127_REFACTOR.md for the full evidence trail. -->
+<script src="core/modules/runtime/audio.js?v=1128.0"></script>
+<script src="core/modules/runtime/i18n.js?v=1128.0"></script>
+<script src="core/modules/runtime/ads.js?v=1128.0"></script>
+<script src="core/modules/runtime/auth-core.js?v=1128.0"></script>
+<script src="core/modules/runtime/app-shell.js?v=1128.0"></script>
+<script src="core/modules/runtime/dedupe.js?v=1128.0"></script>
+<script src="core/modules/runtime/question-history.js?v=1128.0"></script>
+<script src="core/modules/runtime/server-adapter.js?v=1128.0"></script>
+<script src="core/modules/runtime/engagement.js?v=1128.0"></script>
+<script src="core/modules/runtime/live-hud.js?v=1128.0"></script>
 <script src="core/modules/match-center.js?v=1127.0"></script>
 <script src="core/modules/auth.js?v=1127.0"></script>
 <script src="core/modules/player.js?v=1127.0"></script>
