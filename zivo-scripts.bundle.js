@@ -3863,7 +3863,7 @@ window.ZIVOZONE_V18 = {
         const current=num(ws.data()?.zivo);
         const fv=F().firestore.FieldValue;
         tx.set(wallet,{zivo:current+0.5,updatedAt:fv.serverTimestamp(),mode:'zivozone-economy-v1089'},{merge:true});
-        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000),amount:0.5,version:'v1089'},{merge:true});
+        tx.set(mining,{lastMiningAt:fv.serverTimestamp(),nextMiningAt:new Date(now+86400000+300000),amount:0.5,version:'v1089'},{merge:true});
         tx.set(ledger,{type:'daily_mining',label:'daily_mining',amount:0.5,eventId:ledger.id,createdAt:fv.serverTimestamp(),source:'zivozone-v1089'});
       });
       await refresh();
