@@ -25,3 +25,6 @@ V31, V33, V34 and V37 no longer reference V26. They use V30 as the player identi
 
 ## Rule
 No additional legacy removal should be performed until the production deployment is manually smoke-tested for Auth, Player, Wallet, Mining, Challenges, News, Dark Room, Profile, Admin and Mobile navigation.
+
+
+V1100: Economy migrated from legacy global core into core/modules/economy.js; Wallet, Mining, Perfect Rewards, Mission/Competition credits and Ledger use one canonical Economy contract. Legacy global economy is archived and not loaded.
