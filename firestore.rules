@@ -35,10 +35,9 @@ service cloud.firestore {
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')) ||
           (request.resource.data.zivo == resource.data.zivo + 10 &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.amount == 10 &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.type == 'challenge_reward' &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.consumedAt == request.time) ||
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.amount == 10 &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.status == 'consumed' &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.consumedAt == request.time) ||
           (request.resource.data.zivo == resource.data.zivo + 1 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.amount == 1 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
@@ -81,10 +80,9 @@ service cloud.firestore {
         allow create: if isSelf(userId)
           && request.resource.data.status == 'consumed'
           && request.resource.data.claimId == claimId
-          && request.resource.data.type in ['mission_reward','competition_reward','challenge_reward']
+          && request.resource.data.type in ['mission_reward','competition_reward']
           && ((request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2])
-            || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5])
-            || (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10 && request.resource.data.policy == '10_of_10_only'))
+            || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]))
           && request.resource.data.consumedAt == request.time;
         allow update,delete: if false;
       }

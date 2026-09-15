@@ -1,27 +1,19 @@
-# ZIVOZONE V1120 — UNIFIED CORE
+# ZIVOZONE V1120 — TRUE UNIFIED CORE PACKAGE
 
-Implemented order: State → Auth → Player → Challenges → Rewards → Economy → Cloud → UI → Legacy Removal.
+This package is the audited V1111 foundation repackaged into a single runtime boundary.
 
-## Canonical owners
-- State: `core/modules/state.js`
-- Auth boundary: `core/modules/auth.js`
-- Player/Progress: `core/modules/player.js`
-- Challenges: `core/modules/challenges.js`
-- Rewards: `core/modules/rewards.js`
-- Economy: `core/modules/economy.js`
-- Cloud: `core/modules/cloud.js`
-- UI: `core/modules/ui.js`
+## Canonical order
+State → Auth → Player → Challenges → Rewards → Economy → Cloud → UI
 
-## Safety
-Legacy challenge/auth runtime is isolated as compatibility infrastructure because the production challenge renderer still depends on it. Obsolete V34–V104 runtime scripts and the duplicate V1080/V1081 hubs are no longer loaded by `index.html`.
+## Runtime boundary
+All historical runtime scripts are consolidated into `core/runtime/compatibility-engine.js` and are no longer loaded as scattered `core/legacy/*.js` files. V1080/V1081 superseded core layers are excluded from the runtime bundle.
 
-## Important fixes
-- One State store with migration from V8/V17/V30/V35.
-- Player reads/writes through State.
-- Perfect 10/10 reward claim is idempotent per attempt instead of one global claim document.
-- Rewards have one public contract.
-- Economy is the sole ZIVO ledger writer.
-- Boot diagnostics verify canonical modules.
+## Safety rule
+The compatibility engine remains intentionally isolated because the challenge bank and challenge-center implementation still contain historical dependencies. It is not considered final application architecture; it is the controlled migration boundary for the next E2E-tested removal.
 
-## Next deletion gate
-After browser smoke tests prove login/register/logout, challenge start/answer/finish, 10/10 +10 ZIVO, mining, wallet ledger, daily/mission/competition, news and admin routes, remaining compatibility files can be removed in a second controlled pass.
+## Verification performed
+- All JavaScript files syntax-checked.
+- index.html script references checked against package files.
+- No `core/legacy/*.js` references remain in index.html.
+- V1080/V1081 runtime files are excluded.
+- Canonical State, Auth, Player, Challenges, Economy, Cloud, Rewards and UI contracts are loaded.
