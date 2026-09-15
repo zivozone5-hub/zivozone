@@ -19,5 +19,5 @@
 هذا المشروع يحتوي طبقات CSS/JS متعددة متراكمة فوق بعض بدل دمجها بملف واحد. الخطة القادمة (موثقة بمحادثات التطوير) هي دمجها بدون أي تغيير على الشكل أو الوظائف.
 
 
-## V1096 ARCHITECTURE CORE
-See `V1096_ARCHITECTURE.md` and `CHANGELOG_V1096.md`.
+## V1097 ARCHITECTURE CORE
+See `V1097_ARCHITECTURE.md` and `CHANGELOG_V1097.md`.

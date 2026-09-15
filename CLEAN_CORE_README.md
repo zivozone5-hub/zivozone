@@ -6,7 +6,7 @@ This build is a conservative engineering refactor of V1095.
 - Official Admin email remains `raefalbtish@gmail.com`.
 - Existing runtime behavior is preserved as the priority.
 - Historical archive/changelog folders are excluded from the production package.
-- Runtime is moved to `core/runtime/zivo-runtime.js`.
+- Runtime is moved to `core/legacy/*.js`.
 - Configuration is centralized in `core/config.js`.
 - Non-invasive diagnostics are available through `window.ZIVOZONE_CLEAN_CORE`.
 - No paid service, VPS, paid API, or new backend is introduced.
