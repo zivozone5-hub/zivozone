@@ -1,19 +1,19 @@
-# ZIVOZONE V1120 — TRUE UNIFIED CORE PACKAGE
+# ZIVOZONE V1120 — TRUE UNIFIED CORE / CLEANED
 
-This package is the audited V1111 foundation repackaged into a single runtime boundary.
+## Canonical modules
+State → Auth → Player → Challenges → Rewards → Economy → Cloud → UI.
 
-## Canonical order
-State → Auth → Player → Challenges → Rewards → Economy → Cloud → UI
+## Restored
+- Player Profile + Player Hub entry point.
+- ZIVO Hub with Wallet + Mining.
+- Canonical Rewards facade.
+- Service worker shell updated to V1120; stale V1110/legacy shell references removed.
 
-## Runtime boundary
-All historical runtime scripts are consolidated into `core/runtime/compatibility-engine.js` and are no longer loaded as scattered `core/legacy/*.js` files. V1080/V1081 superseded core layers are excluded from the runtime bundle.
+## Cleanup
+Historical changelogs and archived runtime artifacts are not shipped. Active challenge compatibility remains isolated because the challenge engine still depends on its current bank/auth runtime. It must not be deleted until E2E challenge tests pass.
 
-## Safety rule
-The compatibility engine remains intentionally isolated because the challenge bank and challenge-center implementation still contain historical dependencies. It is not considered final application architecture; it is the controlled migration boundary for the next E2E-tested removal.
-
-## Verification performed
-- All JavaScript files syntax-checked.
-- index.html script references checked against package files.
-- No `core/legacy/*.js` references remain in index.html.
-- V1080/V1081 runtime files are excluded.
-- Canonical State, Auth, Player, Challenges, Economy, Cloud, Rewards and UI contracts are loaded.
+## Static QA
+- All local script sources exist.
+- All JavaScript files pass Node syntax validation.
+- No `core/legacy/*` paths are referenced by `index.html` or the service worker.
+- Rewards module is present and loaded before Economy.
