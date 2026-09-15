@@ -1542,3 +1542,15 @@ body.zivo-nav-open #zivo-nav-toggle span:nth-child(3){transform:translateY(-4px)
 @keyframes horrorIntroFlicker{0%,100%{opacity:1}45%{opacity:1}47%{opacity:.35}49%{opacity:1}72%{opacity:.85}74%{opacity:1}}
 @keyframes horrorIntroFlash{0%,100%{opacity:1}50%{opacity:.25}}
 @media(prefers-reduced-motion:reduce){#horror-intro,#horror-intro:before,#horror-intro .horror-intro-text{animation:none}}
+
+/* ===== ZIVOZONE V1095 — Dark Room random surprise glitch (unpredictable, brief, non-blocking) ===== */
+#horror-surprise{position:fixed;inset:0;z-index:9997;display:grid;place-items:center;pointer-events:none;background:rgba(4,0,2,.55);animation:horrorSurpriseFlash .7s ease-out forwards}
+#horror-surprise:before,#horror-surprise:after{content:attr(data-g);position:absolute;font-size:min(30vw,220px);font-weight:900;opacity:.5}
+#horror-surprise{font-size:min(30vw,220px);font-weight:900;color:#ff2f5c;text-shadow:0 0 40px rgba(255,40,90,.85)}
+#horror-surprise:before{color:#00e5ff;transform:translate(-6px,0);mix-blend-mode:screen}
+#horror-surprise:after{color:#ff2f5c;transform:translate(6px,0);mix-blend-mode:screen}
+body.horror-active{animation:none}
+body.horror-active:has(#horror-surprise){animation:horrorSurpriseShake .35s ease-in-out 1}
+@keyframes horrorSurpriseFlash{0%{opacity:0;transform:scale(.9)}8%{opacity:1;transform:scale(1.05)}16%{opacity:.6}24%{opacity:1}70%{opacity:.85}100%{opacity:0}}
+@keyframes horrorSurpriseShake{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(6px,3px)}}
+@media(prefers-reduced-motion:reduce){#horror-surprise,body.horror-active:has(#horror-surprise){animation:none!important}}
