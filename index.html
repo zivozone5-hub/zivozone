@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="core/styles/index.css?v=1125.0">
+<link rel="stylesheet" href="core/styles/index.css?v=1126.0">
 
 
 
@@ -45,7 +45,7 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="core/styles/core.css?v=1125.0">
+<link rel="stylesheet" href="core/styles/core.css?v=1126.0">
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -147,6 +147,16 @@
     <div class="challenge-center-meta"><span id="player-level-chip" class="level-chip">Level 1</span><span class="challenge-live-chip">● LIVE CHALLENGE ENGINE</span></div>
   </div>
   <div class="ad-slot ad-top" data-ad-slot="top"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
+  <div class="challenge-featured" aria-label="أقسام ZIVOZONE الرئيسية">
+    <article class="challenge-featured-card dark-feature" data-challenge="horror" tabindex="0" role="button" aria-label="دخول الغرفة المظلمة">
+      <div class="featured-media"><img src="assets/challenge-posters/horror.svg" alt="" loading="eager"><span class="featured-scan"></span></div>
+      <div class="featured-copy"><span class="featured-kicker">ZIVOZONE // SIGNATURE EXPERIENCE</span><h3>🌑 الغرفة المظلمة</h3><p>تجربة سينمائية كاملة الشاشة. اضغط على أي مكان للدخول مباشرة.</p><strong>دخول مباشر ↗</strong></div>
+    </article>
+    <article class="challenge-featured-card forensic-feature" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي">
+      <div class="featured-media"><img src="assets/forensic/scene-camera.svg" alt="" loading="eager"><span class="featured-grid"></span></div>
+      <div class="featured-copy"><span class="featured-kicker">ZIVOZONE // INVESTIGATION LAB</span><h3>🕵️ المختبر الجنائي</h3><p>حلل الأدلة، اربط الزمن، وابنِ الرواية الأقوى. اضغط للدخول.</p><strong>دخول المختبر ↗</strong></div>
+    </article>
+  </div>
   <div class="challenge-layout premium-challenge-layout">
     <aside class="ad-column ad-left" aria-label="Future advertising area">
       <div class="ad-slot" data-ad-slot="left-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
@@ -191,7 +201,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1125.0"></script>
+<script type="module" src="zivo-ai.js?v=1126.0"></script>
 
 
 
@@ -214,25 +224,25 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="core/config.js?v=1125.0"></script>
-<script src="core/modules/question-bank.js?v=1125.0"></script>
-<script src="core/runtime.js?v=1125.0"></script>
-<script src="core/modules/match-center.js?v=1125.0"></script>
-<script src="core/modules/auth.js?v=1125.0"></script>
-<script src="core/modules/player.js?v=1125.0"></script>
-<script src="core/modules/economy.js?v=1125.0"></script>
-<script src="core/modules/challenges.js?v=1125.0"></script>
-<script src="core/modules/cloud.js?v=1125.0"></script>
-<script src="core/modules/achievements.js?v=1125.0"></script>
-<script src="core/modules/daily.js?v=1125.0"></script>
-<script src="core/modules/competition.js?v=1125.0"></script>
-<script src="core/modules/missions.js?v=1125.0"></script>
-<script src="core/modules/player-hub.js?v=1125.0"></script>
-<script src="core/modules/news.js?v=1125.0"></script>
-<script src="core/modules/admin.js?v=1125.0"></script>
-<script src="core/modules/ui.js?v=1125.0"></script>
-<script src="core/app.js?v=1125.0"></script>
-<script src="core/boot.js?v=1125.0"></script>
+<script src="core/config.js?v=1126.0"></script>
+<script src="core/modules/question-bank.js?v=1126.0"></script>
+<script src="core/runtime.js?v=1126.0"></script>
+<script src="core/modules/match-center.js?v=1126.0"></script>
+<script src="core/modules/auth.js?v=1126.0"></script>
+<script src="core/modules/player.js?v=1126.0"></script>
+<script src="core/modules/economy.js?v=1126.0"></script>
+<script src="core/modules/challenges.js?v=1126.0"></script>
+<script src="core/modules/cloud.js?v=1126.0"></script>
+<script src="core/modules/achievements.js?v=1126.0"></script>
+<script src="core/modules/daily.js?v=1126.0"></script>
+<script src="core/modules/competition.js?v=1126.0"></script>
+<script src="core/modules/missions.js?v=1126.0"></script>
+<script src="core/modules/player-hub.js?v=1126.0"></script>
+<script src="core/modules/news.js?v=1126.0"></script>
+<script src="core/modules/admin.js?v=1126.0"></script>
+<script src="core/modules/ui.js?v=1126.0"></script>
+<script src="core/app.js?v=1126.0"></script>
+<script src="core/boot.js?v=1126.0"></script>
 <script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
 
 
