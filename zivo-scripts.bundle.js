@@ -119,6 +119,11 @@
   Object.assign(T.zh,{economyEyebrow:'⭐ ZIVO 专属经济系统 ⭐',economyTitle:'边玩边赚 ZIVO',economySubtitle:'真实钱包、每日挖矿，满分即时奖励——每笔交易都受 ZIVOZONE 服务器保护。',walletLabel:'ZIVO 钱包',walletLoginHint:'登录以保存您的余额和奖励。',walletAccountPrefix:'账户：',walletOpenBtn:'💰 钱包',miningTitle:'每日挖矿',miningDesc:'每24小时可挖矿一次，获得少量 ZIVO 奖励。',mineStartBtn:'开始挖矿 +0.50',mineLoginBtn:'登录后挖矿',mineAccountRequired:'需要账户',mineAvailableNow:'现在可用',mineActiveBtn:'挖矿进行中',mineAdminBtn:'管理员账户',mineSuccessToast:'挖矿成功！+0.50 ZIVO ⛏️',mineErrorToast:'暂时无法开始挖矿。',mineAdminBlocked:'管理员账户不参与挖矿系统。',mineNotYetAvailable:'挖矿尚未开放。',mineAlreadyToday:'今日挖矿已完成。',rewardSuccessToast:'满分 10/10 — 已添加 +10 ZIVO 到您的钱包 🪙',walletModalLabel:'ZIVOZONE 经济系统',walletModalTitle:'ZIVO 钱包',walletModalDesc:'您在平台上的 ZIVO 余额。每次增加都会经过 ZIVOZONE 服务器并显示在交易记录中。',walletModalLedgerTitle:'最近交易',walletModalNote:'XP 与 ZIVO 是分开的，ZIVO 与 Tickets 也是分开的。此货币目前只是平台内的虚拟余额，并非真实货币。',ledgerEmpty:'暂无交易记录。',ledgerFallbackLabel:'交易',ledgerMiningLabel:'每日挖矿',ledgerRewardLabelPrefix:'满分挑战奖励 — '});
   Object.assign(T.hi,{economyEyebrow:'⭐ एक्सक्लूसिव ZIVO इकोनॉमी ⭐',economyTitle:'खेलते हुए ZIVO कमाएँ',economySubtitle:'असली वॉलेट, डेली माइनिंग, और हर परफेक्ट स्कोर पर तुरंत इनाम — हर लेनदेन ZIVOZONE सर्वर स्तर पर सुरक्षित है।',walletLabel:'ZIVO वॉलेट',walletLoginHint:'अपना बैलेंस और इनाम बचाने के लिए लॉगिन करें।',walletAccountPrefix:'अकाउंट: ',walletOpenBtn:'💰 वॉलेट',miningTitle:'डेली माइनिंग',miningDesc:'हर 24 घंटे में एक बार माइन करें और थोड़ा ZIVO इनाम पाएं।',mineStartBtn:'माइनिंग शुरू करें +0.50',mineLoginBtn:'माइन करने के लिए लॉगिन करें',mineAccountRequired:'अकाउंट चाहिए',mineAvailableNow:'अभी उपलब्ध',mineActiveBtn:'माइनिंग सक्रिय',mineAdminBtn:'एडमिन अकाउंट',mineSuccessToast:'माइनिंग सफल! +0.50 ZIVO ⛏️',mineErrorToast:'अभी माइनिंग शुरू नहीं हो सकी।',mineAdminBlocked:'एडमिन अकाउंट माइनिंग सिस्टम में शामिल नहीं होते।',mineNotYetAvailable:'माइनिंग अभी उपलब्ध नहीं है।',mineAlreadyToday:'आज की माइनिंग पहले ही ली जा चुकी है।',rewardSuccessToast:'परफेक्ट 10/10 — आपके वॉलेट में +10 ZIVO जोड़ा गया 🪙',walletModalLabel:'ZIVOZONE इकोनॉमी',walletModalTitle:'ZIVO वॉलेट',walletModalDesc:'प्लेटफ़ॉर्म पर आपका ZIVO बैलेंस। हर जोड़ ZIVOZONE सर्वर से होकर गुजरता है और लेनदेन लॉग में दिखता है।',walletModalLedgerTitle:'हाल के लेनदेन',walletModalNote:'XP, ZIVO से अलग है, और ZIVO, Tickets से अलग है। यह करेंसी फ़िलहाल केवल प्लेटफ़ॉर्म के अंदर की वर्चुअल बैलेंस है, असली पैसा नहीं।',ledgerEmpty:'अभी तक कोई लेनदेन नहीं।',ledgerFallbackLabel:'लेनदेन',ledgerMiningLabel:'डेली माइनिंग',ledgerRewardLabelPrefix:'परफेक्ट चैलेंज इनाम — '});
   Object.assign(T.es,{economyEyebrow:'⭐ ECONOMÍA EXCLUSIVA ZIVO ⭐',economyTitle:'Gana ZIVO mientras juegas',economySubtitle:'Una billetera real, minería diaria y una recompensa instantánea en cada puntuación perfecta — cada transacción está protegida a nivel del servidor de ZIVOZONE.',walletLabel:'BILLETERA ZIVO',walletLoginHint:'Inicia sesión para guardar tu saldo y recompensas.',walletAccountPrefix:'Cuenta: ',walletOpenBtn:'💰 Billetera',miningTitle:'Minería diaria',miningDesc:'Mina una vez cada 24 horas y obtén una pequeña recompensa en ZIVO.',mineStartBtn:'Empezar a minar +0.50',mineLoginBtn:'Inicia sesión para minar',mineAccountRequired:'Cuenta requerida',mineAvailableNow:'Disponible ahora',mineActiveBtn:'Minería activa',mineAdminBtn:'Cuenta de administrador',mineSuccessToast:'¡Minería exitosa! +0.50 ZIVO ⛏️',mineErrorToast:'No se pudo activar la minería en este momento.',mineAdminBlocked:'Las cuentas de administrador no participan en el sistema de minería.',mineNotYetAvailable:'La minería aún no está disponible.',mineAlreadyToday:'La minería de hoy ya fue reclamada.',rewardSuccessToast:'Puntuación perfecta 10/10 — se añadieron +10 ZIVO a tu billetera 🪙',walletModalLabel:'ECONOMÍA ZIVOZONE',walletModalTitle:'Billetera ZIVO',walletModalDesc:'Tu saldo de ZIVO en la plataforma. Cada adición pasa por el servidor de ZIVOZONE y aparece en el registro de transacciones.',walletModalLedgerTitle:'Transacciones recientes',walletModalNote:'El XP es independiente del ZIVO, y el ZIVO es independiente de los Tickets. Esta moneda es actualmente un saldo virtual dentro de la plataforma, no dinero real.',ledgerEmpty:'Aún no hay transacciones.',ledgerFallbackLabel:'Transacción',ledgerMiningLabel:'Minería diaria',ledgerRewardLabelPrefix:'Recompensa por desafío perfecto — '});
+  Object.assign(T.ar,{horrorIntroTitle:'DARK ROOM',horrorIntroInit:'جارٍ التهيئة...',horrorIntroSignal:'تم رصد إشارة'});
+  Object.assign(T.en,{horrorIntroTitle:'DARK ROOM',horrorIntroInit:'INITIALIZING...',horrorIntroSignal:'SIGNAL DETECTED'});
+  Object.assign(T.zh,{horrorIntroTitle:'DARK ROOM',horrorIntroInit:'正在初始化...',horrorIntroSignal:'检测到信号'});
+  Object.assign(T.hi,{horrorIntroTitle:'DARK ROOM',horrorIntroInit:'इनिशियलाइज़ हो रहा है...',horrorIntroSignal:'सिग्नल मिला'});
+  Object.assign(T.es,{horrorIntroTitle:'DARK ROOM',horrorIntroInit:'INICIALIZANDO...',horrorIntroSignal:'SEÑAL DETECTADA'});
   function get(){return localStorage.getItem(LANG_KEY)||'ar'}
   function set(lang){if(!LANGS.includes(lang))lang='ar';localStorage.setItem(LANG_KEY,lang);document.documentElement.lang=lang;document.documentElement.dir=DIR[lang];window.dispatchEvent(new CustomEvent('zivozone-language',{detail:{lang}}));return lang}
   function tr(key,lang=get()){return (T[lang]&&T[lang][key])||T.ar[key]||key}
@@ -1156,7 +1161,30 @@ window.ZIVOZONE_V18 = {
     return chosen;
   }
   function guestGate(id){openModal(`<button class="modal-close" data-close>×</button><span class="eyebrow">${t('guestMode')}</span><h2>${t('guest')}</h2><p>${t('guestText')}</p><div class="modal-actions"><button class="btn btn-primary" id="continue-guest">${t('continueGuest')}</button><button class="btn btn-ghost" id="create-now">${t('createNow')}</button></div>`);$('#continue-guest').onclick=()=>{closeModal();beginGame(id,true)};$('#create-now').onclick=()=>authModal(()=>beginGame(id,false))}
-  function startGame(id){const src=C.get(id);if(!src){toast(t('noData'),'error');return}if(id==='horror'){openModal(`<div class="horror-warning-card"><span class="eyebrow">${t('horrorWarningTitle')}</span><h2>${t('horrorWarningHeadline')}</h2><p>${t('horrorWarningText')}</p><p class="horror-warning">${t('horrorWarningNight')}</p><div class="modal-actions"><button class="btn btn-primary" id="enter-horror">${t('horrorEnter')}</button><button class="btn btn-ghost" data-close>${t('close')}</button></div></div>`,'horror-modal phase-1');$('#enter-horror').onclick=()=>{closeModal();beginGame('horror',!A.isLoggedIn())};return}beginGame(id,!A.isLoggedIn())}
+  function startGame(id){const src=C.get(id);if(!src){toast(t('noData'),'error');return}if(id==='horror'){openModal(`<div class="horror-warning-card"><span class="eyebrow">${t('horrorWarningTitle')}</span><h2>${t('horrorWarningHeadline')}</h2><p>${t('horrorWarningText')}</p><p class="horror-warning">${t('horrorWarningNight')}</p><div class="modal-actions"><button class="btn btn-primary" id="enter-horror">${t('horrorEnter')}</button><button class="btn btn-ghost" data-close>${t('close')}</button></div></div>`,'horror-modal phase-1');$('#enter-horror').onclick=()=>{closeModal();horrorIntroSequence(()=>beginGame('horror',!A.isLoggedIn()))};return}beginGame(id,!A.isLoggedIn())}
+  function horrorIntroSequence(done){
+    const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    if(reduced){done();return}
+    S().unlock?.();S().whisper?.();
+    const el=document.createElement('div');el.id='horror-intro';el.setAttribute('aria-hidden','true');
+    document.body.appendChild(el);
+    document.body.classList.add('horror-active');
+    const steps=[
+      {cls:'step-1',text:t('horrorIntroTitle'),delay:900},
+      {cls:'step-2',text:t('horrorIntroInit'),delay:1000},
+      {cls:'step-3',text:t('horrorIntroSignal'),delay:900}
+    ];
+    let i=0;
+    const run=()=>{
+      if(i>=steps.length){el.remove();done();return}
+      const s=steps[i];
+      el.className='step-'+(i+1);
+      el.innerHTML=`<span class="horror-intro-text">${esc(s.text)}</span>`;
+      i++;
+      setTimeout(run,s.delay);
+    };
+    requestAnimationFrame(run);
+  }
   function beginGame(id,guest){const src=C.get(id),horror=id==='horror';game={id,questions:horror?shuffle(src.questions.map(q=>({...q}))):prepareQuestions(id),index:0,score:0,pressureScore:0,streak:0,bestStreak:0,answers:[],guest,locked:false,horrorSignupShown:false,horrorUsed:[],timedOut:0,questionStartedAt:0};if(horror)game.horrorUsed=game.questions.map(q=>q.id);document.body.classList.toggle('horror-active',horror);S().unlock?.();S().startChallenge?.(id);renderQuestion()}
   function currentQ(){return game.questions[game.index]}
   function inputMarkup(q){const isNum=q.type==='number';return `<form id="answer-form" class="input-answer-form"><input id="answer-input" ${isNum?'inputmode="numeric" pattern="[0-9.\\-]+"':''} autocomplete="off" placeholder="${esc(isNum?t('enterNumber'):t('writeAnswer'))}" required><button class="btn btn-primary" type="submit">${t('submitAnswer')}</button></form>`}
@@ -1229,21 +1257,6 @@ window.ZIVOZONE_V18 = {
   async function askAI(message){const payload={message:String(message||'').slice(0,1000),language:lang(),player:{level:state.level,xp:state.xp,gamesPlayed:state.gamesPlayed,coins:state.coins}};try{if(window.ZIVOZONE_REAL_AI?.ask){return await window.ZIVOZONE_REAL_AI.ask(message)}}catch(e){console.warn('ZIVO AI Gemini:',e);if(e?.message)toast(e.message,'error')}try{const f=window.firebase?.functions?.();if(f){const fn=f.httpsCallable(API.aiCallable||'zivoAI');const r=await fn(payload);if(r?.data?.reply)return r.data.reply}}catch(e){console.warn('ZIVO AI callable:',e)}if(API.aiEndpoint){try{const r=await fetch(API.aiEndpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(r.ok){const d=await r.json();if(d.reply)return d.reply}}catch(e){console.warn('ZIVO AI endpoint:',e)}}return localAIReply(message)}
   function applyLanguage(){const l=lang();document.documentElement.lang=l;document.documentElement.dir=I.dir[l];$$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I.T[l]?.[k]!==undefined)el.textContent=t(k)});$$('[data-i18n-placeholder]').forEach(el=>el.placeholder=t(el.dataset.i18nPlaceholder));renderChallenges();renderNewsSources();profile();sports();$('#footer-tagline')?.replaceChildren(document.createTextNode(t('footerTagline')))}
   document.addEventListener('click',e=>{const gameBtn=e.target.closest('[data-game],[data-challenge]');if(gameBtn){e.preventDefault();startGame(gameBtn.dataset.game||gameBtn.dataset.challenge);return}const action=e.target.closest('[data-action]')?.dataset.action;if(action==='scroll-games'||action==='scroll-challenges'){e.preventDefault();$('#challenges')?.scrollIntoView({behavior:'smooth'});return}if(action==='open-identity'){identity();return}if(action==='login'){A.isLoggedIn()?location.hash='#profile':authModal();return}if(action==='logout'){A.logout().then(()=>{state={level:1,xp:0,coins:0,wins:0,gamesPlayed:0,bestStreak:0,identity:null};saveState();profile();toast(t('logoutDone'))});return}if(action==='refresh-sports'){sports();return}if(action==='ad-info'){toast(t('adText'));return}if(action==='ads-control'){window.ZIVOZONE_ADS?.open?.();return}if(action==='return-challenges'){returnToChallenges();return}if(action==='quit-game'){quitGame();return}});
-  function bindMobileUX(){
-    const more=$('#mobile-more'),root=$('#mobile-tools'),list=$('#mobile-tools-list');
-    if(!more||!root||!list)return;
-    const hiddenIds=['zivo-v24-balance','z27-cloud-status','v28-open','v29-open','v30-open','v31-open','v32-open','v33-open','v34-open','v35-open','v37-open','v38-open','v39-open'];
-    const render=()=>{list.innerHTML='';hiddenIds.map(id=>document.getElementById(id)).filter(Boolean).forEach(src=>{
-      const b=document.createElement('button');b.type='button';b.className='btn btn-ghost';b.textContent=(src.getAttribute('aria-label')||src.title||src.textContent||'ZIVO Tool').trim().slice(0,42)||'ZIVO Tool';
-      b.onclick=()=>{src.click();close()};list.appendChild(b);
-    });
-    if(!list.children.length)list.innerHTML='<p class="muted">الأدوات الإضافية ستظهر هنا عند توفرها.</p>'};
-    const open=()=>{render();root.hidden=false;root.setAttribute('aria-hidden','false')};
-    const close=()=>{root.hidden=true;root.setAttribute('aria-hidden','true')};
-    more.onclick=open;root.querySelectorAll('[data-mobile-close]').forEach(x=>x.addEventListener('click',close));
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-    document.querySelectorAll('.mobile-nav a').forEach(a=>a.addEventListener('click',()=>document.querySelectorAll('.mobile-nav a').forEach(x=>x.classList.toggle('active',x===a))));
-  }
   function bind(){const audioBtn=$('#audio-toggle');if(audioBtn){audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇';audioBtn.onclick=async()=>{await S().unlock?.();S().toggle?.();audioBtn.textContent=S().isEnabled?.()?'🔊':'🔇'}}$('#language-select').value=lang();$('#language-select').onchange=async e=>{I.set(e.target.value);await A.setLanguage(e.target.value);applyLanguage();toast(t('updateDone'),'success')};const accountRoute=()=>A.isAdmin?.()?location.hash='#admin':A.isLoggedIn()?location.hash='#profile':authModal();$('#login-btn').onclick=accountRoute;$$('[data-action="login"]').forEach(b=>b.onclick=accountRoute);$('#ai-form').onsubmit=async e=>{e.preventDefault();const input=$('#ai-input'),v=input.value.trim();if(!v)return;const box=$('#ai-messages');const u=document.createElement('div');u.className='ai-message user';u.textContent=v;box.append(u);input.value='';const b=document.createElement('div');b.className='ai-message bot';b.textContent='…';box.append(b);b.textContent=await askAI(v);box.scrollTop=box.scrollHeight};
     const navToggle=$('#zivo-nav-toggle'),mainNav=$('.main-nav');
     if(navToggle&&mainNav){
@@ -3745,7 +3758,6 @@ window.ZIVOZONE_V18 = {
       .z101-toast{position:fixed;left:16px;bottom:84px;z-index:130000;background:#111827;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 13px;font-weight:900;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}
       .z101-toast.show{opacity:1;transform:none}
       /* remove old floating economy / quick docks so there is exactly one wallet */
-      #zivo-global-wallet,#zivo-v85-open,#zivo-v85-economy,#zivo-v81-open,#zivo-v81-economy,#zivo-v80-open,#z80-admin-open,#zivo-v87-quickdock,#v26-open,#zivo-v24-balance,#z25-wallet-btn{display:none!important} #z81-admin-open{display:flex!important}
       @media(max-width:760px){
         .z101-showcase{padding:20px 16px;border-radius:20px;margin-top:14px}
         .z101-showcase .section-heading{margin-bottom:14px}
@@ -4309,21 +4321,6 @@ window.ZIVOZONE_V104={openAdmin};
       document.addEventListener('click',e=>{
         if(e.target.closest('#zivo-header-wallet')) setTimeout(()=>window.ZIVOZONE_ECONOMY?.refresh?.(),0);
       });
-    }
-  }
-
-  function topbarPolish(){
-    const h=document.querySelector('.topbar');if(!h)return;
-    h.classList.add('z1062-topbar');
-    if(!document.getElementById('z1062-menu')){
-      const b=document.createElement('button');
-      b.id='z1062-menu';b.type='button';b.className='z1062-menu';b.setAttribute('aria-label','القائمة');
-      b.innerHTML='☰';
-      b.onclick=()=>{
-        const nav=h.querySelector('.main-nav');
-        if(nav)nav.classList.toggle('z1062-mobile-open');
-      };
-      h.insertBefore(b,h.firstElementChild);
     }
   }
 
