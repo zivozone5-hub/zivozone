@@ -11,13 +11,15 @@
       "scripts/**",
       ".github/**",
       "docs/**",
-      "ARCHIVE/**",
       "*.bat",
       "*.cmd",
       "*.exe",
       "*.ps1",
       "*.sh",
-      "*.com"
+      "*.com",
+      "**/*.md",
+      "QUESTION_BANK_MANIFEST.json",
+      "data/news-sources.json"
     ],
     "headers": [
       {
