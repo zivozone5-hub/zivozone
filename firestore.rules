@@ -30,23 +30,27 @@ service cloud.firestore {
       match /zivozone/wallet {
         allow read: if isOwner() || isSelf(userId);
         allow create: if isSelf(userId) && validWalletKeys() && request.resource.data.zivo == 0;
-        allow update: if isOwner() || (isSelf(userId) && validWalletKeys() && (
+        allow update: if isOwner() || (isSelf(userId) && validWalletKeys() && request.resource.data.updatedAt == request.time && (
           (request.resource.data.zivo == resource.data.zivo + 0.5 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')) ||
           (request.resource.data.zivo == resource.data.zivo + 10 &&
+            request.time > resource.data.updatedAt + duration.value(20, 's') &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.amount == 10 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.status == 'consumed' &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaim).data.consumedAt == request.time) ||
           (request.resource.data.zivo == resource.data.zivo + 1 &&
+            request.time > resource.data.updatedAt + duration.value(5, 's') &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.amount == 1 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.consumedAt == request.time) ||
           (request.resource.data.zivo == resource.data.zivo + 2 &&
+            request.time > resource.data.updatedAt + duration.value(5, 's') &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.amount == 2 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.consumedAt == request.time) ||
           (request.resource.data.zivo == resource.data.zivo + 5 &&
+            request.time > resource.data.updatedAt + duration.value(5, 's') &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.amount == 5 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.consumedAt == request.time)

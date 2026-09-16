@@ -89,6 +89,35 @@ silently ignored:
   Firebase custom-claim change on the account itself, done from the
   Firebase console, not just a code edit.
 
+## 6. Added (V1129): free-plan-compatible reward-claim hardening
+
+The client confirmed the project stays on Firebase's free Spark plan,
+which rules out Cloud Functions (they require Blaze). Firestore
+security rules alone can verify that a reward claim's fields are
+*internally consistent* (e.g. `correct == 10 && total == 10`), but
+they cannot verify that a challenge was actually played — a
+technically capable user could still write a well-formed claim
+straight to the Firestore REST API without touching the game UI.
+Cloud Functions would close that gap completely; without them, the
+next-best, zero-cost mitigation is to make abuse slow and rate-limited
+instead of instant and unlimited:
+
+- `wallet.updatedAt` must now equal `request.time` (the real server
+  clock) on every update — a forged write can no longer claim an
+  arbitrary timestamp.
+- The +10 perfect-score reward now requires at least 20 seconds since
+  the wallet's last update; mission/competition rewards (+1/+2/+5)
+  require at least 5 seconds. Genuine gameplay always exceeds these
+  windows, so real players notice nothing, while a scripted claim loop
+  is throttled to roughly the same trickle a human could produce
+  manually instead of an unlimited drain.
+
+This was applied directly to `firestore.rules`. **Test it in the
+Firebase console's Rules Playground (or `firebase emulators:start`)
+before deploying** — this sandbox has no network access to run the
+Firestore rules linter itself, so treat this as reviewed-by-hand, not
+compiler-verified.
+
 ## File map: old → new
 
 | Old | New |
