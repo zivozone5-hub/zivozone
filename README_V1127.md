@@ -8,14 +8,6 @@
 - Mobile-first responsive behavior is part of the core UI.
 
 
-## V1128 update
-See `CHANGELOG_V1127_REFACTOR.md` for a real structural refactor done
-on top of this version: the `core/runtime.js` monolith was split into
-real per-domain files, 6 dead/never-called modules were removed from
-the page load, a real HUD/profile level-mismatch bug was fixed, and
-the 4 conflicting `.topbar` CSS rules (one of them entirely inert)
-were consolidated into 1.
-
 ## V1127 Architecture
 - One canonical News Core: football rail + politics rail.
 - One canonical Challenge Core: standard challenges + Dark Room + Forensic Lab.
