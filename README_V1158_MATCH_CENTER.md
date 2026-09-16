@@ -42,3 +42,7 @@
 **Update ZIVOZONE News**
 
 للأخبار.
+
+
+## V1160 replacement note
+This file is retained as historical documentation; V1160 replaces the previous Match Center UI and runtime rather than layering over it.

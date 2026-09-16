@@ -40,3 +40,7 @@ zivozone/
 
 ## حدود التغطية
 لا يوجد مصدر مجاني واحد يضمن كل بطولة في العالم حرفيًا. التصميم هنا يجعل TheSportsDB مصدر الاكتشاف اليومي لكل البطولات التي يعيدها، وESPN مصدر إثراء للمسابقات التي يدعمها. بذلك لا نعرض بطولات وهمية ولا نحذف بطولات حقيقية لمجرد أنها ليست في قائمة ثابتة.
+
+
+## V1160 replacement note
+This file is retained as historical documentation; V1160 replaces the previous Match Center UI and runtime rather than layering over it.

@@ -18,3 +18,7 @@
 
 ## واجهة
 كل النصوص الخاصة بمركز المباريات عربية، مع أمس/اليوم/غدًا/القادمة/السابقة، مباشر/قادمة/انتهت، بحث، بطولات، مفضلة، وتفاصيل المباراة.
+
+
+## V1160 replacement note
+This file is retained as historical documentation; V1160 replaces the previous Match Center UI and runtime rather than layering over it.
