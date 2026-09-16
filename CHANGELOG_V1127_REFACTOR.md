@@ -89,6 +89,74 @@ silently ignored:
   Firebase custom-claim change on the account itself, done from the
   Firebase console, not just a code edit.
 
+## 6. Added (V1129): free-plan-compatible reward-claim hardening
+
+The client confirmed the project stays on Firebase's free Spark plan,
+which rules out Cloud Functions (they require Blaze). Firestore
+security rules alone can verify that a reward claim's fields are
+*internally consistent* (e.g. `correct == 10 && total == 10`), but
+they cannot verify that a challenge was actually played — a
+technically capable user could still write a well-formed claim
+straight to the Firestore REST API without touching the game UI.
+Cloud Functions would close that gap completely; without them, the
+next-best, zero-cost mitigation is to make abuse slow and rate-limited
+instead of instant and unlimited:
+
+- `wallet.updatedAt` must now equal `request.time` (the real server
+  clock) on every update — a forged write can no longer claim an
+  arbitrary timestamp.
+- The +10 perfect-score reward now requires at least 20 seconds since
+  the wallet's last update; mission/competition rewards (+1/+2/+5)
+  require at least 5 seconds. Genuine gameplay always exceeds these
+  windows, so real players notice nothing, while a scripted claim loop
+  is throttled to roughly the same trickle a human could produce
+  manually instead of an unlimited drain.
+
+This was applied directly to `firestore.rules`. **Test it in the
+Firebase console's Rules Playground (or `firebase emulators:start`)
+before deploying** — this sandbox has no network access to run the
+Firestore rules linter itself, so treat this as reviewed-by-hand, not
+compiler-verified.
+
+## 7. Added (V1130): challenge cards rebuilt to match reference mockup
+
+The client provided a reference design image and asked for an exact
+rebuild of the challenge cards — a circular themed icon + a "Level X"
+pill — replacing the previous text tag + question-count row.
+
+**Real colors, not guesses:** the reference image's pixels were
+sampled directly (Python/PIL) rather than eyeballed. Primary button:
+solid `#0058FD` with a `#3D82FF` glossy top highlight. Level badge:
+`#001547` fill with a light blue border. These exact values are now
+in `core/styles/index.css`.
+
+**What changed:**
+- `core/modules/challenges.js`: each challenge bank now gets a themed
+  accent color (`CATEGORY_ACCENT` — football/blue, knowledge
+  categories/purple, strategy/green, daily/gold) and a "level" number
+  computed from the **real average per-question difficulty already in
+  the question bank** (not a fabricated value) — `levelFor()`.
+- New markup per card: `.challenge-meta-row` holding
+  `.challenge-icon-badge` (the bank's existing emoji icon, now shown
+  in a themed circular badge) and `.level-badge` (the pill).
+- Card border now tints toward each challenge's accent color via a
+  `--card-accent` CSS variable, matching the reference image's
+  color-coded card borders.
+- Dark Room / Forensic Lab cards are untouched — the reference image
+  doesn't cover that cinematic/narrative card type, so they keep
+  their existing "FULL SCREEN" / "CASE LAB" tag treatment.
+
+**Honest scope note:** this rebuild was verified for the base desktop
+layout (syntax-checked, brace-balanced, and cross-checked against the
+sampled reference colors). The `.challenge-card` CSS carries several
+`!important` mobile-breakpoint overrides from earlier versions
+(≤900px, ≤600px, ≤480px) that were not individually re-verified
+against this new markup in this pass — the new icon badge and level
+pill should still render correctly since they don't depend on the
+old `.card-tag`/`.challenge-count` classes those breakpoints target,
+but a visual check on an actual phone screen is recommended before
+calling mobile "done."
+
 ## File map: old → new
 
 | Old | New |
