@@ -1,23 +1,10 @@
-# ZIVOZONE
+# ZIVOZONE V1180 — Canonical Maintenance Core
 
-منصة ترفيهية تفاعلية (IQ Tests، Horror Room، تحديات يومية، Who am I، قسم رياضي، نظام XP/ZIVO Coin) مبنية بـ HTML/CSS/JS ومتصلة بـ Firebase (Auth, Firestore, App Check).
+نسخة صيانة شاملة مبنية على نواة واحدة لكل نطاق وظيفي، مع إزالة الملفات غير المستخدمة، وتوحيد مسار رحلة اللاعب، وتحسين التخزين المؤقت، وحماية بيانات مركز المباريات من الاستبدال ببيانات فارغة.
 
-- **الموقع الحي:** https://www.zivozone.com
-- **سجل التحديثات الكامل (تاريخي):** [`docs/changelog/`](docs/changelog/CHANGELOG.md)
-
-## هيكل الملفات
-- `index.html` — الصفحة الرئيسية وترتيب تحميل كل الطبقات
-- `styles.css` — التنسيق الأساسي
-- `zivo-v103-pro.css/js` … `zivo-v1081-player.css/js` — طبقات تطوير متتالية (مرشحة للدمج، راجع `docs/changelog`)
-- `zivozone-runtime.js` — المحرك الرئيسي للتحديات والاقتصاد
-- `zivo-global-core.js`, `zivo-ai.js` — وحدات مساعدة
-- `assets/` — صور، أصوات، أيقونات
-- `data/`, `scripts/` — بيانات الأخبار وسكربت الجلب
-- `firebase.json`, `firestore.rules`, `.firebaserc` — إعدادات Firebase
-
-## ملاحظة تقنية
-هذا المشروع يحتوي طبقات CSS/JS متعددة متراكمة فوق بعض بدل دمجها بملف واحد. الخطة القادمة (موثقة بمحادثات التطوير) هي دمجها بدون أي تغيير على الشكل أو الوظائف.
-
-
-## V1097 ARCHITECTURE CORE
-See `V1097_ARCHITECTURE.md` and `CHANGELOG_V1097.md`.
+- العربية هي الواجهة الافتراضية.
+- الاستضافة متوافقة مع Firebase Spark / GitHub Pages.
+- البريد الإداري الرسمي: raefalbt@gmail.com
+- Player Home هو المالك الوحيد لرحلة اللاعب.
+- Forensic Core هو المالك الوحيد للمختبر الجنائي.
+- Match Center يعتمد على بيانات محفوظة + تحديث مباشر، ولا ينشر لقطة فارغة فوق آخر لقطة ناجحة.
