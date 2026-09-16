@@ -4,8 +4,7 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isOwner() { return signedIn() && request.auth.token.email == 'raefalbtish@gmail.com'; }
     function isSelf(id) { return signedIn() && request.auth.uid == id; }
-    function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastRewardClaimId','lastMiningTransferId']); }
-    function validMiningWalletKeys() { return request.resource.data.keys().hasOnly(['balance','capacity','updatedAt','lastMiningAt','lastTransferAt','lastTransferAmount','lastTransferId']); }
+    function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastRewardClaimId']); }
     function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward']; }
     function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]); }
     function validRewardClaim(claimId) { return request.resource.data.claimId == claimId && request.resource.data.status == 'consumed' && request.resource.data.consumedAt == request.time && rewardTypeValid() && rewardAmountValid(); }
@@ -35,14 +34,9 @@ service cloud.firestore {
         allow read: if isOwner() || isSelf(userId);
         allow create: if isSelf(userId) && validWalletKeys() && request.resource.data.zivo == 0;
         allow update: if isOwner() || (isSelf(userId) && validWalletKeys() && request.resource.data.updatedAt == request.time && (
-          (request.resource.data.zivo == resource.data.zivo &&
+          (request.resource.data.zivo == resource.data.zivo + 0.5 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')) ||
-          (request.resource.data.zivo > resource.data.zivo &&
-            request.resource.data.lastMiningTransferId is string &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/miningWallet).data.balance == 0 &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/miningWallet).data.lastTransferId == request.resource.data.lastMiningTransferId &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/miningWallet).data.lastTransferAmount == request.resource.data.zivo - resource.data.zivo) ||
           (request.resource.data.zivo > resource.data.zivo &&
             request.resource.data.lastRewardClaimId is string &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
@@ -64,28 +58,6 @@ service cloud.firestore {
         allow delete: if false;
       }
 
-      match /zivozone/miningWallet {
-        allow read: if isOwner() || isSelf(userId);
-        allow create: if isSelf(userId) && validMiningWalletKeys()
-          && request.resource.data.balance == 0
-          && request.resource.data.capacity > 0;
-        allow update: if isSelf(userId) && validMiningWalletKeys()
-          && request.resource.data.updatedAt == request.time
-          && request.resource.data.capacity == resource.data.capacity
-          && request.resource.data.balance >= 0
-          && request.resource.data.balance <= request.resource.data.capacity
-          && (
-            (request.resource.data.balance == resource.data.balance + 0.5 &&
-             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5 &&
-             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')) ||
-            (request.resource.data.balance == 0 &&
-             request.resource.data.lastTransferId is string &&
-             request.resource.data.lastTransferAmount == resource.data.balance + 0.5 &&
-             request.resource.data.lastTransferAmount > 0)
-          );
-        allow delete: if false;
-      }
-
       match /zivozone/rewardClaim {
         allow read: if isOwner() || isSelf(userId);
         allow write: if false;
@@ -101,17 +73,12 @@ service cloud.firestore {
         allow read: if isOwner() || isSelf(userId);
         allow create: if isSelf(userId)
           && request.resource.data.eventId == entryId
-          && (
-            ((request.resource.data.type == 'mining_deposit' || request.resource.data.type == 'mining_transfer')
-              && request.resource.data.amount > 0
-              && request.resource.data.source == 'zivozone-mining-wallet-v1164')
-            || (request.resource.data.claimId == entryId
-              && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.status == 'consumed'
-              && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.amount == request.resource.data.amount
-              && ((request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10)
-                || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2])
-                || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5])))
-          );
+          && request.resource.data.claimId == entryId
+          && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.status == 'consumed'
+          && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.amount == request.resource.data.amount
+          && ((request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10)
+            || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2])
+            || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]));
         allow update,delete: if false;
       }
     }
