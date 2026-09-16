@@ -8,7 +8,3 @@
 - لا Firebase Functions ولا خدمة مدفوعة.
 
 مهم: لا يمكن لأي مصدر مجاني عام أن يضمن حرفيًا كل بطولة في العالم. V1157 يعرض جميع البطولات التي يدعمها/يرجعها المصدران المستخدمان، بدل إظهار بطولات وهمية أو فارغة.
-
-
-## V1160 replacement note
-This file is retained as historical documentation; V1160 replaces the previous Match Center UI and runtime rather than layering over it.
