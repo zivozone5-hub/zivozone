@@ -7,7 +7,19 @@ service cloud.firestore {
     function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastRewardClaimId']); }
     function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward']; }
     function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]); }
-    function validRewardClaim(claimId) { return request.resource.data.claimId == claimId && request.resource.data.status == 'consumed' && request.resource.data.consumedAt == request.time && rewardTypeValid() && rewardAmountValid(); }
+    function validRewardClaim(claimId) {
+      return request.resource.data.claimId == claimId
+        && request.resource.data.status == 'consumed'
+        && request.resource.data.consumedAt == request.time
+        && rewardTypeValid()
+        && rewardAmountValid()
+        // SECURITY FIX (was dead code): a challenge_reward claim must also satisfy
+        // perfectClaim() below, otherwise any signed-in user could mint 10 ZIVO
+        // by writing a matching document directly, without ever playing.
+        && (request.resource.data.type != 'challenge_reward' || perfectClaim())
+        && (request.resource.data.type != 'mission_reward' || request.resource.data.policy == 'mission_reward')
+        && (request.resource.data.type != 'competition_reward' || request.resource.data.policy == 'competition_reward');
+    }
     function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
     function perfectClaim() {
       return request.resource.data.amount == 10

@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="core/styles/index.css?v=1142.0">
+<link rel="stylesheet" href="core/styles/index.css?v=1180.0">
 
 
 
@@ -45,7 +45,9 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="core/styles/core.css?v=1142.0">
+<link rel="stylesheet" href="core/styles/core.css?v=1180.0">
+<link rel="stylesheet" href="core/styles/forensic-case.css?v=1180.0">
+<link rel="stylesheet" href="core/styles/player-hub.css?v=1180.0">
 </head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -57,7 +59,7 @@
     <a href="#ai" data-i18n="ai">ZIVO AI</a>
     <a href="#identity" data-i18n="identity">من أنا؟</a>
     <a href="#sports" data-i18n="sports">الرياضة</a>
-    <a href="#profile" data-i18n="profile">ملفي</a>
+    <a href="#player-home" data-player-home>رحلة اللاعب</a>
   </nav>
   <div class="top-actions"><button id="audio-toggle" class="icon-btn" type="button" aria-label="Sound">🔊</button><span id="firebase-status" class="firebase-status" title="Firebase">●</span>
     <label class="sr-only" for="language-select">Language</label>
@@ -133,8 +135,8 @@
       <div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 الغرفة المظلمة</h3><p>تجربة سينمائية كاملة الشاشة. اضغط في أي مكان للدخول مباشرة.</p><b>دخول الغرفة ↗</b></div>
     </article>
     <article class="zivo-signature-card forensic" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي">
-      <div class="zivo-signature-media"><img src="assets/forensic/scene-camera.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">CASE LAB</span></div>
-      <div class="zivo-signature-copy"><span>02 // INVESTIGATION EXPERIENCE</span><h3>🕵️ المختبر الجنائي</h3><p>أدلة، صور، زمن، واستنتاجات. اضغط في أي مكان لفتح القضية.</p><b>فتح القضية ↗</b></div>
+      <div class="zivo-signature-media forensic-cinematic-poster"><img src="assets/forensic-cinema/entry.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">مسرح القضية</span></div>
+      <div class="zivo-signature-copy"><span>02 // تجربة التحقيق</span><h3>🕵️ المختبر الجنائي</h3><p>ادخل مسرح القضية، افحص الأدلة، اربط الزمن والوقائع، وابنِ استنتاجك بنفسك.</p><b>بدء التحقيق ↗</b></div>
     </article>
   </div>
 </section>
@@ -163,15 +165,15 @@
 </section>
 <section id="identity" class="section"><div class="identity-panel"><div><span class="eyebrow" data-i18n="identityEyebrow">من أنا؟</span><h2 data-i18n="identityTitle">اكتشف شخصيتك داخل ZIVOZONE</h2><p data-i18n="identityText">اختبار ترفيهي يحلل نمط اختياراتك، وليس تشخيصًا نفسيًا.</p></div><button class="btn btn-primary btn-lg" data-action="open-identity" data-i18n="identityStart">ابدأ الاختبار</button></div></section>
 <section id="ai" class="section alt"><div class="section-heading"><div><span class="eyebrow" data-i18n="aiEyebrow">ZIVO AI</span><h2 data-i18n="aiTitle">مساعد ZIVO الذكي</h2></div></div><div class="ai-panel"><div id="ai-messages" class="ai-messages"><div class="ai-message bot" data-i18n="aiWelcome">أهلًا بك 🤖 اسألني عن مستواك أو الألعاب أو التحديات أو الرياضة.</div></div><form id="ai-form" class="ai-form"><input id="ai-input" maxlength="1000" required data-i18n-placeholder="aiPlaceholder" placeholder="اكتب سؤالك..."><button class="btn btn-primary" type="submit" data-i18n="send">إرسال</button></form><small class="muted" data-i18n="aiNote">ZIVO AI يعمل عبر Firebase AI Logic + Gemini عند تفعيل الخدمة في مشروع Firebase. 10 رسائل مجانية يوميًا لكل متصفح في هذه المرحلة.</small></div></section>
-<section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading mc-heading"><div><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><p>النتائج والمواعيد والمباريات المباشرة والبطولات في مكان واحد.</p></div><span class="live-badge">LIVE / MATCH CENTER</span></div><div id="fixture-list" class="match-center-host"></div></section>
-<section id="profile" class="section alt"><div class="profile-panel"><div class="avatar">Z</div><div class="profile-main"><span class="eyebrow" data-i18n="profileEyebrow">لاعب ZIVO</span><h2 id="profile-name">زائر</h2><p id="profile-email" class="muted">يمكنك اللعب كزائر ثم إنشاء حساب لحفظ تقدمك.</p><div class="progress"><span id="xp-progress"></span></div><div class="profile-stats"><span><span data-i18n="level">المستوى</span> <b id="profile-level">1</b></span><span><span data-i18n="xp">XP</span> <b id="profile-xp">0</b></span><span>🪙 <span data-i18n="coins">ZIVO</span> <b id="profile-coins">0</b></span><span>🏆 <span data-i18n="wins">انتصارات</span> <b id="profile-wins">0</b></span><span>🔥 <span data-i18n="bestStreak">أفضل سلسلة</span> <b id="profile-best-streak">0</b></span></div></div><div class="profile-actions"><button class="btn btn-primary" data-action="login" data-i18n="account">🔐 الحساب</button><button id="logout-btn" class="btn btn-ghost" data-action="logout" hidden data-i18n="logout">تسجيل الخروج</button></div></div><div class="zivo-player-tools" aria-label="أدوات اللاعب"><button type="button" data-zivo-tool="daily">🎯 تحدي اليوم</button><button type="button" data-zivo-tool="missions">📋 مهامي</button><button type="button" data-zivo-tool="competition">🏆 المنافسة</button><button type="button" data-zivo-tool="achievements">🏅 إنجازاتي</button></div><div class="profile-cloud-note">☁️ <b>ملف اللاعب:</b> تقدمك وXP وZIVO والنتائج تُدار من هذا القسم بعد تسجيل الدخول.</div><div class="notice" data-i18n="saveHint">الزائر يستطيع اللعب. الحساب المجاني يحفظ تقدمك وXP وZIVO والنتائج.</div></section>
+<section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading mc-heading"><div><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><p>النتائج والمواعيد والمباريات المباشرة والبطولات في مكان واحد.</p></div><span class="live-badge">مباشر · مركز المباريات</span></div><div id="fixture-list" class="match-center-host"></div></section>
+
 </main>
 <nav class="mobile-nav" aria-label="Mobile navigation">
   <a href="#home" data-mobile-nav="home">⌂<span data-i18n="home">الرئيسية</span></a>
   <a href="#challenges" data-mobile-nav="challenges">⚡<span data-i18n="challenges">التحديات</span></a>
   <a href="#ai" data-mobile-nav="ai">🤖<span>ZIVO AI</span></a>
   <a href="#sports" data-mobile-nav="sports">⚽<span data-i18n="sports">الرياضة</span></a>
-  <a href="#profile" data-mobile-nav="profile">👤<span data-i18n="profile">ملفي</span></a>
+  <a href="#player-home" data-mobile-nav="player-home" data-player-home>👤<span>رحلة اللاعب</span></a>
 </nav>
 </div>
 <footer class="footer"><strong>ZIVOZONE</strong><span>© 2026 ZIVOZONE</span><span id="footer-tagline">Built for the next generation.</span><button id="zivo-terms-footer" class="zivo-footer-link" type="button">الشروط والاستخدام</button></footer>
@@ -189,7 +191,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1142.0"></script>
+<script type="module" src="zivo-ai.js?v=1180.0"></script>
 
 
 
@@ -212,62 +214,44 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="core/config.js?v=1142.0"></script>
-<script src="core/events.js?v=1142.0"></script>
-<script src="core/state.js?v=1142.0"></script>
-<script src="core/modules/question-bank.js?v=1142.0"></script>
-<!-- V1141 core: core/runtime.js (a 144KB file pasted together from 16
-     historical version files) has been split into real, separate modules.
-     Dead sub-modules that runtime.js used to load but that nothing in the
-     app ever called (rotation V18/V22, cloud-progression V21, cloud-core
-     V43, score-gate V45, smart-metrics V23) are parked under
-     dev/parked-legacy/ and intentionally NOT loaded here.
-     See CHANGELOG_V1127_REFACTOR.md for the full evidence trail. -->
-<script src="core/modules/runtime/audio.js?v=1142.0"></script>
-<script src="core/modules/runtime/i18n.js?v=1142.0"></script>
-<script src="core/modules/runtime/ads.js?v=1142.0"></script>
-<script src="core/modules/runtime/auth-core.js?v=1142.0"></script>
-<script src="core/modules/runtime/app-shell.js?v=1142.0"></script>
-<script src="core/modules/runtime/dedupe.js?v=1142.0"></script>
-<script src="core/modules/runtime/question-history.js?v=1142.0"></script>
-<script src="core/modules/runtime/server-adapter.js?v=1142.0"></script>
-<script src="core/modules/runtime/engagement.js?v=1142.0"></script>
-<script src="core/modules/runtime/live-hud.js?v=1142.0"></script>
-<script src="core/modules/match-center.js?v=1142.0"></script>
-<script src="core/modules/auth.js?v=1142.0"></script>
-<script src="core/modules/player.js?v=1142.0"></script>
-<script src="core/modules/economy.js?v=1142.0"></script>
-<script src="core/modules/challenges.js?v=1142.0"></script>
-<script src="core/modules/cloud.js?v=1142.0"></script>
-<script src="core/modules/achievements.js?v=1142.0"></script>
-<script src="core/modules/daily.js?v=1142.0"></script>
-<script src="core/modules/competition.js?v=1142.0"></script>
-<script src="core/modules/missions.js?v=1142.0"></script>
-<script src="core/modules/player-hub.js?v=1142.0"></script>
-<script src="core/modules/news.js?v=1142.0"></script>
-<script src="core/modules/admin.js?v=1142.0"></script>
-<script src="core/modules/ui.js?v=1142.0"></script>
-<script src="core/app.js?v=1142.0"></script>
-<script src="core/boot.js?v=1142.0"></script>
+<script src="core/config.js?v=1180.0"></script>
+<script src="core/events.js?v=1180.0"></script>
+<script src="core/state.js?v=1180.0"></script>
+<script src="core/modules/question-bank.js?v=1180.0"></script>
+<script src="core/modules/runtime/audio.js?v=1180.0"></script>
+<script src="core/modules/runtime/i18n.js?v=1180.0"></script>
+<script src="core/modules/runtime/ads.js?v=1180.0"></script>
+<script src="core/modules/auth.js?v=1180.0"></script>
+<script src="core/modules/runtime/app-shell.js?v=1180.0"></script>
+<script src="core/modules/runtime/dedupe.js?v=1180.0"></script>
+<script src="core/modules/runtime/question-history.js?v=1180.0"></script>
+<script src="core/modules/runtime/server-adapter.js?v=1180.0"></script>
+<script src="core/modules/runtime/engagement.js?v=1180.0"></script>
+<script src="core/modules/runtime/live-hud.js?v=1180.0"></script>
+<script src="core/modules/match-center.js?v=1180.0"></script>
+<script src="core/modules/player.js?v=1180.0"></script>
+<script src="core/modules/economy.js?v=1180.0"></script>
+<script src="core/modules/forensic-case-core.js?v=1180.0"></script>
+<script src="core/modules/challenges.js?v=1180.0"></script>
+<script src="core/modules/cloud.js?v=1180.0"></script>
+<script src="core/modules/achievements.js?v=1180.0"></script>
+<script src="core/modules/daily.js?v=1180.0"></script>
+<script src="core/modules/competition.js?v=1180.0"></script>
+<script src="core/modules/missions.js?v=1180.0"></script>
+<script src="core/modules/player-hub.js?v=1180.0"></script>
+<script src="core/modules/news.js?v=1180.0"></script>
+<script src="core/modules/admin.js?v=1180.0"></script>
+<script src="core/modules/ui.js?v=1180.0"></script>
+<script src="core/app.js?v=1180.0"></script>
+<script src="core/boot.js?v=1180.0"></script>
 <script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
 
 
 <script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js",{scope:"/"}).catch(e=>console.warn("ZIVOZONE SW:",e)));}</script>
 
-<!-- ZIVO V101 UNIFIED MOBILE-FIRST ECONOMY
-     Single responsive codebase: mobile is the primary UX target.
-     Economy contract:
-       XP      = progression / level (not spendable)
-       ZIVO    = virtual in-platform currency (not cash-out)
-       TICKETS = event/tournament entry units
-     Primary action rule: one primary action per user intent.
-     Backend must validate all ZIVO/XP transactions server-side.
--->
 
 
 
-
-<!-- ZIVOZONE V1089 CORE -->
 
 </body>
 </html>
