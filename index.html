@@ -45,8 +45,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="core/styles/core.css?v=1185.0">
-<link rel="stylesheet" href="core/styles/forensic-case.css?v=1185.0">
+<link rel="stylesheet" href="core/styles/core.css?v=1182.0">
+<link rel="stylesheet" href="core/styles/forensic-case.css?v=1180.0">
 <link rel="stylesheet" href="core/styles/player-hub.css?v=1180.0">
 </head>
 <body>
@@ -64,17 +64,131 @@
   <div class="top-actions"><button id="audio-toggle" class="icon-btn" type="button" aria-label="Sound">🔊</button><span id="firebase-status" class="firebase-status" title="Firebase">●</span>
     <label class="sr-only" for="language-select">Language</label>
     <select id="language-select" aria-label="Language">
-<option value="ar">العربية</option>
-<option value="en">English</option>
-<option value="zh">中文</option>
-<option value="hi">हिन्दी</option>
-<option value="fr">Français</option>
-<option value="es">Español</option>
-<option value="fa">فارسی</option>
-</select>
+      <option value="ar">العربية</option>
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+      <option value="hi">हिन्दी</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+      <option value="fa">فارسی</option>
+    </select>
     <button id="login-btn" class="btn btn-primary" data-i18n="login">🔐 إنشاء حساب / دخول</button>
   </div>
+</header>
+<main>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section id="home" class="hero section">
+  <div class="hero-copy">
+    <span class="eyebrow" data-i18n="heroEyebrow">عالم رقمي • ZIVOZONE</span>
+    <h1><span class="hero-brand">ZIVOZONE</span><br><span data-i18n="heroTitle">عالمك يبدأ من هنا</span></h1>
+    <p data-i18n="heroText">ألعاب وتحديات وذكاء ورعب وعلوم ورياضة واكتشاف للشخصية في عالم رقمي واحد.</p>
+    <div class="hero-actions"><button class="btn btn-primary btn-lg" data-action="scroll-challenges" data-i18n="play">🚀 ابدأ اللعب</button><button class="btn btn-ghost btn-lg" data-action="open-identity" data-i18n="discover">🧠 اكتشف نفسك</button></div>
+    <div class="hero-stats"><div><b>5</b><span data-i18n="languages">لغات</span></div><div><b>10+</b><span data-i18n="modes">أنماط ألعاب</span></div><div><b>100+</b><span data-i18n="challengesCount">تحديات</span></div></div>
+  </div>
+  <div class="hero-orb-wrap"><div class="hero-orb"><span>Z</span></div><span class="float-tag t1">IQ</span><span class="float-tag t2">AI</span><span class="float-tag t3">HORROR</span><span class="float-tag t4">SPORT</span></div>
+</section>
+
+
+
+<section class="zivo-news-stack" aria-label="أخبار ZIVOZONE" data-news-core="1127">
+  <div class="zivo-news-rail zivo-sports-rail" dir="rtl">
+    <div class="zivo-rail-head"><span class="zivo-rail-live">عاجل</span><span class="zivo-rail-title">كرة القدم</span></div>
+    <div class="zivo-rail-window"><div class="zivo-rail-track" id="z50track"><span class="zivo-news-item"><span class="zivo-news-brand">ZIVOZONE</span><span class="zivo-news-headline">جاري تحميل أخبار كرة القدم...</span></span></div></div>
+  </div>
+  <div class="zivo-news-rail zivo-politics-rail" dir="rtl">
+    <div class="zivo-rail-head"><span class="zivo-rail-badge">أخبار</span><span class="zivo-rail-title">السياسة</span></div>
+    <div class="zivo-rail-window"><div class="zivo-rail-track" id="zivoGeneralTrack"><span class="zivo-news-item"><span class="zivo-news-brand">ZIVOZONE</span><span class="zivo-news-headline">جاري تحميل الأخبار السياسية...</span></span></div></div>
+  </div>
+</section>
+
+<section class="zivo-signature-zone" aria-label="تجارب ZIVOZONE الرئيسية">
+  <div class="zivo-signature-head"><div><span class="eyebrow">ZIVOZONE SIGNATURE</span><h2>تجارب ZIVOZONE الرئيسية</h2><p>قسم واحد بارز لتجربتين لا تشبهان أي تحدٍ آخر.</p></div><span class="zivo-signature-live">● دخول مباشر</span></div>
+  <div class="zivo-signature-grid">
+    <article class="zivo-signature-card dark" data-challenge="horror" tabindex="0" role="button" aria-label="دخول الغرفة المظلمة">
+      <div class="zivo-signature-media"><img src="assets/challenge-posters/horror.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">FULL SCREEN</span></div>
+      <div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 الغرفة المظلمة</h3><p>تجربة سينمائية كاملة الشاشة. اضغط في أي مكان للدخول مباشرة.</p><b>دخول الغرفة ↗</b></div>
+    </article>
+    <article class="zivo-signature-card forensic" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي">
+      <div class="zivo-signature-media forensic-cinematic-poster"><img src="assets/forensic-cinema/entry.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">مسرح القضية</span></div>
+      <div class="zivo-signature-copy"><span>02 // تجربة التحقيق</span><h3>🕵️ المختبر الجنائي</h3><p>ادخل مسرح القضية، افحص الأدلة، اربط الزمن والوقائع، وابنِ استنتاجك بنفسك.</p><b>بدء التحقيق ↗</b></div>
+    </article>
+  </div>
+</section>
+
+<section id="challenges" class="section alt challenge-center-section">
+  <div class="section-heading challenge-center-heading">
+    <div><span class="eyebrow" data-i18n="challengeEyebrow">مركز التحديات</span><h2 data-i18n="challengeTitle">مركز التحديات</h2><p class="muted" data-i18n="challengeText">كل تحدٍ عالم مستقل؛ اختر واحدًا وابدأ رحلة تتصاعد في الصعوبة.</p></div>
+    <div class="challenge-center-meta"><span id="player-level-chip" class="level-chip">Level 1</span><span class="challenge-live-chip">● LIVE CHALLENGE ENGINE</span></div>
+  </div>
+  <div class="ad-slot ad-top" data-ad-slot="top"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
+  <div class="challenge-layout premium-challenge-layout">
+    <aside class="ad-column ad-left" aria-label="Future advertising area">
+      <div class="ad-slot" data-ad-slot="left-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
+      <div class="ad-slot" data-ad-slot="left-2"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>ZIVO Partner</strong></div>
+    </aside>
+    <div class="challenge-main">
+      <div class="challenge-toolbar"><span class="muted" data-i18n="challengeToolbar">تحديات متنوعة: منطق، ذاكرة، رياضيات، علوم، كرة قدم، سرعة، واستراتيجية. • 30 ثانية لكل سؤال.</span></div>
+      <div id="challenge-list" class="challenge-list"></div>
+    </div>
+    <aside class="ad-column ad-right" aria-label="Future advertising area">
+      <div class="ad-slot" data-ad-slot="right-1"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>Premium</strong></div>
+      <div class="ad-slot" data-ad-slot="right-2"><span class="ad-badge" data-i18n="ad">إعلان</span><strong>ZIVO Partner</strong></div>
+    </aside>
+  </div>
+  <div class="ad-slot ad-bottom" data-ad-slot="bottom"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
+</section>
+<section id="identity" class="section"><div class="identity-panel"><div><span class="eyebrow" data-i18n="identityEyebrow">من أنا؟</span><h2 data-i18n="identityTitle">اكتشف شخصيتك داخل ZIVOZONE</h2><p data-i18n="identityText">اختبار ترفيهي يحلل نمط اختياراتك، وليس تشخيصًا نفسيًا.</p></div><button class="btn btn-primary btn-lg" data-action="open-identity" data-i18n="identityStart">ابدأ الاختبار</button></div></section>
+<section id="ai" class="section alt"><div class="section-heading"><div><span class="eyebrow" data-i18n="aiEyebrow">ZIVO AI</span><h2 data-i18n="aiTitle">مساعد ZIVO الذكي</h2></div></div><div class="ai-panel"><div id="ai-messages" class="ai-messages"><div class="ai-message bot" data-i18n="aiWelcome">أهلًا بك 🤖 اسألني عن مستواك أو الألعاب أو التحديات أو الرياضة.</div></div><form id="ai-form" class="ai-form"><input id="ai-input" maxlength="1000" required data-i18n-placeholder="aiPlaceholder" placeholder="اكتب سؤالك..."><button class="btn btn-primary" type="submit" data-i18n="send">إرسال</button></form><small class="muted" data-i18n="aiNote">ZIVO AI يعمل عبر Firebase AI Logic + Gemini عند تفعيل الخدمة في مشروع Firebase. 10 رسائل مجانية يوميًا لكل متصفح في هذه المرحلة.</small></div></section>
+<section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading mc-heading"><div><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><p>النتائج والمواعيد والمباريات المباشرة والبطولات في مكان واحد.</p></div><span class="live-badge">مباشر · مركز المباريات</span></div><div id="fixture-list" class="match-center-host"></div></section>
+
+</main>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="#home" data-mobile-nav="home">⌂<span data-i18n="home">الرئيسية</span></a>
+  <a href="#challenges" data-mobile-nav="challenges">⚡<span data-i18n="challenges">التحديات</span></a>
+  <a href="#ai" data-mobile-nav="ai">🤖<span>ZIVO AI</span></a>
+  <a href="#sports" data-mobile-nav="sports">⚽<span data-i18n="sports">الرياضة</span></a>
+  <a href="#player-home" data-mobile-nav="player-home" data-player-home>👤<span>رحلة اللاعب</span></a>
+</nav>
+</div>
+<footer class="footer"><strong>ZIVOZONE</strong><span>© 2026 ZIVOZONE</span><span id="footer-tagline">Built for the next generation.</span><button id="zivo-terms-footer" class="zivo-footer-link" type="button">الشروط والاستخدام</button></footer>
+<div id="modal-root" class="modal-root" aria-hidden="true"></div><div id="toast-container" class="toast-container" aria-live="polite"></div>
+<script>
+window.ZIVOZONE_FIREBASE_CONFIG={apiKey:'AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s',authDomain:'zivozone-fc6ed.firebaseapp.com',projectId:'zivozone-fc6ed',storageBucket:'zivozone-fc6ed.firebasestorage.app',messagingSenderId:'169366383094',appId:'1:169366383094:web:5875e8d24b1c543e4a7fd7',measurementId:'G-ZXW8LP39JY'};
+/* Optional secure backends. Leave blank until a server endpoint is deployed. */
+window.ZIVOZONE_API={aiEndpoint:'',sportsNewsEndpoint:'',aiCallable:'zivoAI',sportsCallable:'getSportsBroadcast'};
+window.ZIVOZONE_GAME_RULES={questionSeconds:30,version:'V62-clean-engine'};
+// IMPORTANT: raw reCAPTCHA Enterprise SITE KEY only (no <script> tag).
+window.ZIVOZONE_SECURITY={appCheckSiteKey:'6LcDYbctAAAAAHJP_2BRgSXi3cnq1iKxCNTH1zBW'};
+window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
+</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -116,7 +230,7 @@
 <script src="core/modules/runtime/server-adapter.js?v=1180.0"></script>
 <script src="core/modules/runtime/engagement.js?v=1180.0"></script>
 <script src="core/modules/runtime/live-hud.js?v=1180.0"></script>
-<script src="core/modules/match-center.js?v=1182.0"></script>
+<script src="core/modules/match-center.js?v=1185.0"></script>
 <script src="core/modules/player.js?v=1180.0"></script>
 <script src="core/modules/economy.js?v=1180.0"></script>
 <script src="core/modules/forensic-case-core.js?v=1185.0"></script>
