@@ -1,0 +1,512 @@
+{
+  "version": "V1142 TRUE CLEAN CORE",
+  "source": "V1141 reference rebuild",
+  "rules": [
+    "single Auth owner",
+    "no archived duplicate Auth",
+    "no legacy Auth global",
+    "canonical public contract: ZIVOZONE.Auth"
+  ],
+  "files": [
+    {
+      "path": ".firebaserc",
+      "bytes": 56,
+      "sha256": "9b87a313c9e08366c8ace65021b6302287ebd8f40585394a90cc8d28dbe88bf0"
+    },
+    {
+      "path": ".github/workflows/news-update.yml",
+      "bytes": 658,
+      "sha256": "305a7fcb1338555cc920e7cb4e0eaf95ed0fc4789a3be79c101ea17baf4864f2"
+    },
+    {
+      "path": "CHANGELOG_V1127_REFACTOR.md",
+      "bytes": 8636,
+      "sha256": "5947873c78fdd6788819f04632267cb4ef5e706b1fbd34330426067fe96f3986"
+    },
+    {
+      "path": "CNAME",
+      "bytes": 13,
+      "sha256": "58e2555331d5adb07f319cd5b80feae27d3dfa9a80be1e2eba2572f17d8648d2"
+    },
+    {
+      "path": "QUESTION_BANK_MANIFEST.json",
+      "bytes": 300,
+      "sha256": "61a79160d712cc36dfee8316b49f6bd09ad5701f65ef40273065953bfbf2d006"
+    },
+    {
+      "path": "README_V1127.md",
+      "bytes": 1512,
+      "sha256": "c8f912560df6205965ff08a186050bc7b0eb274952ec39298fc523cd893d3925"
+    },
+    {
+      "path": "V1140_DELIVERY_REPORT.md",
+      "bytes": 11796,
+      "sha256": "204bf1f06becfcfd12e9e165cee4618660e52b734589eb2ca7a88b609c7892cb"
+    },
+    {
+      "path": "V1141_ENGINEERING_REPORT.md",
+      "bytes": 1083,
+      "sha256": "06b5e8249970d48f5f919b6f25d2e929304b9b3abcb5520da513c9fa7a9daf8c"
+    },
+    {
+      "path": "assets/audio/daily_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "a39d9b4d77a9715ef487ef20fcf36671fd8ae3ff3db6d520387eda9b439f1193"
+    },
+    {
+      "path": "assets/audio/football_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "3b6fd6529fa776a898bee750ad80e776a8f10aed221b2cf2a15e2d07970019f3"
+    },
+    {
+      "path": "assets/audio/horror_ambient.mp3",
+      "bytes": 721023,
+      "sha256": "36584021ecac6b0556d0451049e5b0134e53d67f10c7a6daeb133ced33836b07"
+    },
+    {
+      "path": "assets/audio/horror_laugh.mp3",
+      "bytes": 44243,
+      "sha256": "d1236e31b4c7498304d55ddec81b22eda6e569679b31eb92aa5ed167804ee8f0"
+    },
+    {
+      "path": "assets/audio/horror_scream.mp3",
+      "bytes": 29823,
+      "sha256": "3c68386c29404bace7d47db82eb4022570e3ac4cfe635b6271faaf2d0d6e18a8"
+    },
+    {
+      "path": "assets/audio/iq_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "501f98e74e84cf5b243b6e8becacbdb4d0923513ec91548684da07207a4dca4a"
+    },
+    {
+      "path": "assets/audio/logic_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "d7666c9b803f1db6f60f3b5d9e477fc8cea72c7120d04e90af152b9b8408e385"
+    },
+    {
+      "path": "assets/audio/math_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "5443517a8a24a90df26bca17dfb25d4a5c58d5bd05f38febb4876bc4d65d0428"
+    },
+    {
+      "path": "assets/audio/memory_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "76f26afbac0706bc554a653e1327b3e344ad58db6eca25c76422bf6f324a600d"
+    },
+    {
+      "path": "assets/audio/reaction_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "10120f5d6142f65e3d8156c66e9eed750c5e906051fa65d74aa7bbe8d2cfe984"
+    },
+    {
+      "path": "assets/audio/science_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "3599235bfdeeb16aee5d011312e586d256b4ea1181c4ba52af6413169460ddd0"
+    },
+    {
+      "path": "assets/audio/strategy_ambient.mp3",
+      "bytes": 289062,
+      "sha256": "ebf07294d0279bd45ec60080e982d0c5d4f47f2ca7d85d2cd0b01d89d3013eb1"
+    },
+    {
+      "path": "assets/challenge-4d/daily.svg",
+      "bytes": 1938,
+      "sha256": "f9fe1dda1a61bea59fae47a6337708ec1ea27dee2bdab23340da1db39bf11a69"
+    },
+    {
+      "path": "assets/challenge-4d/focus.svg",
+      "bytes": 1940,
+      "sha256": "51fc21400ea6ace0cca9edef33a00db13d88825197f2ea1bc3f4977377738af6"
+    },
+    {
+      "path": "assets/challenge-4d/football.svg",
+      "bytes": 1940,
+      "sha256": "e55eb9564e431fbf77581009d82d4e5f9d8445be375a3f846e6649ed9acb0fca"
+    },
+    {
+      "path": "assets/challenge-4d/football_intelligence.svg",
+      "bytes": 1940,
+      "sha256": "a7ca5ac432a674b0d93b0125343f68546906a63a12eac5f8a182b7e8d4a5648c"
+    },
+    {
+      "path": "assets/challenge-4d/forensic.svg",
+      "bytes": 1941,
+      "sha256": "7ecac325c278e379cb10589d4ed479908191ce7c8e400012c20f917f8970543f"
+    },
+    {
+      "path": "assets/challenge-4d/horror.svg",
+      "bytes": 3979,
+      "sha256": "87e866f2baad658ab2a17678455de546563c6613f2d960fa41aff345086c69f3"
+    },
+    {
+      "path": "assets/challenge-4d/logic.svg",
+      "bytes": 1940,
+      "sha256": "810995a9383399337fd6663e1db0ded0d8616812f5e4cd83b11f29bc72b6395a"
+    },
+    {
+      "path": "assets/challenge-4d/logic_extreme.svg",
+      "bytes": 1940,
+      "sha256": "7d67bf6f126f4ba6d787beea5cee311dc277c809a522c64a9f9e8e8f90728766"
+    },
+    {
+      "path": "assets/challenge-4d/math.svg",
+      "bytes": 1939,
+      "sha256": "c0ff48e3c19c291204fc41213423693e44ca0338bbada1fc1b3952b0a02dd77d"
+    },
+    {
+      "path": "assets/challenge-4d/memory.svg",
+      "bytes": 1941,
+      "sha256": "acbce23e651f5dc3f8b4d81f0c0ec0d4a3bf273f95ba457361249c5a4327ab9f"
+    },
+    {
+      "path": "assets/challenge-4d/memory_focus.svg",
+      "bytes": 1941,
+      "sha256": "a9c463286d96ce0b662eb4a3cbba7c98c98df791bcb9bfd0a9376aa58c85cd6a"
+    },
+    {
+      "path": "assets/challenge-4d/pattern.svg",
+      "bytes": 1940,
+      "sha256": "be6add262b0cebbde0a30d2bed8c2a4d29157b0b441e04af8fa9ba83c49e6bda"
+    },
+    {
+      "path": "assets/challenge-4d/probability.svg",
+      "bytes": 1941,
+      "sha256": "60bafaf9a20b046532bfdea4e24d253a8a766c3e848f94cc50a5eeea6308e4c5"
+    },
+    {
+      "path": "assets/challenge-4d/reaction.svg",
+      "bytes": 1940,
+      "sha256": "e801104fc508d51d84b1ea843359ce654f41158f16dcf5c0cb5c5cda10dd76c3"
+    },
+    {
+      "path": "assets/challenge-4d/science.svg",
+      "bytes": 1940,
+      "sha256": "8e14aa79246e234c97064a492c7a24422b1809b9857cb18cfed48a56e84524a2"
+    },
+    {
+      "path": "assets/challenge-4d/strategy.svg",
+      "bytes": 1940,
+      "sha256": "c57a5b7933fffc0381c705512d9745fc23ccdd5e5d793c7c55cbb80f1596a8b8"
+    },
+    {
+      "path": "assets/challenge-4d/whoami.svg",
+      "bytes": 1938,
+      "sha256": "d501b2ec04baae7cc4b97a69de8eaceb039e8716fe48493df3118675d264c7b3"
+    },
+    {
+      "path": "assets/challenge-posters/code.svg",
+      "bytes": 1455,
+      "sha256": "f3c5a8e21d0e4afe767292f09a1dd491a878c761f6f5348f6266c96b403287f5"
+    },
+    {
+      "path": "assets/challenge-posters/daily.svg",
+      "bytes": 1454,
+      "sha256": "a4ae05eecf97426f98f38e68334e597ab18840a57d35a08ad9a739b0fd4720fe"
+    },
+    {
+      "path": "assets/challenge-posters/focus.svg",
+      "bytes": 1457,
+      "sha256": "e309f494e2cf6faef31af940182995fdf9e7a56fe29458af12f1b0ffd38234d3"
+    },
+    {
+      "path": "assets/challenge-posters/football.svg",
+      "bytes": 1455,
+      "sha256": "3806e93efd1da370262a4cab5e70ca50e9581309c711c8e261a15dbb76ccc81b"
+    },
+    {
+      "path": "assets/challenge-posters/forensic.svg",
+      "bytes": 1462,
+      "sha256": "b65ef34e9906dda22f6d44770b6c7c3bb1f63bc883d05c30c160a16eaa70292c"
+    },
+    {
+      "path": "assets/challenge-posters/horror.svg",
+      "bytes": 1458,
+      "sha256": "8ca276e55786322aad35ed9a26842c6b3e30806c83b2dda5ca9bf20bc853afea"
+    },
+    {
+      "path": "assets/challenge-posters/iq.svg",
+      "bytes": 1455,
+      "sha256": "c6b0bb5efcd0bdd3a0a2d68d2daab23c8e58da6be9bce32347f5ba00440b27eb"
+    },
+    {
+      "path": "assets/challenge-posters/logic.svg",
+      "bytes": 1458,
+      "sha256": "9607bd5df6c0c4e4d7c02940b1344d8fc5b1e5bb935e60efcc30a6319b10e6e7"
+    },
+    {
+      "path": "assets/challenge-posters/math.svg",
+      "bytes": 1462,
+      "sha256": "f501963e00c016aa3e0a30b22ce5a1968ca2116df5e129d6ea7d6a214591f2cb"
+    },
+    {
+      "path": "assets/challenge-posters/memory.svg",
+      "bytes": 1458,
+      "sha256": "81bb2e43f65bc1df208d6215e1a2a588d5922305bc55f5780074509af08b61f1"
+    },
+    {
+      "path": "assets/challenge-posters/probability.svg",
+      "bytes": 1454,
+      "sha256": "a8267e8c6cebfe9c4933c46db0ac84e9ea6dcb0a4bf7c4c4967de6d91025a3b3"
+    },
+    {
+      "path": "assets/challenge-posters/science.svg",
+      "bytes": 1456,
+      "sha256": "15958b50cac7cf8011d6827b1e11df387155a965ab1a8aba4b035823f4f7bc8d"
+    },
+    {
+      "path": "assets/challenge-posters/strategy.svg",
+      "bytes": 1454,
+      "sha256": "6d7d98194393067dc35fb0f05d8719bc2f457f007a8b03516ca900917be13f98"
+    },
+    {
+      "path": "assets/challenge-posters/visual.svg",
+      "bytes": 1457,
+      "sha256": "a831f1d5f5be71cdbd07fd29383fee02cb0beb0a565194b0088406d14a53dbfd"
+    },
+    {
+      "path": "assets/forensic/scene-camera.svg",
+      "bytes": 706,
+      "sha256": "9ba7cc79b38cff6076103974f456bb42f95ffe3efedce1c005699cb34d2a132f"
+    },
+    {
+      "path": "assets/forensic/scene-desk.svg",
+      "bytes": 908,
+      "sha256": "d46b1c951f3a8ac46baeb4ed4a739333cfb949a362f8645d2958e97436197359"
+    },
+    {
+      "path": "assets/forensic/scene-door.svg",
+      "bytes": 771,
+      "sha256": "3a73046b0acaa1e8352a93b37e6aa6e02a203cb7bdb5e24e1255fe43b6b70535"
+    },
+    {
+      "path": "assets/icons/zivo-192.png",
+      "bytes": 7689,
+      "sha256": "04add2c66b58a995ff618a20e8541cc40fa8d15dc1d74d21ea74bfaa155da545"
+    },
+    {
+      "path": "assets/icons/zivo-512.png",
+      "bytes": 24382,
+      "sha256": "2f6736b7cf25356d85de8295510e50feb50f130468b213ff5b74d6ff82b1eb37"
+    },
+    {
+      "path": "assets/zivo-hero-player.svg",
+      "bytes": 2131,
+      "sha256": "3d5a5872b664db133f3eddac9b97b6eb6a5915eef7065c23522de2a5f6f65f31"
+    },
+    {
+      "path": "core/app.js",
+      "bytes": 1228,
+      "sha256": "03da7547e2bd7d1d594f62af2167a43e32d4a771dfef22488eee8dedd0d8105e"
+    },
+    {
+      "path": "core/boot.js",
+      "bytes": 835,
+      "sha256": "22d660d169048239f4593d241c43e40c0f7cd61b03fe68a2e748e4a3621210a0"
+    },
+    {
+      "path": "core/config.js",
+      "bytes": 542,
+      "sha256": "977e18e7250329a860380d85567d27e189b63f36a99f34fe715c867668b1aa39"
+    },
+    {
+      "path": "core/events.js",
+      "bytes": 2705,
+      "sha256": "27864a6a551ca71819f3cfe0788572aa156ab42c6cd10b3c1906b33017f8b813"
+    },
+    {
+      "path": "core/modules/achievements.js",
+      "bytes": 3113,
+      "sha256": "dd515c961cfc9554c633eb67546a545cc61c4f8f01d6c2eac193a266e4d4f6fc"
+    },
+    {
+      "path": "core/modules/admin.js",
+      "bytes": 9224,
+      "sha256": "855e9aa6a98475eb32692561fcd26edf13c20763d679b40e73bd59220b0dd254"
+    },
+    {
+      "path": "core/modules/auth.js",
+      "bytes": 10942,
+      "sha256": "aee40fcbdf36486f6e2d75294b3bf1b2f9d11c29d5ea9493157b1584dff04791"
+    },
+    {
+      "path": "core/modules/challenges.js",
+      "bytes": 18545,
+      "sha256": "f7a084f24a4b7f011219bf76620e917491d720e1232ad5b13f74219fa0f81d49"
+    },
+    {
+      "path": "core/modules/cloud.js",
+      "bytes": 1506,
+      "sha256": "8d1606c6bd5690897b2dddf572c4b07ad87d5a64c0ec185860c770a3f8631b98"
+    },
+    {
+      "path": "core/modules/competition.js",
+      "bytes": 3646,
+      "sha256": "b061ce529a92902bcd042c688e679495d7c7d3676572089a7a582ee72e48c70e"
+    },
+    {
+      "path": "core/modules/daily.js",
+      "bytes": 2285,
+      "sha256": "2f03d60f93a94b6a88c5bc702b36907c42edaf3aeb22a4cfdfe915a13c648b9e"
+    },
+    {
+      "path": "core/modules/economy.js",
+      "bytes": 20726,
+      "sha256": "010109124feb94b142747738da8cb571ecb2483cc4320d9872a72dd8c6298613"
+    },
+    {
+      "path": "core/modules/match-center.js",
+      "bytes": 28073,
+      "sha256": "c0243686ed017ffbc45b9e24096040bbc3da898ff7b654e8e1dbd84b453c96fd"
+    },
+    {
+      "path": "core/modules/missions.js",
+      "bytes": 3091,
+      "sha256": "c68b70466fa32141d399f63beff46ae12b19198b4305cf8c2f8432f67affa724"
+    },
+    {
+      "path": "core/modules/news.js",
+      "bytes": 5083,
+      "sha256": "150f073ad4655fec8148313e4a8994e1d42c0fc5bba309aecce9f11baf7ca64c"
+    },
+    {
+      "path": "core/modules/player-hub.js",
+      "bytes": 9681,
+      "sha256": "6aa47091c24ed55a63f85c1a9c0fbcc295ff96205e08b406f1b044f67af13e38"
+    },
+    {
+      "path": "core/modules/player.js",
+      "bytes": 3983,
+      "sha256": "4f1fe0e0a9440a2726b2a4e9a41ef0de2184da94ba74c7b2b4e32bafeeb05948"
+    },
+    {
+      "path": "core/modules/question-bank.js",
+      "bytes": 238882,
+      "sha256": "dc98e70c7b2260d784b39f1c4a4a3555bb57d815a5cf036fffd04638684191f9"
+    },
+    {
+      "path": "core/modules/runtime/ads.js",
+      "bytes": 2625,
+      "sha256": "89a16ee458a3cb4292a25895794f4436c5d5177a12d3135aa821cfd0d9c2f88a"
+    },
+    {
+      "path": "core/modules/runtime/app-shell.js",
+      "bytes": 35152,
+      "sha256": "3b2f887bf0155fd3b239d29d5b9cb91cc211e71c8129805d6751b61f98347294"
+    },
+    {
+      "path": "core/modules/runtime/audio.js",
+      "bytes": 10408,
+      "sha256": "19986fb21b5e252f5cf44ba9736a2577e9c7c53b2d3a067205361bab644fd066"
+    },
+    {
+      "path": "core/modules/runtime/dedupe.js",
+      "bytes": 2544,
+      "sha256": "8c5ee707be9a5f48aa22bcaefc03f8e91a9d66140ab13dbe0efdf2cc8312d04a"
+    },
+    {
+      "path": "core/modules/runtime/engagement.js",
+      "bytes": 2829,
+      "sha256": "a4de9f49f15736907b7a67f65ade0ddb1c8b502e403cf871fc78c7c8821960a7"
+    },
+    {
+      "path": "core/modules/runtime/i18n.js",
+      "bytes": 59259,
+      "sha256": "c477a924451a18cdc6767a8f5e2af588b873f02e7f45037742cb8651a418f42f"
+    },
+    {
+      "path": "core/modules/runtime/live-hud.js",
+      "bytes": 1445,
+      "sha256": "c3ef93dfed987b4862dd96ddc3102911c9a5a2887c255bc9bb741fc60dc702e8"
+    },
+    {
+      "path": "core/modules/runtime/question-history.js",
+      "bytes": 3079,
+      "sha256": "1e2c03c5a10e659f79c5bc6c9876cb1b0440261b5a57ed5e89b7bff9bed6ac73"
+    },
+    {
+      "path": "core/modules/runtime/server-adapter.js",
+      "bytes": 3631,
+      "sha256": "be4858ec55516d633f58e156ab58c112965fa7b66feaa619bc2ba1bbb5b250d0"
+    },
+    {
+      "path": "core/modules/ui.js",
+      "bytes": 795,
+      "sha256": "6d91c594d90a073fa531f3bd8c9905a30da677dff661aa7b1259a51c05d05861"
+    },
+    {
+      "path": "core/state.js",
+      "bytes": 2017,
+      "sha256": "5d4eb13f3f94e7e7da7be8e22f86ab2db8a78b6f500e3e4f73a0bc7106b7c37b"
+    },
+    {
+      "path": "core/styles/core.css",
+      "bytes": 21323,
+      "sha256": "48c1891c1fd075d1cc736825c15f59efd053de3554f5929f7ef073579940ce8a"
+    },
+    {
+      "path": "core/styles/index.css",
+      "bytes": 144581,
+      "sha256": "21e39d0ead7ad3eb7b420a8f90f1e0d16152f4ee31a8ca48433ad16b0e1ed90e"
+    },
+    {
+      "path": "data/news-sources.json",
+      "bytes": 3560,
+      "sha256": "aa2504f9d6f4b7d72e371b827ab669d63c0fe1fba26d5fbedc992a8e0414eb6b"
+    },
+    {
+      "path": "data/news.json",
+      "bytes": 5983,
+      "sha256": "900692917d73f279bcedd8f77731d55ffce88f7caeede7044c9e28cb5d263248"
+    },
+    {
+      "path": "firebase.json",
+      "bytes": 930,
+      "sha256": "adb7eae65c806f493b523ef0a7a937fd6a253853a56803902fded4239f9d06e0"
+    },
+    {
+      "path": "firestore.rules",
+      "bytes": 7219,
+      "sha256": "08fe93be9158a96cbc2550507e64cfd0e1b0657ad238321b7c12ebedff667c77"
+    },
+    {
+      "path": "index.html",
+      "bytes": 20208,
+      "sha256": "e0c0bff46a3a495fa8166701bda258b4136e31fe24c17fa0a348cd609f139514"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 677,
+      "sha256": "64d3904677f41f829e564844bed37625e230ff98ece5850f1112ea773c780012"
+    },
+    {
+      "path": "robots.txt",
+      "bytes": 65,
+      "sha256": "62a4ff1cfddff215411514a6a31fd4a4fdac330acfea8fef17e536445b4e002b"
+    },
+    {
+      "path": "scripts/qa_v1141.py",
+      "bytes": 1621,
+      "sha256": "1878c96cbbe7c82d5172fc18fe2b4c60729d2cb6f6207dc88b22bc5a03799d0d"
+    },
+    {
+      "path": "scripts/update_news.py",
+      "bytes": 3020,
+      "sha256": "f1223b77255ee3f0cc6cdca470c603df23907f33cb24866ea6786d2121425304"
+    },
+    {
+      "path": "sitemap.xml",
+      "bytes": 156,
+      "sha256": "53e33d34a0313b0dcd99a2440439f9b7da3a0560214cd692608547a6f97a44bd"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1339,
+      "sha256": "344e885138cba2b06b3a530b6e89a67dc4561b88dd63ccf76489c6370425e469"
+    },
+    {
+      "path": "zivo-ai.js",
+      "bytes": 6388,
+      "sha256": "930b695f24a694b4d7a68b42738b6e81be2f39563d9129464818854b1c940d9c"
+    }
+  ]
+}

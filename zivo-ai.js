@@ -1,4 +1,4 @@
-/* ZIVOZONE V1180 — Real ZIVO AI bridge
+/* ZIVOZONE V1070 — Real ZIVO AI bridge
  * Firebase AI Logic + Gemini Developer API.
  * No Gemini API key is stored in the client.
  */
@@ -50,14 +50,14 @@ Keep responses suitable for a broad audience and avoid collecting unnecessary pe
   async function init() {
     if (!cfg?.projectId) throw new Error('Missing Firebase configuration');
     // Use the single default Firebase app. The previous build created a second
-    // named app while the previous runtime had already initialized Firebase,
+    // named app while the legacy runtime had already initialized Firebase,
     // which could result in App Check being initialized on a different app.
     let app;
     const apps = getApps();
     if (apps.length) app = getApp();
     else app = initializeApp(cfg);
 
-    // ZIVOZONE V1180 — App Check is mandatory for Firebase AI Logic.
+    // ZIVOZONE V1070 — App Check is mandatory for Firebase AI Logic.
     // The same public reCAPTCHA Enterprise SCORE-based site key must be registered
     // for the ZIVOZONE WEB app in Firebase Console and allowed for the production domain.
     const appCheckKey = String(window.ZIVOZONE_SECURITY?.appCheckSiteKey || '').trim();
