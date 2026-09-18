@@ -1,4 +1,4 @@
-const CACHE='zivozone-shell-v1143-canonical';
+const CACHE='zivozone-shell-v1141-canonical';
 const SHELL=['/','/index.html','/core/styles/index.css','/core/styles/core.css','/core/config.js','/core/events.js','/core/state.js','/core/app.js','/core/boot.js','/core/modules/question-bank.js','/core/runtime.js','/core/modules/challenges.js','/core/modules/player.js','/core/modules/economy.js','/core/modules/auth.js','/core/modules/player.js','/core/modules/admin.js','/core/modules/player-hub.js','/core/modules/news.js','/core/modules/match-center.js','/manifest.webmanifest'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).catch(()=>{})).then(()=>self.skipWaiting()));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('zivozone-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

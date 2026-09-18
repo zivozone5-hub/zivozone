@@ -81,12 +81,6 @@ service cloud.firestore {
             || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]));
         allow update,delete: if false;
       }
-
-      match /zivozone/progress {
-        allow read: if isOwner() || isSelf(userId);
-        allow create,update: if isSelf(userId) && request.resource.data.keys().hasOnly(['forensic','darkroom','updatedAt']);
-        allow delete: if false;
-      }
     }
 
     match /players/{uid} {
