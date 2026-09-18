@@ -79,42 +79,8 @@ current JS at all.
   audit — no dead globals, no duplicate `window.ZIVOZONE.X` owners, correct
   load order, `scripts/qa_v1141.py` passing.
 
-## Addendum — packaging fix + live-duplicate consolidation
-
-**Packaging bug (fixed):** the first V1142 zip was built with a command that
-excluded every dotfile, which silently dropped `.firebaserc` (and
-`.github/`) from the archive. That is why `firebase deploy` reported "No
-currently active project" — the CLI had no `.firebaserc` to read the default
-project (`zivozone-fc6ed`) from. This zip includes `.firebaserc` and
-`.github/` again. If you still hit the same error after re-extracting, run
-`firebase use --add` once in the project folder to bind it explicitly, or
-pass `--project zivozone-fc6ed` on the deploy command.
-
-**Live-duplicate CSS consolidation (done, not just dead-code removal):**
-Went further than the dead-code pass above and actually resolved the
-selectors that were still live but re-declared across the old V101/V103/V105
-skin layers (`.challenge-center-section`, `.challenge-card`,
-`.challenge-list`, `.challenge-visual`, `.challenge-copy`, `.brand-mark`,
-`.hero-orb-wrap`, `.hero-orb`, `.top-actions`, `.mobile-nav`, `.warden`, and
-44 others — 56 selectors total, all **outside** `@media` blocks). For each
-one, every occurrence's declarations were merged property-by-property using
-real CSS cascade rules — `!important` beats normal regardless of order,
-and among declarations of equal importance the one that appears later in
-the file wins — so the merged, single rule renders **identically** to what
-the old layered version rendered, it just no longer carries the dead,
-always-overridden declarations from the earlier skins. This is mechanical
-and cascade-accurate, not a visual guess, which is why it didn't need the
-live-browser check the note above flagged as missing. `@media`-scoped
-duplicates were intentionally left alone for the same reason as before —
-that still needs a visual pass.
-Result: another ~9.4 KB removed, 56 duplicate top-level selectors reduced to
-one declaration each. Re-verified: 0 duplicate top-level selectors remain,
-brace-balanced, all previously-confirmed-live selectors still present.
-
-**QA script itself had the same disease it was checking for:**
-`scripts/qa_v1141.py` hard-coded the literal string `v=1141.0` as its pass
-condition, so it would have force-failed on every future version bump
-forever (it already did, the moment the assets were bumped to 1142.0). Fixed
-it to check that all local script/style tags share one consistent
-`?v=` version (whatever that version is) instead of a frozen number — same
-intent, no longer version-locked. All checks pass at `v1142.0`.
+## Suggested next step
+A V1143 pass that: (1) resolves the remaining live-but-duplicated CSS
+selectors into one rule each per breakpoint, verified against real
+screenshots before/after; (2) sweeps `@media` bodies for the same class of
+dead code found here.
