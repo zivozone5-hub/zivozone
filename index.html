@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="core/styles/index.css?v=1182.0">
+<link rel="stylesheet" href="core/styles/index.css?v=1181.0">
 
 
 
@@ -45,8 +45,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="core/styles/core.css?v=1182.0">
-<link rel="stylesheet" href="core/styles/forensic-case.css?v=1180.0">
+<link rel="stylesheet" href="core/styles/core.css?v=1181.0">
+<link rel="stylesheet" href="core/styles/forensic-case.css?v=1182.0">
 <link rel="stylesheet" href="core/styles/player-hub.css?v=1180.0">
 </head>
 <body>
@@ -68,9 +68,7 @@
       <option value="en">English</option>
       <option value="zh">中文</option>
       <option value="hi">हिन्दी</option>
-      <option value="fr">Français</option>
       <option value="es">Español</option>
-      <option value="fa">فارسی</option>
     </select>
     <button id="login-btn" class="btn btn-primary" data-i18n="login">🔐 إنشاء حساب / دخول</button>
   </div>
@@ -221,7 +219,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="core/state.js?v=1180.0"></script>
 <script src="core/modules/question-bank.js?v=1180.0"></script>
 <script src="core/modules/runtime/audio.js?v=1180.0"></script>
-<script src="core/modules/runtime/i18n.js?v=1185.0"></script>
+<script src="core/modules/runtime/i18n.js?v=1180.0"></script>
 <script src="core/modules/runtime/ads.js?v=1180.0"></script>
 <script src="core/modules/auth.js?v=1180.0"></script>
 <script src="core/modules/runtime/app-shell.js?v=1180.0"></script>
@@ -230,11 +228,11 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="core/modules/runtime/server-adapter.js?v=1180.0"></script>
 <script src="core/modules/runtime/engagement.js?v=1180.0"></script>
 <script src="core/modules/runtime/live-hud.js?v=1180.0"></script>
-<script src="core/modules/match-center.js?v=1185.0"></script>
+<script src="core/modules/match-center.js?v=1182.0"></script>
 <script src="core/modules/player.js?v=1180.0"></script>
 <script src="core/modules/economy.js?v=1180.0"></script>
-<script src="core/modules/forensic-case-core.js?v=1185.0"></script>
-<script src="core/modules/challenges.js?v=1185.0"></script>
+<script src="core/modules/forensic-case-core.js?v=1182.0"></script>
+<script src="core/modules/challenges.js?v=1182.0"></script>
 <script src="core/modules/cloud.js?v=1180.0"></script>
 <script src="core/modules/achievements.js?v=1180.0"></script>
 <script src="core/modules/daily.js?v=1180.0"></script>
@@ -255,18 +253,5 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 
 
 
-<script>
-(function(){
- function boot(){
-  const s=document.getElementById('zivo-lang-select');
-  if(!s)return;
-  const go=()=>{if(window.ZIVOLanguage)window.ZIVOLanguage.set(s.value);};
-  s.value=window.ZIVOLanguage?.get?.()||localStorage.getItem('zivozone-language')||'ar';
-  s.addEventListener('change',go);
-  document.addEventListener('zivo:language',e=>{s.value=e.detail.code});
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-})();
-</script>
 </body>
 </html>
