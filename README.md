@@ -1,3 +1,9 @@
+# ZIVOZONE V1198 CLEAN CORE HARDENED
+
+V1198 is based on V1197.6 and applies the approved cleanup, navigation-state hardening, lazy audio loading, content integrity guard, and language registry expansion.
+
+See `docs/architecture-audit/V1198_ARCHITECTURE_AUDIT.md` for the release gates.
+
 # ZIVOZONE V1180 — Canonical Maintenance Core
 
 نسخة صيانة شاملة مبنية على نواة واحدة لكل نطاق وظيفي، مع إزالة الملفات غير المستخدمة، وتوحيد مسار رحلة اللاعب، وتحسين التخزين المؤقت، وحماية بيانات مركز المباريات من الاستبدال ببيانات فارغة.

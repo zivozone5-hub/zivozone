@@ -1,18 +1,18 @@
-const CACHE='zivozone-shell-v1197.6';
+const CACHE='zivozone-shell-v1198.0';
 const APP_CODE=/\.(?:js|css)(?:\?.*)?$/i;
 const HTML=/\.html(?:\?.*)?$/i;
 const DATA=/\/data\/(?:matches\/|news\.json)/i;
 const SHELL=[
   '/', '/index.html',
-  '/core/styles/index.css?v=1197.6','/core/styles/core.css?v=1197.6','/core/styles/player-hub.css?v=1197.6','/core/styles/forensic-case.css?v=1197.6','/core/styles/puzzle-room.css?v=1197.6','/core/styles/beauty-room.css?v=1197.6',
-  '/core/config.js?v=1197.6','/core/events.js?v=1197.6','/core/state.js?v=1197.6','/core/app.js?v=1197.6','/core/boot.js?v=1197.6',
-  '/core/modules/question-bank.js?v=1197.6','/core/modules/auth.js?v=1197.6','/core/modules/challenges.js?v=1197.6','/core/modules/player.js?v=1197.6','/core/modules/economy.js?v=1197.6',
-  '/core/modules/admin.js?v=1197.6','/core/modules/player-hub.js?v=1197.6','/core/modules/news.js?v=1197.6','/core/modules/match-center.js?v=1197.6','/core/modules/forensic-case-core.js?v=1197.6',
-  '/core/modules/runtime/i18n.js?v=1197.6','/core/modules/runtime/audio.js?v=1197.6','/core/modules/runtime/ads.js?v=1197.6','/core/modules/runtime/app-shell.js?v=1197.6',
-  '/core/modules/runtime/dedupe.js?v=1197.6','/core/modules/runtime/question-history.js?v=1197.6','/core/modules/runtime/server-adapter.js?v=1197.6','/core/modules/runtime/exit-guard.js?v=1197.6',
-  '/core/modules/runtime/game-registry.js?v=1197.6','/core/modules/runtime/game-session.js?v=1197.6','/core/modules/runtime/game-validator.js?v=1197.6','/core/modules/runtime/game-telemetry.js?v=1197.6','/core/modules/runtime/game-adapters.js?v=1197.6','/core/modules/runtime/game-loader.js?v=1197.6','/core/modules/runtime/game-bridge.js?v=1197.6','/core/modules/runtime/game-platform.js?v=1197.6',
-  '/core/modules/runtime/engagement.js?v=1197.6','/core/modules/runtime/live-hud.js?v=1197.6',
-  '/core/modules/daily.js?v=1197.6','/core/modules/competition.js?v=1197.6','/core/modules/missions.js?v=1197.6','/core/modules/cloud.js?v=1197.6','/core/modules/achievements.js?v=1197.6','/core/modules/ui.js?v=1197.6','/core/modules/puzzle-room.js?v=1197.6','/core/modules/beauty-room.js?v=1197.6','/zivo-ai.js?v=1197.6','/assets/forensic-cinema/entry.svg','/manifest.webmanifest'
+  '/core/styles/index.css?v=1198.0','/core/styles/core.css?v=1198.0','/core/styles/player-hub.css?v=1198.0','/core/styles/forensic-case.css?v=1198.0','/core/styles/puzzle-room.css?v=1198.0','/core/styles/beauty-room.css?v=1198.0',
+  '/core/config.js?v=1198.0','/core/events.js?v=1198.0','/core/state.js?v=1198.0','/core/app.js?v=1198.0','/core/boot.js?v=1198.0',
+  '/core/modules/question-bank.js?v=1198.0','/core/modules/auth.js?v=1198.0','/core/modules/challenges.js?v=1198.0','/core/modules/player.js?v=1198.0','/core/modules/economy.js?v=1198.0',
+  '/core/modules/admin.js?v=1198.0','/core/modules/player-hub.js?v=1198.0','/core/modules/news.js?v=1198.0','/core/modules/match-center.js?v=1198.0','/core/modules/forensic-case-core.js?v=1198.0',
+  '/core/modules/runtime/i18n.js?v=1198.0','/core/modules/runtime/audio.js?v=1198.0','/core/modules/runtime/ads.js?v=1198.0','/core/modules/runtime/app-shell.js?v=1198.0',
+  '/core/modules/runtime/dedupe.js?v=1198.0','/core/modules/runtime/question-history.js?v=1198.0','/core/modules/runtime/server-adapter.js?v=1198.0','/core/modules/runtime/exit-guard.js?v=1198.0',
+  '/core/modules/runtime/game-registry.js?v=1198.0','/core/modules/runtime/game-session.js?v=1198.0','/core/modules/runtime/game-validator.js?v=1198.0','/core/modules/runtime/game-telemetry.js?v=1198.0','/core/modules/runtime/game-adapters.js?v=1198.0','/core/modules/runtime/game-loader.js?v=1198.0','/core/modules/runtime/game-bridge.js?v=1198.0','/core/modules/runtime/game-platform.js?v=1198.0',
+  '/core/modules/runtime/engagement.js?v=1198.0','/core/modules/runtime/live-hud.js?v=1198.0',
+  '/core/modules/daily.js?v=1198.0','/core/modules/competition.js?v=1198.0','/core/modules/missions.js?v=1198.0','/core/modules/cloud.js?v=1198.0','/core/modules/achievements.js?v=1198.0','/core/modules/ui.js?v=1198.0','/core/modules/puzzle-room.js?v=1198.0','/core/modules/beauty-room.js?v=1198.0','/zivo-ai.js?v=1198.0','/assets/forensic-cinema/entry.svg','/manifest.webmanifest'
 ];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).catch(err=>console.warn('ZIVOZONE cache install:',err)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('zivozone-shell-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
