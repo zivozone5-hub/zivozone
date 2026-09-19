@@ -1,8 +1,8 @@
-# ZIVOZONE V1198 CLEAN CORE HARDENED
+# ZIVOZONE V1199 CLEAN CORE HARDENED
 
-V1198 is based on V1197.6 and applies the approved cleanup, navigation-state hardening, lazy audio loading, content integrity guard, and language registry expansion.
+V1199 is based on V1197.6 and applies the approved cleanup, navigation-state hardening, lazy audio loading, content integrity guard, and language registry expansion.
 
-See `docs/architecture-audit/V1198_ARCHITECTURE_AUDIT.md` for the release gates.
+See `docs/architecture-audit/V1199_ARCHITECTURE_AUDIT.md` for the release gates.
 
 # ZIVOZONE V1180 — Canonical Maintenance Core
 

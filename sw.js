@@ -1,4 +1,4 @@
-const CACHE='zivozone-shell-v1198.0';
+const CACHE='zivozone-shell-v1199.0';
 const APP_CODE=/\.(?:js|css)(?:\?.*)?$/i;
 const HTML=/\.html(?:\?.*)?$/i;
 const DATA=/\/data\/(?:matches\/|news\.json)/i;
