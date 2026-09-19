@@ -47,6 +47,7 @@
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
 <link rel="stylesheet" href="core/styles/core.css?v=1191.0">
 <link rel="stylesheet" href="core/styles/forensic-case.css?v=1182.0">
+<link rel="stylesheet" href="core/styles/puzzle-room.css?v=1194.0">
 <link rel="stylesheet" href="core/styles/player-hub.css?v=1180.0">
 </head>
 <body>
@@ -133,6 +134,10 @@
     <article class="zivo-signature-card dark" data-challenge="horror" tabindex="0" role="button" aria-label="دخول الغرفة المظلمة">
       <div class="zivo-signature-media"><img src="assets/challenge-posters/horror.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">FULL SCREEN</span></div>
       <div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 الغرفة المظلمة</h3><p>تجربة سينمائية كاملة الشاشة. اضغط في أي مكان للدخول مباشرة.</p><b>دخول الغرفة ↗</b></div>
+    </article>
+    <article class="zivo-signature-card puzzle-room" data-puzzle-room tabindex="0" role="button" aria-label="دخول غرفة الألغاز">
+      <div class="zivo-signature-media"><div style="height:100%;display:grid;place-items:center;background:radial-gradient(circle,#19334a,#070b12);font-size:80px">🧩</div><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">10 مراحل</span></div>
+      <div class="zivo-signature-copy"><span>03 // PUZZLE EXPERIENCE</span><h3>🧩 غرفة الألغاز</h3><p>غرفة متسلسلة تجمع الذاكرة والمنطق والمتاهة والشيفرة والأدلة والخزنة النهائية.</p><b>دخول غرفة الألغاز ↗</b></div>
     </article>
     <article class="zivo-signature-card forensic" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي">
       <div class="zivo-signature-media forensic-cinematic-poster"><img src="assets/forensic-cinema/entry.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">مسرح القضية</span></div>
@@ -235,6 +240,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="core/modules/economy.js?v=1191.0"></script>
 <script src="core/modules/forensic-case-core.js?v=1182.0"></script>
 <script src="core/modules/challenges.js?v=1191.0"></script>
+<script src="core/modules/puzzle-room.js?v=1194.0"></script>
 <script src="core/modules/cloud.js?v=1180.0"></script>
 <script src="core/modules/achievements.js?v=1180.0"></script>
 <script src="core/modules/daily.js?v=1180.0"></script>
