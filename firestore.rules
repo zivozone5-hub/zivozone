@@ -27,7 +27,11 @@ service cloud.firestore {
         && request.resource.data.correct == 10
         && request.resource.data.timedOut == 0
         && request.resource.data.status == 'consumed'
-        && request.resource.data.policy == '10_of_10_only';
+        && request.resource.data.policy == '10_of_10_only'
+        && request.resource.data.source == 'game-platform'
+        && request.resource.data.validated == true
+        && request.resource.data.validatedSessionId is string
+        && request.resource.data.validatedSessionId.size() > 5;
     }
 
     match /users/{userId} {
