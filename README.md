@@ -17,3 +17,12 @@
 - Match Center score rendering is direction-safe (`dir=ltr`) and result wording is derived from the actual home/away scores, never from Arabic translation.
 - Team names are marked `translate=no` to prevent browser translation from altering club names.
 - No new runtime layer or parallel challenge engine was introduced; the existing Core modules were repaired in place.
+
+
+## V1185 — World Experiences
+- Replaced the shared post-entry question screen with a full room-world experience.
+- Each challenge has its own world map, zones, interaction modes and visual scene.
+- Football has pitch/tactics/VAR/transfers/set-piece scenes; Math has reactor/geometry/probability/budget scenes; other rooms receive distinct identities.
+- Cinematic entry compositions are now materially different by room type, not only image swaps.
+- Perfect runs remain linked to the ZIVO reward flow (+10 ZIVO), with guest pending reward support.
+- No new parallel challenge runtime was introduced; changes remain in the existing Core challenge engine.
