@@ -39,3 +39,11 @@ See `docs/architecture-audit/V1199_ARCHITECTURE_AUDIT.md` for the release gates.
 - Cinematic entry compositions are now materially different by room type, not only image swaps.
 - Perfect runs remain linked to the ZIVO reward flow (+10 ZIVO), with guest pending reward support.
 - No new parallel challenge runtime was introduced; changes remain in the existing Core challenge engine.
+
+
+## V1202 — PRODUCTION INTEGRATION GATE
+- Match Center + yesterday/today/tomorrow snapshot contract retained.
+- Challenge result → validated session → reward claim → wallet → ledger contract hardened.
+- Fixed the missing Firestore authorization path for `daily_mining` ledger entries.
+- Mining remains capped at 0.50 ZIVO per 24h cycle.
+- Browser E2E and Firebase Emulator E2E are not claimed unless a real runtime is available.

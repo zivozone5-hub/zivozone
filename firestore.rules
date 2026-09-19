@@ -87,14 +87,26 @@ service cloud.firestore {
 
       match /zivozone/wallet/ledger/{entryId} {
         allow read: if isOwner() || isSelf(userId);
-        allow create: if isSelf(userId)
-          && request.resource.data.eventId == entryId
-          && request.resource.data.claimId == entryId
-          && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.status == 'consumed'
-          && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.amount == request.resource.data.amount
-          && ((request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10)
-            || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2])
-            || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]));
+        allow create: if isSelf(userId) && (
+          (
+            request.resource.data.type == 'daily_mining'
+            && request.resource.data.amount == 0.5
+            && request.resource.data.eventId == entryId
+            && request.resource.data.policy == '24h_mining'
+            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5
+            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')
+          )
+          ||
+          (
+            request.resource.data.eventId == entryId
+            && request.resource.data.claimId == entryId
+            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.status == 'consumed'
+            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.amount == request.resource.data.amount
+            && ((request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10)
+              || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2])
+              || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]))
+          )
+        );
         allow update,delete: if false;
       }
     }
