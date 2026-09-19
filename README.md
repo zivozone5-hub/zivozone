@@ -1,3 +1,10 @@
+## V1201 Runtime / Economy Validation
+
+- Perfect 10/10 rewards now carry validated session evidence into Firestore claims.
+- Failed reward writes remain retryable instead of being permanently marked processed.
+- Guest perfect rewards preserve the validated session id across login.
+- Match Center exposes versioned runtime metadata and validates 3-day snapshots.
+
 # ZIVOZONE V1199 CLEAN CORE HARDENED
 
 V1199 is based on V1197.6 and applies the approved cleanup, navigation-state hardening, lazy audio loading, content integrity guard, and language registry expansion.

@@ -1,0 +1,20 @@
+{
+  "version": "1201.0",
+  "name": "ZIVOZONE V1201 Runtime Economy Validated",
+  "source": "V1200_BROWSER_RELEASE_VALIDATED",
+  "status": "RELEASE_CANDIDATE",
+  "gates": {
+    "static": "PASS",
+    "browser_e2e": "NOT_VERIFIED",
+    "firebase_e2e": "NOT_VERIFIED"
+  },
+  "scope": [
+    "match-center",
+    "navigation-lifecycle",
+    "game-results",
+    "zivo-rewards",
+    "wallet",
+    "mining",
+    "firestore-rules"
+  ]
+}
