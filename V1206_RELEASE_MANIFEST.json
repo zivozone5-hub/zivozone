@@ -1,0 +1,21 @@
+{
+  "version": "1206.0",
+  "name": "ZIVOZONE V1206 Audio UX + Runtime Stabilized",
+  "base": "V1205_FULL_PLATFORM_SFX_HARDENED",
+  "status": "RELEASE_CANDIDATE",
+  "scope": [
+    "unified-audio",
+    "audio-state-persistence",
+    "ambient-crossfade",
+    "sfx-throttle",
+    "unified-exit-router",
+    "puzzle-return",
+    "version-alignment",
+    "cache-bust"
+  ],
+  "gates": {
+    "static": "PASS",
+    "browser_e2e": "NOT_VERIFIED",
+    "firebase_e2e": "NOT_VERIFIED"
+  }
+}
