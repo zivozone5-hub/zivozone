@@ -112,7 +112,7 @@ service cloud.firestore {
     match /wallets/{uid} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
     match /leaderboard/{id} { allow read: if true; allow write: if false; }
     match /admins/{uid} { allow read: if isOwner() && request.auth.uid == uid; allow write: if false; }
-    match /siteStats/visitors/{day}/{visitorId} { allow read: if isOwner(); allow create,update: if isSelf(visitorId); allow delete: if false; }
+    match /siteStats/visitors/{day}/{visitorId} { allow read: if isOwner(); allow create,update: if request.resource.data.type == 'guest' && request.resource.data.visitorId == visitorId && request.resource.data.keys().hasOnly(['visitorId','type','status','firstSeenAt','lastSeenAt','lastSeenPath','referrer','language','userAgent','updatedAt']); allow delete: if false; }
     match /siteStats/{document=**} { allow read: if isOwner(); allow write: if false; }
     match /public/{document=**} { allow read: if true; allow write: if false; }
   }
