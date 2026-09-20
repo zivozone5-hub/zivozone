@@ -14,6 +14,13 @@
 <meta property="og:description" content="ZIVOZONE — ألعاب وتحديات ورياضة وتجارب رقمية مع XP وZIVO في منصة واحدة.">
 <meta property="og:site_name" content="ZIVOZONE">
 <meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://zivozone.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ZIVOZONE">
+<meta property="og:locale" content="ar_AR">
+<meta name="twitter:image" content="https://zivozone.com/assets/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ZIVOZONE","url":"https://zivozone.com/","inLanguage":["ar","en","zh","hi","es","fr","fa"],"description":"ZIVOZONE — games, challenges, sport and rooms in one place."}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="assets/icons/zivo-192.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/icons/zivo-192.png">
@@ -21,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="core/styles/index.css?v=1205.0">
+<link rel="stylesheet" href="core/styles/index.css?v=1219.0">
 
 
 
@@ -45,13 +52,14 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="core/styles/core.css?v=1205.0">
-<link rel="stylesheet" href="core/styles/forensic-case.css?v=1205.0">
-<link rel="stylesheet" href="core/styles/puzzle-room.css?v=1205.0">
-<link rel="stylesheet" href="core/styles/beauty-room.css?v=1205.0">
-<link rel="stylesheet" href="core/styles/player-hub.css?v=1205.0">
-<link rel="stylesheet" href="core/modules/runtime/ready-rooms-v1209.css"><link rel="stylesheet" href="core/modules/runtime/independent-story-health-v1210.css"><link rel="stylesheet" href="core/modules/runtime/audio-v1212.css"><link rel="stylesheet" href="core/modules/runtime/real-room-router-v1213.css"></head>
+<link rel="stylesheet" href="core/styles/core.css?v=1219.0">
+<link rel="stylesheet" href="core/styles/forensic-case.css?v=1219.0">
+<link rel="stylesheet" href="core/styles/puzzle-room.css?v=1219.0">
+<link rel="stylesheet" href="core/styles/beauty-room.css?v=1219.0">
+<link rel="stylesheet" href="core/styles/player-hub.css?v=1219.0">
+<link rel="stylesheet" href="core/styles/rooms.css?v=1219.0"></head>
 <body>
+<noscript><div style="padding:24px;text-align:center;color:#fff;background:#05060b">ZIVOZONE يحتاج إلى تفعيل JavaScript. / ZIVOZONE requires JavaScript.</div></noscript>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
 <header class="topbar">
   <a class="brand" href="#home" aria-label="ZIVOZONE"><span class="brand-mark">Z</span><span class="brand-name">ZIVOZONE</span></a>
@@ -142,8 +150,8 @@
       <div class="zivo-signature-media"><div style="height:100%;display:grid;place-items:center;background:radial-gradient(circle,#19334a,#070b12);font-size:80px">🧩</div><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">10 مراحل</span></div>
       <div class="zivo-signature-copy"><span>03 // PUZZLE EXPERIENCE</span><h3>🧩 غرفة الألغاز</h3><p>غرفة متسلسلة تجمع الذاكرة والمنطق والمتاهة والشيفرة والأدلة والخزنة النهائية.</p><b>دخول غرفة الألغاز ↗</b></div>
     </article>
-    <article class="zivo-signature-card v1210-story-card" data-zivo-story-room tabindex="0" role="button" aria-label="دخول غرفة القصص"><div class="zivo-signature-media" style="background:radial-gradient(circle,#4b1f5d,#07040d);display:grid;place-items:center;font-size:78px">📖</div><div class="zivo-signature-copy"><span>05 // CINEMATIC STORIES</span><h3>📖 غرفة القصص</h3><p>مكتبة قصص طويلة ومشوقة. اختر الحكاية وادخل عالمها.</p><b>دخول غرفة القصص ↗</b></div></article>
-    <article class="zivo-signature-card v1210-health-card" data-zivo-health-room tabindex="0" role="button" aria-label="دخول غرفة صحتك بتهمنا"><div class="zivo-signature-media" style="background:radial-gradient(circle,#0d5948,#06100e);display:grid;place-items:center;font-size:78px">❤</div><div class="zivo-signature-copy"><span>06 // HEALTH EXPERIENCE</span><h3>❤ صحتك بتهمنا</h3><p>أبواب مستقلة للصحة والرياضة والطعام والنوم والوزن والنفسية وغيرها.</p><b>دخول غرفة الصحة ↗</b></div></article>
+    <article class="zivo-signature-card room-card-story" data-zivo-story-room tabindex="0" role="button" aria-label="دخول غرفة القصص"><div class="zivo-signature-media" style="background:radial-gradient(circle,#4b1f5d,#07040d);display:grid;place-items:center;font-size:78px">📖</div><div class="zivo-signature-copy"><span>05 // CINEMATIC STORIES</span><h3>📖 غرفة القصص</h3><p>مكتبة قصص طويلة ومشوقة. اختر الحكاية وادخل عالمها.</p><b>دخول غرفة القصص ↗</b></div></article>
+    <article class="zivo-signature-card room-card-health" data-zivo-health-room tabindex="0" role="button" aria-label="دخول غرفة صحتك بالدنيا"><div class="zivo-signature-media" style="background:radial-gradient(circle,#0d5948,#06100e);display:grid;place-items:center;font-size:78px">❤</div><div class="zivo-signature-copy"><span>06 // HEALTH EXPERIENCE</span><h3>❤ صحتك بالدنيا</h3><p>أبواب مستقلة للصحة والرياضة والطعام والنوم والوزن والنفسية وغيرها.</p><b>دخول غرفة الصحة ↗</b></div></article>
     <article class="zivo-signature-card beauty" data-beauty-room tabindex="0" role="button" aria-label="دخول غرفة الجمال">
       <div class="zivo-signature-media beauty-cinematic-poster"><div class="beauty-poster-symbol">✦</div><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">BEAUTY & CARE</span></div>
       <div class="zivo-signature-copy"><span>04 // BEAUTY EXPERIENCE</span><h3>✦ غرفة الجمال</h3><p>عناية راقية بالبشرة والجسد والشعر، وصفات بسيطة، وعادات يومية وإطلالات إكسسوارات.</p><b>دخول غرفة الجمال ↗</b></div>
@@ -205,7 +213,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1205.0"></script>
+<script type="module" src="zivo-ai.js?v=1219.0"></script>
 
 
 
@@ -228,50 +236,50 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="core/config.js?v=1205.0"></script>
-<script src="core/events.js?v=1205.0"></script>
-<script src="core/state.js?v=1205.0"></script>
-<script src="core/modules/question-bank.js?v=1205.0"></script>
-<script src="core/modules/question-bank-expansion.js?v=1205.0"></script>
-<script src="core/modules/content-integrity.js?v=1205.0"></script>
-<script src="core/modules/runtime/audio.js?v=1205.0"></script>
-<script src="core/modules/runtime/i18n.js?v=1205.0"></script>
-<script src="core/modules/runtime/ads.js?v=1205.0"></script>
-<script src="core/modules/auth.js?v=1205.0"></script>
-<script src="core/modules/runtime/app-shell.js?v=1205.0"></script>
-<script src="core/modules/runtime/dedupe.js?v=1205.0"></script>
-<script src="core/modules/runtime/question-history.js?v=1205.0"></script>
-<script src="core/modules/runtime/server-adapter.js?v=1205.0"></script>
-<script src="core/modules/runtime/exit-guard.js?v=1205.0"></script>
-<script src="core/modules/runtime/game-registry.js?v=1205.0"></script>
-<script src="core/modules/runtime/game-session.js?v=1205.0"></script>
-<script src="core/modules/runtime/game-validator.js?v=1205.0"></script>
-<script src="core/modules/runtime/game-telemetry.js?v=1205.0"></script>
-<script src="core/modules/runtime/game-adapters.js?v=1205.0"></script>
-<script src="core/modules/runtime/game-loader.js?v=1205.0"></script>
-<script src="core/modules/runtime/game-bridge.js?v=1205.0"></script>
-<script src="core/modules/runtime/game-platform.js?v=1205.0"></script>
-<script src="core/modules/runtime/engagement.js?v=1205.0"></script>
-<script src="core/modules/runtime/live-hud.js?v=1205.0"></script>
-<script src="core/modules/match-center.js?v=1205.0"></script>
-<script src="core/modules/player.js?v=1205.0"></script>
-<script src="core/modules/economy.js?v=1205.0"></script>
-<script src="core/modules/forensic-case-core.js?v=1205.0"></script>
-<script src="core/modules/challenges.js?v=1205.0"></script>
-<script src="core/modules/puzzle-room.js?v=1205.0"></script>
-<script src="core/modules/cloud.js?v=1205.0"></script>
-<script src="core/modules/achievements.js?v=1205.0"></script>
-<script src="core/modules/daily.js?v=1205.0"></script>
-<script src="core/modules/competition.js?v=1205.0"></script>
-<script src="core/modules/missions.js?v=1205.0"></script>
-<script src="core/modules/player-hub.js?v=1205.0"></script>
-<script src="core/modules/news.js?v=1205.0"></script>
-<script src="core/modules/admin.js?v=1205.0"></script>
-<script src="core/modules/chat.js?v=1205.0"></script>
-<script src="core/modules/ui.js?v=1205.0"></script>
-<script src="core/app.js?v=1205.0"></script>
-<script src="core/modules/beauty-room.js?v=1205.0"></script>
-<script src="core/boot.js?v=1205.0"></script>
+<script src="core/config.js?v=1219.0"></script>
+<script src="core/events.js?v=1219.0"></script>
+<script src="core/state.js?v=1219.0"></script>
+<script src="core/modules/question-bank.js?v=1219.0"></script>
+<script src="core/modules/question-bank-expansion.js?v=1219.0"></script>
+<script src="core/modules/content-integrity.js?v=1219.0"></script>
+<script src="core/modules/audio.js?v=1219.0"></script>
+<script src="core/modules/runtime/i18n.js?v=1219.0"></script>
+<script src="core/modules/runtime/ads.js?v=1219.0"></script>
+<script src="core/modules/auth.js?v=1219.0"></script>
+<script src="core/modules/runtime/app-shell.js?v=1219.0"></script>
+<script src="core/modules/runtime/dedupe.js?v=1219.0"></script>
+<script src="core/modules/runtime/question-history.js?v=1219.0"></script>
+<script src="core/modules/runtime/server-adapter.js?v=1219.0"></script>
+<script src="core/modules/runtime/exit-guard.js?v=1219.0"></script>
+<script src="core/modules/runtime/game-registry.js?v=1219.0"></script>
+<script src="core/modules/runtime/game-session.js?v=1219.0"></script>
+<script src="core/modules/runtime/game-validator.js?v=1219.0"></script>
+<script src="core/modules/runtime/game-telemetry.js?v=1219.0"></script>
+<script src="core/modules/runtime/game-adapters.js?v=1219.0"></script>
+<script src="core/modules/runtime/game-loader.js?v=1219.0"></script>
+<script src="core/modules/runtime/game-bridge.js?v=1219.0"></script>
+<script src="core/modules/runtime/game-platform.js?v=1219.0"></script>
+<script src="core/modules/runtime/engagement.js?v=1219.0"></script>
+<script src="core/modules/runtime/live-hud.js?v=1219.0"></script>
+<script src="core/modules/match-center.js?v=1219.0"></script>
+<script src="core/modules/player.js?v=1219.0"></script>
+<script src="core/modules/economy.js?v=1219.0"></script>
+<script src="core/modules/forensic-case-core.js?v=1219.0"></script>
+<script src="core/modules/challenges.js?v=1219.0"></script>
+<script src="core/modules/puzzle-room.js?v=1219.0"></script>
+<script src="core/modules/cloud.js?v=1219.0"></script>
+<script src="core/modules/achievements.js?v=1219.0"></script>
+<script src="core/modules/daily.js?v=1219.0"></script>
+<script src="core/modules/competition.js?v=1219.0"></script>
+<script src="core/modules/missions.js?v=1219.0"></script>
+<script src="core/modules/player-hub.js?v=1219.0"></script>
+<script src="core/modules/news.js?v=1219.0"></script>
+<script src="core/modules/admin.js?v=1219.0"></script>
+<script src="core/modules/chat.js?v=1219.0"></script>
+<script src="core/modules/ui.js?v=1219.0"></script>
+<script src="core/app.js?v=1219.0"></script>
+<script src="core/modules/beauty-room.js?v=1219.0"></script>
+<script src="core/boot.js?v=1219.0"></script>
 <script>document.addEventListener("DOMContentLoaded",()=>{document.getElementById("zivo-terms-footer")?.addEventListener("click",()=>window.ZIVOZONE_OPEN_TERMS?.());});</script>
 
 
@@ -281,7 +289,5 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 
 
 
-<script src="core/modules/runtime/independent-story-health-v1210.js"></script><script>
-(function(){function bind(){var S=window.ZIVOZONE&&window.ZIVOZONE.IndependentRooms;if(!S)return false;document.querySelectorAll('[data-zivo-story-room]').forEach(function(e){if(e.dataset.bound)return;e.dataset.bound=1;e.addEventListener('click',function(){S.open('stories')});e.addEventListener('keydown',function(x){if(x.key==='Enter'||x.key===' '){x.preventDefault();S.open('stories')}})});document.querySelectorAll('[data-zivo-health-room]').forEach(function(e){if(e.dataset.bound)return;e.dataset.bound=1;e.addEventListener('click',function(){S.open('health')});e.addEventListener('keydown',function(x){if(x.key==='Enter'||x.key===' '){x.preventDefault();S.open('health')}})});return true}document.addEventListener('DOMContentLoaded',function(){var n=0,i=setInterval(function(){if(bind()||++n>30)clearInterval(i)},100)});})();
-</script><script src="core/modules/runtime/audio-v1212.js"></script><script src="core/modules/runtime/audio-ui-v1212.js"></script><script src="core/modules/runtime/real-room-router-v1213.js"></script><script src="core/modules/runtime/real-room-home-bind-v1214.js"></script></body>
+<script src="core/modules/rooms.js?v=1219.0"></script></body>
 </html>

@@ -157,6 +157,15 @@ service cloud.firestore {
         && request.resource.data.nextAllowedAt >= request.time + duration.value(3, 's');
       allow delete: if isOwner();
     }
+    // Online-count heartbeat written by core/modules/chat.js (was missing → every write/read was denied).
+    match /publicChatPresence/{uid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','lastSeen'])
+        && request.resource.data.uid == uid
+        && request.resource.data.lastSeen == request.time;
+      allow delete: if isOwner() || (signedIn() && request.auth.uid == uid);
+    }
     match /publicChatBans/{uid} {
       allow read: if isOwner();
       allow create,update: if isOwner() && request.resource.data.uid == uid;
