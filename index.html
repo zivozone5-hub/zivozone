@@ -50,7 +50,7 @@
 <link rel="stylesheet" href="core/styles/puzzle-room.css?v=1205.0">
 <link rel="stylesheet" href="core/styles/beauty-room.css?v=1205.0">
 <link rel="stylesheet" href="core/styles/player-hub.css?v=1205.0">
-<link rel="stylesheet" href="core/modules/runtime/ready-rooms-v1209.css"><link rel="stylesheet" href="core/modules/runtime/independent-story-health-v1210.css"><link rel="stylesheet" href="core/modules/runtime/audio-v1212.css"></head>
+<link rel="stylesheet" href="core/modules/runtime/ready-rooms-v1209.css"><link rel="stylesheet" href="core/modules/runtime/independent-story-health-v1210.css"><link rel="stylesheet" href="core/modules/runtime/audio-v1212.css"><link rel="stylesheet" href="core/modules/runtime/real-room-router-v1213.css"></head>
 <body>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
 <header class="topbar">
@@ -283,5 +283,5 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 
 <script src="core/modules/runtime/independent-story-health-v1210.js"></script><script>
 (function(){function bind(){var S=window.ZIVOZONE&&window.ZIVOZONE.IndependentRooms;if(!S)return false;document.querySelectorAll('[data-zivo-story-room]').forEach(function(e){if(e.dataset.bound)return;e.dataset.bound=1;e.addEventListener('click',function(){S.open('stories')});e.addEventListener('keydown',function(x){if(x.key==='Enter'||x.key===' '){x.preventDefault();S.open('stories')}})});document.querySelectorAll('[data-zivo-health-room]').forEach(function(e){if(e.dataset.bound)return;e.dataset.bound=1;e.addEventListener('click',function(){S.open('health')});e.addEventListener('keydown',function(x){if(x.key==='Enter'||x.key===' '){x.preventDefault();S.open('health')}})});return true}document.addEventListener('DOMContentLoaded',function(){var n=0,i=setInterval(function(){if(bind()||++n>30)clearInterval(i)},100)});})();
-</script><script src="core/modules/runtime/audio-v1212.js"></script><script src="core/modules/runtime/audio-ui-v1212.js"></script></body>
+</script><script src="core/modules/runtime/audio-v1212.js"></script><script src="core/modules/runtime/audio-ui-v1212.js"></script><script src="core/modules/runtime/real-room-router-v1213.js"></script></body>
 </html>
