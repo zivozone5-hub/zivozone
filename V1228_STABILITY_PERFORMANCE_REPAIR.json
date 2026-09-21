@@ -1,0 +1,14 @@
+{
+  "version": "1228.0",
+  "coreVersion": "1228-unified-core",
+  "baseline": "ZIVOZONE_V1228_DASHBOARD_STABLE",
+  "changes": [
+    "unified version authority",
+    "router no longer hides built-in rooms when absent from games manifest",
+    "defer all script entry points while preserving execution order",
+    "updated runtime registry cache version"
+  ],
+  "safety": "compatibility-first; heavy modules remain present and are not removed",
+  "scriptCount": 53,
+  "deferCount": 53
+}
