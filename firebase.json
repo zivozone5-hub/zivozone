@@ -27,7 +27,25 @@
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "no-cache, no-store, max-age=0"
+            "value": "no-cache, no-store, max-age=0, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/sw.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, no-store, max-age=0, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/manifest.webmanifest",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, max-age=0, must-revalidate"
           }
         ]
       },
@@ -50,13 +68,62 @@
         ]
       },
       {
+        "source": "/data/stories/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=3600,must-revalidate"
+          }
+        ]
+      },
+      {
         "source": "/stories/**",
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public,max-age=3600"
+            "value": "public,max-age=3600,must-revalidate"
           }
         ]
+      },
+      {
+        "source": "/core/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "/assets/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=86400,must-revalidate"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/stories",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/health",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/health/**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/challenges",
+        "destination": "/index.html"
+      },
+      {
+        "source": "/challenges/**",
+        "destination": "/index.html"
       }
     ]
   },

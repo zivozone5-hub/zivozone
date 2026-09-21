@@ -1,4 +1,4 @@
-# ZIVOZONE V1224
+# ZIVOZONE V1222
 
 منصة ألعاب وتحديات ورياضة وغرف محتوى — موقع ثابت (GitHub Pages / Firebase Hosting) مع Firebase Auth + Firestore.
 
