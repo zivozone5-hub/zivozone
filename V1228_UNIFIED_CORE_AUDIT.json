@@ -1,0 +1,31 @@
+{
+  "target_app_version": "1228.0",
+  "target_core_version": "1228-unified-core",
+  "syntax_check": {
+    "status": "PASS",
+    "files_checked": 48
+  },
+  "legacy_localstorage_keys_remaining": [],
+  "legacy_runtime_version_literals_remaining": [],
+  "version_authority": "core/config.js",
+  "state_hydration": "core/state.js",
+  "migrated_modules": [
+    "core/modules/economy.js",
+    "core/modules/chat.js",
+    "core/modules/daily.js",
+    "core/modules/news.js",
+    "core/modules/challenges.js",
+    "core/modules/auth.js",
+    "core/modules/runtime/app-shell.js",
+    "core/modules/runtime/router.js",
+    "core/modules/runtime/game-registry.js",
+    "core/modules/runtime/game-adapters.js",
+    "core/modules/runtime/server-adapter.js",
+    "core/modules/rooms.js"
+  ],
+  "notes": [
+    "Historical archive/docs files are intentionally not rewritten.",
+    "CSS class names containing legacy vXX tokens are treated as UI selectors, not application versions.",
+    "Legacy localStorage keys are migrated/removed at boot; migration payload is hydrated into ZIVOZONE.State."
+  ]
+}

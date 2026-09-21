@@ -1,0 +1,12 @@
+{
+  "version": "1228.0",
+  "coreVersion": "1228-unified-core",
+  "securityModel": "fail-closed client rewards",
+  "clientAttestation": "SHA-256 integrity signal only; not a trust boundary",
+  "rewardAuthority": "trusted server/Firebase Functions required",
+  "clientRewardWrites": false,
+  "walletRewardWrites": false,
+  "rewardClaimClientCreate": false,
+  "ledgerRewardClientCreate": false,
+  "miningClientWrite": true
+}
