@@ -5,6 +5,7 @@
 import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-ai.js';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app-check.js';
+import { GlobalSpatialAudio } from './core/modules/audio-spatial.js';
 
 (() => {
   const cfg = window.ZIVOZONE_FIREBASE_CONFIG;
@@ -15,6 +16,11 @@ import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from 'https
   let model = null;
   let ready = false;
   let lastError = '';
+  let activeRoom = 'daily_room';
+
+  window.addEventListener('zivozone:room-change', event => {
+    activeRoom = String(event.detail?.roomId || activeRoom);
+  });
 
   function usage() {
     const n = Number(localStorage.getItem(KEY) || 0);
@@ -113,9 +119,13 @@ Keep responses suitable for a broad audience and avoid collecting unnecessary pe
     if (!ready) await init();
 
     const ctx = playerContext();
-    const prompt = `Player context: level=${ctx.level}, xp=${ctx.xp}, zivo=${ctx.zivo}, gamesPlayed=${ctx.gamesPlayed}, wins=${ctx.wins}, bestStreak=${ctx.bestStreak}.
+    const prompt = `Active ZIVOZONE room: ${activeRoom}.
+Player context: level=${ctx.level}, xp=${ctx.xp}, zivo=${ctx.zivo}, gamesPlayed=${ctx.gamesPlayed}, wins=${ctx.wins}, bestStreak=${ctx.bestStreak}.
 User message: ${text}`;
     bump();
+    // The AI interaction itself becomes a spatial event; this is created only
+    // after the user's submit gesture, so browser autoplay rules are respected.
+    GlobalSpatialAudio.playSpatialTone('ai', { x: 2.2, y: 0.8, z: -3.5 });
     const result = await chat.sendMessage(prompt);
     const reply = result?.response?.text?.() || '';
     if (!reply) throw new Error('لم يصل رد من ZIVO AI.');
