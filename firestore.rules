@@ -2,7 +2,8 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
-    function isOwner() { return signedIn() && request.auth.token.email == 'raefalbtish@gmail.com'; }
+    // V1229: an unverified e-mail must never grant admin rights.
+    function isOwner() { return signedIn() && request.auth.token.email == 'raefalbtish@gmail.com' && request.auth.token.email_verified == true; }
     function isSelf(id) { return signedIn() && request.auth.uid == id; }
     function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastRewardClaimId']); }
     function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward']; }
@@ -42,7 +43,7 @@ service cloud.firestore {
 
       match /activity/{eventId} {
         allow read: if isOwner() || isSelf(userId);
-        allow create: if isSelf(userId);
+        allow create: if isSelf(userId) && request.resource.data.keys().hasOnly(['event','meta','createdAt','uid']) && request.resource.data.event is string && request.resource.data.event.size() <= 80 && request.resource.data.uid == userId && request.resource.data.createdAt == request.time;
         allow update,delete: if false;
       }
 
@@ -52,7 +53,8 @@ service cloud.firestore {
         allow update: if isOwner() || (isSelf(userId) && validWalletKeys() && request.resource.data.updatedAt == request.time && (
           (request.resource.data.zivo == resource.data.zivo + 0.5 &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5 &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')) ||
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's') &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.lastMiningAt == request.time) ||
           (request.resource.data.zivo > resource.data.zivo &&
             request.resource.data.lastRewardClaimId is string &&
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
@@ -66,10 +68,12 @@ service cloud.firestore {
         allow read: if isOwner() || isSelf(userId);
         allow create: if isSelf(userId) && validMiningKeys()
           && request.resource.data.amount == 0.5
+          && request.resource.data.lastMiningAt == request.time
           && request.resource.data.nextMiningAt >= request.time + duration.value(86400, 's');
         allow update: if isSelf(userId) && validMiningKeys()
           && resource.data.nextMiningAt <= request.time
           && request.resource.data.amount == 0.5
+          && request.resource.data.lastMiningAt == request.time
           && request.resource.data.nextMiningAt >= request.time + duration.value(86400, 's');
         allow delete: if false;
       }
@@ -94,7 +98,8 @@ service cloud.firestore {
             && request.resource.data.eventId == entryId
             && request.resource.data.policy == '24h_mining'
             && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.amount == 0.5
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's')
+            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.nextMiningAt >= request.time + duration.value(86400, 's') &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.lastMiningAt == request.time
           )
           ||
           (
@@ -113,9 +118,9 @@ service cloud.firestore {
 
     match /players/{uid} {
       allow read: if isOwner() || isSelf(uid);
-      allow create: if isSelf(uid);
+      allow create: if isSelf(uid) && request.resource.data.get('zivo', 0) == 0 && request.resource.data.get('coins', 0) == 0;
       allow update: if isOwner() || (isSelf(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['zivo','coins']));
-      match /events/{eventId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
+      match /events/{eventId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid) && request.resource.data.keys().hasOnly(['event','meta','createdAt']) && request.resource.data.event is string && request.resource.data.event.size() <= 80 && request.resource.data.createdAt == request.time; allow update,delete: if false; }
       match /results/{resultId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
       match /attempts/{attemptId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
       match /gameAttempts/{attemptId} { allow read,create: if isOwner() || isSelf(uid); allow update,delete: if false; }
@@ -128,7 +133,7 @@ service cloud.firestore {
     match /wallets/{uid} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
     match /leaderboard/{id} { allow read: if true; allow write: if false; }
     match /admins/{uid} { allow read: if isOwner() && request.auth.uid == uid; allow write: if false; }
-    match /siteStats/visitors/{day}/{visitorId} { allow read: if isOwner(); allow create,update: if request.resource.data.type == 'guest' && request.resource.data.visitorId == visitorId && request.resource.data.keys().hasOnly(['visitorId','type','status','firstSeenAt','lastSeenAt','lastSeenPath','referrer','language','userAgent','updatedAt']); allow delete: if false; }
+    match /siteStats/visitors/{day}/{visitorId} { allow read: if isOwner(); allow create,update: if request.resource.data.type == 'guest' && request.resource.data.status == 'visitor' && request.resource.data.visitorId == visitorId && visitorId.size() <= 64 && request.resource.data.keys().hasOnly(['visitorId','type','status','firstSeenAt','lastSeenAt','lastSeenPath','referrer','language','userAgent','updatedAt']) && request.resource.data.lastSeenAt == request.time && request.resource.data.updatedAt == request.time && request.resource.data.lastSeenPath.size() <= 100 && request.resource.data.referrer.size() <= 200 && request.resource.data.language.size() <= 10 && request.resource.data.userAgent.size() <= 180; allow delete: if false; }
     match /siteStats/{document=**} { allow read: if isOwner(); allow write: if false; }
     match /publicChat/{messageId} {
       allow read: if true;
