@@ -1,6 +1,84 @@
 {
-  "updatedAt": 1789950786397,
+  "updatedAt": 1789972437146,
   "sports": [
+    {
+      "headline": "الخرف في الأمازون.. سر انخفاضه الظاهري",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/technology/1893381-%D8%A7%D9%84%D8%AE%D8%B1%D9%81-%D8%A7%D9%84%D8%A3%D9%85%D8%A7%D8%B2%D9%88%D9%86-%D8%B3%D8%B1-%D8%A7%D9%86%D8%AE%D9%81%D8%A7%D8%B6%D9%87-%D8%A7%D9%84%D8%B8%D8%A7%D9%87%D8%B1%D9%8A",
+      "published": "Mon, 21 Sep 2026 05:58:14 GMT"
+    },
+    {
+      "headline": "توأم رقمي يتنبأ باستجابة الخلية للأدوية",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/technology/1893372-%D8%AA%D9%88%D8%A3%D9%85-%D8%B1%D9%82%D9%85%D9%8A-%D9%8A%D8%AA%D9%86%D8%A8%D8%A3-%D8%A8%D8%A7%D8%B3%D8%AA%D8%AC%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D8%A9-%D9%84%D9%84%D8%A3%D8%AF%D9%88%D9%8A%D8%A9",
+      "published": "Mon, 21 Sep 2026 05:40:37 GMT"
+    },
+    {
+      "headline": "روسيا.. استهداف مراكز لوجستية ومستودعات وموانئ وسفن أوكرانية",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893382-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%A7%D8%B3%D8%AA%D9%87%D8%AF%D8%A7%D9%81-%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D9%84%D9%88%D8%AC%D8%B3%D8%AA%D9%8A%D8%A9-%D9%88%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%D8%A7%D8%AA-%D9%88%D9%85%D9%88%D8%A7%D9%86%D8%A6-%D9%88%D8%B3%D9%81%D9%86-%D8%A3%D9%88%D9%83%D8%B1%D8%A7%D9%86%D9%8A%D8%A9",
+      "published": "Mon, 21 Sep 2026 05:36:29 GMT"
+    },
+    {
+      "headline": "سوء التغذية يهدد نمو أطفال غزة في خيام النزوح",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/middle-east/1893375-%D8%B3%D9%88%D8%A1-%D8%A7%D9%84%D8%AA%D8%BA%D8%B0%D9%8A%D8%A9-%D9%8A%D9%87%D8%AF%D8%AF-%D9%86%D9%85%D9%88-%D8%A3%D8%B7%D9%81%D8%A7%D9%84-%D8%BA%D8%B2%D8%A9-%D8%AE%D9%8A%D8%A7%D9%85-%D8%A7%D9%84%D9%86%D8%B2%D9%88%D8%AD",
+      "published": "Mon, 21 Sep 2026 05:27:08 GMT"
+    },
+    {
+      "headline": "منظمة العفو: حركة إم 23 تجبر الآلاف على العمل بمناجم الكونغو",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893378-%D9%85%D9%86%D8%B8%D9%85%D8%A9-%D8%A7%D9%84%D8%B9%D9%81%D9%88-%D8%AD%D8%B1%D9%83%D8%A9-%D8%A5%D9%85-23-%D8%AA%D8%AC%D8%A8%D8%B1-%D8%A7%D9%84%D8%A2%D9%84%D8%A7%D9%81-%D8%A7%D9%84%D8%B9%D9%85%D9%84-%D8%A8%D9%85%D9%86%D8%A7%D8%AC%D9%85-%D8%A7%D9%84%D9%83%D9%88%D9%86%D8%BA%D9%88",
+      "published": "Mon, 21 Sep 2026 05:23:18 GMT"
+    },
+    {
+      "headline": "هل تجعلنا مواقع التواصل أقل سعادة؟.. دراسة تجيب",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/technology/1893370-%D8%AA%D8%AC%D8%B9%D9%84%D9%86%D8%A7-%D9%85%D9%88%D8%A7%D9%82%D8%B9-%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%B5%D9%84-%D8%B3%D8%B9%D8%A7%D8%AF%D8%A9-%D8%AF%D8%B1%D8%A7%D8%B3%D8%A9-%D8%AA%D8%AC%D9%8A%D8%A8",
+      "published": "Mon, 21 Sep 2026 05:10:09 GMT"
+    },
+    {
+      "headline": "داون ديتكتور: تعطل فيسبوك وإنستغرام لدى آلاف المستخدمين",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/technology/1893367-%D8%AF%D8%A7%D9%88%D9%86-%D8%AF%D9%8A%D8%AA%D9%83%D8%AA%D9%88%D8%B1-%D8%AA%D8%B9%D8%B7%D9%84-%D9%81%D9%8A%D8%B3%D8%A8%D9%88%D9%83-%D9%88%D8%A5%D9%86%D8%B3%D8%AA%D8%BA%D8%B1%D8%A7%D9%85-%D8%A2%D9%84%D8%A7%D9%81-%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%8A%D9%86",
+      "published": "Mon, 21 Sep 2026 04:30:52 GMT"
+    },
+    {
+      "headline": "انتخابات \"الدوما\" الروسي.. حزب \"روسيا الموحدة\" يحتفظ بهيمنته",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893365-%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AF%D9%88%D9%85%D8%A7-%D8%A7%D9%84%D8%B1%D9%88%D8%B3%D9%8A-%D8%AD%D8%B2%D8%A8-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%A7%D9%84%D9%85%D9%88%D8%AD%D8%AF%D8%A9-%D9%8A%D8%AD%D8%AA%D9%81%D8%B8-%D8%A8%D9%87%D9%8A%D9%85%D9%86%D8%AA%D9%87",
+      "published": "Mon, 21 Sep 2026 04:15:43 GMT"
+    },
+    {
+      "headline": "كوريا الجنوبية.. إصابة جنود بانفجار في المنطقة منزوعة السلاح",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893363-%D9%83%D9%88%D8%B1%D9%8A%D8%A7-%D8%A7%D9%84%D8%AC%D9%86%D9%88%D8%A8%D9%8A%D8%A9-%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%AC%D9%86%D9%88%D8%AF-%D8%A8%D8%A7%D9%86%D9%81%D8%AC%D8%A7%D8%B1-%D8%A7%D9%84%D9%85%D9%86%D8%B7%D9%82%D8%A9-%D9%85%D9%86%D8%B2%D9%88%D8%B9%D8%A9-%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D8%AD",
+      "published": "Mon, 21 Sep 2026 04:05:11 GMT"
+    },
+    {
+      "headline": "تكساس.. أصابه رجل برصاص عنصر بإدارة الهجرة",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893362-%D8%AA%D9%83%D8%B3%D8%A7%D8%B3-%D8%A3%D8%B5%D8%A7%D8%A8%D9%87-%D8%B1%D8%AC%D9%84-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%B9%D9%86%D8%B5%D8%B1-%D8%A8%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D9%87%D8%AC%D8%B1%D8%A9",
+      "published": "Mon, 21 Sep 2026 03:48:43 GMT"
+    },
+    {
+      "headline": "التجارة والذكاء الاصطناعي.. يقودان تفاهمات واشنطن وبكين",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893361-%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9-%D9%88%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%8A%D9%82%D9%88%D8%AF%D8%A7%D9%86-%D8%AA%D9%81%D8%A7%D9%87%D9%85%D8%A7%D8%AA-%D9%88%D8%A7%D8%B4%D9%86%D8%B7%D9%86-%D9%88%D8%A8%D9%83%D9%8A%D9%86",
+      "published": "Mon, 21 Sep 2026 01:15:03 GMT"
+    },
+    {
+      "headline": "أميركا تتسلم 18 مشتبها بهم في اغتيال الرئيس الهايتي",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893360-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D8%A7-%D8%AA%D8%AA%D8%B3%D9%84%D9%85-18-%D9%85%D8%B4%D8%AA%D8%A8%D9%87%D8%A7-%D8%A8%D9%87%D9%85-%D8%A7%D8%BA%D8%AA%D9%8A%D8%A7%D9%84-%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3-%D8%A7%D9%84%D9%87%D8%A7%D9%8A%D8%AA%D9%8A",
+      "published": "Mon, 21 Sep 2026 00:58:49 GMT"
+    },
+    {
+      "headline": "البديل من أجل ألمانيا اليميني المتطرف يحقق فوزا ثانيا",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893358-%D8%A7%D9%84%D8%A8%D8%AF%D9%8A%D9%84-%D8%A3%D8%AC%D9%84-%D8%A3%D9%84%D9%85%D8%A7%D9%86%D9%8A%D8%A7-%D8%A7%D9%84%D9%8A%D9%85%D9%8A%D9%86%D9%8A-%D8%A7%D9%84%D9%85%D8%AA%D8%B7%D8%B1%D9%81-%D9%8A%D8%AD%D9%82%D9%82-%D9%81%D9%88%D8%B2%D8%A7-%D8%AB%D8%A7%D9%86%D9%8A%D8%A7",
+      "published": "Mon, 21 Sep 2026 00:35:23 GMT"
+    },
     {
       "headline": "ماركينيوس يخطف الفوز لسان جيرمان ومرسيليا يغرق في أزمة",
       "source": "Sky News Arabia",
@@ -14,82 +92,64 @@
       "published": "Sun, 20 Sep 2026 23:38:05 GMT"
     },
     {
-      "headline": "فيديو.. انفجارات ضخمة متتالية في مخزن أسلحة بريف حلب",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1893349-%D9%81%D9%8A%D8%AF%D9%8A%D9%88-%D8%A7%D9%86%D9%81%D8%AC%D8%A7%D8%B1%D8%A7%D8%AA-%D8%B6%D8%AE%D9%85%D8%A9-%D9%85%D8%AA%D8%AA%D8%A7%D9%84%D9%8A%D8%A9-%D9%85%D8%AE%D8%B2%D9%86-%D8%A3%D8%B3%D9%84%D8%AD%D8%A9-%D8%A8%D8%B1%D9%8A%D9%81-%D8%AD%D9%84%D8%A8",
-      "published": "Sun, 20 Sep 2026 23:04:47 GMT"
+      "headline": "لليوم السابع.. الاحتلال يحاصر الرأس الأحمر بالأغوار الشمالية",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d9%85%d8%aa%d8%b6%d8%a7%d9%85%d9%86%d9%88%d9%86-%d9%8a%d8%ad%d8%a7%d9%88%d9%84%d9%88%d9%86-%d8%a7%d9%84%d8%a3%d8%ad%d9%85-%d8%a7%d9%84%d8%a3%d8%ba%d9%88%d8%a7%d8%b1-%d8%ae%d8%a7%d9%86?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 05:51:13 +0300"
     },
     {
-      "headline": "مقتل جنود باكستانيين ومسلحين في اشتباك قرب حدود أفغانستان",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893348-%D9%85%D9%82%D8%AA%D9%84-%D8%AC%D9%86%D9%88%D8%AF-%D8%A8%D8%A7%D9%83%D8%B3%D8%AA%D8%A7%D9%86%D9%8A%D9%8A%D9%86-%D9%88%D9%85%D8%B3%D9%84%D8%AD%D9%8A%D9%86-%D8%A7%D8%B4%D8%AA%D8%A8%D8%A7%D9%83-%D9%82%D8%B1%D8%A8-%D8%AD%D8%AF%D9%88%D8%AF-%D8%A3%D9%81%D8%BA%D8%A7%D9%86%D8%B3%D8%AA%D8%A7%D9%86",
-      "published": "Sun, 20 Sep 2026 22:54:09 GMT"
+      "headline": "احتجاجات وغضب في أوستن بعد إصابة مهاجر فنزويلي برصاص وكالة الهجرة الأمريكية",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d8%a7%d8%ad%d8%aa%d8%ac%d8%a7%d8%ac%d8%a7%d8%aa-%d9%81%d9%8a-%d8%a3%d9%88%d8%b3%d8%aa%d9%86-%d8%a8%d8%b9%d8%af-%d8%a5%d8%b5%d8%a7%d8%a8%d8%a9-%d9%85%d9%87%d8%a7%d8%ac%d8%b1?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 05:50:27 +0300"
     },
     {
-      "headline": "باريس تتوعد بالرد على إغلاق المركز الثقافي الفرنسي في طهران",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893347-%D8%A8%D8%A7%D8%B1%D9%8A%D8%B3-%D8%AA%D8%AA%D9%88%D8%B9%D8%AF-%D8%A8%D8%A7%D9%84%D8%B1%D8%AF-%D8%A5%D8%BA%D9%84%D8%A7%D9%82-%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2-%D8%A7%D9%84%D8%AB%D9%82%D8%A7%D9%81%D9%8A-%D8%A7%D9%84%D9%81%D8%B1%D9%86%D8%B3%D9%8A-%D8%B7%D9%87%D8%B1%D8%A7%D9%86",
-      "published": "Sun, 20 Sep 2026 22:45:12 GMT"
+      "headline": "عاجل | المتحدث باسم الحرس الثوري الإيراني: نحذر من أن أي هجوم جديد سيدفع طهران إلى تغيير جغرافيا الحرب ونوعية أسلحتها",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d8%b9%d8%a7%d8%ac%d9%84-%d8%a7%d9%84%d9%85%d8%aa%d8%ad%d8%af%d8%ab-%d8%a8%d8%a7%d8%b3%d9%85-%d8%a7%d9%84%d8%ad%d8%b1%d8%b3-%d8%a7%d9%84%d8%ab%d9%88%d8%b1%d9%8a-2?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 05:43:28 +0300"
     },
     {
-      "headline": "رئيسة فنزويلا تشارك في الجمعية العامة.. ولقاء مرتقب مع ترامب",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893346-%D8%B1%D8%A6%D9%8A%D8%B3%D8%A9-%D9%81%D9%86%D8%B2%D9%88%D9%8A%D9%84%D8%A7-%D8%AA%D8%B4%D8%A7%D8%B1%D9%83-%D8%A7%D9%84%D8%AC%D9%85%D8%B9%D9%8A%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9-%D9%88%D9%84%D9%82%D8%A7%D8%A1-%D9%85%D8%B1%D8%AA%D9%82%D8%A8-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8",
-      "published": "Sun, 20 Sep 2026 22:03:21 GMT"
+      "headline": "قتلى وجرحى في غارات باكستانية شرقي أفغانستان وكابل تتوعد بالرد",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d9%82%d8%aa%d9%84%d9%89-%d9%88%d8%ac%d8%b1%d8%ad%d9%89-%d9%81%d9%8a-%d8%ba%d8%a7%d8%b1%d8%a7%d8%aa-%d8%a8%d8%a7%d9%83%d8%b3%d8%aa%d8%a7%d9%86%d9%8a%d8%a9-%d8%b4%d8%b1%d9%82%d9%8a?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 05:24:43 +0300"
     },
     {
-      "headline": "إقليم كردستان يعلن اكتمال توحيد قوات \"البيشمركة\" رسميا",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1893345-%D8%A5%D9%82%D9%84%D9%8A%D9%85-%D9%83%D8%B1%D8%AF%D8%B3%D8%AA%D8%A7%D9%86-%D9%8A%D8%B9%D9%84%D9%86-%D8%A7%D9%83%D8%AA%D9%85%D8%A7%D9%84-%D8%AA%D9%88%D8%AD%D9%8A%D8%AF-%D9%82%D9%88%D8%A7%D8%AA-%D8%A7%D9%84%D8%A8%D9%8A%D8%B4%D9%85%D8%B1%D9%83%D8%A9-%D8%B1%D8%B3%D9%85%D9%8A%D8%A7",
-      "published": "Sun, 20 Sep 2026 21:46:27 GMT"
+      "headline": "تفكيك أسباب أزمة الجوع في السودان",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/politics/2026/9/21/%d8%aa%d9%81%d9%83%d9%8a%d9%83-%d8%a3%d8%b3%d8%a8%d8%a7%d8%a8-%d8%a3%d8%b2%d9%85%d8%a9-%d8%a7%d9%84%d8%ac%d9%88%d8%b9-%d9%81%d9%8a-%d8%a7%d9%84%d8%b3%d9%88%d8%af%d8%a7%d9%86?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 04:50:52 +0300"
     },
     {
-      "headline": "استطلاع: تراجع شعبية ترامب يضعف الجمهوريين قبل الانتخابات",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893343-%D8%A7%D8%B3%D8%AA%D8%B7%D9%84%D8%A7%D8%B9-%D8%AA%D8%B1%D8%A7%D8%AC%D8%B9-%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86-%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA",
-      "published": "Sun, 20 Sep 2026 21:24:28 GMT"
+      "headline": "اليسار يتقدم في برلين.. حزب ميرتس يتلقى ضربة انتخابية ثالثة",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d8%a7%d9%84%d9%8a%d8%b3%d8%a7%d8%b1-%d9%8a%d8%aa%d8%b5%d8%af%d8%b1-%d8%a7%d9%86%d8%aa%d8%ae%d8%a7%d8%a8%d8%a7%d8%aa-%d8%a8%d8%b1%d9%84%d9%8a%d9%86-%d9%85%d8%aa%d9%82%d8%af%d9%85%d8%a7?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 03:58:18 +0300"
     },
     {
-      "headline": "ترامب يضغط على زيلينسكي لوقف ضرب مصافي النفط الروسية",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893342-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D8%B6%D8%BA%D8%B7-%D8%B2%D9%8A%D9%84%D9%8A%D9%86%D8%B3%D9%83%D9%8A-%D9%84%D9%88%D9%82%D9%81-%D8%B6%D8%B1%D8%A8-%D9%85%D8%B5%D8%A7%D9%81%D9%8A-%D8%A7%D9%84%D9%86%D9%81%D8%B7-%D8%A7%D9%84%D8%B1%D9%88%D8%B3%D9%8A%D8%A9",
-      "published": "Sun, 20 Sep 2026 21:10:27 GMT"
+      "headline": "مباحثات أمريكية صينية تمهد لقمة ترمب وشي في واشنطن",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d9%85%d8%a8%d8%a7%d8%ad%d8%ab%d8%a7%d8%aa-%d8%a3%d9%85%d8%b1%d9%8a%d9%83%d9%8a%d8%a9-%d8%b5%d9%8a%d9%86%d9%8a%d8%a9-%d8%aa%d9%85%d9%87%d8%af-%d9%84%d9%82%d9%85%d8%a9-%d8%aa%d8%b1%d9%85%d8%a8?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 03:15:53 +0300"
     },
     {
-      "headline": "دولة الإمارات ترسل مساعدات إغاثية إلى كولومبيا",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893341-%D8%AF%D9%88%D9%84%D8%A9-%D8%A7%D9%84%D8%A5%D9%85%D8%A7%D8%B1%D8%A7%D8%AA-%D8%AA%D8%B1%D8%B3%D9%84-%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A7%D8%AA-%D8%A5%D8%BA%D8%A7%D8%AB%D9%8A%D8%A9-%D9%83%D9%88%D9%84%D9%88%D9%85%D8%A8%D9%8A%D8%A7",
-      "published": "Sun, 20 Sep 2026 20:57:43 GMT"
+      "headline": "بين التصعيد والوساطة.. حرب روسيا وأوكرانيا أمام اختبار دبلوماسي جديد",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d8%a8%d9%8a%d9%86-%d8%a7%d9%84%d8%aa%d8%b5%d8%b9%d9%8a%d8%af-%d9%88%d8%a7%d9%84%d9%88%d8%b3%d8%a7%d8%b7%d8%a9-%d8%ad%d8%b1%d8%a8-%d8%b1%d9%88%d8%b3%d9%8a%d8%a7?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 03:15:50 +0300"
     },
     {
-      "headline": "طوق نجاة لمرضى السرطان.. عالم مصري يطور خلايا تدمر الأورام",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1893340-%D8%B7%D9%88%D9%82-%D9%86%D8%AC%D8%A7%D8%A9-%D9%84%D9%85%D8%B1%D8%B6%D9%89-%D8%A7%D9%84%D8%B3%D8%B1%D8%B7%D8%A7%D9%86-%D8%B9%D8%A7%D9%84%D9%85-%D9%85%D8%B5%D8%B1%D9%8A-%D9%8A%D8%B7%D9%88%D8%B1-%D8%AE%D9%84%D8%A7%D9%8A%D8%A7-%D8%AA%D8%AF%D9%85%D8%B1-%D8%A7%D9%84%D8%A3%D9%88%D8%B1%D8%A7%D9%85",
-      "published": "Sun, 20 Sep 2026 19:48:50 GMT"
+      "headline": "اغتيال الرئيس الهاييتي يعود للواجهة.. نقل المتهمين بقتله للمحاكمة في فلوريدا",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d9%85%d9%82%d8%aa%d9%84-%d8%a7%d9%84%d8%b1%d8%a6%d9%8a%d8%b3-%d8%a7%d9%84%d9%87%d8%a7%d9%8a%d9%8a%d8%aa%d9%8a-%d9%8a%d8%b9%d9%88%d8%af-%d9%84%d9%84%d9%88%d8%a7%d8%ac%d9%87%d8%a9-%d9%86%d9%82%d9%84?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 01:05:55 +0300"
     },
     {
-      "headline": "مانشستر يونايتد ينجو من الخسارة أمام فولهام بهدف \"قاتل\"",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/sport/1893339-%D9%85%D8%A7%D9%86%D8%B4%D8%B3%D8%AA%D8%B1-%D9%8A%D9%88%D9%86%D8%A7%D9%8A%D8%AA%D8%AF-%D9%8A%D9%86%D8%AC%D9%88-%D8%A7%D9%84%D8%AE%D8%B3%D8%A7%D8%B1%D8%A9-%D8%A3%D9%85%D8%A7%D9%85-%D9%81%D9%88%D9%84%D9%87%D8%A7%D9%85-%D8%A8%D9%87%D8%AF%D9%81-%D9%82%D8%A7%D8%AA%D9%84",
-      "published": "Sun, 20 Sep 2026 19:18:31 GMT"
-    },
-    {
-      "headline": "حزب \"روسيا الموحدة\" يتجه نحو الفوز بالانتخابات التشريعية",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893336-%D8%AD%D8%B2%D8%A8-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%A7%D9%84%D9%85%D9%88%D8%AD%D8%AF%D8%A9-%D9%8A%D8%AA%D8%AC%D9%87-%D8%A7%D9%84%D9%81%D9%88%D8%B2-%D8%A8%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B4%D8%B1%D9%8A%D8%B9%D9%8A%D8%A9",
-      "published": "Sun, 20 Sep 2026 18:52:01 GMT"
-    },
-    {
-      "headline": "تقرير يكشف أعداد النازحين في اليمن منذ بدء التصعيد العسكري",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1893334-%D8%AA%D9%82%D8%B1%D9%8A%D8%B1-%D9%8A%D9%83%D8%B4%D9%81-%D8%A3%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D9%86%D8%A7%D8%B2%D8%AD%D9%8A%D9%86-%D8%A7%D9%84%D9%8A%D9%85%D9%86-%D8%A8%D8%AF%D8%A1-%D8%A7%D9%84%D8%AA%D8%B5%D8%B9%D9%8A%D8%AF-%D8%A7%D9%84%D8%B9%D8%B3%D9%83%D8%B1%D9%8A",
-      "published": "Sun, 20 Sep 2026 18:13:09 GMT"
-    },
-    {
-      "headline": "بعد \"الهجوم الأكبر\".. روسيا تتوعد برد قاس على كييف",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893332-%D8%A7%D9%84%D9%87%D8%AC%D9%88%D9%85-%D8%A7%D9%84%D8%A3%D9%83%D8%A8%D8%B1-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%AA%D8%AA%D9%88%D8%B9%D8%AF-%D8%A8%D8%B1%D8%AF-%D9%82%D8%A7%D8%B3-%D9%83%D9%8A%D9%8A%D9%81",
-      "published": "Sun, 20 Sep 2026 17:27:06 GMT"
+      "headline": "عقوبات أمريكية وشيكة تستهدف الجنائية الدولية",
+      "source": "الجزيرة",
+      "url": "https://www.aljazeera.net/news/2026/9/21/%d8%b9%d9%82%d9%88%d8%a8%d8%a7%d8%aa-%d8%a3%d9%85%d8%b1%d9%8a%d9%83%d9%8a%d8%a9-%d9%88%d8%b4%d9%8a%d9%83%d8%a9-%d8%aa%d8%b3%d8%aa%d9%87%d8%af%d9%81-%d8%a7%d9%84%d8%ac%d9%86%d8%a7%d8%a6%d9%8a%d8%a9?traffic_source=rss",
+      "published": "Mon, 21 Sep 2026 00:42:15 +0300"
     },
     {
       "headline": "إدانات واسعة لاقتحام بن غفير للأقصى وسط تصاعد التوتر بالقدس والضفة",
@@ -110,7 +170,7 @@
       "published": "Sun, 20 Sep 2026 22:00:00 +0300"
     },
     {
-      "headline": "ريال مدريد ظلم تحكيميا أمام أتلتيكو.. لجنة الحكام تؤيد مورينيو رغم تصريحاته اللاذعة",
+      "headline": "ريال مدريد ظُلم تحكيميا أمام أتلتيكو.. لجنة الحكام تؤيد مورينيو رغم تصريحاته اللاذعة",
       "source": "الجزيرة",
       "url": "https://www.aljazeera.net/sport/2026/9/21/%d8%b1%d9%8a%d8%a7%d9%84-%d9%85%d8%af%d8%b1%d9%8a%d8%af-%d8%b8%d9%84%d9%85-%d8%aa%d8%ad%d9%83%d9%8a%d9%85%d9%8a%d8%a7-%d8%a3%d9%85%d8%a7%d9%85-%d8%a3%d8%aa%d9%84%d8%aa%d9%8a%d9%83%d9%88?traffic_source=rss",
       "published": "Sun, 20 Sep 2026 21:44:52 +0300"
@@ -120,74 +180,20 @@
       "source": "الجزيرة",
       "url": "https://www.aljazeera.net/sport/2026/9/21/%d8%a8%d8%b3%d8%a8%d8%a8-%d8%a7%d9%84%d8%aa%d9%88%d8%aa%d8%b1%d8%a7%d8%aa-%d8%a7%d9%84%d8%b3%d9%8a%d8%a7%d8%b3%d9%8a%d8%a9-%d8%a5%d8%b3%d8%a8%d8%a7%d9%86%d9%8a%d8%a7-%d8%aa%d8%aa%d8%ac%d9%87?traffic_source=rss",
       "published": "Sun, 20 Sep 2026 21:30:00 +0300"
-    },
-    {
-      "headline": "مؤسسات إعلامية ترفض قرار ترمب منع صحفييها من دخول البيت الأبيض",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/9/21/%d9%85%d8%a4%d8%b3%d8%b3%d8%a7%d8%aa-%d8%a5%d8%b9%d9%84%d8%a7%d9%85%d9%8a%d8%a9-%d8%aa%d8%b1%d9%81%d8%b6-%d9%82%d8%b1%d8%a7%d8%b1-%d8%aa%d8%b1%d9%85%d8%a8-%d9%85%d9%86%d8%b9?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 21:28:19 +0300"
-    },
-    {
-      "headline": "\"العربي الخالص\".. كيف تغيرت صورة اللاعب القادر على النجاح في أوروبا؟",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/sport/2026/9/21/%d8%a7%d9%84%d8%b9%d8%b1%d8%a8%d9%8a-%d8%a7%d9%84%d8%ae%d8%a7%d9%84%d8%b5-%d9%83%d9%8a%d9%81-%d8%aa%d8%ba%d9%8a%d8%b1%d8%aa-%d8%b5%d9%88%d8%b1%d8%a9-%d8%a7%d9%84%d9%84%d8%a7%d8%b9%d8%a8?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 21:15:00 +0300"
-    },
-    {
-      "headline": "إيران مباشر.. ترمب لا يستبعد استئناف الهجمات وطهران تتوعد القواعد الأمريكية",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/liveblog/2026/9/21/%d8%a5%d9%8a%d8%b1%d8%a7%d9%86-%d9%85%d8%a8%d8%a7%d8%b4%d8%b1-%d8%aa%d8%b1%d9%85%d8%a8-%d9%84%d8%a7-%d9%8a%d8%b3%d8%aa%d8%a8%d8%b9%d8%af-%d8%a7%d8%b3%d8%aa%d8%a6%d9%86%d8%a7%d9%81?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 21:01:00 +0300"
-    },
-    {
-      "headline": "اليمن مباشر.. غارات جوية على الحوثيين وواشنطن تحذر رعاياها",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/liveblog/2026/9/21/%d8%a7%d9%84%d9%8a%d9%85%d9%86-%d9%85%d8%a8%d8%a7%d8%b4%d8%b1-%d8%ba%d8%a7%d8%b1%d8%a7%d8%aa-%d8%ac%d9%88%d9%8a%d8%a9-%d8%b9%d9%84%d9%89-%d9%85%d9%88%d8%a7%d9%82%d8%b9?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 21:01:00 +0300"
-    },
-    {
-      "headline": "كارثة جديدة.. 11 قتيلا و30 مصابا في انهيار منجم ذهب بالسودان",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/9/20/%d9%83%d8%a7%d8%b1%d8%ab%d8%a9-%d8%ac%d8%af%d9%8a%d8%af%d8%a9-11-%d9%82%d8%aa%d9%8a%d9%84%d8%a7-%d9%8830-%d9%85%d8%b5%d8%a7%d8%a8%d8%a7-%d9%81%d9%8a-%d8%a7%d9%86%d9%87%d9%8a%d8%a7%d8%b1?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 20:59:26 +0300"
-    },
-    {
-      "headline": "\"صلاحتاشي\".. صخرة محمد صلاح تتحول لمزار سياحي في طرابزون (فيديو)",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/sport/2026/9/20/%d8%b5%d9%84%d8%a7%d8%ad%d8%aa%d8%a7%d8%b4%d9%8a-%d8%b5%d8%ae%d8%b1%d8%a9-%d9%85%d8%ad%d9%85%d8%af-%d8%b5%d9%84%d8%a7%d8%ad-%d8%b7%d8%b1%d8%a7%d8%a8%d8%b2%d9%88%d9%86?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 20:59:00 +0300"
-    },
-    {
-      "headline": "هل تقترب الضفة الغربية من انتفاضة جديدة؟",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/9/20/%d9%87%d9%84-%d8%aa%d9%82%d8%aa%d8%b1%d8%a8-%d8%a7%d9%84%d8%b6%d9%81%d8%a9-%d8%a7%d9%84%d8%ba%d8%b1%d8%a8%d9%8a%d8%a9-%d9%85%d9%86-%d8%a7%d9%86%d8%aa%d9%81%d8%a7%d8%b6%d8%a9?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 20:52:31 +0300"
-    },
-    {
-      "headline": "إذا أسقط زيلينسكي الطائرة فلا مفر من الكارثة النووية",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/opinions/2026/9/20/%d9%84%d9%85%d8%a7%d8%b0%d8%a7-%d9%8a%d8%b3%d8%aa%d8%b7%d9%8a%d8%b9-%d8%aa%d8%b1%d9%85%d8%a8-%d8%a5%d9%86%d9%87%d8%a7%d8%a1-%d8%a7%d9%84%d8%b5%d8%b1%d8%a7%d8%b9-%d8%a7%d9%84%d8%b1%d9%88%d8%b3%d9%8a?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 20:51:53 +0300"
-    },
-    {
-      "headline": "\"حتى لو كنت مورينيو\".. رد سيميوني على انتقادات مدرب ريال مدريد للحكام",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/sport/2026/9/20/%d8%ad%d8%aa%d9%89-%d9%84%d9%88-%d9%83%d9%86%d8%aa-%d9%85%d9%88%d8%b1%d9%8a%d9%86%d9%8a%d9%88-%d8%b1%d8%af-%d8%b3%d9%8a%d9%85%d9%8a%d9%88%d9%86%d9%8a-%d8%b9%d9%84%d9%89?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 20:45:00 +0300"
-    },
-    {
-      "headline": "خطة تجديد أكشاك القاهرة تثير مخاوف أصحابها",
-      "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/ebusiness/2026/9/20/%d8%ae%d8%b7%d8%a9-%d8%aa%d8%ac%d8%af%d9%8a%d8%af-%d8%a3%d9%83%d8%b4%d8%a7%d9%83-%d8%a7%d9%84%d9%82%d8%a7%d9%87%d8%b1%d8%a9-%d8%aa%d8%ab%d9%8a%d8%b1-%d9%85%d8%ae%d8%a7%d9%88%d9%81?traffic_source=rss",
-      "published": "Sun, 20 Sep 2026 20:42:44 +0300"
     }
   ],
   "general": [
     {
-      "headline": "الحوثيون يتهمون السعودية بشنَّ 28 غارة خلال 24 ساعة، ورئيس المخابرات الأمريكية بزيارة \"نادرة\" للقاهرة",
+      "headline": "أربع إصابات \"حصيلة أولية\" لانفجارات متتالية في موقع عسكري قرب حلب",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/c64gd0z1g5zno?at_medium=RSS&at_campaign=rss",
+      "published": "Mon, 21 Sep 2026 06:19:31 GMT"
+    },
+    {
+      "headline": "الحوثيون يتهمون السعودية بشنّ 28 غارة خلال 24 ساعة، ورئيس المخابرات الأمريكية في زيارة \"نادرة\" للقاهرة",
       "source": "BBC عربي",
       "url": "https://www.bbc.com/arabic/articles/cw33k2ex2881o?at_medium=RSS&at_campaign=rss",
-      "published": "Sun, 20 Sep 2026 22:47:52 GMT"
+      "published": "Mon, 21 Sep 2026 04:03:23 GMT"
     },
     {
       "headline": "إيران تحذر دول المنطقة من التعاون مع واشنطن في حال استئناف الهجوم عليها",
@@ -232,12 +238,6 @@
       "published": "Sun, 20 Sep 2026 08:29:50 GMT"
     },
     {
-      "headline": "مقتل شخصين في هجوم أوكراني \"ضخم\" بالطائرات المسيّرة على منطقة موسكو",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/cm9w4q9ypr8vo?at_medium=RSS&at_campaign=rss",
-      "published": "Sun, 20 Sep 2026 08:24:09 GMT"
-    },
-    {
       "headline": "إيد شيران يعتذر للحضور عن \"ارتكابه الأخطاء\"",
       "source": "BBC عربي",
       "url": "https://www.bbc.com/arabic/articles/cjx2z14dg212o?at_medium=RSS&at_campaign=rss",
@@ -274,6 +274,84 @@
       "published": "Sun, 20 Sep 2026 16:51:21 GMT"
     },
     {
+      "headline": "الخرف في الأمازون.. سر انخفاضه الظاهري",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/technology/1893381-%D8%A7%D9%84%D8%AE%D8%B1%D9%81-%D8%A7%D9%84%D8%A3%D9%85%D8%A7%D8%B2%D9%88%D9%86-%D8%B3%D8%B1-%D8%A7%D9%86%D8%AE%D9%81%D8%A7%D8%B6%D9%87-%D8%A7%D9%84%D8%B8%D8%A7%D9%87%D8%B1%D9%8A",
+      "published": "Mon, 21 Sep 2026 05:58:14 GMT"
+    },
+    {
+      "headline": "توأم رقمي يتنبأ باستجابة الخلية للأدوية",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/technology/1893372-%D8%AA%D9%88%D8%A3%D9%85-%D8%B1%D9%82%D9%85%D9%8A-%D9%8A%D8%AA%D9%86%D8%A8%D8%A3-%D8%A8%D8%A7%D8%B3%D8%AA%D8%AC%D8%A7%D8%A8%D8%A9-%D8%A7%D9%84%D8%AE%D9%84%D9%8A%D8%A9-%D9%84%D9%84%D8%A3%D8%AF%D9%88%D9%8A%D8%A9",
+      "published": "Mon, 21 Sep 2026 05:40:37 GMT"
+    },
+    {
+      "headline": "روسيا.. استهداف مراكز لوجستية ومستودعات وموانئ وسفن أوكرانية",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893382-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%A7%D8%B3%D8%AA%D9%87%D8%AF%D8%A7%D9%81-%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D9%84%D9%88%D8%AC%D8%B3%D8%AA%D9%8A%D8%A9-%D9%88%D9%85%D8%B3%D8%AA%D9%88%D8%AF%D8%B9%D8%A7%D8%AA-%D9%88%D9%85%D9%88%D8%A7%D9%86%D8%A6-%D9%88%D8%B3%D9%81%D9%86-%D8%A3%D9%88%D9%83%D8%B1%D8%A7%D9%86%D9%8A%D8%A9",
+      "published": "Mon, 21 Sep 2026 05:36:29 GMT"
+    },
+    {
+      "headline": "سوء التغذية يهدد نمو أطفال غزة في خيام النزوح",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/middle-east/1893375-%D8%B3%D9%88%D8%A1-%D8%A7%D9%84%D8%AA%D8%BA%D8%B0%D9%8A%D8%A9-%D9%8A%D9%87%D8%AF%D8%AF-%D9%86%D9%85%D9%88-%D8%A3%D8%B7%D9%81%D8%A7%D9%84-%D8%BA%D8%B2%D8%A9-%D8%AE%D9%8A%D8%A7%D9%85-%D8%A7%D9%84%D9%86%D8%B2%D9%88%D8%AD",
+      "published": "Mon, 21 Sep 2026 05:27:08 GMT"
+    },
+    {
+      "headline": "منظمة العفو: حركة إم 23 تجبر الآلاف على العمل بمناجم الكونغو",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893378-%D9%85%D9%86%D8%B8%D9%85%D8%A9-%D8%A7%D9%84%D8%B9%D9%81%D9%88-%D8%AD%D8%B1%D9%83%D8%A9-%D8%A5%D9%85-23-%D8%AA%D8%AC%D8%A8%D8%B1-%D8%A7%D9%84%D8%A2%D9%84%D8%A7%D9%81-%D8%A7%D9%84%D8%B9%D9%85%D9%84-%D8%A8%D9%85%D9%86%D8%A7%D8%AC%D9%85-%D8%A7%D9%84%D9%83%D9%88%D9%86%D8%BA%D9%88",
+      "published": "Mon, 21 Sep 2026 05:23:18 GMT"
+    },
+    {
+      "headline": "هل تجعلنا مواقع التواصل أقل سعادة؟.. دراسة تجيب",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/technology/1893370-%D8%AA%D8%AC%D8%B9%D9%84%D9%86%D8%A7-%D9%85%D9%88%D8%A7%D9%82%D8%B9-%D8%A7%D9%84%D8%AA%D9%88%D8%A7%D8%B5%D9%84-%D8%B3%D8%B9%D8%A7%D8%AF%D8%A9-%D8%AF%D8%B1%D8%A7%D8%B3%D8%A9-%D8%AA%D8%AC%D9%8A%D8%A8",
+      "published": "Mon, 21 Sep 2026 05:10:09 GMT"
+    },
+    {
+      "headline": "داون ديتكتور: تعطل فيسبوك وإنستغرام لدى آلاف المستخدمين",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/technology/1893367-%D8%AF%D8%A7%D9%88%D9%86-%D8%AF%D9%8A%D8%AA%D9%83%D8%AA%D9%88%D8%B1-%D8%AA%D8%B9%D8%B7%D9%84-%D9%81%D9%8A%D8%B3%D8%A8%D9%88%D9%83-%D9%88%D8%A5%D9%86%D8%B3%D8%AA%D8%BA%D8%B1%D8%A7%D9%85-%D8%A2%D9%84%D8%A7%D9%81-%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%AE%D8%AF%D9%85%D9%8A%D9%86",
+      "published": "Mon, 21 Sep 2026 04:30:52 GMT"
+    },
+    {
+      "headline": "انتخابات \"الدوما\" الروسي.. حزب \"روسيا الموحدة\" يحتفظ بهيمنته",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893365-%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AF%D9%88%D9%85%D8%A7-%D8%A7%D9%84%D8%B1%D9%88%D8%B3%D9%8A-%D8%AD%D8%B2%D8%A8-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%A7%D9%84%D9%85%D9%88%D8%AD%D8%AF%D8%A9-%D9%8A%D8%AD%D8%AA%D9%81%D8%B8-%D8%A8%D9%87%D9%8A%D9%85%D9%86%D8%AA%D9%87",
+      "published": "Mon, 21 Sep 2026 04:15:43 GMT"
+    },
+    {
+      "headline": "كوريا الجنوبية.. إصابة جنود بانفجار في المنطقة منزوعة السلاح",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893363-%D9%83%D9%88%D8%B1%D9%8A%D8%A7-%D8%A7%D9%84%D8%AC%D9%86%D9%88%D8%A8%D9%8A%D8%A9-%D8%A5%D8%B5%D8%A7%D8%A8%D8%A9-%D8%AC%D9%86%D9%88%D8%AF-%D8%A8%D8%A7%D9%86%D9%81%D8%AC%D8%A7%D8%B1-%D8%A7%D9%84%D9%85%D9%86%D8%B7%D9%82%D8%A9-%D9%85%D9%86%D8%B2%D9%88%D8%B9%D8%A9-%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D8%AD",
+      "published": "Mon, 21 Sep 2026 04:05:11 GMT"
+    },
+    {
+      "headline": "تكساس.. أصابه رجل برصاص عنصر بإدارة الهجرة",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893362-%D8%AA%D9%83%D8%B3%D8%A7%D8%B3-%D8%A3%D8%B5%D8%A7%D8%A8%D9%87-%D8%B1%D8%AC%D9%84-%D8%A8%D8%B1%D8%B5%D8%A7%D8%B5-%D8%B9%D9%86%D8%B5%D8%B1-%D8%A8%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D9%87%D8%AC%D8%B1%D8%A9",
+      "published": "Mon, 21 Sep 2026 03:48:43 GMT"
+    },
+    {
+      "headline": "التجارة والذكاء الاصطناعي.. يقودان تفاهمات واشنطن وبكين",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893361-%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9-%D9%88%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%8A%D9%82%D9%88%D8%AF%D8%A7%D9%86-%D8%AA%D9%81%D8%A7%D9%87%D9%85%D8%A7%D8%AA-%D9%88%D8%A7%D8%B4%D9%86%D8%B7%D9%86-%D9%88%D8%A8%D9%83%D9%8A%D9%86",
+      "published": "Mon, 21 Sep 2026 01:15:03 GMT"
+    },
+    {
+      "headline": "أميركا تتسلم 18 مشتبها بهم في اغتيال الرئيس الهايتي",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893360-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D8%A7-%D8%AA%D8%AA%D8%B3%D9%84%D9%85-18-%D9%85%D8%B4%D8%AA%D8%A8%D9%87%D8%A7-%D8%A8%D9%87%D9%85-%D8%A7%D8%BA%D8%AA%D9%8A%D8%A7%D9%84-%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3-%D8%A7%D9%84%D9%87%D8%A7%D9%8A%D8%AA%D9%8A",
+      "published": "Mon, 21 Sep 2026 00:58:49 GMT"
+    },
+    {
+      "headline": "البديل من أجل ألمانيا اليميني المتطرف يحقق فوزا ثانيا",
+      "source": "Sky News Arabia",
+      "url": "https://www.skynewsarabia.com/world/1893358-%D8%A7%D9%84%D8%A8%D8%AF%D9%8A%D9%84-%D8%A3%D8%AC%D9%84-%D8%A3%D9%84%D9%85%D8%A7%D9%86%D9%8A%D8%A7-%D8%A7%D9%84%D9%8A%D9%85%D9%8A%D9%86%D9%8A-%D8%A7%D9%84%D9%85%D8%AA%D8%B7%D8%B1%D9%81-%D9%8A%D8%AD%D9%82%D9%82-%D9%81%D9%88%D8%B2%D8%A7-%D8%AB%D8%A7%D9%86%D9%8A%D8%A7",
+      "published": "Mon, 21 Sep 2026 00:35:23 GMT"
+    },
+    {
       "headline": "ماركينيوس يخطف الفوز لسان جيرمان ومرسيليا يغرق في أزمة",
       "source": "Sky News Arabia",
       "url": "https://www.skynewsarabia.com/sport/1893357-%D9%85%D8%A7%D8%B1%D9%83%D9%8A%D9%86%D9%8A%D9%88%D8%B3-%D9%8A%D8%AE%D8%B7%D9%81-%D8%A7%D9%84%D9%81%D9%88%D8%B2-%D9%84%D8%B3%D8%A7%D9%86-%D8%AC%D9%8A%D8%B1%D9%85%D8%A7%D9%86-%D9%88%D9%85%D8%B1%D8%B3%D9%8A%D9%84%D9%8A%D8%A7-%D9%8A%D8%BA%D8%B1%D9%82-%D8%A3%D8%B2%D9%85%D8%A9",
@@ -284,84 +362,6 @@
       "source": "Sky News Arabia",
       "url": "https://www.skynewsarabia.com/world/1893356-%D8%AA%D9%88%D8%AA%D8%B1%D8%A7%D8%AA-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D8%A7-%D9%81%D8%B1%D9%86%D8%B3%D8%A7-%D9%88%D9%83%D9%86%D8%AF%D8%A7-%D8%AA%D8%AA%D9%81%D9%82%D8%A7%D9%86-%D8%AA%D8%B9%D9%85%D9%8A%D9%82-%D8%A7%D9%84%D8%B4%D8%B1%D8%A7%D9%83%D8%A9",
       "published": "Sun, 20 Sep 2026 23:38:05 GMT"
-    },
-    {
-      "headline": "فيديو.. انفجارات ضخمة متتالية في مخزن أسلحة بريف حلب",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1893349-%D9%81%D9%8A%D8%AF%D9%8A%D9%88-%D8%A7%D9%86%D9%81%D8%AC%D8%A7%D8%B1%D8%A7%D8%AA-%D8%B6%D8%AE%D9%85%D8%A9-%D9%85%D8%AA%D8%AA%D8%A7%D9%84%D9%8A%D8%A9-%D9%85%D8%AE%D8%B2%D9%86-%D8%A3%D8%B3%D9%84%D8%AD%D8%A9-%D8%A8%D8%B1%D9%8A%D9%81-%D8%AD%D9%84%D8%A8",
-      "published": "Sun, 20 Sep 2026 23:04:47 GMT"
-    },
-    {
-      "headline": "مقتل جنود باكستانيين ومسلحين في اشتباك قرب حدود أفغانستان",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893348-%D9%85%D9%82%D8%AA%D9%84-%D8%AC%D9%86%D9%88%D8%AF-%D8%A8%D8%A7%D9%83%D8%B3%D8%AA%D8%A7%D9%86%D9%8A%D9%8A%D9%86-%D9%88%D9%85%D8%B3%D9%84%D8%AD%D9%8A%D9%86-%D8%A7%D8%B4%D8%AA%D8%A8%D8%A7%D9%83-%D9%82%D8%B1%D8%A8-%D8%AD%D8%AF%D9%88%D8%AF-%D8%A3%D9%81%D8%BA%D8%A7%D9%86%D8%B3%D8%AA%D8%A7%D9%86",
-      "published": "Sun, 20 Sep 2026 22:54:09 GMT"
-    },
-    {
-      "headline": "باريس تتوعد بالرد على إغلاق المركز الثقافي الفرنسي في طهران",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893347-%D8%A8%D8%A7%D8%B1%D9%8A%D8%B3-%D8%AA%D8%AA%D9%88%D8%B9%D8%AF-%D8%A8%D8%A7%D9%84%D8%B1%D8%AF-%D8%A5%D8%BA%D9%84%D8%A7%D9%82-%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2-%D8%A7%D9%84%D8%AB%D9%82%D8%A7%D9%81%D9%8A-%D8%A7%D9%84%D9%81%D8%B1%D9%86%D8%B3%D9%8A-%D8%B7%D9%87%D8%B1%D8%A7%D9%86",
-      "published": "Sun, 20 Sep 2026 22:45:12 GMT"
-    },
-    {
-      "headline": "رئيسة فنزويلا تشارك في الجمعية العامة.. ولقاء مرتقب مع ترامب",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893346-%D8%B1%D8%A6%D9%8A%D8%B3%D8%A9-%D9%81%D9%86%D8%B2%D9%88%D9%8A%D9%84%D8%A7-%D8%AA%D8%B4%D8%A7%D8%B1%D9%83-%D8%A7%D9%84%D8%AC%D9%85%D8%B9%D9%8A%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%85%D8%A9-%D9%88%D9%84%D9%82%D8%A7%D8%A1-%D9%85%D8%B1%D8%AA%D9%82%D8%A8-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8",
-      "published": "Sun, 20 Sep 2026 22:03:21 GMT"
-    },
-    {
-      "headline": "إقليم كردستان يعلن اكتمال توحيد قوات \"البيشمركة\" رسميا",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1893345-%D8%A5%D9%82%D9%84%D9%8A%D9%85-%D9%83%D8%B1%D8%AF%D8%B3%D8%AA%D8%A7%D9%86-%D9%8A%D8%B9%D9%84%D9%86-%D8%A7%D9%83%D8%AA%D9%85%D8%A7%D9%84-%D8%AA%D9%88%D8%AD%D9%8A%D8%AF-%D9%82%D9%88%D8%A7%D8%AA-%D8%A7%D9%84%D8%A8%D9%8A%D8%B4%D9%85%D8%B1%D9%83%D8%A9-%D8%B1%D8%B3%D9%85%D9%8A%D8%A7",
-      "published": "Sun, 20 Sep 2026 21:46:27 GMT"
-    },
-    {
-      "headline": "استطلاع: تراجع شعبية ترامب يضعف الجمهوريين قبل الانتخابات",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893343-%D8%A7%D8%B3%D8%AA%D8%B7%D9%84%D8%A7%D8%B9-%D8%AA%D8%B1%D8%A7%D8%AC%D8%B9-%D8%B4%D8%B9%D8%A8%D9%8A%D8%A9-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D8%B6%D8%B9%D9%81-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86-%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA",
-      "published": "Sun, 20 Sep 2026 21:24:28 GMT"
-    },
-    {
-      "headline": "ترامب يضغط على زيلينسكي لوقف ضرب مصافي النفط الروسية",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893342-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D8%B6%D8%BA%D8%B7-%D8%B2%D9%8A%D9%84%D9%8A%D9%86%D8%B3%D9%83%D9%8A-%D9%84%D9%88%D9%82%D9%81-%D8%B6%D8%B1%D8%A8-%D9%85%D8%B5%D8%A7%D9%81%D9%8A-%D8%A7%D9%84%D9%86%D9%81%D8%B7-%D8%A7%D9%84%D8%B1%D9%88%D8%B3%D9%8A%D8%A9",
-      "published": "Sun, 20 Sep 2026 21:10:27 GMT"
-    },
-    {
-      "headline": "دولة الإمارات ترسل مساعدات إغاثية إلى كولومبيا",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893341-%D8%AF%D9%88%D9%84%D8%A9-%D8%A7%D9%84%D8%A5%D9%85%D8%A7%D8%B1%D8%A7%D8%AA-%D8%AA%D8%B1%D8%B3%D9%84-%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A7%D8%AA-%D8%A5%D8%BA%D8%A7%D8%AB%D9%8A%D8%A9-%D9%83%D9%88%D9%84%D9%88%D9%85%D8%A8%D9%8A%D8%A7",
-      "published": "Sun, 20 Sep 2026 20:57:43 GMT"
-    },
-    {
-      "headline": "طوق نجاة لمرضى السرطان.. عالم مصري يطور خلايا تدمر الأورام",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1893340-%D8%B7%D9%88%D9%82-%D9%86%D8%AC%D8%A7%D8%A9-%D9%84%D9%85%D8%B1%D8%B6%D9%89-%D8%A7%D9%84%D8%B3%D8%B1%D8%B7%D8%A7%D9%86-%D8%B9%D8%A7%D9%84%D9%85-%D9%85%D8%B5%D8%B1%D9%8A-%D9%8A%D8%B7%D9%88%D8%B1-%D8%AE%D9%84%D8%A7%D9%8A%D8%A7-%D8%AA%D8%AF%D9%85%D8%B1-%D8%A7%D9%84%D8%A3%D9%88%D8%B1%D8%A7%D9%85",
-      "published": "Sun, 20 Sep 2026 19:48:50 GMT"
-    },
-    {
-      "headline": "مانشستر يونايتد ينجو من الخسارة أمام فولهام بهدف \"قاتل\"",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/sport/1893339-%D9%85%D8%A7%D9%86%D8%B4%D8%B3%D8%AA%D8%B1-%D9%8A%D9%88%D9%86%D8%A7%D9%8A%D8%AA%D8%AF-%D9%8A%D9%86%D8%AC%D9%88-%D8%A7%D9%84%D8%AE%D8%B3%D8%A7%D8%B1%D8%A9-%D8%A3%D9%85%D8%A7%D9%85-%D9%81%D9%88%D9%84%D9%87%D8%A7%D9%85-%D8%A8%D9%87%D8%AF%D9%81-%D9%82%D8%A7%D8%AA%D9%84",
-      "published": "Sun, 20 Sep 2026 19:18:31 GMT"
-    },
-    {
-      "headline": "حزب \"روسيا الموحدة\" يتجه نحو الفوز بالانتخابات التشريعية",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893336-%D8%AD%D8%B2%D8%A8-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%A7%D9%84%D9%85%D9%88%D8%AD%D8%AF%D8%A9-%D9%8A%D8%AA%D8%AC%D9%87-%D8%A7%D9%84%D9%81%D9%88%D8%B2-%D8%A8%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B4%D8%B1%D9%8A%D8%B9%D9%8A%D8%A9",
-      "published": "Sun, 20 Sep 2026 18:52:01 GMT"
-    },
-    {
-      "headline": "تقرير يكشف أعداد النازحين في اليمن منذ بدء التصعيد العسكري",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1893334-%D8%AA%D9%82%D8%B1%D9%8A%D8%B1-%D9%8A%D9%83%D8%B4%D9%81-%D8%A3%D8%B9%D8%AF%D8%A7%D8%AF-%D8%A7%D9%84%D9%86%D8%A7%D8%B2%D8%AD%D9%8A%D9%86-%D8%A7%D9%84%D9%8A%D9%85%D9%86-%D8%A8%D8%AF%D8%A1-%D8%A7%D9%84%D8%AA%D8%B5%D8%B9%D9%8A%D8%AF-%D8%A7%D9%84%D8%B9%D8%B3%D9%83%D8%B1%D9%8A",
-      "published": "Sun, 20 Sep 2026 18:13:09 GMT"
-    },
-    {
-      "headline": "بعد \"الهجوم الأكبر\".. روسيا تتوعد برد قاس على كييف",
-      "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1893332-%D8%A7%D9%84%D9%87%D8%AC%D9%88%D9%85-%D8%A7%D9%84%D8%A3%D9%83%D8%A8%D8%B1-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%AA%D8%AA%D9%88%D8%B9%D8%AF-%D8%A8%D8%B1%D8%AF-%D9%82%D8%A7%D8%B3-%D9%83%D9%8A%D9%8A%D9%81",
-      "published": "Sun, 20 Sep 2026 17:27:06 GMT"
     }
   ]
 }
