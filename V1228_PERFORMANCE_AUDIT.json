@@ -93,5 +93,6 @@
     ]
   },
   "unloadSemantics": "teardown and release DOM/listeners/state; ECMAScript module source remains browser-cached and cannot be forcibly unloaded",
-  "expectedInitialHeavyBytesRemoved": 428977
+  "expectedInitialHeavyBytesRemoved": 428977,
+  "hotfix": "Room opener API mismatch fixed: forensic/puzzle/beauty use start(), not open(). openFeature now fails loudly if no opener is returned."
 }
