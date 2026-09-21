@@ -1,4 +1,4 @@
-# ZIVOZONE V1220
+# ZIVOZONE V1221
 
 منصة ألعاب وتحديات ورياضة وغرف محتوى — موقع ثابت (GitHub Pages / Firebase Hosting) مع Firebase Auth + Firestore.
 
@@ -11,7 +11,7 @@
 
 ## أوامر الصيانة
 ```bash
-python3 scripts/release.py 1220.0        # يوحّد رقم الإصدار ويعيد بناء قائمة كاش الـ service worker
+python3 scripts/release.py 1221.0        # يوحّد رقم الإصدار ويعيد بناء قائمة كاش الـ service worker
 python3 scripts/build_content_index.py   # يعيد بناء data/stories/index.json من manuscripts/
 python3 scripts/clean_health_doors.py    # يولّد health-doors.json من الأصل المؤرشف
 python3 scripts/verify_site.py           # البوابة الثابتة الوحيدة (يجب أن تنجح قبل أي نشر)
