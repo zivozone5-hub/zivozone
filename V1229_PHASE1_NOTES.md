@@ -33,3 +33,13 @@ Base: V1228 STATE_CACHE_READY. Look and features unchanged; this release fixes c
 - fr/fa UI is mostly copied from en/ar; 63% of questions are Arabic-only (Phase 4).
 - Legal pages are a technical draft: have a lawyer review before ads/commercial launch. Contact address = admin email; change in `privacy/` and `terms/`.
 - Mobile header overlaps the hero card; canonical apex vs www; ESPN/raw.githubusercontent dependencies.
+
+## Update 1229.1 — honesty of the economy text
+- UI text no longer claims a "real wallet" or "server-level protection" (no trusted server exists yet). ZIVO is described as a virtual points balance, matching the Terms.
+- `qa_phase1_trust.py` now fails if those claims reappear. Re-allow them only after Phase 2 (server authority) exists.
+
+## Decision: stay on the free plan (Spark)
+- Cloud Functions need the Blaze plan, so server-side reward authority is postponed.
+- Until then ZIVO stays **points only**. Do not add any cash-out, sale, or "earn money" wording.
+- Balances created before a trusted ledger exists cannot be trusted; when real value is planned, start a fresh audited ledger.
+- Trigger to revisit: before ANY feature that gives ZIVO monetary value (needs server authority + legal review).
