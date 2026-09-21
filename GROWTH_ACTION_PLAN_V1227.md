@@ -1,4 +1,4 @@
-# ZIVOZONE V1227 — Growth Action Plan
+# ZIVOZONE V1228 — Growth Action Plan
 
 ## 1) Measurement
 GA4 events:
