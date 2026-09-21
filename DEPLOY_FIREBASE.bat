@@ -2,10 +2,10 @@
 setlocal
 cd /d "%~dp0"
 echo.
-echo ZIVOZONE V1225 - Firebase Production Deploy
+echo ZIVOZONE V1226 - Firebase Production Deploy
 if not exist "index.html" (
   echo ERROR: index.html was not found in this directory.
-  echo Run this file from the extracted ZIVOZONE_V1225 folder.
+  echo Run this file from the extracted ZIVOZONE_V1226 folder.
   pause
   exit /b 1
 )
