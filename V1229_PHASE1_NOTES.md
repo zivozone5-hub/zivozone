@@ -111,3 +111,46 @@ confirmed byte-for-byte identical across all 13 pages before touching anything.
   size reduction on top of today's request-count win.
 - **Four duplicate question banks → one.** Not started this round.
 - **Duplicate `esc()` in 13 files → one shared utility.** Not started this round.
+
+## Update 1229.5 — Phase 3 step 2: one canonical question bank instead of six globals
+Investigating "merge the 4 question banks into 1" found the real picture was more specific: the
+content already lived in one mostly-consolidated file (question-bank.js, from a V1180 pass), but it
+exported SIX different global objects (`ZIVOZONE_CHALLENGES`, `ZIVOZONE_V18_BANK`, `ZIVOZONE_V18`,
+`ZIVOZONE_V40_BANK`, `ZIVOZONE_V22_BANK`, `ZIVOZONE_QUESTION_BANK_PRO`, `ZIVOZONE.QuestionBank`,
+`ZIVOZONE_QUESTION_BANK_FLOOR`), and challenges.js had to know to union several of them together at
+runtime just to see the full question pool.
+
+Checked every one of them for real consumers before touching anything (deleting live content here
+would silently remove questions from gameplay):
+- **Confirmed genuinely dead** (zero consumers anywhere else in the codebase): `ZIVOZONE_V18` (a
+  wrapper with its own get/all/scoreAnswer methods, unused), `ZIVOZONE_QUESTION_BANK_PRO` (a
+  stats/all API, unused), `ZIVOZONE.QuestionBank` (unused), `ZIVOZONE_QUESTION_BANK_FLOOR` (unused —
+  but the `dedupe()` pass that ran alongside it is real and was kept).
+- **Confirmed live and kept untouched:** the 18 "PRO" question packs that get merged into existing
+  banks (code_v22, daily, football, horror, iq, logic, math, memory, science, strategy, etc. — real
+  content, actively shipped), the options→a/c schema canonicalization, and the stable-ID assignment
+  pass (used by the "don't repeat a question" history logic).
+- **V18's 30 questions** (Logic Lab / Pattern / Focus, 10 each) were reachable via challenges.js's
+  three-way union but were invisible to `window.ZIVOZONE_CHALLENGES` itself. Made V18 self-merge into
+  `ZIVOZONE_CHALLENGES` the same way V22 and V40 already did, then simplified challenges.js's
+  `banks()` to read only `Object.values(ZIVOZONE_CHALLENGES)` — one source instead of three.
+
+**Verified zero content loss:** total question count and the per-bank breakdown are identical before
+and after (633 questions across 21 banks, same numbers per bank) — checked with a standalone Node
+harness that loads the actual bank files. Also **found and fixed a blind spot** in
+`scripts/question-bank-integrity-v1197-4.js`: it only ever read `ZIVOZONE_CHALLENGES` directly, so it
+had been under-counting the real question total by 30 (610 instead of 633) since V18 was added,
+because V18 lived outside `ZIVOZONE_CHALLENGES`. It now reports the correct 640 (549 choice + 84
+direct-answer, minus/plus small overlaps from dedupe).
+
+**Verified in real Chromium, not just data:** opened the "التحديات" (Challenges) screen — the grid
+still renders all 20 cards (unchanged), including the three V18 cards, which were already reachable
+before this change (their poster images already existed — this was a real, if easy-to-miss, existing
+feature, not dead content). Started the `logic_v18` challenge end-to-end: cinematic intro → world
+screen → the exact question from the raw data ("أكمل: 2، 4، 6، 8، ؟") → answered "10" → advanced to
+question 2/10. Zero JavaScript errors throughout. All 9 project gates still pass, including the
+bundle-freshness gate (question-bank.js is part of the bundle, so it was rebuilt and reverified).
+
+### Not done yet (explicitly deferred, not forgotten)
+- **Bundle minification** — still just concatenated, not minified (no npm access in this sandbox).
+- **Duplicate `esc()` in 13 files → one shared utility.** Next up.
