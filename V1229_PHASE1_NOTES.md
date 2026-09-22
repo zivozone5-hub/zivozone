@@ -60,3 +60,54 @@ Investigating the "news/matches fetched 3x" item from the audit found the actual
 - Along the way, found `#jordan-news-list` ("🇯🇴 كرة القدم الأردنية · مصادر رسمية + مباشر") had **no renderer at all** — it was permanently blank under a "live" badge in V1228, for every user, always. Implemented a real one: it filters the same sports feed for Jordan-related keywords and shows an honest "لا توجد أخبار أردنية حالياً" message when the source has none today, instead of showing nothing under a false "live" claim.
 - New gate `scripts/qa_no_duplicate_boot_fetch.py`: drives real Chromium on index.html and a story page, fails if `data/news.json` is fetched more than twice at boot. This regression class (a new caller quietly added later) is invisible to static analysis, so this gate exists specifically to catch it again if it comes back.
 - Full regression re-run after this fix: 26/26 Phase-1 browser checks + 10/10 ticker checks, all still green.
+
+## Update 1229.4 — Phase 3 step 1: one entry point instead of 48 `<script>` tags
+The first structural piece of "unify instead of layering": index.html and all 12 story pages loaded
+the exact same 48 local JavaScript files as 48 separate `<script>` tags, in the exact same order,
+confirmed byte-for-byte identical across all 13 pages before touching anything.
+
+- **What changed:** those 48 files are now concatenated, in their original execution order, into one
+  file: `dist/app.bundle.js`. Each page now loads it with a single `<script>` tag instead of 48. Every
+  file is untouched — same code, same order, just fetched once instead of 48 times. `zivo-ai.js` (an ES
+  module with `import` statements from a CDN) and the 4 Firebase compat SDKs are deliberately left as
+  separate tags; they cannot be concatenated into a classic-script bundle.
+- **Source of truth:** `scripts/bundle_manifest.txt` — a plain, ordered, one-path-per-line list.
+  Add/remove/reorder a core module there when the module list changes; `scripts/build_bundle.py` reads
+  it and rebuilds. It intentionally does NOT re-derive the list from index.html on every run (that would
+  be self-referential once the page only contains the bundle tag).
+- **Wired into the release flow:** `python3 scripts/release.py <version>` now calls the bundler
+  automatically, after stamping `core/config.js`/`core/boot.js`, so the bundle always embeds the new
+  version strings.
+- **New gate — `scripts/qa_bundle_freshness.py`:** rebuilds the bundle from current sources into a
+  temp copy and fails if it doesn't match the committed `dist/app.bundle.js` byte-for-byte, so a source
+  edit can never silently ship stale bundled code. Wired into `run_all_gates.sh`.
+- **Fixed a gate that assumed the old architecture:** `qa_game_platform.py` checked for literal
+  `<script src="game-registry.js">`-style tags in index.html. Updated it to accept either a literal tag
+  or presence in the bundle manifest — the invariant it's protecting (the browser actually receives
+  that module's code) is unchanged, only how it ships.
+- **Measured effect:**
+  - Local JS requests per page load: 49 (48 modules + zivo-ai.js) → 2 (bundle + zivo-ai.js).
+  - Service-worker precache list (auto-derived from index.html's tags): 61 entries → 14.
+  - Bundle is 895 KB unminified (sum of the 48 source files + `//# sourceURL=` markers for DevTools).
+    No minification was applied — no bundler/minifier could be installed in this sandbox (no network
+    access to npm). This is a real request-count and precache win; minification (shrinking that 895 KB)
+    is separate future work once a build tool can be installed, and is called out below so it isn't
+    silently treated as done.
+- **A build-script bug caught by its own gate, worth recording:** the first version of `build_bundle.py`
+  re-derived the file list from index.html on every run. The second time it ran (during freshness-gate
+  development), index.html by then only contained the bundle tag, so it bundled the bundle into itself.
+  Caught immediately because the freshness gate's byte-diff didn't match; fixed by moving to the static
+  manifest file described above, and recovered by re-extracting the known-good pre-bundle 1229.3 state
+  from the zip already delivered to the user rather than trying to hand-repair the corrupted files.
+- **Verified in real Chromium** (index.html + a story page + mobile): 14/15 automated checks passed;
+  the one "failure" was a bug in the *test's* URL matcher (it treated `.json` as containing `.js`), not
+  a real regression — confirmed by hand that exactly 2 local `.js` files are requested. Login/register
+  modal, the age gate, the consent banner, the news ticker, and the Jordan football section (see 1229.3)
+  all work identically to before bundling, on both index.html and story pages.
+
+### Not done yet (explicitly deferred, not forgotten)
+- **Minification.** The bundle is concatenated but not minified/whitespace-stripped (no bundler could be
+  installed here). Run it through esbuild/Terser once you have local npm access; expect roughly a 60-70%
+  size reduction on top of today's request-count win.
+- **Four duplicate question banks → one.** Not started this round.
+- **Duplicate `esc()` in 13 files → one shared utility.** Not started this round.
