@@ -121,7 +121,7 @@ service cloud.firestore {
       allow create: if isSelf(uid) && request.resource.data.get('zivo', 0) == 0 && request.resource.data.get('coins', 0) == 0;
       allow update: if isOwner() || (isSelf(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['zivo','coins']));
       match /events/{eventId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid) && request.resource.data.keys().hasOnly(['event','meta','createdAt']) && request.resource.data.event is string && request.resource.data.event.size() <= 80 && request.resource.data.createdAt == request.time; allow update,delete: if false; }
-      match /results/{resultId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
+      match /results/{resultId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid) && request.resource.data.keys().size() <= 30 && request.resource.data.createdAt == request.time; allow update,delete: if false; }
       match /attempts/{attemptId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
       match /gameAttempts/{attemptId} { allow read,create: if isOwner() || isSelf(uid); allow update,delete: if false; }
       match /wallet/{doc} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
@@ -129,7 +129,11 @@ service cloud.firestore {
 
     match /questions/{id} { allow read: if signedIn(); allow write: if false; }
     match /dailyChallenges/{id} { allow read: if signedIn(); allow write: if false; }
-    match /results/{id} { allow read,create: if signedIn(); allow update,delete: if false; }
+    // SECURITY FIX: this top-level collection had no consumers anywhere in the app (only the
+    // per-user players/{uid}/results below is used) and allowed any signed-in user to create an
+    // unbounded, unvalidated document here — an open write surface to a shared collection with no
+    // real purpose. Denied outright; re-open with real validation if a feature needs it.
+    match /results/{id} { allow read: if signedIn(); allow write: if false; }
     match /wallets/{uid} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
     match /leaderboard/{id} { allow read: if true; allow write: if false; }
     match /admins/{uid} { allow read: if isOwner() && request.auth.uid == uid; allow write: if false; }
@@ -144,8 +148,10 @@ service cloud.firestore {
         && request.resource.data.text.size() >= 1
         && request.resource.data.text.size() <= 280
         && request.resource.data.keys().hasOnly(['text','displayName','authorUid','language','createdAt'])
+        && (!('displayName' in request.resource.data) || (request.resource.data.displayName is string && request.resource.data.displayName.size() <= 40))
+        && (!('language' in request.resource.data) || (request.resource.data.language is string && request.resource.data.language.size() <= 10))
         && request.resource.data.createdAt == request.time
-        && ((!exists(/databases/$(database)/documents/publicChatRate/$(request.auth.uid))) || get(/databases/$(database)/documents/publicChatRate/$(request.auth.uid)).data.nextAllowedAt <= request.time))
+        && ((!exists(/databases/$(database)/documents/publicChatRate/$(request.auth.uid))) || get(/databases/$(database)/documents/publicChatRate/$(request.auth.uid)).data.nextAllowedAt <= request.time)
         && getAfter(/databases/$(database)/documents/publicChatRate/$(request.auth.uid)).data.nextAllowedAt >= request.time + duration.value(3, 's');
       allow delete: if isOwner();
       allow update: if false;

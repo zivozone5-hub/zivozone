@@ -154,3 +154,93 @@ bundle-freshness gate (question-bank.js is part of the bundle, so it was rebuilt
 ### Not done yet (explicitly deferred, not forgotten)
 - **Bundle minification** — still just concatenated, not minified (no npm access in this sandbox).
 - **Duplicate `esc()` in 13 files → one shared utility.** Next up.
+
+## Update 1229.6 — Phase 3 step 3: one `esc()` instead of 13 copies
+The last item on the original Phase 3 list. The same one-line HTML-escaping helper (escape `& < > " '`)
+was copy-pasted, with minor formatting differences, into 13 files: admin.js, beauty-room.js,
+challenges.js, chat.js, economy.js, exit-guard.js, forensic-case-core.js, match-center.js, news.js,
+player-hub.js, puzzle-room.js, rooms.js, and runtime/app-shell.js. Three of them used a
+DOM-`textContent` trick instead of a regex, but produced identical output for these characters.
+
+- **New file:** `core/modules/util-esc.js` — the one implementation, exported as `window.ZIVOZONE_ESC`.
+  Added to `scripts/bundle_manifest.txt` right after `core/config.js` so it's available before any of
+  the 13 consumers load.
+- **Minimal-diff approach on purpose:** each of the 13 files still has a local `const esc = ...` — it
+  now just reads `const esc = window.ZIVOZONE_ESC;`. Every existing `esc(...)` call site in those files
+  needed zero changes. This was deliberately chosen over rewriting every call site: same guarantee,
+  far smaller diff, far less risk.
+- **Verified in real Chromium:** called `window.ZIVOZONE_ESC` directly with `<script>&"'</script>` and
+  confirmed correct escaping; re-opened the Challenges grid (still 20 cards), the Sports/Jordan section,
+  and consent flow — all identical, zero JS errors. Full gate suite (including bundle freshness) passes.
+
+### Phase 3 (unification) is now complete against the original plan
+1. One entry point instead of 48 `<script>` tags (1229.4).
+2. One canonical question bank instead of six overlapping globals (1229.5).
+3. One `esc()` instead of 13 copies (1229.6).
+
+Remaining, explicitly out of scope for this pass:
+- **Minification** of `dist/app.bundle.js` — needs a build tool this sandbox can't install (no npm
+  access). Concatenation-only bundle is 895 KB; expect roughly 60–70% smaller once minified.
+- Two smaller, real findings surfaced along the way and already fixed as part of the phase they came
+  up in, not held back: the permanently-blank Jordan football section (1229.3) and a QA gate that was
+  silently under-counting the question bank by 30 (1229.5).
+
+## Update 1229.6 (continued) — firestore.rules security review
+
+### Critical, fixed: the file had a syntax error and likely could not deploy at all
+`firestore.rules` had one extra closing parenthesis in the `publicChat` rate-limit condition
+(`...request.time))` instead of `...request.time)`). This is a hard compile error — `firebase deploy
+--only firestore:rules` would reject the whole file. Best case, deploys of this file have simply been
+failing; worst case, an older and less-restrictive ruleset is what's actually live right now while the
+source looks current. There is no Firebase CLI or emulator available in this environment to compile
+rules for real, so I wrote a lightweight structural check (`scripts/qa_rules_syntax.py`: balanced
+`()`/`{}`/`[]`, every custom `function` both defined and called) and wired it into
+`scripts/run_all_gates.sh`. It cannot catch everything a real compiler would, but it catches exactly
+this class of error, which just happened for real. **Please run `firebase deploy --only
+firestore:rules` (or paste the file into the Firebase Console rules simulator) once, since this is
+the one thing in this whole project I have not been able to verify against a real backend.**
+
+### Fixed: three narrow, safe hardening changes (each verified to only remove access nothing uses)
+- **Root `results/{id}` collection locked down** (`allow create: if signedIn()` → `allow write: if
+  false`). Confirmed via a full-codebase search that no client code writes here — only the separate
+  `players/{uid}/results` path is used. This was an open, per-account-unbounded write surface to a
+  *global* (not per-user) collection with zero shape or size validation.
+- **`players/{uid}/results/{resultId}` now bounded**: previously any signed-in user could write an
+  arbitrarily large, arbitrarily shaped document into their own results subcollection with no
+  validation at all (`allow create: if isSelf(uid)`). Added a field-count cap and required the one
+  field the client always sets. Left permissive on purpose (I don't know the intended full schema,
+  and the calling function, `Auth.saveResult()`, is currently unused by any other module — this is
+  future-facing hardening, not a fix for an active exploit).
+- **Public chat**: `displayName` and `language` had no type or size limit. Bounded to a string ≤40 and
+  ≤10 characters respectively, so a message can't carry a multi-kilobyte name into the public feed.
+
+### Found, NOT fixed here, and why — the real economy risk
+Tracing `rewardChallenge()` in economy.js (the only thing that credits ZIVO for a "perfect 10/10"
+challenge) confirms with certainty, not just suspicion, that **the whole flow is self-asserted by the
+browser**: `challenges.js` decides client-side whether the player scored 10/10 and calls
+`window.ZIVOZONE.Economy.rewardChallenge({..., validatedResult:{validated:true, perfect:true, ...}})`
+directly — nothing server-side ever checks that a real session happened. Concretely, anyone can open
+the browser console on the live site and run that same call with a fabricated `validatedResult` and
+mint 10 ZIVO, repeatable with a fresh `eventId` every time, with **no rate limit at all** on
+`rewardClaims` creation (unlike mining's 24-hour cooldown or chat's 3-second throttle).
+
+I looked for a rules-only mitigation (a per-user cooldown on reward claims, the same pattern already
+used for mining and chat) and deliberately did not ship it this round: making it real requires the
+*same* change on both sides at once — `economy.js`'s `credit()` transaction would need to also
+read/write a new rate-limit document, and `firestore.rules` would need to require that write in the
+same transaction via `getAfter()`. I have no Firebase emulator or live project access to test a
+transaction-plus-rules change like that together, and a subtle mismatch between the two would not
+fail loudly — it would either silently block *every* legitimate reward (including honest players) or
+silently do nothing at all. Given this reward path is live and working today, I chose not to ship an
+untested change to it. **This is the top remaining item, and it cannot be fully closed with Firestore
+rules alone** — only a Cloud Function that independently verifies a completed session (Phase 2) can
+confirm a claim is true rather than just well-shaped. A rules-only rate limit would raise the cost of
+abuse (bound the throughput) but never the authenticity, which is why Phase 2 stays the real fix.
+Since ZIVO is currently points-only (no cash-out), the practical damage today is a corrupted
+leaderboard, not a financial loss — but this is exactly the gap that must close before any real value
+is attached to ZIVO, per the earlier discussion.
+
+### Re-verified after all rule and code changes
+All 10 project gates pass, including the two new ones (`qa_rules_syntax.py`,
+already-existing gates re-run clean). The rules changes don't touch JS, so no bundle rebuild was
+needed for them; version bumped to 1229.6 to also carry the esc() de-duplication from the same round.
