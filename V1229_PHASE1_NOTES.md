@@ -244,3 +244,46 @@ is attached to ZIVO, per the earlier discussion.
 All 10 project gates pass, including the two new ones (`qa_rules_syntax.py`,
 already-existing gates re-run clean). The rules changes don't touch JS, so no bundle rebuild was
 needed for them; version bumped to 1229.6 to also carry the esc() de-duplication from the same round.
+
+## Update 1229.7 — Phase 4 (globalization) started: real French and Persian translations
+You said you want this to be a global project. The most concrete, verifiable step toward that today:
+of the 230 UI strings the translation system (`core/modules/runtime/i18n.js`) actually controls, 181
+French and 180 Persian ones were byte-identical copies of the English/Arabic source — never actually
+translated, just left as placeholders. Chinese, Hindi and Spanish were already properly translated.
+
+- **Translated all 181 French and 180 Persian keys by hand** (buttons, headings, error messages, the
+  Dark Room warning/checkpoint copy, the economy/wallet/mining strings, password reset flow, etc.).
+  A handful of keys are correctly identical to the source on purpose — brand terms (`XP`, `ZIVO`),
+  an email placeholder, and words French/Persian share with English/Arabic (`Football`, `Score`,
+  Persian's `خروج` for "exit" is standard Persian, not a leftover) — every one of those is now listed
+  explicitly in the new gate below rather than silently passing.
+- **New gate — `scripts/qa_i18n_coverage.py`**: flags any UI key that is textual and byte-identical to
+  its source language, unless it's on the small, explicit allow-list of genuine shared words. Wired
+  into `run_all_gates.sh`. This is the gate that would have caught the original 181/180 gap.
+- **Verified in real Chromium**, not just the data: loaded the homepage with French and with Persian
+  forced, confirmed the hero heading/subtext, stats labels, and nav render real translated text (not
+  fallback), and confirmed Persian gets `dir="rtl"` correctly (it was already mapped correctly, just
+  the words behind it weren't translated).
+
+### Important scope limit, stated plainly so it isn't mistaken for "the site is now global"
+The translation system only covers UI chrome that actually calls `t()` / uses `data-i18n` — roughly
+230 strings. Large parts of the site render Arabic text **hardcoded directly in JavaScript**, entirely
+outside this system, and stay Arabic-only regardless of the language switcher. Confirmed by checking
+the rendered page: the "ZIVO ECONOMY" wallet/mining widget shows Arabic labels ("محفظة ZIVO", "الرصيد
+الحالي"...) even with French or Persian selected, because `economy.js` builds that markup with ~130
+literal Arabic text fragments, not translation keys. The original audit found roughly 5,400 such
+hardcoded Arabic fragments across the codebase (challenges.js alone has ~2,960). Wiring all of that
+into the translation system — and then translating the resulting keys — is a much larger job than
+today's pass and has not been started.
+
+Also unchanged today: **63% of quiz questions are Arabic-only** (no English/French/Persian/etc.
+version exists in the data), the news ticker's content is whatever language the news source provides
+(Arabic, in the current feed), and there is still one URL for every language (no hreflang, since the
+site has no per-language routes to point hreflang at — that would need real URL-per-language routing,
+a structural change, not a translation one).
+
+### Honest caveat on translation quality
+These are my own translations, not reviewed by a native French or Persian speaker. They should read
+naturally and be functionally correct, but before a real launch to French- or Persian-speaking users,
+have a native speaker skim them — UI copy is exactly the kind of short, context-light text where an
+automated or non-native pass can miss tone even when the words are technically right.
