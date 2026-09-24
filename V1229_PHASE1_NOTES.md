@@ -287,3 +287,47 @@ These are my own translations, not reviewed by a native French or Persian speake
 naturally and be functionally correct, but before a real launch to French- or Persian-speaking users,
 have a native speaker skim them — UI copy is exactly the kind of short, context-light text where an
 automated or non-native pass can miss tone even when the words are technically right.
+
+## Update 1229.8 — wired the ZIVO Economy widget into the translation system
+Followed up directly on the 1229.7 finding: the "ZIVO ECONOMY" wallet/mining widget stayed Arabic
+regardless of the language switcher because `core/modules/economy.js` had its own local `t()`
+translation helper defined and **never once called** — every string (~130 Arabic fragments) was a
+hardcoded literal instead.
+
+- **Wired all of it**: wallet status line, last-mining timestamp, the mining chip/button in every
+  state (ready / cooling down / needs sign-in / needs account), toasts (mining success/error, perfect-
+  challenge reward), the ledger row labels (daily mining / perfect challenge / fallback), the full
+  wallet modal (title, stats, ledger title, empty state, virtual-balance note), and the widget's own
+  heading/intro/security note. Added 25 new i18n keys (translated into all 7 languages the same way as
+  1229.7) for strings that had no existing equivalent; reused ~15 existing keys where one already fit.
+- **Fixed a real, separate bug found while doing this**: the ledger's date/time formatting was
+  hardcoded to `'ar-JO'` regardless of UI language. Added a small locale map (`en`→`en-US`, `fr`→`fr-FR`,
+  `fa`→`fa-IR`, etc.) so transaction timestamps format in the viewer's actual language too.
+- **Handled the "translate once, but the language switches later" problem correctly**: most of this
+  widget's DOM is rebuilt on every refresh (mining status, ledger preview) or every open (`open()`
+  rebuilds the modal's `innerHTML` from scratch each time) — for those, a plain `t()` call is enough,
+  since they naturally re-render in the new language. Two pieces are built exactly once at mount time
+  (the header wallet chip's icon, the widget's heading/intro text) — gave those `data-i18n` /
+  `data-i18n-aria-label` attributes instead, and extended `applyLanguage()` in `app-shell.js` (which
+  already re-applies `[data-i18n]` and `[data-i18n-placeholder]` on every language switch) to also
+  support `[data-i18n-aria-label]`, so these stay in sync too, not just correct at first paint.
+- **Verified in real Chromium**: loaded the site in Arabic (widget correctly Arabic), switched to
+  French via the actual language dropdown — widget text changed live, zero leftover Arabic. Switched to
+  Persian — same result, and opened the wallet modal fresh in Persian to confirm it rebuilds correctly
+  translated too (screenshot: "کیف پول ZIVO", "هنوز تراکنشی وجود ندارد", fully natural Persian, correct
+  RTL). Confirmed **zero hardcoded Arabic fragments remain** in `economy.js` (was ~130).
+- Along the way, `qa_i18n_coverage.py` correctly flagged two new keys as suspicious matches to their
+  source language; both turned out to be genuine coincidences (French "transactions" is spelled
+  identically in English; that's just correct French) and were added to the gate's explicit allow-list
+  rather than silently ignored.
+- All 10 gates pass, including a real undefined-identifier catch mid-session (a leftover reference to
+  a variable I'd removed) — exactly the class of bug that gate exists to catch before it ships.
+
+### Scope note, unchanged from 1229.7
+This closes ONE major hardcoded-Arabic section. `challenges.js` alone still has roughly 2,960 hardcoded
+Arabic text fragments (quiz UI chrome, not the questions themselves), and the wider codebase has
+thousands more across chat.js, rooms.js, admin.js, puzzle-room.js, and others. Economy was chosen first
+because it's the most prominently visible section on the homepage. The same pattern used here — find
+the hardcoded strings, match against existing keys first, add new keys only where needed, prefer
+`data-i18n` for once-rendered markup and plain `t()` for anything that already re-renders — applies
+directly to each remaining file, but each one is its own similarly-sized pass.
