@@ -331,3 +331,57 @@ because it's the most prominently visible section on the homepage. The same patt
 the hardcoded strings, match against existing keys first, add new keys only where needed, prefer
 `data-i18n` for once-rendered markup and plain `t()` for anything that already re-renders — applies
 directly to each remaining file, but each one is its own similarly-sized pass.
+
+## Update 1229.9 — permanent i18n infrastructure (so future updates can't silently break a language)
+You asked for a structure that fits future updates: any change should cover every phase and every
+language without errors. This is that structure — three gates plus one tool, all wired into
+`run_all_gates.sh`, so this is enforced automatically on every release, not something to remember.
+
+### The three new gates
+1. **`qa_i18n_completeness.py`** — every UI key must exist, as a non-empty string, in all 7 languages.
+   `tr()`'s fallback chain (`T[lang][key] || T.en[key] || T.ar[key] || key`) means a genuinely missing
+   key fails silently today — it just shows English, Arabic, or the raw key name instead of erroring.
+   This gate makes that loud instead of silent. Tested it against the exact realistic mistake (a new
+   key added to `ar/en/fr/fa` but the `zh` line forgotten) — caught it immediately, named the language
+   and the key.
+2. **`qa_i18n_coverage.py`** (from 1229.7) — a translation isn't just a copy of its source language.
+3. **`qa_no_hardcoded_arabic.py`** + **`scripts/hardcoded_arabic_baseline.json`** — the actual "future
+   updates can't regress this" mechanism. It records today's hardcoded-Arabic-fragment count per file
+   (5,340 total, unchanged from before — this pass didn't reduce it, it just makes it visible and
+   monitored) and fails the build if any file's count goes UP. Tested this too: added 5 fake hardcoded
+   Arabic fragments to a file, confirmed the gate fails and names the exact file and delta; reverted,
+   confirmed it passes clean again. A file's count can only go down (real translation progress, via
+   `gen_hardcoded_arabic_baseline.py`, run deliberately) or stay flat — never up without the build
+   failing. This is also the tool that shows exactly where the remaining ~5,340 fragments are, file by
+   file, so future passes (challenges.js next, per the last message) have a precise, tracked target
+   instead of a vague "lots of Arabic left" — see the JSON file for the current per-file breakdown.
+
+### The one tool: `scripts/add_i18n_keys.py`
+Every previous round of adding translation keys (1229.7, 1229.8) was a one-off inline Python script —
+easy to get subtly wrong. This is now the standard way to add or update UI strings:
+```
+python3 scripts/add_i18n_keys.py my_new_keys.json
+python3 scripts/release.py <version>
+bash scripts/run_all_gates.sh
+```
+`my_new_keys.json` shape: `{"myKey": {"ar":"...","en":"...","zh":"...","hi":"...","es":"...","fr":"...","fa":"..."}}`.
+It refuses to run if any key is missing a language, has an empty string, or already exists (unless you
+pass `--allow-overwrite` — for deliberately fixing a translation, not adding a new one). Tested all
+three refusal paths directly.
+
+### The standing workflow for any future feature (translated or not)
+1. Write the feature. If it shows Arabic text to the user, use `t('key')` or `data-i18n="key"` —
+   never a literal Arabic string in a template.
+2. If the key doesn't exist yet, create a JSON file with all 7 languages and run `add_i18n_keys.py`.
+   (For once-only-rendered markup — created via `if (!document.getElementById(...))` guards rather
+   than rebuilt on every refresh — use `data-i18n`/`data-i18n-aria-label` instead of a bare `t()` call,
+   so `applyLanguage()` keeps it in sync on later language switches. See economy.js's `mountHub()` for
+   the pattern.)
+3. `python3 scripts/release.py <version>` (rebuilds the bundle, stamps versions).
+4. `bash scripts/run_all_gates.sh`. If it's green, every phase (syntax, security rules, question bank,
+   bundle freshness, AND all three i18n gates) is verified in one command — that's what "covers all
+   phases and languages without errors" means concretely here.
+
+This is infrastructure, not a translation pass — the 5,340 hardcoded-Arabic count is unchanged today.
+What changed is that it can now only be reduced, never silently increased, and any future key is
+structurally guaranteed complete across all 7 languages before it ships.
