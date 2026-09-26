@@ -385,3 +385,68 @@ three refusal paths directly.
 This is infrastructure, not a translation pass — the 5,340 hardcoded-Arabic count is unchanged today.
 What changed is that it can now only be reduced, never silently increased, and any future key is
 structurally guaranteed complete across all 7 languages before it ships.
+
+## Update 1229.10 — Firebase cost audit + two verified fixes (real traffic scaling)
+Responding to a detailed cost/architecture brief. Did the real audit first (grep every
+Firestore touchpoint, read each in context), then implemented only what could be verified safely in
+this sandbox. Full findings in four new reports: `ZIVOZONE_FIREBASE_COST_AUDIT.md`,
+`ZIVOZONE_ARCHITECTURE.md`, `ZIVOZONE_COST_MODEL.md`, `ZIVOZONE_SECURITY_AUDIT.md`.
+
+### Fixed and verified
+1. **`chat.js` no longer initializes for every visitor.** It used to create a second Firebase app,
+   sign the visitor in anonymously, and open two permanent `onSnapshot` listeners plus a 45s presence
+   ping — on every page load, regardless of whether chat was ever opened. Now that only happens on the
+   chat toggle's first click. **Caught and fixed my own regression during this**: the first version of
+   this fix accidentally made the chat toggle button itself never appear (it was only ever created
+   inside the same function I deferred). Split "create the button" (still runs on page load, no
+   network) from "connect to Firebase" (deferred) before shipping. Verified with a mocked Firebase
+   stub: the `ZIVO_CHAT` app and anonymous sign-in are called zero times before the click, exactly
+   once after.
+2. **`touchSession()` (presence writes to 3 documents) throttled to at most once per 60 seconds**,
+   down from once per in-app navigation. An active session clicking through several sections used to
+   write 3 documents per click; now those collapse into far fewer writes without losing real freshness
+   (a 5-minute background interval already existed as a floor). Verified by code review and the full
+   12-gate suite (no behavioral regression); **not** verified against live/emulated Firestore — flagged
+   explicitly in the audit as the one change from this round without that level of verification.
+
+### Found, not fixed: a fully-built write-behind economy queue, sitting unused
+`core/state.js` already implements almost exactly what the brief's Phases 4–8 ask for — cache-first
+reads, stale-while-revalidate, and a 10-second write-behind queue for economy mutations with idempotent
+IDs and flush-on-visibility-change/pagehide. **Nothing in the codebase calls it.** `economy.js` writes
+straight to Firestore on every action instead. Wiring this up is the single highest-leverage remaining
+change for real scale (see `ZIVOZONE_COST_MODEL.md`: it's the only change that alters the *scaling
+shape*, not just the constant factor) — but it touches the reward/wallet transaction path, which this
+project has consistently declined to modify without live Firebase/emulator access to test against (see
+1229.6's reward-claim rate-limit decision for the same reasoning, restated). `ZIVOZONE_ARCHITECTURE.md`
+has the concrete integration plan and the specific question (single vs. batched transactions per flush)
+that needs an emulator to answer safely.
+
+### Explicitly out of scope this round, stated so it isn't assumed done
+- Firebase Storage/bandwidth audit (images, video) — not reviewed.
+- A live "Cost Guard" admin dashboard — not built (would need either a paid Firebase usage API or
+  self-tracked counters; flagged as a real trade-off rather than shipping fabricated numbers).
+- Wiring `State.cache.swr` into `match-center.js`/`news.js` for read-side caching — recommended as
+  low-risk in `ZIVOZONE_ARCHITECTURE.md`, not implemented this round to keep this patch scoped to the
+  two verified fixes.
+- The full 22-phase brief's Cloud Functions/paid-tier proposals were intentionally not pursued, per the
+  brief's own Phase 17 instruction and this project's standing Spark-plan-only decision.
+
+All 12 gates pass after these changes.
+
+## Update 1229.11 — fixed a multiplicative (not linear) cost risk in chat's "online count"
+Directly responding to "if visitors spike suddenly, keep the cost as low as possible": the chat
+panel's "who's online" count used a live `onSnapshot` listener, which re-bills a read for every
+matched document every time any of them changes. With many concurrent chatters each pinging presence,
+this re-delivers (and re-bills) constantly, to every client watching the count — cost scales
+multiplicatively with concurrent chatters, not linearly. That's the exact shape that turns a viral
+spike into a cost spike, and it was the most important remaining risk from the 1229.10 audit's own "not
+covered" list, now covered.
+
+**Fix:** the online count is now a periodic `.get()` (piggybacked on the existing presence-ping timer,
+every 60s) instead of a standing listener — a count tolerant of up to a minute of staleness, costing
+one bounded read per viewer per minute regardless of how many others are chatting, instead of a cost
+that multiplies with concurrent users. Verified with a mocked Firestore stub: exactly one `.get()` call
+for the count and the message feed's `.onSnapshot()` (which genuinely needs to be real-time) untouched.
+Also: presence ping interval 45s→60s, online-window 120s→150s (safety margin for a missed ping).
+
+Full write-up in `ZIVOZONE_FIREBASE_COST_AUDIT.md`, "Update 1229.11". All 12 gates pass.
