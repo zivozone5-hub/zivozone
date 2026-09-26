@@ -450,3 +450,16 @@ for the count and the message feed's `.onSnapshot()` (which genuinely needs to b
 Also: presence ping interval 45s→60s, online-window 120s→150s (safety margin for a missed ping).
 
 Full write-up in `ZIVOZONE_FIREBASE_COST_AUDIT.md`, "Update 1229.11". All 12 gates pass.
+
+## Update 1229.12 — audited challenges/economy for the chat-listener pattern; fixed a second writer instead
+Checked every module for `onSnapshot` (the multiplicative pattern fixed in 1229.11) — confirmed it
+exists nowhere else; `challenges.js` and `economy.js` have zero listeners and zero cross-user
+contention (every operation is scoped to the acting user's own uid). Found a different but related
+issue instead: `engagement.js` writes 2 Firestore documents on every tab `visibilitychange` (switching
+back to the tab) with no throttle — the file already tracked `lastSync` but never used it to gate
+anything. Applied the same 60s-throttle pattern as `touchSession` (1229.10); initial load, sign-in, and
+reconnect-after-offline still sync immediately (forced). Verified: 5 rapid simulated tab-switches now
+produce zero additional writes. Also confirmed `question-history.js`'s per-question cloud write is dead
+code (no callers anywhere) — left alone, flagged for the same throttle if it's ever activated.
+
+Full write-up in `ZIVOZONE_FIREBASE_COST_AUDIT.md`, "Update 1229.12". All 12 gates pass.

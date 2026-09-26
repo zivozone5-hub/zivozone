@@ -134,3 +134,48 @@ This is now the audit's single highest-confidence fix for the stated goal (avoid
 visitor numbers spike suddenly), because unlike the write-behind economy queue, it required no change
 to any transaction or security-sensitive logic — it only changes how a non-critical, tolerant-of-
 staleness number is fetched.
+
+## Update 1229.12 — audited challenges + economy for the same multiplicative pattern; found a second unthrottled writer instead
+Systematically re-checked every module for `onSnapshot` and any other listener-based pattern, since
+1229.11 fixed the one confirmed case (chat's online count). Result: **`onSnapshot` appears nowhere else
+in the codebase** — chat was the only file using it, and both of its uses are now handled correctly
+(count is polled, message feed is a legitimate listener). `challenges.js` and `economy.js` have zero
+listeners and zero cross-user contention risk: every read/write in `economy.js` is scoped to
+`users/{the-acting-user's-own-uid}/...`, so no user's mining or reward transaction can ever contend
+with another user's — there is no multiplicative risk here regardless of how many people play at once.
+
+**A second, real, previously-unfixed cost issue was found instead** (same *class* of bug as
+`touchSession`, not the same multiplicative shape as chat's listener): `core/modules/runtime/
+engagement.js` writes 2 Firestore documents on every `visibilitychange` event — i.e., every time a
+signed-in visitor switches back to the tab, which for a real session (checking messages, coming back,
+repeatedly) can happen dozens of times — with **no throttle at all**, stacking on top of the
+already-throttled `touchSession` writes. Notably, the file already tracked `s.lastSync` after every
+successful sync but never used it to gate anything — the fix was making it do what it was clearly
+built to do.
+
+**Fix:** `sync()` now only performs the actual 2-document write if at least 60 seconds have passed
+since the last real sync (same threshold and pattern as `touchSession`, 1229.10); the initial
+post-load sync, a fresh sign-in, and reconnecting after being offline explicitly bypass the throttle
+(`force=true`) since those are genuinely meaningful moments to sync promptly. The local, no-cost
+`activeSeconds` counter (`tick()`, every 5s) is completely unaffected — only the Firestore write is
+throttled, not the underlying stat.
+
+**Verified** with a mocked Firestore stub: the forced initial/auth syncs write as expected, then five
+rapid simulated `visibilitychange` events in immediate succession produce **zero** additional writes.
+
+**Also found, and left alone on purpose:** `core/modules/runtime/question-history.js` has a `record()`
+function that would write to Firestore on every answered question if it were called — but a full-
+codebase search shows **it is never called from anywhere**. This is dead code with zero current cost
+impact (matching the pattern found earlier in the question-bank consolidation, 1229.5), not an active
+risk, so it was left as-is rather than "optimized" for a call path that doesn't exist yet. If this
+feature is wired up later, it should get the same throttle treatment before it ships.
+
+### Summary after two audit passes (1229.10, 1229.11, 1229.12)
+- **Multiplicative-with-concurrent-users risk**: found once (chat's online count), fixed (1229.11).
+  None remain — confirmed by re-checking every file for `onSnapshot`.
+- **Unthrottled per-user write amplification**: found twice (`touchSession` in 1229.10,
+  `engagement.js` sync in 1229.12), both fixed with the same 60-second-throttle pattern.
+- **Dead/unused write paths**: `question-history.js`'s `record()`, and the write-behind economy queue
+  in `core/state.js` (1229.10) — neither costs anything today; the former should be throttled if
+  activated, the latter is the recommended next real architecture step once live Firebase testing is
+  available (see `ZIVOZONE_ARCHITECTURE.md`).
