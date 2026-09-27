@@ -530,3 +530,26 @@ the fix, rather than leaving it as an open question.
 All 13 gates pass. This closes the ad-revenue infrastructure item completely — from here, everything
 that renders live still depends on you completing AdSense account signup and approval (unchanged from
 1229.13, cannot be done by code).
+
+## Update 1229.15 — SEO basics (item 2 from the growth discussion)
+Full write-up in `ZIVOZONE_SEO_NOTES.md`. Starting point was better than expected — titles,
+descriptions, canonicals, og:tags and JSON-LD already existed per page. Fixed two real gaps:
+
+1. All 12 story pages carried **identical, copy-pasted, generic `WebSite` structured data** instead of
+   describing that specific story. Replaced with a proper `ShortStory` schema built from each page's own
+   already-correct title/description/canonical (no invented `datePublished` — left out since the real
+   date isn't known, rather than fabricated).
+2. `sitemap.xml` had no `<lastmod>` dates. Added them, wired into `scripts/release.py` so they're
+   regenerated from each page's real file modification time on every release automatically.
+
+New gate `qa_seo_basics.py` (title/description/canonical present and unique per page, story structured
+data is page-specific, sitemap lastmod present and well-formed) — wired into `run_all_gates.sh`, 14
+gates now. Verified in a real browser: 3 pages load correctly with valid structured data, zero JS
+errors.
+
+**Flagged, not fixed — the single biggest lever for "global" via search specifically**: the site can
+currently only be found in non-Arabic search results never, regardless of in-app translation quality,
+because there is one URL for all 7 languages and language-switching is entirely client-side — search
+engines only ever see the Arabic HTML. Fixing this needs real per-language URLs/routing plus hreflang,
+which is a hosting/architecture project bigger than an SEO pass and deserves its own explicit decision
+before starting. Details and reasoning in `ZIVOZONE_SEO_NOTES.md`.
