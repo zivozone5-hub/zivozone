@@ -463,3 +463,43 @@ produce zero additional writes. Also confirmed `question-history.js`'s per-quest
 code (no callers anywhere) — left alone, flagged for the same throttle if it's ever activated.
 
 Full write-up in `ZIVOZONE_FIREBASE_COST_AUDIT.md`, "Update 1229.12". All 12 gates pass.
+
+## Update 1229.13 — real Google AdSense wiring (item 1 from the growth/revenue discussion)
+Converted the existing ad-slot placeholders (6 slots: top, bottom, left-1/2, right-1/2 — already built,
+never connected to a real ad network) into real, working Google AdSense integration.
+
+- **`core/modules/runtime/ads.js` rewritten**, preserving 100% of the existing ad-control panel
+  (enable/disable, label toggle, density — verified unchanged) and adding: consent-gated AdSense script
+  loading, automatic `<ins class="adsbygoogle">` unit creation per configured slot, and a placeholder-ID
+  safety check so this ships safely today with zero visible change until real IDs are added.
+- **Consent-gated, matching the existing analytics pattern (1229.0) exactly**: ads never load or serve
+  before the visitor accepts the privacy banner. Updated the banner text itself (all 7 languages, via
+  `add_i18n_keys.py`) to say "analytics and ads" instead of just "analytics" — the banner now accurately
+  describes what accepting enables. Verified in a real browser with a simulated configured AdSense
+  account: the AdSense script is not requested before consent, and is requested immediately after.
+- **`core/config.js`**: added `ADSENSE_PUBLISHER_ID` (placeholder) and `ADSENSE_SLOT_IDS` (one per
+  placement name). Replace these with real values from your AdSense account — see
+  `ZIVOZONE_ADS_SETUP.md` for the full walkthrough. Until then, `ads.js` detects the placeholder and
+  never loads the AdSense script at all.
+- **`privacy/index.html`** (both languages): replaced "we don't currently show ads" with a proper
+  Google AdSense disclosure — cookies, personalized ads, and the standard opt-out links Google requires
+  publishers to provide (Google's ad settings, aboutads.info, youronlinechoices.eu). Bumped
+  `PRIVACY_VERSION`.
+- **New gate — `qa_ads_consent.py`**: verifies the consent gate, the placeholder-detection logic, and
+  the privacy disclosure are all present, wired into `run_all_gates.sh`.
+
+### What I could not do — this requires you, not code
+I cannot create or approve an AdSense account, and no code change can skip Google's manual site review.
+**No ads will actually render from this update alone.** `ZIVOZONE_ADS_SETUP.md` has the exact steps:
+sign up, get the site approved (can take days to weeks), get your publisher ID and per-slot IDs, paste
+them into `core/config.js`. Until then, this update is a safe no-op — verified nothing renders
+differently today.
+
+### A real decision I'm flagging, not making for you
+All 6 ad slots are hidden on screens narrower than 700px (pre-existing, not changed here) — meaning
+**ads currently would only show on desktop**, and most traffic to a game/quiz site is plausibly mobile.
+Three options laid out with trade-offs in `ZIVOZONE_ADS_SETUP.md` (do nothing / enable Google Auto Ads /
+design a dedicated mobile slot) — this is a real UX-vs-revenue trade-off worth your input, not something
+to decide silently while wiring the ad network.
+
+All 13 gates pass. New docs: `ZIVOZONE_ADS_SETUP.md`.
