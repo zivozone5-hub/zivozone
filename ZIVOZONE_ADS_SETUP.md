@@ -38,21 +38,28 @@
    ```
 4. Run `python3 scripts/release.py <version>` and `bash scripts/run_all_gates.sh`, then deploy as usual.
 
-## The mobile trade-off — a decision for you, not made automatically
-**All 6 ad slots are currently hidden on screens narrower than 700px** (`@media(max-width:700px)` in
-`core/styles/index.css`) — i.e., on essentially every phone. This predates this update; it wasn't
-changed here because it's a real UX decision, not a bug: the 6-slot desktop layout (2 sidebars + top +
-bottom) would be cramped and intrusive if shown as-is on a phone screen, and for a game/quiz site most
-traffic is very likely mobile. Three honest options, in order of effort:
-- **Do nothing.** Ship this update, ads show only on desktop. Simplest, but leaves the majority of
-  potential ad impressions on the table if most visitors are on mobile.
-- **Enable Google Auto Ads** — set `ADSENSE_AUTO_ADS: true` in `core/config.js` (a follow-up code
-  change would be needed to actually load the auto-ads script tag; not wired up in this pass since it
-  needs a decision first). Google automatically places responsive ad units, including mobile-specific
-  formats (anchor, vignette), without any manual layout work — the standard modern recommendation for
-  exactly this situation. Trade-off: less control over exactly where ads appear.
-- **Design one mobile-specific slot** (e.g., a single anchor ad at the bottom of the screen) instead of
-  cramming all 6 desktop slots in. More design work, most control, but a real follow-up task.
+## The mobile gap — resolved: Google Auto Ads (V1229.14)
+**All 6 manual ad slots are hidden on screens narrower than 700px** (`@media(max-width:700px)` in
+`core/styles/index.css`, pre-existing) — i.e., on essentially every phone, meaning phones got zero ad
+inventory from the manual slots alone. **Decision made and implemented: Google Auto Ads is now on by
+default** (`ADSENSE_AUTO_ADS: true` in `core/config.js`). Google automatically places responsive ad
+units — including mobile-specific formats like anchor and vignette ads — without any manual mobile
+layout work, filling exactly the gap the manual slots leave. This was chosen over the alternatives
+because it needed no risky manual mobile redesign and is Google's own standard recommendation for this
+exact situation (a site with an existing desktop-oriented manual layout that doesn't yet have mobile ad
+placements).
+
+**How it works alongside the manual slots**: Auto Ads and the 6 manual units both run — Google
+explicitly supports this combination and manages overall ad density itself, so this isn't an
+either/or. In practice: desktop visitors may see both the manual slots and Auto-Ads-placed units;
+mobile visitors, where the manual slots are hidden, get ads only from Auto Ads. Gated behind the exact
+same consent + "ads enabled" + real-publisher-ID checks as the manual slots (verified in a real
+browser, both mobile and desktop viewports: the Auto Ads request fires exactly once, only after
+consent, on both).
+
+**To opt out** and go back to manual-slots-only (desktop-only ads, until a dedicated mobile slot is
+designed separately), set `ADSENSE_AUTO_ADS: false` in `core/config.js`. No other code change needed
+either way — the flag is read live by `ads.js`.
 
 ## What was NOT touched
 - No change to the reward economy, security rules, or any user data flow — this update only affects

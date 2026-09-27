@@ -503,3 +503,30 @@ design a dedicated mobile slot) — this is a real UX-vs-revenue trade-off worth
 to decide silently while wiring the ad network.
 
 All 13 gates pass. New docs: `ZIVOZONE_ADS_SETUP.md`.
+
+## Update 1229.14 — mobile ad gap closed: Google Auto Ads (decision made and shipped)
+Following up on the mobile trade-off flagged in 1229.13: decided and implemented Google Auto Ads as
+the fix, rather than leaving it as an open question.
+
+- **`ADSENSE_AUTO_ADS` (config flag from 1229.13, previously unwired) now actually does something**:
+  when true, `ads.js` pushes `{google_ad_client, enable_page_level_ads: true}` once the base AdSense
+  script has loaded — this is the code-level way to enable Auto Ads regardless of the AdSense
+  dashboard's own Auto Ads toggle. **Set to `true` by default** — this is the completed decision, not
+  just an available option.
+- **Why Auto Ads over the other two options**: it needed no manual mobile redesign (lower risk, ships
+  today) and it's Google's own standard recommendation for exactly this situation — a site with an
+  existing desktop-oriented manual ad layout with nothing placed for mobile. Google explicitly supports
+  running Auto Ads alongside manual ad units on the same page and manages overall ad density itself, so
+  this isn't an either/or with the 6 existing manual slots.
+- **Gated behind the exact same checks as the manual slots** — enabled, real (non-placeholder)
+  publisher ID, and visitor consent — and is idempotent (won't push the enable call twice). Verified in
+  a real browser on **both mobile (390px) and desktop (1400px) viewports** with a simulated configured
+  AdSense account: the Auto Ads push fires exactly once, only after consent, on both, with zero JS
+  errors.
+- To opt back out (manual-slots-only, desktop-only ads), set `ADSENSE_AUTO_ADS: false` — no other code
+  change needed, the flag is read live.
+
+`ZIVOZONE_ADS_SETUP.md` updated to reflect this as a completed decision rather than an open question.
+All 13 gates pass. This closes the ad-revenue infrastructure item completely — from here, everything
+that renders live still depends on you completing AdSense account signup and approval (unchanged from
+1229.13, cannot be done by code).
