@@ -553,3 +553,49 @@ because there is one URL for all 7 languages and language-switching is entirely 
 engines only ever see the Arabic HTML. Fixing this needs real per-language URLs/routing plus hreflang,
 which is a hosting/architecture project bigger than an SEO pass and deserves its own explicit decision
 before starting. Details and reasoning in `ZIVOZONE_SEO_NOTES.md`.
+
+## Update 1229.16 — mobile polish turned up the biggest globalization gap yet: phones couldn't change language
+Started as "fix the mobile header overlap flagged in the original audit." Checked it properly (5 phone
+widths 320–412px, programmatic bounding-box overlap test, horizontal-overflow test): **that overlap no
+longer exists** — resolved as a side effect of earlier work, so nothing was changed for it. But checking
+turned up two real mobile problems instead:
+
+1. **The guest sign-up button was cut off mid-word** ("إنشاء حسا…") on phones — the button is capped at
+   125px with an ellipsis and the label is too long. On the primary conversion button, for first-time
+   visitors. Now a short, neutral "Account" label (`loginShort`, all 7 languages) is used at ≤480px, and
+   re-applied on rotation/resize and after every language switch. Desktop keeps the full label.
+2. **Phones had no way to change language at all — and no auto-detection either.** Three facts, each
+   verified: the header language dropdown is `display:none!important` under 700px (an old "compact
+   header" rule); the hamburger menu contained only page links; and `navigator.language` was never read
+   anywhere, so every first-time visitor got Arabic regardless of device language. Net effect: **all the
+   translation work in 1229.7–1229.9 was invisible to most mobile visitors.** Fixed both halves:
+   - **First-visit detection**: an explicit saved choice always wins; otherwise the browser's preferred-
+     language list is walked in order and the first supported language is used; if none of the 7 is
+     supported (German, Portuguese, Russian…) it falls back to **English rather than Arabic**. Arabic
+     browsers still get Arabic (detected, not hardcoded). *Product note: that English fallback is a
+     small behavior change for non-Arabic, non-supported-language visitors — easy to revert in
+     `detect()` in `i18n.js` if you'd rather default them to Arabic.*
+   - **A language picker inside the mobile menu** (`#language-select-nav`), visible exactly where the
+     header one disappears (≤700px), hidden on desktop so there's never a duplicate. Both pickers share
+     one handler and stay in sync. Verified tapping it doesn't collapse the menu (the menu only closes on
+     link clicks, Escape, or outside clicks).
+3. **Two menu labels were still hardcoded Arabic in every language** — "⏻ الخروج من الموقع" (Exit site,
+   a highlighted button) and "رحلة اللاعب" (Player journey), in the top menu, bottom bar, and JS that
+   actively overwrote them (`player-hub.js` even stripped the `data-i18n` attribute to pin the Arabic
+   text; `exit-guard.js` forced an Arabic `aria-label` on every load). Now translated via keys
+   `playerJourney` and `exitSite` (plus the existing `exit` key), including screen-reader labels.
+   `player-hub.js` 148→142 and `exit-guard.js` 50→40 hardcoded fragments; baseline regenerated
+   (total 5,340 → 5,324) — the first time the ratchet has been used to lock in real progress.
+
+**Verified in a real browser (30 checks across this update):** device languages fr/zh/hi/es/fa/en/ar
+each open in the right language on first visit; German and Portuguese fall back to English; a saved
+Arabic choice beats a French device; the mobile menu picker works on the homepage and a story page;
+French/Persian/Arabic round-trip cleanly in the menu and bottom bar with no Arabic left over in French;
+desktop unchanged (header picker only, no duplicate); zero JS errors. All 14 gates pass. Along the way
+the coverage gate correctly flagged Persian `loginShort` as identical to Arabic — genuinely the same word
+("حساب" = account) — and it was added to the explicit allow-list rather than ignored.
+
+### Still open (unchanged)
+Page titles/meta descriptions are still Arabic-only (see `ZIVOZONE_SEO_NOTES.md` on why real per-language
+search visibility needs per-language URLs — a separate decision), ~5,300 hardcoded Arabic fragments remain
+(`challenges.js` ~3,190 is the biggest), and 63% of quiz questions exist only in Arabic.
