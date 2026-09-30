@@ -599,3 +599,50 @@ the coverage gate correctly flagged Persian `loginShort` as identical to Arabic 
 Page titles/meta descriptions are still Arabic-only (see `ZIVOZONE_SEO_NOTES.md` on why real per-language
 search visibility needs per-language URLs — a separate decision), ~5,300 hardcoded Arabic fragments remain
 (`challenges.js` ~3,190 is the biggest), and 63% of quiz questions exist only in Arabic.
+
+## Update 1229.17 — started challenges.js globalization: completed 2 partial dictionaries + built a 3rd
+`challenges.js` is the biggest remaining hardcoded-Arabic file (~3,190 fragments) and the one players
+spend the most time in, so it's the natural next target now that the i18n infrastructure (1229.9) and
+mobile language switching (1229.16) both exist. Given its size, this is a multi-session effort — this
+round covered the highest-leverage, lowest-risk first slice.
+
+**Discovery that changed the plan**: this file already contains two well-built, nearly-complete
+per-language dictionaries — `atlasCopy()` (14 UI labels: missions, play now, back to world, etc. — used
+in every challenge's "world" screen) and `miniDescription()` (18 per-challenge-type instructions) — both
+already correctly implemented in ar/en/zh/hi/es, just missing French and Persian. This is much better
+groundwork than the "3,190 fragments, all untranslated" framing suggested.
+
+1. **Completed both dictionaries** — added real French and Persian translations for all 32 keys (14 +
+   18), matching the exact established pattern. Verified in isolated Node for all 7 languages by
+   extracting and calling the actual functions directly — the most precise verification available for a
+   pure lookup function, confirming exact correct output per language.
+2. **Converted `gameNames`** (23 mini-game display titles — "Pattern Factory", "Evidence Room", etc. —
+   shown as the mini-game's title inside every challenge) from a single Arabic-only object with **zero**
+   translation infrastructure into the same `dict[lang][id]` pattern as the other two, now genuinely
+   translated into all 7 languages (not just fr/fa — this one had nothing before). Same Node-level
+   verification for all 7 languages.
+3. **A real edge case in the hardcoded-Arabic ratchet gate, found and documented**: Persian is written
+   in a script that shares Unicode's Arabic block, so completing Persian translations legitimately
+   *raises* the raw Arabic-character count the ratchet tracks (challenges.js: 3191 → 3413 → 3463 across
+   these two changes). Re-baselined deliberately both times, after verifying via Node that the increase
+   was genuine new-language coverage, not regression — and added a note to the gate's own documentation
+   explaining this exact situation for future reference, since it's a one-time-surprising, easy-to-get-
+   wrong nuance of using a Unicode-range heuristic for a script Arabic and Persian both use.
+
+**Verification, stated precisely**: the three functions' *output* is verified exactly and conclusively
+(isolated Node calls, all 7 languages, both before and after). Full syntax check and the complete
+14-gate suite pass, including gates that exercise real game logic. What I did **not** complete this
+round: driving the actual multi-stage cinematic UI (challenge card → intro → mission-start) via
+automated browser clicks all the way to an on-screen mini-game title — this flow was fragile to
+automate for reasons unrelated to this change (the same difficulty showed up earlier in this project for
+other content too) and eating disproportionate time relative to its verification value given the
+function-level testing already available. The call sites that consume these three functions
+(`gameNames[id]`, `atlasCopy(...)`, `miniDescription(...)`) are unchanged — only the values they return
+changed — so the risk this leaves is low, but it's honest to say the full click-through wasn't the thing
+verified.
+
+### What's left in challenges.js (unchanged, for scale)
+`ROOM_DNA` (kicker/title/zones/missions for ~21 challenge types — the challenge card grid itself, likely
+the single highest-visibility remaining piece), the atlas zone `label`/`sub` text, in-canvas mini-game
+prompt strings, and external H5P/PhET link descriptions (lowest priority — external resource blurbs).
+Each is its own bounded slice, same treatment as this round.
