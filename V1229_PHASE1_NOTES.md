@@ -646,3 +646,50 @@ verified.
 the single highest-visibility remaining piece), the atlas zone `label`/`sub` text, in-canvas mini-game
 prompt strings, and external H5P/PhET link descriptions (lowest priority — external resource blurbs).
 Each is its own bounded slice, same treatment as this round.
+
+## Update 1229.18 — challenge card grid: UI chrome translated + 15 challenges fully multi-language
+Continuing the challenges.js globalization started in 1229.17. This round targeted the card grid
+itself (`renderCenter()`) — confirmed to be the highest-visibility piece, shown to every visitor who
+opens "Challenges" — after discovering it doesn't actually read from `ROOM_DNA` at all; it reads
+`title`/`desc` from the question bank (`question-bank.js`) plus some hardcoded chrome text.
+
+1. **5 new UI chrome keys** (shown on every card): the question-count suffix, the "Forensic Lab" / dark
+   room tag, "completed today", "click anywhere to enter", and the generic fallback description used
+   when a challenge has no `desc`. Wired via a new `t()` helper added to `challenges.js` (it didn't have
+   one before).
+2. **Completed real translations for the 15 challenges that already had partial multi-language
+   `title`/`desc` objects** (iq, science, daily, football, logic, horror, memory, strategy, math, and
+   the 5 "_v22" challenges) — these had ar/en/zh/hi/es already (via existing `O(...)`/`M(...)` helper
+   functions in `question-bank.js`), missing only French and Persian. Rather than editing 15 object
+   literals by hand, **extended the helper functions themselves** (`A`, `O`, `M`) to accept optional
+   fr/fa parameters defaulting sensibly (fr→en, fa→ar) — so every *other*, not-yet-explicitly-translated
+   entry in the file automatically gets a reasonable fallback instead of nothing, and adding real
+   translations for a given challenge is now a one-line change at its own definition going forward.
+   Verified **all 105 (15 × 7)** title/desc values directly against the loaded question bank in Node —
+   all present, all non-empty. Confirmed total question count unchanged (633, zero content loss).
+3. **Verified live in a real browser**, not just in isolation: opened the Challenges grid in French —
+   titles ("Labo QI", "La Chambre Noire"), descriptions, and all 5 new chrome labels ("Niveau 2",
+   "questions", "Appuyez n'importe où pour entrer") render correctly, zero JS errors. Checked for
+   leftover Arabic and found **exactly** the three challenges already flagged as deferred in 1229.17
+   (`logic_extreme`, `memory_focus`, `football_intelligence` — plain Arabic strings, no dict yet) and
+   nothing else — confirming the fix is complete and precise, not accidentally partial.
+
+### New discovery while verifying — not fixed this round
+The real-browser check surfaced a **separate, prominent, 100%-hardcoded-Arabic section** that isn't
+part of `challenges.js` at all: "ZIVOZONE Signature" (section header plus 4 cards — Dark Room, Puzzle
+Room, Story Room, Health World), hardcoded directly in `index.html`'s static markup. This sits directly
+below the economy widget on the homepage, so it's seen by essentially every visitor — likely comparable
+in visibility to the economy widget fixed in 1229.8. Flagging this now rather than silently expanding
+this round's scope further; it's a clean, separate, bounded next task using the exact same workflow.
+
+All 14 gates pass (the hardcoded-Arabic ratchet correctly caught the Persian-Unicode-overlap nuance
+again — challenges.js net *improved* this round since the removed UI-chrome literals outweighed any
+Persian additions in that specific file; the new Persian content actually lives in `question-bank.js`,
+which is correctly excluded from the ratchet as legitimate content data). Baseline re-generated after
+verification, consistent with the established workflow.
+
+### Remaining scope (updated)
+In `challenges.js`/`question-bank.js`: 3 challenges still need title/desc dicts built from scratch
+(`logic_extreme`, `memory_focus`, `football_intelligence`), plus `ROOM_DNA` (used in each challenge's
+"world" screen after entry — zones, missions, flavor text), atlas labels, and in-canvas mini-game
+prompts. Separately, newly found: the homepage's "ZIVOZONE Signature" section in `index.html`.
