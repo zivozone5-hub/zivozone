@@ -24,3 +24,6 @@ python3 scripts/browser_smoke.py         # اختبار متصفح حقيقي (P
 2. **القصص**: 12 قصة أصلية فقط (~550–630 كلمة). القصص الـ56 القديمة (متشابهة بنسبة ~90%) في `docs/archive/templated-stories-v1218/`. أضف قصة بوضع `tale-NN.md` في `manuscripts/` بنفس تنسيق الترويسة ثم شغّل `build_content_index.py`؛ البوابة تفشل إن تكررت فقرة بين قصتين.
 3. **اللغات**: الواجهة بـ7 لغات، لكن القصص والصحة عربية فقط.
 4. لم يُختبر Firebase Emulator ولا قواعد Firestore الجديدة (`publicChatPresence`) في هذه البيئة.
+
+## V1230.1 — ZIVO Quad-Race
+The canonical challenge entry now offers Solo or Online Quad-Race. The online mode uses a separate Socket.IO Node.js server under `server/`. Firebase Hosting excludes that directory. With no server URL configured, the client waits 15 seconds and then runs a clearly labeled local ZIVO BOT fallback without real ZIVO issuance. See `QUAD_RACE_V1230.1.md` and `server/README.md`.

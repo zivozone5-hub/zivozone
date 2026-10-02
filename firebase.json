@@ -10,6 +10,7 @@
       "**/node_modules/**",
       "core/**",
       "scripts/**",
+      "server/**",
       "docs/**",
       "*.py",
       "*.pyc",
