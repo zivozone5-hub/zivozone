@@ -901,3 +901,311 @@ Rebuilt `dist/app.bundle.js`, stamped **1230.2**, full gate suite: **ALL GATES P
 
 ### Next up (per the discussed plan)
 Per-room mini-games, then the live-multiplayer hosting decision.
+
+## 1230.3 — Story Room now has a real per-story comprehension quiz, with a reward on passing
+
+### What changed
+- **`data/stories/quizzes.json`** (new): 5 grounded comprehension questions for each of the 12 stories
+  (60 total), written after reading every story's full content — not generic filler. Each question has
+  4 options with the correct one always stored at index 0; the UI shuffles per attempt, so the data
+  file stays simple and the "always index 0" shortcut can never leak into what the player sees.
+- **`core/modules/rooms.js`**: `openStory()` now shows a "🧠 Test your understanding" button under every
+  story's text (swapping to a "✓ completed" state once that story's quiz is done). Clicking it opens a
+  new `openStoryQuiz()` flow: one question at a time with a progress bar, shuffled options, immediate
+  right/wrong feedback, then a results screen. Scoring ≥4/5 unlocks a claim button that calls the same
+  reward contract the rest of the economy already uses — `credit(2, {type:'story_reward', claimId:
+  'story_<id>'})` + 20 XP — so a given story can only ever pay out once, exactly like challenges,
+  missions, competitions and achievements before it.
+- **`firestore.rules`** + **`core/modules/economy.js`**: added `story_reward` (amount == 2) as a fifth
+  reward type across the same four enforcement points used by every type before it (rules'
+  `rewardTypeValid()`, `rewardAmountValid()`, the ledger write rule's policy clause, and `credit()`'s
+  client-side policy/amount gate) — evolving the existing whitelist in place rather than adding a
+  parallel check anywhere.
+- **`core/modules/runtime/i18n.js`**: 13 new keys for the quiz UI (title, progress text, per-question
+  feedback, result screen, reward note, claim button, back-to-story) plus a `📖 ledgerStoryLabel` ledger
+  icon, all 7 languages.
+- **`core/styles/rooms.css`**: quiz-specific styling (progress bar, option buttons with right/wrong
+  states, feedback text, reward note) matching the Story Room's existing violet/green palette.
+
+### Why a quiz specifically for Story Room
+Per the agreed plan, each room's mini-game should serve that room's actual purpose rather than being a
+generic game bolted on. Story Room exists to get players reading; a comprehension check is the most
+honest way to make re-reading and paying attention pay off, instead of a disconnected arcade game that
+has nothing to do with the stories themselves.
+
+### Verified
+- `node --check core/modules/rooms.js` and `python3 scripts/qa_rules_syntax.py` — both clean.
+- Hardcoded-Arabic ratchet gate on `rooms.js`: first pass added +14 fragments (3 new strings typed
+  directly in Arabic instead of through `t()` — a back-button label repeated twice, a quiz-unavailable
+  message, and two more "إغلاق" aria-labels that duplicated an existing `close` key instead of reusing
+  it). Fixed by adding `storyQuizUnavailable`/`storyQuizBackToStory` i18n keys and routing the aria-labels
+  through the existing `close` key — gate now reads **245 → 245**, back at baseline.
+  Documenting this because it's exactly the mistake the gate exists to catch, including from the code
+  that defined the `t()` helper specifically to avoid it — worth remembering for the next feature added
+  to this file.
+- Fixed a French i18n gate failure from the same pass: `storyQuizCorrect`'s French value was `"✓
+  Correct"`, identical to English — changed to `"✓ Bonne réponse"`.
+- Full 14-gate suite: **ALL GATES PASSED**.
+- **Live in a real browser** (Playwright, headless Chromium): opened the Story Room, opened a story,
+  clicked the quiz CTA, answered all 5 questions by matching each shuffled option back to the source
+  data (confirming the shuffle is real, not cosmetic) — scored 5/5, claim button appeared, clicking it
+  flipped the story's CTA to the "done" state and persisted across a full second attempt (claim button
+  correctly absent the second time, confirming the idempotency guard). Zero console/page errors.
+  **Not verified this round**: the actual Firestore credit, because this sandbox has no outbound network
+  access to the live project (confirmed by `ERR_TUNNEL_CONNECTION_FAILED` on every Firestore call) — the
+  same limitation noted for achievement rewards in 1230.2. The server-side `claimId`-based idempotency
+  (the part that matters once this is live) is unchanged code, already covered by the rule-logic tests
+  in 1230.2, and was not re-tested against a live Firestore project this round.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.3**, full gate suite: **ALL GATES PASSED**.
+
+### Not done this round (honest scope)
+Health World and Beauty Room mini-games — still pending, per the agreed order. Live-multiplayer hosting
+decision — not revisited since the planning discussion.
+
+### Next up (per the discussed plan)
+Health World mini-game, then Beauty Room, then the live-multiplayer hosting decision.
+
+## 1230.4 — Health World's real-time fitness reaction game (not a quiz)
+
+### What changed
+- **`core/modules/rooms.js`**: `openHealth()` now shows a "🏃 Start the fitness challenge" CTA above
+  the 12 health doors, opening a genuine real-time reaction mini-game — not a Q&A quiz, per the
+  explicit request for arcade-style gameplay distinct from the question-based system. Mechanics: a 3×3
+  grid of cells; healthy icons (💧🥦😴🏃🍎🧘) and unhealthy ones (🍬🚬🍟📵) flash briefly in random cells
+  over a 30-second round; tapping a healthy icon scores a point, tapping an unhealthy one costs one
+  (floored at 0), and letting a healthy icon expire unclicked just costs the chance, not a penalty.
+  Scoring ≥10 unlocks a one-time reward via the same contract as every other reward type —
+  `credit(2, {type:'health_reward', claimId:'health_game_clear'})` + 20 XP.
+- **`firestore.rules`** + **`core/modules/economy.js`**: added `health_reward` (amount == 2) as a sixth
+  reward type across the same four enforcement points used by every type before it — evolving the
+  existing whitelist, not adding a parallel one.
+- **`core/modules/runtime/i18n.js`**: 15 new keys (game title, intro, HUD text, result/claim/reward-note
+  strings, a `🏃 ledgerHealthLabel` ledger icon), all 7 languages.
+- **`core/styles/rooms.css`**: game grid/cell/HUD styling in the Health Room's existing green palette.
+
+### Why this design
+The room's purpose is fast, practical health awareness, not reading comprehension — so instead of
+reusing the Story Room's quiz shape, this is a reflex game: recognizing and acting on a healthy choice
+quickly is closer to the room's real message than answering a multiple-choice question about it. The
+`credit()`/Firestore reward contract itself was reused exactly as-is (same four touch points, same
+idempotent `claimId` pattern) — only the gameplay in front of it is new.
+
+### Verified
+- `node --check core/modules/rooms.js`, `python3 scripts/qa_rules_syntax.py` — both clean.
+- Hardcoded-Arabic ratchet: caught one new literal (a kicker string typed directly instead of reusing
+  the existing `COPY.health.title` variable) before it shipped — fixed, and the file's count actually
+  *dropped* below its prior baseline (245 → 244, two more aria-labels were switched from a raw `"إغلاق"`
+  string to the shared `close` i18n key) — baseline regenerated to lock that improvement in.
+- Full 14-gate suite: **ALL GATES PASSED**.
+- **Live in a real browser** (Playwright): opened Health World, started the game, confirmed the grid
+  renders and cells cycle; scripted real clicks on whichever cell currently held a healthy icon —
+  scored 25/30 spawns in a full round, claim button appeared, claiming flipped the Health World CTA to
+  its "done" state. Separately confirmed clicking an unhealthy icon drops the score by one and never
+  goes negative. Zero console/page errors.
+  **Not verified this round** (same standing limitation as 1230.2/1230.3): the live Firestore credit
+  itself — this sandbox has no outbound path to the real project.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.4**, full gate suite: **ALL GATES PASSED**.
+
+### Not done this round (honest scope)
+Beauty Room's mini-game — still pending. Live-multiplayer hosting decision — not revisited.
+
+### Next up (per the discussed plan)
+Beauty Room mini-game, then the live-multiplayer hosting decision.
+
+## 1230.5 — Beauty Room's "Order Your Routine" mini-game
+
+### What changed
+- **`core/modules/beauty-room.js`**: added a "✦ Play: Order your routine" CTA in the room's hero
+  section, opening a genuine interactive game — not a quiz, per the same standing requirement as
+  Health World. Mechanics: two rounds (morning routine, then evening routine); each round shows that
+  routine's steps shuffled as buttons, and the player must tap them back into the correct order one at
+  a time. A wrong tap shows feedback and lets the player retry immediately (no soft-lock, no penalty
+  beyond a counted mistake); a correct tap locks in and advances. Finishing both rounds with at most one
+  mistake unlocks a one-time reward — `credit(2, {type:'beauty_reward', claimId:'beauty_game_clear'})` +
+  20 XP — the same reward contract as every other room.
+- The correct step order for each round is **derived directly from the room's existing editorial
+  copy** (`data.skin[0][1]` / `data.skin[1][1]`, the morning/evening routine descriptions already
+  written in the room, which use "→" between steps) via a small `parseSteps()` splitter, instead of a
+  second, separately-maintained list of steps — one source of truth for the routine content, in
+  keeping with "evolution, not layering."
+- Added a small local progress store (`zivo_beauty_progress` in localStorage) scoped to this module,
+  mirroring the pattern `rooms.js` already uses for Stories/Health, since Beauty Room didn't have one
+  before.
+- **`firestore.rules`** + **`core/modules/economy.js`**: added `beauty_reward` (amount == 2) as a
+  seventh reward type across the same four enforcement points as every type before it.
+- **`core/modules/runtime/i18n.js`**: 17 new keys (this module had no i18n usage before this round —
+  added the same `t()`/`fmt()` helper pattern used in `rooms.js`, only for the new game's UI; the
+  room's existing editorial content stays as it was), plus a `✦ ledgerBeautyLabel` ledger icon.
+- **`core/styles/beauty-room.css`**: game card/options/feedback styling in the room's existing
+  pink/magenta palette.
+
+### Verified
+- `node --check core/modules/beauty-room.js`, `python3 scripts/qa_rules_syntax.py` — both clean.
+- Hardcoded-Arabic ratchet on `beauty-room.js`: **unchanged** (385 → 385) — the new UI text went
+  through i18n from the start this time, catching the lesson from 1230.3/1230.4's near-misses before it
+  needed a fix.
+- Fixed the same recurring French gate failure early: `beautyGameCorrect`'s French value was `"✓
+  Correct"`, identical to English — changed to `"✓ Bonne réponse"` before the final gate run.
+- **Live in a real browser** (Playwright) caught a real logic bug before delivery: the step counter
+  wasn't reset to 0 when advancing from the morning round to the evening round, so the UI showed "Step
+  4 of 3" and the game never reached the result screen. Fixed (`ri++;si=0;`), rebuilt, and re-verified
+  the full flow end to end: both rounds in the correct order with 0 mistakes → result screen → claim
+  button → claiming flips the room's CTA to its "done" state. Separately verified the wrong-answer path
+  (deliberately tapped a wrong step): correct feedback shown, step does not advance, the button stays
+  usable for an immediate retry — no soft-lock. Zero console/page errors in either run.
+  **Not verified this round** (same standing limitation as every prior reward round): the live
+  Firestore credit itself — this sandbox has no outbound path to the real project.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.5**, full gate suite: **ALL GATES PASSED**.
+
+### Not done this round (honest scope)
+This closes the per-room mini-game set agreed earlier (Stories, Health, Beauty all now have a real,
+room-specific interactive game; Puzzle Room and the Forensic Lab already had one). The Dark Room
+(horror) and the Forensic Lab's exact interactive mechanics were not re-verified this round — flagged in
+1230.0's planning discussion as already game-like, not re-confirmed with fresh testing. The
+live-multiplayer hosting decision is still untouched — Firebase's free Hosting plan cannot run a
+persistent Socket.io-style server, and that decision needs the user's input on hosting (an external free
+tier, a Firestore-only async mode, or a paid-tier approval) before any code gets written for it.
+
+### Next up (per the discussed plan)
+The live-multiplayer hosting decision — the one remaining item from the original five-part plan.
+
+## 1230.6 — Horror Room rebuilt: "Don't Look Back", a real-time tension game
+
+### Why this round exists
+The user reviewed Dark Room, Puzzle Room and the Forensic Lab and said the gameplay wasn't good enough —
+wanted something stronger, more modern, and more creative, with the Forensic Lab specifically reframed
+as "help the detective." Investigating first: Puzzle Room already has 10 real interactive mechanics
+(observation, sequencing, memory, rotation, code-breaking, a maze, and more) — genuinely strong, so it's
+deferred rather than rebuilt blind. The Forensic Lab already has a 3D cinematic scene, a branching
+case file, and an accusation ending — but its actual "investigation" was 10 abstract multiple-choice
+questions about how to reason with evidence, with the clickable evidence hotspots only there for flavor
+text. **The Dark Room was the thinnest of all**: clicking it just launched the same generic 10-question
+trivia engine shared with the IQ/science/daily challenges, with a horror skin — no real interaction
+specific to the room at all. Given the scope of rebuilding three rooms well, this round focuses on
+fixing that biggest gap first: a brand-new Dark Room game. The Forensic Lab's "help the detective"
+rework and the Puzzle Room refresh are next, not done in this round — flagged honestly below.
+
+### What changed
+- **New room identity, detached from the shared quiz engine**: the Dark Room's homepage card no longer
+  triggers `challenges.js`'s generic trivia runner. Changed its trigger attribute from
+  `data-challenge="horror"` to `data-horror-room` (index.html + all 12 story-page shells), matching the
+  same per-room-module pattern Puzzle Room and Beauty Room already use. The old `horror` challenge
+  definition inside `challenges.js` is left untouched and unreferenced from the UI — nothing there was
+  touched or risked, since removing it from that shared, heavily-used file would have been the riskier
+  "layering" move; detaching the one UI entry point was the safe, surgical change.
+- **New file `core/modules/horror-room.js`**: a real-time reflex/tension game, "Don't Look Back."
+  Something flashes briefly (750ms) at a random position on a dark full-screen stage; the player must
+  tap it before it vanishes. A hit raises a composure meter; a miss drops it and shakes the screen. The
+  round runs 40 seconds; composure hitting 0 ends it immediately (a "you lost your composure" screen,
+  no reward) — surviving the full round with composure ≥ 50% unlocks a one-time reward:
+  `credit(2, {type:'horror_reward', claimId:'horror_game_clear'})` + 20 XP, the same contract every
+  other room's reward already uses.
+- **New file `core/styles/horror-room.css`**: a red/black palette distinct from every other room
+  (`#ff3055` against near-black), screen-shake on a miss, a composure meter, and a full
+  `prefers-reduced-motion` fallback that drops all animation.
+- **`firestore.rules`** + **`core/modules/economy.js`**: added `horror_reward` (amount == 2) as an
+  eighth reward type across the same four enforcement points as every type before it.
+- **`core/modules/runtime/i18n.js`**: 16 new keys (title, intro, HUD text, hit feedback, survived/failed
+  result screens, reward note, claim, back/play-again), all 7 languages, plus a `🌑 ledgerHorrorLabel`
+  ledger icon.
+- Kept the room's own keyboard accessibility: since detaching from `challenges.js` also detached its
+  shared Enter/Space-to-activate handler, added an equivalent one scoped to `[data-horror-room]` so the
+  card stays keyboard-operable, not just click-operable.
+
+### Verified
+- `node --check core/modules/horror-room.js`, `python3 scripts/qa_rules_syntax.py` — both clean.
+- Hardcoded-Arabic ratchet: the new file starts at **0** hardcoded Arabic fragments — every string in
+  it went through `t()`/`fmt()` from the first line, so this file needed no after-the-fact fixing (the
+  mistake that cost a fix-and-rebuild cycle in 1230.3 and 1230.4).
+- Full 14-gate suite: **ALL GATES PASSED**.
+- **Live in a real browser** (Playwright), two full runs: (1) clicked every apparition that appeared
+  for the entire 40-second round — survived with composure at 100%, claim button appeared, claiming
+  completed with zero errors; (2) deliberately never clicked anything — composure drained to 0 and the
+  round ended early (well before the 40-second mark) with the "lost your composure" screen and no claim
+  button offered, confirming the early-fail path and the reward gate both work correctly. Zero
+  console/page errors in either run.
+  **Not verified this round** (same standing limitation as every prior reward round): the live
+  Firestore credit itself — this sandbox has no outbound path to the real project.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.6**, full gate suite: **ALL GATES PASSED**.
+
+### Not done this round (honest scope)
+The Forensic Lab's "help the detective" rework and the Puzzle Room refresh — both still pending, per the
+ordering above. The live-multiplayer hosting decision is also still untouched.
+
+### Next up
+The Forensic Lab: turning its current "10 abstract reasoning questions with decorative evidence
+hotspots" into an actual deduction mechanic — pinning each piece of evidence to the suspect it
+implicates on a visual case board, reusing the existing case data (story/suspects/scene/3D backdrop)
+rather than rewriting it.
+
+## 1230.7 — Forensic Lab rework: "help the detective," a live Detective's Board
+
+### Why this round exists
+Continuing straight from 1230.6's plan: the Forensic Lab's 25 cases already have real story/scene/suspect
+data and a 3D cinematic intro, but the actual "investigation" was 10 flat multiple-choice questions with
+zero feedback — pick an answer, move on, never know if you were right, and the clickable evidence hotspots
+were decorative flavor text only. The user asked specifically for this room to feel like "helping the
+detective." The fix keeps every case file, every clue, every suspect, and the whole scoring/reward system
+exactly as it was — this round only changes how answering a clue *feels*.
+
+### What changed
+- **A live "Detective's Board"**: each case now tracks `this.evidence` (an array built up as the player
+  answers). Every answered clue — right or wrong — gets pinned to a visible board under the question,
+  shown as a small card (📌 for a confirmed clue, ❓ for a shaky one) with the clue's own label, so the
+  board visibly fills up over the 10 questions instead of the screen just silently advancing.
+- **Real feedback, for the first time**: clicking an answer now immediately marks it right (cyan) or wrong
+  (locks in the correct one in cyan too) and shows a feedback line — "✓ دليل مثبت بدقة على لوحة المحقق" /
+  "✗ استنتاج غير دقيق — الدليل لا يُثبّت هكذا" — before auto-advancing after ~0.9s. Previously there was no
+  feedback of any kind.
+- **New `pin(choice)` method**: sits between the existing click handler and the existing, completely
+  untouched `answer(choice)` (scoring logic unchanged) — it only adds the visual board/feedback layer, then
+  calls `answer()` exactly as before.
+- **Verdict screen restyle ("lineup")**: the final suspect-accusation screen now presents the suspects as a
+  card lineup (cyan-on-dark, numbered, hover-lift) instead of a plain button list — purely a CSS addition
+  (`core/styles/forensic-case.css`), zero logic change.
+- **`core/modules/forensic-case-core.js`**: `open(id)` now initializes `this.evidence=[]`; `question()`'s
+  template renders the board when non-empty; the `[data-o]` handler calls `pin()` instead of `answer()`
+  directly. All 25 cases' data, the 4-stage/10-clue structure, and `finish()`'s reward math are untouched.
+
+### Two real bugs found and fixed by live testing (not caught by static checks)
+1. **A naming collision I introduced**: the new board state was first named `this.board` — but the file
+   already has a pre-existing `board()` *method* (the case-archive/"files" screen reached from the "ملفات
+   القضايا" button after finishing a case). Assigning `this.board=[]` silently overwrote that method on the
+   instance, which only surfaces when a player clicks back to the archive after finishing a case. Renamed
+   the new state to `this.evidence` throughout — zero behavior change otherwise, collision gone.
+2. **A pre-existing bug, exposed now that a live-testing path reaches it**: `finish(choice)` — the method
+   that renders the final "case closed" screen — referenced `m.innerHTML` without ever binding
+   `const m=this.m` the way every other screen-rendering method in the file does. This has likely been
+   broken since before this round (unrelated to anything built this session), but a full end-to-end
+   Playwright run through all 10 questions to a real verdict is what actually exercised it and threw
+   `ReferenceError: m is not defined`, silently breaking the final results screen. Fixed by adding the
+   missing binding, matching the pattern used everywhere else in the file.
+
+### Verified
+- `node --check core/modules/forensic-case-core.js` — clean.
+- Full 14-gate suite: **ALL GATES PASSED**.
+- **Live in a real browser** (Playwright), full real-UI path: start → skip cinematic → open a case →
+  begin → answer all 10 clues (checking feedback text/class and the board's pin count growing 0→9 after
+  each) → verdict screen (confirmed lineup styling present) → accuse a suspect → final "case closed"
+  screen renders correctly. Separately verified the "ملفات القضايا" (back to archive) button from the
+  result screen still opens the real case archive. **Zero console/page errors** in the final run — the
+  first attempt caught both bugs above, which were fixed, gate-rechecked, and re-verified clean before
+  calling this done.
+  **Not verified this round** (same standing limitation as every prior reward round): the live Firestore
+  credit itself — this sandbox has no outbound path to the real project.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.7**, full gate suite: **ALL GATES PASSED**.
+
+### Not done this round (honest scope)
+The Puzzle Room refresh — still deferred, per 1230.6's own judgment that it already has 10 genuinely
+distinct mechanics; this hasn't been re-confirmed with the user. The live-multiplayer hosting decision is
+also still untouched and unanswered.
