@@ -1209,3 +1209,145 @@ Rebuilt `dist/app.bundle.js`, stamped **1230.7**, full gate suite: **ALL GATES P
 The Puzzle Room refresh — still deferred, per 1230.6's own judgment that it already has 10 genuinely
 distinct mechanics; this hasn't been re-confirmed with the user. The live-multiplayer hosting decision is
 also still untouched and unanswered.
+
+## 1230.8 — Puzzle Room: a real 10-minute countdown + a first-try combo streak
+
+### Why this round exists
+The user's original complaint named three rooms (Dark Room, Forensic Lab, Puzzle Room) as not strong
+enough. 1230.6 and 1230.7 covered the first two; this round finally returns to Puzzle Room, which had
+been deferred on the judgment that its 10 distinct mechanics (observation, sequence, memory, rotation,
+code-breaking, maze, sorting, logic, pattern, final vault) were already strong. Re-reading the user's own
+complaint, though, Puzzle Room was explicitly named — the breadth of mechanics was never really the
+issue; the room had no sense of pressure or escalation, which is what makes a "puzzle/escape room" feel
+modern rather than like a static worksheet. The user asked to continue the rooms and left the
+live-multiplayer decision for later, so this round adds exactly that missing pressure/escalation layer
+without touching any of the 10 existing puzzle mechanics or their scoring.
+
+### What changed
+- **A real 10-minute countdown clock**, shown live in the header throughout the whole room (not per
+  stage) — genuine escape-room pressure across the full run. Turns red and pulses under the last minute.
+  Running out ends the room immediately with a dedicated "Time's up" screen reporting how many stages
+  were completed before time ran out (the result is still recorded, just as not-completed/timed-out —
+  reusing the existing `recordProviderResult({completed, timedOut})` fields, which the result-validation
+  layer already supported but this room never actually passed as anything but `true`/`false`).
+- **A first-try combo streak**: solving a stage correctly on the very first attempt extends a visible
+  🔥 streak counter and adds a small escalating bonus (+1 up to +5 points) to the score; any wrong answer
+  on a stage resets the streak to zero immediately. Shown live in the header next to the score, and called
+  out in the per-stage feedback line when a bonus is earned.
+- **`core/modules/puzzle-room.js`**: added the clock/streak state, `startClock()/stopClock()/tickClock()/
+  timeUp()`, extended `success()`/`fail()`/`finish()`/`start()`/`shell()` — the 10 stage-generator functions
+  (`observe`, `sequence`, `memory`, `rotate`, `code`, `maze`, `sort`, `logic`, `pattern`, `final`) and their
+  scoring/answer logic were not touched at all.
+- **First i18n coverage this file has ever had**: this file was 100% hardcoded Arabic before this round
+  (never part of the earlier i18n rollout that Health World/Beauty Room/Horror Room went through). Rather
+  than hardcode the 6 new strings the clock/streak feature needed (which would have failed the
+  hardcoded-Arabic ratchet gate — caught on the first gate run, +22 fragments), added the same `t()`/
+  `fmt()` helpers the other rooms use and routed only the new strings through 6 new i18n keys, in all 7
+  languages. The file's ~349 pre-existing Arabic strings are untouched and still hardcoded — converting
+  all of those is out of scope for this round and not attempted.
+- **`core/styles/puzzle-room.css`**: small additions only — the clock pill (teal, red+pulsing under one
+  minute), the streak pill (amber), a reduced-motion fallback for the pulse.
+
+### Verified
+- `node --check core/modules/puzzle-room.js` — clean.
+- Hardcoded-Arabic ratchet: caught the first draft's +22 fragments immediately (the 6 new strings written
+  as raw literals); fixed by routing them through `t()`/`fmt()` — file count back to flat 349→349.
+- Full 14-gate suite: **ALL GATES PASSED**.
+- **Live in a real browser** (Playwright), several runs:
+  - Normal play: clock starts at 10:00 and ticks down live; first-try correct answer raises the streak
+    (0→1), a wrong answer resets it to 0 immediately, recovering with a correct answer rebuilds it to 1
+    with no bonus (correct — bonus only applies from a 2nd consecutive first-try clear), and two genuine
+    first-try clears in a row show the "+1 streak 🔥2" bonus line.
+  - Language correctness: with the browser locale set to Arabic (the site's real audience), every new
+    string — clock tooltip, streak tooltip, bonus line — renders fully in Arabic alongside the file's
+    pre-existing hardcoded Arabic text, with no mixed-language text. (With a non-Arabic browser locale the
+    6 new strings follow the chosen language while the file's older, pre-existing hardcoded strings stay
+    Arabic regardless — a known limitation of this specific file that predates this round and isn't made
+    worse by it.)
+  - Timeout path: temporarily shortened the clock to 3 seconds in an isolated local test build only (never
+    gated or shipped that way), let it expire with zero interaction, and confirmed the dedicated "Time's
+    up" screen renders correctly with the right completed-stage count and zero console errors — then
+    restored the real 10-minute clock, rebuilt, re-stamped, and re-ran the full gate suite before shipping.
+  - Zero console/page errors in every run.
+  **Not verified this round** (same standing limitation as every prior reward round): the live Firestore
+  credit itself — this sandbox has no outbound path to the real project.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.8**, full gate suite: **ALL GATES PASSED**.
+
+### Not done this round (honest scope)
+Converting Puzzle Room's ~349 pre-existing hardcoded Arabic strings to full i18n — out of scope, flagged
+above. The live-multiplayer hosting decision is still untouched and unanswered (the user asked to set it
+aside for now and keep going with the rooms). With this round, all three rooms from the user's original
+complaint (Dark Room, Forensic Lab, Puzzle Room) have now been reworked.
+
+## 1230.9 — Dark Room: the classic question gate is back, with the new mini-game as the internal bonus
+
+### Why this round exists
+The user asked that every room's entrance keep the previous question-based system, with the new mini-game
+as an internal part inside it. Investigating all six signature rooms first: **Dark Room** is the only one
+where this was literally true before this session and then broken by 1230.6 — it originally opened into
+the shared engine's own 30-question "no right/wrong, atmosphere escalates every 10 questions" quiz
+(`bank.horror` in `question-bank.js`, with its own cinematic intro), and 1230.6 detached the room's card
+from that engine entirely to go straight into the new "Don't Look Back" mini-game, leaving the old quiz
+unreachable (defined, but orphaned). **Forensic Lab** never lost its question-based entry — its 10-clue
+case flow always was the question system, and 1230.7 only added visible feedback and a board on top of it,
+so it already matches what was asked, unchanged this round. **Puzzle Room, Beauty Room, Health World and
+Story Room never had a quiz-type entry to begin with** — they've always opened straight into their own
+content/interaction (puzzle stages, beauty steps, health doors, the story + its comprehension quiz), so
+there is no "previous question system" to restore there; inventing a brand-new generic quiz in front of
+them would not be restoring anything, so that was deliberately not done — flagged honestly below rather
+than silently skipped.
+
+### What changed
+- **Dark Room's card (`[data-horror-room]`) now launches the classic 30-question quiz again** — the exact
+  same `window.ZIVOZONE_CHALLENGE_CORE.start('horror')` entry point the room always used before 1230.6,
+  cinematic intro and all. Nothing about that shared, heavily-used engine was changed to make this work —
+  only `core/modules/horror-room.js`'s own click/keydown handlers were re-pointed to call it instead of
+  going straight to the mini-game.
+- **The mini-game is now the quiz's internal bonus round**: a new button — "ادخل التجربة الحية 🌑" ("Enter
+  the live experience") — was added to the horror quiz's own finish screen (`core/modules/challenges.js`),
+  alongside its existing "Replay"/"Return to site" buttons, shown only when the finished quiz's `gameId`
+  is `'horror'`. Clicking it closes the quiz cleanly (the engine's own `returnHome()`) and opens
+  `window.ZIVOZONE.HorrorRoom.start()` — the "Don't Look Back" mini-game built in 1230.6, completely
+  unchanged. The quiz's own completion reward (XP, perfect-score bonus) and the mini-game's own
+  `horror_reward` (2 ZIVO + 20 XP) are independent and both still apply — playing the bonus round is a
+  genuine "extra," not a replacement for the quiz's own payout.
+- **One real naming bug caught and fixed before it ever shipped** (code review, not live testing this
+  time): the first draft of the bonus button reused the `zrw-again` class for styling, which would have
+  made `querySelector('.zrw-again')` grab the wrong button and silently break the real "Replay" button's
+  click handler. Caught by re-reading the diff; gave the bonus button its own class instead.
+- **`core/modules/runtime/i18n.js`**: 1 new key (`horrorQuizBonusCta`) in all 7 languages — the quiz's
+  finish screen already uses `t()`/`esc()`, so the new button follows the same pattern rather than adding
+  a raw literal (which did fail the hardcoded-Arabic gate on the first attempt — fixed immediately the
+  same way the last two rounds' near-misses were).
+- **`core/styles/horror-room.css`**: two small rules for the new button's red/black accent on the quiz's
+  otherwise blue-themed finish screen, reduced-motion-safe.
+
+### Verified
+- `node --check` on both touched files — clean.
+- Hardcoded-Arabic ratchet: caught the first raw-literal draft immediately (+3 fragments on
+  `challenges.js`); fixed via the new i18n key, back to flat (3448→3448).
+- Full 14-gate suite: **ALL GATES PASSED**.
+- **Live in a real browser** (Playwright), the full real chain: clicked the Dark Room card → confirmed the
+  classic cinematic intro and world-hub screen render (not the mini-game) → entered the mission → answered
+  the quiz questions → confirmed the finish screen shows the new bonus button with the correct translated
+  text → clicked it → confirmed `returnHome()` ran and the "Don't Look Back" mini-game's own intro screen
+  (title "Don't Look Back") rendered correctly. Zero console/page errors throughout. (To make a full,
+  reliable run of this specific 30-question "no right/wrong" quiz type scriptable without fighting its
+  timing-sensitive per-question transition in headless automation, the question count was temporarily
+  dropped to 2 in an isolated local test build only — never gated or shipped that way — then restored to
+  30, rebuilt, re-stamped, and the full gate suite re-run clean before shipping.)
+  **Not verified this round**: the live Firestore credit itself (standing sandbox limitation), and a full
+  manual 30-question click-through in a real, non-scripted browser session (the engine itself is
+  unchanged pre-existing code, already shipped and working before this session touched it at all).
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.9**, full gate suite: **ALL GATES PASSED**.
+
+### Not done this round (honest scope)
+No quiz was added in front of Puzzle Room, Beauty Room, Health World, or Story Room — they never had one,
+so there was nothing to restore, and fabricating a new one wasn't part of what was asked. If the user
+actually wants a *new* question-based entry gate built for any of those four (not a restoration, a genuine
+first-time addition), that's a separate, larger piece of work and worth confirming before building it. The
+live-multiplayer hosting decision is still untouched and unanswered.
