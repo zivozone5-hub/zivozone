@@ -693,3 +693,211 @@ In `challenges.js`/`question-bank.js`: 3 challenges still need title/desc dicts 
 (`logic_extreme`, `memory_focus`, `football_intelligence`), plus `ROOM_DNA` (used in each challenge's
 "world" screen after entry — zones, missions, flavor text), atlas labels, and in-canvas mini-game
 prompts. Separately, newly found: the homepage's "ZIVOZONE Signature" section in `index.html`.
+
+## 1229.19 — Big-5 leagues only + site-wide "all buttons work" audit (Escape-to-close)
+
+User instruction fulfilled this round: *"اعمل ما تراه مناسب لكن اعمل اخبار الرياضة خمس الدوريات
+العالميه الكبرى فقط واريد تشغيل جميع الأزرار في الموقع ثم اتم باقي العمل بنظام التطوير وليس نظام
+الطبقات"* — restrict sports news to the 5 major global leagues only, make every button on the site
+work, continue everything else via evolution (not layering).
+
+### 1. Match Center restricted to the Big 5 leagues
+`core/modules/match-center.js`'s `LEAGUES` array cut from 19 competitions (Champions League, Serie A,
+Bundesliga, Ligue 1, Eredivisie, Primeira Liga, Süper Lig, Brasileirão, Argentine Primera, MLS, Liga MX,
+Saudi Pro League, AFC/CAF Champions League, and all 3 Jordanian competitions) down to exactly the 5
+asked for: **English Premier League, La Liga, Serie A, Bundesliga, Ligue 1**.
+
+Three places needed the change, not one — a single real-browser pass through the feature (not just
+editing the array) caught the second and third:
+- `LEAGUES` itself — the obvious one.
+- `matchesFor()` — the `'major'` filter already used `priority<=N`; changed `N` from 19 to 5, and
+  made `'all'` use the same bound (previously `'all'` had no cap at all).
+- `catalog()` — this was the real leak. It didn't just list `LEAGUES`; it auto-discovered *any*
+  league ID appearing in the raw match data and added it to the dropdown and the "all tournaments"
+  view. With the restricted `LEAGUES` array alone, selecting "all tournaments" in a live browser test
+  still showed Jordanian league matches, because they exist in the local static match snapshot, just
+  under the 3 trimmed IDs. Fixed by making `catalog()` return the fixed `LEAGUES` list only.
+
+Verified in a real headless-Chromium pass: the `#zmc-league` dropdown contains only
+`major, all, eng.1, esp.1, ita.1, ger.1, fra.1` — zero other league IDs reachable through the UI by
+any path, including "all tournaments."
+
+### 2. Site-wide button audit: the Escape-to-close bug class
+Testing every interactive control in a real browser (not just reading code) surfaced one systemic bug
+repeated across **five independently-built overlay/modal systems** — a direct symptom of the "layering"
+pattern the user has asked to move away from: each feature built its own open/close logic from scratch
+instead of sharing one. Every one of them closed correctly on a backdrop click or an explicit × button,
+but **none of them closed on the Escape key** — a basic, expected keyboard affordance and an
+accessibility gap.
+
+Fixed in place (evolution, not a new parallel system — each fix follows that file's own existing
+close-logic pattern exactly):
+- `core/modules/runtime/app-shell.js` — the shared `#modal-root` system (used by login/auth, identity
+  choice, language picker, and others). Added a `document`-level `keydown` listener next to
+  `closeModal()`'s own definition.
+- `core/modules/economy.js` — the ZIVO wallet overlay (`#zivo-economy-modal`). Added the Escape
+  listener right where the existing backdrop-click listener is created (once, on first open).
+- `core/modules/missions.js` — the daily-missions overlay (`#zivo-missions`). Added next to its `.v34-close` button handler.
+- `core/modules/achievements.js` — the achievements overlay (`#zivo-achievements`). Added next to its `.v31-close` button handler.
+- `core/modules/competition.js` — the competition-streak overlay (`#zivo-competition`). Added next to its `.v33-close` button handler.
+- `core/modules/forensic-case-core.js` — structurally different (a full-screen `start()`-based
+  experience, not a classic overlay). Rather than bolting on a separate close mechanism, Escape now
+  routes through the **existing, unified** `ZIVOZONE.ExitGuard` confirmation flow — the same one its
+  own "العودة إلى الموقع" button already uses — guarded so it doesn't double-fire while that
+  confirmation dialog (which already has its own Escape-to-close) is open.
+
+Checked and confirmed already correct, no change needed: `core/modules/runtime/player-hub.js`'s
+`.zph-overlay` already had proper Escape handling.
+
+All five fixes verified live in headless Chromium, not just by reading the code: each overlay was
+opened programmatically through its real public API (`window.ZIVOZONE.Economy.open()`,
+`.Missions.open()`, `.Achievements.open()`, `.Competition.open()`, and `window.ZIVOZONE_FORENSIC_CORE
+.start()`), confirmed open, then Escape was pressed and the closed state confirmed directly from the
+DOM (`aria-hidden`/`classList.contains('open')`) — 6/6 checks passed (5 overlays + the forensic exit
+route).
+
+### Honest scope note — what "all buttons work" still doesn't cover
+This round audited and fixed a specific, confirmed bug class (missing keyboard close) across every
+overlay system found to have it, plus re-confirmed via real-browser testing that Match Center's core
+interactions (day tabs, league/status filters, search, refresh, match-detail modal) work correctly
+end-to-end with the new restriction. It did **not** re-audit the full admin panel, every in-game button
+inside every challenge type, puzzle-room, beauty-room, rooms.js, or deeper per-screen interactions —
+that is a much larger surface than one round can responsibly claim to have fully covered, and is called
+out here explicitly rather than implied as done.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js` (49 files), ran `python3 scripts/release.py 1229.19` to stamp the version
+consistently across `config.js`, the service worker, and every page's bundle tag, then re-ran the full
+14-gate suite: **ALL GATES PASSED**.
+
+## 1230.1 — Rights protection: legal clause + copyright footer + clone-domain deterrent
+
+First round of the broader plan discussed with the user (rights protection → reward/retention system →
+per-room mini-games → live multiplayer, in that order, chosen because this one is quick, fully free-tier,
+and has zero conflict with anything else). Scope for this round only; the other three items are separate,
+not-yet-started work.
+
+### What a static client-side site can and cannot be protected against — stated plainly
+Before building anything, this needs to be said honestly: no JavaScript running in a browser can be made
+truly impossible to copy. Anyone can open DevTools → "View Source" and read it. Any product claiming
+"encryption" that fully prevents this would be overstating what's possible. What *is* real and worth
+building: legal deterrence (a clear, dated copyright/IP notice the site can point to if a copy is found),
+and a lightweight technical signal that outs the casual "copy the files, change nothing" clone — not a
+security boundary, just a flag that doesn't cost anything and can't misfire on the real site.
+
+### 1. Legal layer
+- **Footer** (`index.html` + all 12 story pages, `core/modules/runtime/i18n.js`): the old hardcoded
+  `© 2026 ZIVOZONE` + English-only tagline is now a proper i18n key (`footerTagline`, previously present
+  in the dictionary but never actually wired to `data-i18n` on that span — a small pre-existing bug fixed
+  as a side effect), plus a new dated rights line (`footerRights`, all 7 languages) stating copying/
+  republishing without written permission is prohibited.
+- **Terms of Use** (`terms/index.html`): added a new clause — "Intellectual property and content
+  protection" (Arabic + English) — naming what's owned (design, code, text, logos, assets, game/challenge
+  structure, question database), what's prohibited (copying, redistributing, cloning, bulk-extracting),
+  and that ZIVOZONE reserves the right to pursue takedowns (DMCA or equivalent). Bumped
+  `TERMS_VERSION` from `2026.09.1` to `2026.10.1` in `core/config.js` — this is the version stamped on
+  each user's account at signup (`auth.js`), so existing accounts correctly show as having accepted the
+  prior version, not silently upgraded to one they never saw.
+
+### 2. Clone-domain deterrent (`core/config.js` + `core/modules/runtime/app-shell.js`)
+`core/config.js` now carries an `ALLOWED_HOSTS` list (`zivozone.com`, `www.zivozone.com`, localhost/
+127.0.0.1 for local dev) plus a check that also accepts this project's own Firebase Hosting domains —
+`zivozone-fc6ed.web.app` / `.firebaseapp.com`, including preview-channel subdomains (which share the
+project-id prefix) — so real previews and local testing are never mistaken for a clone. If the page is
+running on none of these, it sets `window.__ZIVOZONE_UNAUTHORIZED_HOST__ = true`; `app-shell.js` picks
+that flag up through a new `mountCloneWarning()` (same pattern as the existing consent-banner
+`mountConsent()`, called right alongside it — not a new system) and shows a small, dismissal-free banner
+naming the real site, using the new `cloneWarningBanner` i18n key.
+
+Verified two ways:
+- **Logic**, directly in Node against 10 hostnames (the real domain, Firebase Hosting + preview-channel
+  domains, localhost/127.0.0.1, and 3 clone-style domains): **10/10 correct**.
+- **Live in a real browser**: on the real (localhost) origin, no banner renders and the footer rights line
+  is present and correctly translated; with the flag forced on, the banner renders with the exact
+  expected text and no console errors. Confirmed zero false positives on the legitimate site.
+
+### 3. What was tried and is honestly not available here
+Looked into adding actual code obfuscation (identifier mangling/string-encoding) as a second, stronger
+technical deterrent on top of the clone-domain check. Both `npm` and `pip` are blocked from the public
+registries in this sandbox (403 on every package, confirmed directly, not assumed) — there is no
+obfuscator tool reachable here, and hand-rolling one without a trusted library would risk silently
+breaking the site's own code, which is a worse outcome than not having it. If this matters enough to
+pursue, the practical path is running a dedicated obfuscator (e.g. `javascript-obfuscator`) against the
+already-built `dist/app.bundle.js` from a machine with real npm access — that file doesn't need to change
+for this to work later; it's a separate, additive build step whenever that's wanted.
+
+### Discovered while verifying, fixed in place — not left broken
+Re-running `scripts/prerender-stories.mjs` (the story-page generator) to propagate the footer fix
+regenerated all 12 story pages from a template that does **not** include their per-story
+`ShortStory`/`Article` structured-data blocks that the committed pages actually have — those blocks
+exist only in the already-built files, not reproduced by this script. Running it blindly would have
+silently deleted real SEO structured data from all 12 story pages. Caught before shipping by running the
+full gate suite (`qa_seo_basics.py` failed exactly on that), **not applied**, and all 12 story pages were
+restored from the last known-good build and given the footer fix as a direct, targeted text replacement
+instead (same two strings, swapped in place, structured data untouched — confirmed present in all 12
+afterward). Flagging `scripts/prerender-stories.mjs` as presently **unsafe to run as-is** until it's
+updated to also regenerate the structured-data blocks it's missing — a separate, bounded fix for later,
+not done this round to avoid scope creep on top of an already-good catch.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.1** via `scripts/release.py`, re-ran the full 14-gate suite:
+**ALL GATES PASSED**.
+
+### Next up (per the discussed plan, not started yet)
+Expanding the reward/retention system, then the per-room mini-games, then the live-multiplayer hosting
+decision.
+
+## 1230.2 — Reward/retention system: achievements now actually pay out
+
+Second item from the discussed plan (rights protection → **reward system** → per-room mini-games →
+live multiplayer). Scope: close a real gap found while auditing the existing retention system before
+touching anything — the 7 achievements (`achievements.js`) were pure badges with **zero economic
+reward**, unlike missions and the competition streak, which already pay ZIVO + XP on completion. For a
+system meant to "encourage the player to come back and use the site," an achievement that gives nothing
+when unlocked is a missed, easy win — not a new feature, a gap in one that already exists.
+
+### What changed
+Extended the exact same server-authoritative reward contract already used by mining/missions/
+competition — not a new economy, a new case inside it:
+- **`firestore.rules`**: added `achievement_reward` (fixed amount `1`, policy `achievement_reward`) to
+  `rewardTypeValid()`, `rewardAmountValid()`, `validRewardClaim()`'s policy check, and the ledger
+  write rule — mirroring the existing per-type pattern line for line, not inventing a parallel one.
+- **`core/modules/economy.js`**: mirrored the same policy/amount whitelist in `credit()`'s client-side
+  gate (so a rejected write fails fast instead of round-tripping to Firestore first), and added
+  `achievement` as a tracked field on both the claim and ledger records alongside the existing
+  `challenge`/`mission`/`competition` fields — plus a dedicated `🏅 ledgerAchievementLabel` ledger-row
+  icon/label (new i18n key, all 7 languages).
+- **`core/modules/achievements.js`**: `state()` now tracks which achievements were *freshly* unlocked
+  this call (not just which are unlocked overall) and calls a new `grantReward()` for each — `credit(1,
+  {type:'achievement_reward', claimId:'achievement_<id>'})` + 15 XP. Double idempotency: the local
+  `unlocked` array only ever adds an id once, and the Firestore `claimId` is deterministic per
+  achievement, so even a bug that somehow re-triggered the call couldn't double-pay. The achievements
+  modal now shows "+1 ZIVO · 15 XP" on every badge (locked or not) so the player knows what unlocking it
+  is worth, rather than finding out never.
+
+### Why 1 ZIVO flat rather than a bigger or tiered reward
+Kept the payout fixed and small on purpose: the existing reward contract's security model is a tight
+per-type amount whitelist enforced identically in both the client and Firestore rules — the simpler that
+whitelist stays, the smaller the surface for a mistake in either copy to open a gap. Seven one-time badges
+at 1 ZIVO each is a bounded, modest addition (7 ZIVO lifetime per player, maximum, ever) — real enough to
+reward, not large enough to be worth the added complexity of a tiered amount set in this round.
+
+### Verified
+- **Rule logic**, directly in Node: 13 cases across all 4 reward types (including 4 for the new
+  `achievement_reward` — valid amount, two invalid amounts, and zero) — **13/13 correct**, matching the
+  same decision table now duplicated in `firestore.rules`.
+- **Live in a real browser**: opened the achievements modal programmatically
+  (`window.ZIVOZONE.Achievements.open()`) — all 7 badges render with the new reward hint text, zero
+  console errors.
+- Full 14-gate suite: **ALL GATES PASSED** (including `qa_game_platform.py`'s reward-guard substring
+  checks, which still match since the new type was added alongside the existing ones, not in place of
+  them).
+
+Did **not** re-run `scripts/prerender-stories.mjs` this round — still flagged unsafe as of 1230.1 above
+until it's fixed to regenerate structured data too.
+
+### Gates & rebuild
+Rebuilt `dist/app.bundle.js`, stamped **1230.2**, full gate suite: **ALL GATES PASSED**.
+
+### Next up (per the discussed plan)
+Per-room mini-games, then the live-multiplayer hosting decision.

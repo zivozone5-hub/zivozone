@@ -1,4 +1,4 @@
-const CACHE='zivozone-shell-v1229';
+const CACHE='zivozone-shell-v1230';
 const APP_CODE=/\.(?:js|css)(?:\?.*)?$/i;
 const HTML=/\.html(?:\?.*)?$/i;
 const LIVE=/\/data\/(?:matches\/|news\.json)/i;
@@ -8,15 +8,15 @@ const LEGAL_ROUTE=/^\/(?:privacy|terms)(?:\/|$)/i;
 const SHELL=[
   '/',
   '/index.html',
-  '/core/styles/index.css?v=1229.39',
-  '/core/styles/core.css?v=1229.39',
-  '/core/styles/forensic-case.css?v=1229.39',
-  '/core/styles/puzzle-room.css?v=1229.39',
-  '/core/styles/beauty-room.css?v=1229.39',
-  '/core/styles/player-hub.css?v=1229.39',
-  '/core/styles/rooms.css?v=1229.39',
-  '/zivo-ai.js?v=1229.39',
-  '/dist/app.bundle.js?v=1229.39',
+  '/core/styles/index.css?v=1230.2',
+  '/core/styles/core.css?v=1230.2',
+  '/core/styles/forensic-case.css?v=1230.2',
+  '/core/styles/puzzle-room.css?v=1230.2',
+  '/core/styles/beauty-room.css?v=1230.2',
+  '/core/styles/player-hub.css?v=1230.2',
+  '/core/styles/rooms.css?v=1230.2',
+  '/zivo-ai.js?v=1230.2',
+  '/dist/app.bundle.js?v=1230.2',
   '/assets/icons/zivo-192.png',
   '/assets/icons/zivo-512.png',
   '/manifest.webmanifest'
