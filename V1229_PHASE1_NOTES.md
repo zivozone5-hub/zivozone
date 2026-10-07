@@ -2213,3 +2213,210 @@ Playwright: language-fallback loader confirmed rendering en/zh/hi/es/fr/fa story
 door titles correctly, Arabic default unchanged (no regression); hreflang reciprocity and `<html lang
 dir>` confirmed correct on root/`en` home pages and `tale-01` Arabic/English story pages; translated
 `/stories/tale-01/en/` article content confirmed English, not Arabic.
+
+## 1230.21 — News ticker mobile readability (pause-on-touch)
+
+Investigated a mobile-unfriendliness report on the news ticker. Live Playwright testing at 320/360/390/414px
+found the existing `@media(max-width:760px)`/`@media(max-width:430px)` rules already working correctly —
+no overflow, no overlap, correct RTL — so the real gap was ergonomics, not a layout bug: a narrow phone
+screen shows far less of each scrolling headline at a time than a desktop window, at the same constant
+scroll speed, so real (long) Arabic headlines fly past faster than they can be read on a small screen.
+
+- `core/modules/news.js`: added `bindPauseOnTouch()` — pressing/holding the ticker now pauses its
+  scroll animation (`animationPlayState`), releasing resumes it, so a visitor can actually finish reading
+  a headline instead of it scrolling off mid-sentence. Bound once on the static `.zivo-newsbar-window`
+  wrapper (not the track, which gets its `innerHTML` replaced on every refresh) so it survives re-renders.
+- `core/styles/index.css`: `.zivo-newsbar-window` got `cursor:pointer` (discoverability) and
+  `touch-action:pan-y` (so pressing it never blocks the page's own vertical scroll gesture). New
+  `@media(max-width:360px)` rule hides the "ZIVOZONE" brand text in the ticker's left badge on the
+  narrowest phones (keeping the "عاجل" live badge) — that fixed head was eating over a third of the
+  bar's width on a 320px screen, leaving very little room for the part visitors actually read.
+- Hit a stale-build trap mid-verification (documented procedural lesson from earlier rounds, confirmed
+  again here): the first live check against the real page found the new pointer listeners never fired —
+  `dist/app.bundle.js` was still the pre-edit build. Re-ran `python3 scripts/release.py 1230.21` (which
+  rebuilds the bundle) before re-verifying; the fix then worked correctly on the real page.
+- Verified live: brand text visible above 360px, hidden below it (confirmed at 340px vs 400px); pointer
+  down/up on the ticker correctly paused/resumed the scroll animation on the rebuilt bundle; full 14-gate
+  suite re-run, ALL PASSED.
+
+## 1230.22 — New Dark Room game: "Hold Your Breath" (replaces "The Last Beam")
+
+User asked to delete the existing Dark Room mini-game and replace it with a new, more intensely horror
+mechanic of my own design. Rewrote `core/modules/horror-room.js` and `core/styles/horror-room.css`
+completely, keeping the module's external contract unchanged (`window.ZIVOZONE.HorrorRoom`, the
+`data-horror-room` entry point, the Economy/Share/ExitGuard wiring, the `zivo_horror_progress` key) so
+nothing elsewhere on the site (the room's landing-page CTA, the reward system, the share flow) had to change.
+
+**New mechanic — "Hold Your Breath":** an unseen presence hunts by sound in the dark, cycling
+unpredictably through calm → warning → danger phases (randomized durations, not a fixed/learnable
+pattern — about 30% of warnings are false alarms that fade back to calm, so reflexively holding breath
+on every cue is itself a losing strategy). The player holds one button to hold their breath:
+- Breathing (not holding) while danger is active → caught: a hard composure hit, a screen flash, a
+  shake, and the existing `horror_scream` stinger.
+- Holding breath drains an oxygen meter; holding through a calm phase "just to be safe" also quietly
+  costs composure (discourages holding constantly). Oxygen hitting zero mid-danger forces a gasp —
+  same penalty as getting caught.
+- Surviving a full danger window while holding earns composure + score. Same pass/reward threshold as
+  before (45s round, ≥50% composure at the end to claim the existing 2 ZIVO + 20 XP reward, once).
+- Controls: press-and-hold on the round `#zhr-hold` button, or hold the Space bar (added for keyboard
+  accessibility — the old game had none).
+
+Updated `core/modules/runtime/i18n.js` across all 7 languages (ar/en/zh/hi/es/fr/fa): rewrote the room's
+title/intro/start copy for the new mechanic, repurposed the existing "battery" label as an oxygen label
+(same key, new text, no new key needed), and added 3 new keys per language (`horrorGameHoldBtn`,
+`horrorGameDangerCue`, `horrorGameSafeCue`) for the new UI text.
+
+### Verified
+`node --check` on both edited JS files; CSS brace-balance check. Full rebuild (`python3 scripts/release.py
+1230.22`) and 14-gate suite: ALL PASSED. Live via Playwright: intro screen shows the new breath/oxygen
+copy (no leftover flashlight/battery text); starting the round renders the hold button, oxygen meter,
+composure meter, cue text and heartbeat icon; the cue text/class genuinely cycles through calm/warning/
+danger over time (not frozen); holding the button visibly drains oxygen and releases it regenerates;
+exit button + ExitGuard confirmation still work; zero console errors from the new code.
+
+## 1230.23 — Registration system + terms/privacy audit
+
+Full read-through of `core/modules/auth.js` (the whole auth engine: register/login/reset/session),
+`core/config.js`, `core/modules/runtime/app-shell.js`'s auth modal, and both legal pages (`terms/`,
+`privacy/`), done against the user's request to "check the registration system and terms of use
+agreement" ahead of making signup mandatory to play.
+
+### What was already right (no changes needed)
+- `MIN_AGE=13` is consistent everywhere: `core/config.js`, `auth.js`'s enforcement, the register form's
+  `min="${MIN_AGE}"` input, and both the Terms (§2 Eligibility) and Privacy (§9 Children) pages' text.
+- The terms checkbox in the register form is `required` and correctly sends `termsAccepted:true` into
+  `Auth.register()`; registration is hard-blocked without it (both client-side `required` and a
+  server-side `throw` in `auth.js` if someone bypasses the checkbox).
+- `resetPassword()` already protects against account enumeration: it swallows `auth/user-not-found` so
+  a visitor can't probe which emails have accounts.
+- `TERMS_VERSION` in `core/config.js` (`ZIVO-TERMS-2026.10.1`) matches what the real terms page displays
+  — the version actually recorded on every new account is correct.
+
+### Bugs found and fixed
+1. **Stale fallback terms version in `auth.js`**: its hardcoded fallback (used only if `core/config.js`
+   fails to load) still said `'ZIVO-TERMS-2026.09.1'`, one version behind the real, currently-configured
+   `'ZIVO-TERMS-2026.10.1'`. Low real-world impact (config.js loads normally), but a genuine landmine if
+   config.js ever failed to load — corrected to match.
+2. **4 hardcoded Arabic-only error strings in `auth.js`**, bypassing the `t()` i18n system entirely, so an
+   English/Chinese/Spanish/etc. visitor would see raw Arabic on these specific errors: weak-password,
+   too-many-requests (rate-limit), the admin-email-reserved message, and the terms-not-accepted message.
+   Added `weakPassword`, `tooManyRequests`, `adminEmailReserved`, `termsRequired` keys to all 7 languages
+   in `core/modules/runtime/i18n.js`, and switched `auth.js` to use `t(...)` for all four.
+
+### Real gaps — not fixed yet, by design (need a decision, not a silent fix)
+1. **No bot/spam protection on the registration or login form.** Firebase App Check + reCAPTCHA
+   Enterprise is already configured site-wide (`window.ZIVOZONE_SECURITY.appCheckSiteKey` in
+   `index.html`) but is only actually *used* by the public chat (`core/modules/chat.js`). The signup/
+   login form has no App Check, no honeypot field, and no client-side attempt throttling — this is
+   exactly Phase 3 of the plan the user approved, not an oversight to patch quietly here.
+2. **Terms and Privacy pages exist only in Arabic + English**, not all 7 site UI languages. Flagged, not
+   changed — legal text is commonly kept to fewer languages on purpose, so this needs the user's call
+   rather than an assumption.
+
+### Verified
+`node --check` on edited files; full rebuild (`python3 scripts/release.py 1230.23`); all 10 QA gate
+scripts: ALL PASSED (including `qa_no_hardcoded_arabic.py` and `qa_i18n_completeness.py`, which both stay
+green since the new keys exist in every language). Live via Playwright: submitted the register form with
+the terms checkbox force-unchecked — the toast now reads the real English sentence ("You must agree to
+the ZIVOZONE terms of use before creating an account.") instead of the old Arabic-only string, confirming
+the fix actually reaches the page through a fresh bundle, not just the source file.
+
+## 1230.24 — Phase 3: anti-bot hardening on registration/login (Spark-plan only, zero cost)
+
+The 1230.23 audit flagged the registration/login form as having no bot protection at all, unlike the
+public chat (which already uses Firebase App Check + reCAPTCHA Enterprise on its own secondary Firebase
+app). This closes that gap with three independent, stacked layers, none of which need Blaze/paid Firebase:
+
+1. **Firebase App Check, now also on the default app.** `core/modules/auth.js` — right after
+   `firebase.initializeApp(CONFIG)` in `initFirebase()`, added the exact same
+   `firebase.appCheck(...).initializeAppCheck({provider:new ReCaptchaEnterpriseProvider(...)})` call
+   `chat.js` already uses on its own named app, now targeting `firebase.app()` (the default app that
+   `Auth.register()`/`.login()` actually run through). This is the piece that lets Firebase start
+   rejecting non-browser/scripted traffic at the network edge — but it only takes effect once App Check
+   **enforcement** is turned on for Authentication (and optionally Firestore) in the Firebase console.
+   That console toggle is a one-time, no-cost Spark-plan setting I cannot flip from this sandbox (no real
+   project access) — flagging it as the one remaining step for the user to do themselves before this
+   layer is actually live, same caveat as any other Firebase console action in this engagement.
+2. **Honeypot field** (`core/modules/runtime/app-shell.js`, `core/styles/index.css`): an invisible
+   `#auth-hp` "Website" input inside the register form only, positioned off-screen with CSS (not
+   `display:none`, which some scripted form-fillers specifically check for and skip) rather than hidden
+   with an attribute. A human never sees or reaches it (`tabindex="-1"`); a bot that blindly fills every
+   input in a form fills it, and a filled honeypot on submit is treated as bot traffic.
+3. **Minimum human fill-time**: the register form records when the auth modal opened; a submit faster
+   than 1.2 seconds after that is rejected the same way. No real visitor fills a name, age, email and
+   password and ticks a checkbox in under 1.2s; a scripted submit typically does.
+
+Both (2) and (3) reject with the ordinary `firebaseError` toast — never a distinct "bot detected"
+message — so a scripted attacker gets no signal about what tripped, consistent with the existing
+account-enumeration protection in `resetPassword()`.
+
+### Verified
+`node --check` on both edited JS files; full rebuild (`python3 scripts/release.py 1230.24`); all 10 QA
+gate scripts: ALL PASSED. Live via Playwright, with temporary console instrumentation to get an
+unambiguous signal (the visible toast text is identical whether the bot gate fires or a real Firebase
+call fails, so toast text alone can't prove which happened — this sandbox has no reachable Firebase
+backend to complete a real registration against, a standing limitation of this environment, not of the
+code):
+- Honeypot filled → gate blocks before `Auth.register()` is ever called.
+- Submitted 100ms after the modal opened → gate blocks before `Auth.register()` is ever called.
+- Normal pace (1.5s+), honeypot empty → gate passes through and `Auth.register()` *is* called (it then
+  fails for the pre-existing, unrelated reason that this sandbox cannot reach Firebase's servers — exactly
+  the same limitation every other live-Firebase check in this engagement has run into).
+All debug instrumentation was removed before the final rebuild; the shipped code has no console logging
+added by this change.
+
+## 1230.25 — Phase 2: "browse free, register to play" gate + persuasive copy
+
+Implements the core of the user's big request: visitors can keep browsing everything (home, rooms'
+intros, stories, sports, health, AI chat, the identity quiz) exactly as before; the moment a guest tries
+to actually **start** a real scored game, a persuasive, prestige-toned screen asks them to create a free
+account first — framed as becoming an early "Founding Member" ahead of a future paid ZIVO VIP tier (see
+the ideas sent separately in chat; nothing about VIP is built yet, this is only the forward framing in
+the copy).
+
+### Where the gate lives (one shared function, reused — not four separate gates)
+`core/modules/runtime/app-shell.js` adds `playGateModal()` + `requirePlay(action)`, exposed as
+`window.ZIVOZONE_REQUIRE_PLAY`. Logged-in users and admins pass through immediately
+(`A.isLoggedIn()||A.isAdmin?.()`); a guest sees the promo screen instead, with:
+- a "Create free account" primary action that opens the existing register form (reusing `authModal`'s
+  `after` callback, now also given an optional second `initialMode` argument so the gate's "sign in"
+  link can open the *same* modal straight into login mode for returning players),
+- a "keep browsing" dismiss that just closes the modal, no account needed,
+- the three benefit bullets and footer note, in all 7 languages (new i18n keys, prefixed `playGate*`).
+
+### Where the gate was wired in (every real path to start a scored game)
+- `core/modules/challenges.js`: `runner.start(id)` — the single choke point every bank-driven challenge
+  goes through (iq, math, science, logic, memory, strategy, reaction, the daily challenge, forensic, and
+  the horror *trivia* entry). Renamed the original body to `_startInner`; `start` is now a thin gate
+  wrapper. Gating here once covers all of these at once.
+- `core/modules/horror-room.js`: the exported `HorrorRoom.start` (the "Hold Your Breath" bonus game,
+  reached from a button after finishing the horror trivia) is gated independently too, so it can't be
+  reached by a guest regardless of call path, even though in practice `enter()` already routes through
+  the gated `runner.start('horror')` first.
+- `core/modules/puzzle-room.js`: renamed the original `start` to `startInner`; the exported `start` (used
+  by the homepage card, the in-room replay button, and the direct API) is the gate wrapper.
+
+### Scoped out on purpose (not an oversight)
+- **Stories, the Health World doors, and the Beauty Room** stay fully free to browse. Stories and health
+  are narrative/informational content, not scored play. The Beauty Room's `renderGame()` mini-interaction
+  grants no XP/ZIVO/economy reward (checked: no `Economy.credit` call anywhere in `beauty-room.js`), so it
+  doesn't fit "real play" either — gating it would frustrate visitors over content that isn't a game.
+- **The "Who Am I?" identity quiz** stays free — it's a personality quiz with no score, reward, or saved
+  progress tied to an account, same reasoning.
+If any of these should actually be gated too, that's a one-line change per entry point using the exact
+same `window.ZIVOZONE_REQUIRE_PLAY` pattern — flagging the scoping choice rather than silently deciding
+it's final.
+
+### Verified
+`node --check` on every edited file; full rebuild (`python3 scripts/release.py 1230.25`); all 10 QA gate
+scripts: ALL PASSED. Live via Playwright, on both the SPA challenge cards and the standalone
+`/rooms/puzzle-room/` page:
+- Guest clicks a challenge card → the play-gate modal renders (not the game); the game's root elements
+  never mount in the DOM.
+- The gate's CTA opens the real register form.
+- With the shared gate function temporarily stubbed to behave exactly as it does for an actual logged-in
+  user (immediate pass-through, which is what `requirePlay` already does when `A.isLoggedIn()` is true),
+  the same click correctly skips the modal and mounts the real game — confirming the wiring, not just that
+  the gate *can* block.
+- Guest clicks the puzzle-room entry on its own standalone page → same gate, `zivo-puzzle-active` never
+  gets added to `<body>`.
