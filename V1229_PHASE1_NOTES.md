@@ -2420,3 +2420,61 @@ scripts: ALL PASSED. Live via Playwright, on both the SPA challenge cards and th
   the gate *can* block.
 - Guest clicks the puzzle-room entry on its own standalone page → same gate, `zivo-puzzle-active` never
   gets added to `<body>`.
+
+## 1230.26 — Phase 4: luxury/professional visual pass (evolution of the existing gold accent, not a new one)
+
+Finishes the user's 4-phase request. This is a restrained design pass over shared site chrome — the
+header, hero, cards, buttons, footer and modals every page already uses — not a re-skin of every
+bespoke room's internal game art (the puzzle-room canvas, horror vignette, etc. are untouched).
+
+### Why gold, and why reused instead of invented
+The codebase already had a "luxury" gold (`#ffd84a`) defined in a legacy `V103 Luxury` CSS layer, but it
+was only ever used on the admin login button and the ZIVO Wallet strip — the rest of the site never
+picked it up. Per the standing "evolution not layering" rule, this pass pulls the *exact same* hex out to
+`:root` as `--gold`/`--gold-deep`/`--gold-ink` and spends it as the site's one accent reserved for
+prestige/status moments, rather than introducing a new brand color.
+
+### Where gold now appears (deliberately limited — "spend your boldness in one place")
+- `.topbar:after` — a thin gold hairline under the header, replacing visual silence there.
+- `.brand-mark`/`.loader-logo` — a subtle inset gold ring added to the existing glow.
+- New `.btn-gold` class — used only for the play-gate's "Create free account" CTA (the Founding Member
+  moment), never for ordinary buttons like nav actions or the default "Sign in."
+- `.hero-orb` — a gold inset ring, plus a single one-time light glint across the orb ~1s after load
+  (`prefers-reduced-motion` turns it off entirely) — not a looping effect.
+- `.game-card`/`.sports-card` — a gold underline reveals on hover (was invisible/opacity:0 at rest).
+- `.footer` — border tint changed from blue to gold.
+- `.zivo-playgate-list` — the "Founding Member badge" bullet (2nd item) gets a gold left border and faint
+  gold wash, so the actual prestige benefit visually stands out from the other two bullets.
+
+### What was tried and reverted
+Added a gold stop to `.hero-brand`'s (the "ZIVOZONE" wordmark) text gradient; screenshot review showed it
+produced a muddy yellow-green blend against the existing violet/cyan. Reverted — the wordmark keeps its
+original two-tone gradient. Gold stays reserved for status/reward moments, not the logo itself.
+
+### Two real pre-existing bugs found and fixed along the way (not part of the original ask, but found via
+### screenshot review while placing the new gold CTA next to them)
+- `.zivo-inline-link` and `.zivo-forgot-link` had **no CSS rule anywhere in the whole stylesheet** — the
+  pre-existing "Forgot password?" link, and this phase's new play-gate "sign in"/"keep browsing" links,
+  were all rendering as raw unstyled default browser buttons. Added proper link styling for both classes.
+- Fixing the above introduced a cascade side effect: the new `.zivo-inline-link{color:#7ddcff}` rule (same
+  specificity, later in the file) silently overrode `.zivo-playgate-dismiss`'s intended quiet muted-gray
+  color, making "Not now, keep browsing" render in link-blue. Fixed by adding `!important` to
+  `.zivo-playgate-dismiss`'s color/text-decoration so it stays visually secondary to the gold CTA.
+
+### Scope boundary (communicated, not silent)
+This pass covers shared site chrome only — header, hero, cards, buttons, footer, auth/play-gate modals —
+visible on every page. It does not re-skin each room's own bespoke internals (puzzle-room's canvas,
+horror-room's vignette, forensic board, etc.); those keep their own existing visual language. Extending
+gold further into any specific room is a follow-up if wanted, using the same `--gold` tokens already in
+place.
+
+### Verified
+Full rebuild (`python3 scripts/release.py 1230.26`); all 10 QA gate scripts: ALL PASSED. Live via
+Playwright screenshots in both English/LTR and Arabic/RTL:
+- Hero, topbar, cards and footer render the new gold accents correctly with no layout breakage.
+- The play-gate modal's gold CTA and "Founding Member" bullet render correctly, including in Arabic/RTL,
+  where the bullet's gold accent border correctly mirrors to the opposite logical side (confirms the
+  `border-inline-start`/logical-property approach used throughout works as intended, not just in LTR).
+- The previously-invisible link-styling bug and its cascade side effect are both confirmed fixed on
+  screen, with "Forgot password?", "Sign in," and "Not now, keep browsing" each rendering as intended
+  (readable link, and visually secondary/muted where that was the intent) rather than raw browser buttons.
