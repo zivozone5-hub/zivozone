@@ -2743,3 +2743,60 @@ Full rebuild (`python3 scripts/release.py 1230.30`). One regression caught and f
 new code comments describing the mobile-nav and profile fixes contained literal Arabic UI-text
 phrases, which `qa_no_hardcoded_arabic.py` counts even inside comments — rewrote both comment
 blocks in English-only prose; all 10 QA gates then: ALL PASSED.
+
+## 1230.31 — Pre-launch punch list: what Claude can fix vs. what only the user can do
+
+Following a full launch-readiness audit, every item that was fixable from inside this sandboxed
+environment — with no live Firebase project, no real domain, no AdSense account — was fixed. Nothing
+was left half-done or silently skipped.
+
+**Fixed:**
+1. **Stale `README.md`.** Its "Known issues" section claimed story/health content was Arabic-only;
+   it has actually been fully translated into all 7 languages since 1230.20. Corrected, and the
+   legal-pages gap (next item) is now also accurately described there.
+2. **`core/modules/rooms.js` hardcoded Arabic chrome text.** ~35 UI strings (close/retry/back
+   buttons, door-number labels, search box, genre filter, error messages, room titles/taglines,
+   the health disclaimer) bypassed the `t()` i18n system and showed Arabic regardless of the
+   visitor's chosen language. Added 33 new keys × 7 languages via `scripts/add_i18n_keys.py` (the
+   project's own standard tool for this) and wired every one in — including fixing two places where
+   a local variable named `t` was shadowing the i18n function, which the original hardcoding had
+   been hiding. The 12 per-door teaser lines (`DOOR_LINES`) and the Epic-50 game/band names remain
+   Arabic+English-only by the same deliberate, already-disclosed scope limit used elsewhere
+   (`minigame-content.js`, `challenges.js`'s `GAME_NAMES_BY_LANG`) — not part of this fix.
+   **Verified live**: switched the real page to French via Playwright and confirmed every one of
+   these strings now renders in French with zero `pageerror` events.
+3. **Privacy and Terms pages translated into all 7 languages.** Both legal pages previously had
+   only Arabic + English sections; added full zh/hi/es/fr/fa sections (same legal content, not
+   summarized) and extended the page nav to link to all 7. Verified both files parse with exactly
+   7 balanced `<section class="doc">` blocks and serve correctly.
+4. **Added a real root `favicon.ico`** (16/32/48/64/128/256px, generated from the existing
+   `zivo-512.png` via Pillow) and linked it from all 102 HTML pages (index, 404, privacy, terms,
+   and all story-language variants) alongside the existing PNG icon, for legacy-browser/bookmark-bar
+   compatibility that a PNG-only `<link rel="icon">` doesn't guarantee.
+
+**Investigated, deliberately not applied:**
+- **Bundle minification.** `esbuild` (already present in this sandbox) can minify
+  `dist/app.bundle.js`, but tested two ways: with default Unicode escaping it made the file *larger*
+  (Arabic text becomes 6-byte `\uXXXX` escapes instead of 2-byte UTF-8), and with `--charset=utf8` it
+  saved ~11% after gzip (333KB → 296KB — Firebase Hosting gzips automatically either way, so this is
+  the real-world saving, not the raw file difference). The cost: minification strips every
+  `//# sourceURL=` marker this project's bundler deliberately adds so browser DevTools show the
+  correct original file name and line number when something breaks in production — there's no
+  esbuild flag that keeps those while minifying. Trading away real production debuggability for a
+  ~37KB-after-gzip saving on a site with no live traffic yet is a judgment call, not a clear win, so
+  it was tested and left out rather than silently applied. Flagged for the user to decide.
+- **Self-service "delete my account."** A real client-side implementation would need to delete across
+  six-plus Firestore collections/subcollections per user (`players/{uid}` + its `events`/`results`
+  subcollections, `users/{uid}` + its `activity` subcollection, the `users/{uid}/zivozone` wallet +
+  its `ledger`/`rewardClaims` subcollections, and per-day `siteStats` visitor docs) plus
+  `firebase.auth().currentUser.delete()` — all against a live Firebase project this sandbox cannot
+  reach, with no emulator to verify against. Shipping untested code that deletes a real user's auth
+  account and data is a different risk category from everything else in this round, and this project
+  has consistently declined changes in that category before (e.g. the reward-claim rate-limit fix in
+  1229.6) for the same reason. Not implemented; stays on the manual/next-round list once Firebase is
+  actually live and testable.
+
+Full rebuild (`python3 scripts/release.py 1230.31`); one regression caught mid-pass: a French
+`roomsGenreAria` ("Genre") flagged as an untranslated copy of English — it's the real French word
+too, added to `qa_i18n_coverage.py`'s known-shared-words allowlist with a comment, same precedent as
+`epic50Points` in 1230.29. All 10 QA gates: ALL PASSED.
