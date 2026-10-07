@@ -2582,3 +2582,164 @@ daily, memory_focus, logic_extreme, memory_v22, horror):
   pixel-level crop of the lives row) when all guesses are exhausted.
 - Confirmed in both English/LTR and Arabic/RTL, and separately confirmed Arabic riddle/sentence text
   still renders correctly shaped and right-to-left after the canvas-direction bidi fix above.
+
+## 1230.28 — Two distinct football mini-games instead of one shared one
+
+Follow-up to 1230.27: the user pointed out that Football Lab (`football`) and Tactical Decision Lab
+(`football_intelligence`) — two separate rooms, each with their own intro/theme — were both wired to
+the exact same "Breakthrough Run" dribbling mini-game. Fair catch: that's a duplicate, not two rooms.
+
+### Football Lab — "Breakthrough Run" (kept, given a real pitch)
+Same dribble-through-the-gap mechanic as 1230.27, now with actual pitch markings (halfway line, center
+circle, goal box) instead of a bare green rectangle, and a real level-10 escalation: from level 7 on, a
+**second defensive line** trails close behind the first with its own, independently-random gap — so the
+final levels are a genuine two-line weave, not just "the same gap, slightly smaller."
+
+### Tactical Decision Lab — new, "Read the Press"
+A completely different mechanic, because this room is about reading a live situation, not steering a
+ball: you're the yellow player at the center; 3-6 teammates sit around you, each ringed green (open) or
+red (covered by a defender); their state flips on its own clock, faster and more often every level.
+Pick only green teammates, build a streak (3 at level 1, up to 6 at level 10) before an increasingly
+tight timer runs out; one wrong (red) pick ends the level immediately — a real pass-or-don't decision
+under time pressure, not dribbling with different art.
+
+### Verified
+`node --check`; full rebuild (`python3 scripts/release.py 1230.28`); all 10 QA gates: ALL PASSED. Live
+via Playwright: both rooms' mini-games render correctly and distinctly (confirmed via screenshot — the
+pitch-with-two-defensive-lines for Football Lab, the teammate web for Tactical Decision Lab); played
+Tactical Decision Lab's "Read the Press" through an actual open-teammate click and confirmed the streak
+counter advances (0/3 → 1/3) on a correct pick, zero JS errors in either game.
+
+## 1230.29 — "Epic 50": a 50-level, 5-band grand challenge in each of the six signature rooms
+
+Scope confirmed with the user first (ambiguity in "the six main rooms" resolved by finding the
+homepage's `#zivo-rooms-hub` section, titled "تجارب ZIVOZONE الرئيسية" and numbered 01–06): Dark
+Room, Forensic Lab, Puzzle Room, Beauty Room, Story Room, Health World. Each now has a second,
+much longer game living *alongside* its existing game/content (nothing removed): 50 levels grouped
+into 5 bands of 10. Difficulty escalates on two axes at once, per the user's explicit request
+("مراحل متقدمة وليس مرحلة واحدة"): continuously within a band (the existing `lerp` pattern,
+extended), and discretely across bands — each band adds a genuinely new rule on top of the
+previous ones (a decoy, a blackout, a mirror/reversal, a second simultaneous target), so band 5
+is every earlier rule stacked together, not just a faster version of band 1.
+
+**Shared engine** (`core/modules/epic50.js`, new file): evolution of the 10-level engine already
+built into `challenges.js`'s `runner.startMiniGame()` — same helper shapes (`lerp`/`rint`/
+`addTimer`/`addInterval`/`addListener`/`cleanupLevel`/`flash`/`winLevel`/`loseLevel`/`point`/
+`clear`/`txt`/`emoji`/`button`/`countdown`, same `ctx.direction='ltr'` RTL-canvas fix), generalized
+so any room can mount it into its own container via `window.ZIVOZONE_EPIC50.mount(el, cfg)`. New on
+top of the 10-level engine: a band progress bar (`.zrg-bandbar`, 5 segments instead of 50 pips),
+a numeric level counter, a bigger "band cleared" transition screen naming the new twist, and a life
+refilled (capped at 3) on every band clear so a 50-level run stays survivable.
+
+**The six games** (each a real mechanical game, not a quiz, per the user's standing instruction):
+- **Dark Room — "Whisper of the Dark"** (`horror-room.js`): glowing eyes appear in a 3×3 grid in
+  the dark; tap the real one(s) before they fade. Bands add decoy eyes, a blackout right before
+  each appearance, a "mirror" rule where the lit tile is a decoy and the real target is the
+  mirrored tile, and finally two simultaneous real targets.
+- **Forensic Lab — "The Case That Never Closes"** (`forensic-case-core.js`): a perception game —
+  spot the one evidence tile that's a subtly different shade among near-identical ones. Bands add
+  a second odd tile, a "fading ink" memory twist (colors fade, must recall the position), and a
+  mirrored board.
+- **Puzzle Room — "The Infinite Vault"** (`puzzle-room.js`): watch a color sequence, replay it.
+  Bands add reversed replay, decoy flashes to ignore, and a "secret group" twist (replay only the
+  colors in the announced group, in order).
+- **Beauty Room — "The Perfect Touch"** (`beauty-room.js`): match a swatch to the shown target
+  color. Bands switch matching to "harmony" (pick the complementary color, not the identical one),
+  add a reshuffle after every pick, and mirror the row.
+- **Story Room — "The Plot Twist"** (`rooms.js`): a book and a candle; one glows — tap the side
+  that did. Bands add a decoy glow on the wrong side, a blackout before the cue, and (fittingly)
+  an actual plot twist: the glowing side becomes the wrong one, its mirror is correct.
+- **Health World — "Full Balance"** (`rooms.js`): tap the icon matching the shown meter
+  (nutrition/rest/energy). Bands add junk items that must never be tapped, a reshuffle, a mirror,
+  and a second, alternating target.
+
+Entry points were added as a second CTA next to each room's existing one (Dark Room's intro screen,
+Puzzle Room's stage-1 intro, Beauty Room's hero, the Forensic case board, the Stories list header,
+and the Health doors screen) — nothing existing was removed or rerouted. Story Room and Health
+World had no real game before this (Story Room only had a 5-question comprehension quiz; Health
+World had a single un-leveled 35-second reaction round) — both are genuinely new games built for
+this pass, not an extension of a quiz.
+
+**i18n**: shared chrome (`epic50Tag`/`epic50Points`/`epic50LevelLabel`/`epic50Victory`/
+`epic50Reached`/`epic50Back`/`epic50BandFallback`) is routed through `i18n.js` in all 7 languages.
+Each room's own game name + 5 band names/twist descriptions are Arabic/English content dictionaries
+living in that room's own file — same precedent as `challenges.js`'s existing `GAME_NAMES_BY_LANG`
+— with English as the fallback for the other 5 UI languages (zh/hi/es/fr/fa), a deliberate scope
+limit matching the one already documented for `minigame-content.js` in 1230.27. Per
+`scripts/gen_hardcoded_arabic_baseline.py`'s own instruction ("add new Arabic content to
+CONTENT_FILES, never silently re-baseline"), `horror-room.js`, `puzzle-room.js`, `beauty-room.js`
+and `rooms.js` were added to `qa_no_hardcoded_arabic.py`'s `CONTENT_FILES` exemption set.
+
+**Bugs caught by the QA gates themselves, fixed before shipping**: an undeclared `localized(...)`
+call in `rooms.js` (should have been the locally-defined `localizedText`) — caught by
+`qa_phase1_trust.py`'s undeclared-identifier check; a French `epic50Points` flagged as an
+untranslated copy of English — it's the same real word in both languages, added to
+`qa_i18n_coverage.py`'s known-shared-words allowlist with a comment, not silently ignored.
+
+**Verified live (Playwright, not just code review)**: all 6 CTAs reached and clicked through their
+room's actual entry flow (including the Dark Room's post-trivia bonus-button path, the Forensic
+cinematic skip, and the Stories/Health "open the door" screens) — zero `pageerror` events in any of
+them. Separately drove the Beauty Room's game to a loss (repeated wrong picks) to confirm
+`loseLevel → finishGame(false)` renders the result screen with working restart/back buttons and
+fires `onExit`/`onFinish` without error. Full rebuild (`python3 scripts/release.py 1230.29`); all 10
+QA gates: ALL PASSED.
+
+**Known limits, disclosed rather than hidden**: band/game-name text covers Arabic + English only
+(5 other languages fall back to English, consistent with the existing `minigame-content.js`
+precedent). A full bot-played 50-level run (reading canvas pixels to always answer correctly through
+all 5 bands) was not executed — verification covered live mounting, interaction, the loss path, and
+a structural/arithmetic review of the band-crossing and life-refill logic, which shares its
+win/lose/flash code path with the already-proven-working loss test.
+
+## 1230.30 — Player Journey audit: "make everything in it real, or delete it"
+
+User's instruction was explicit: audit every feature inside the "Player Journey" panel
+(`core/modules/player-hub.js`), confirm each one really works live on the site, and delete
+whatever doesn't. An Explore subagent audited the panel's full destination grid (10 targets),
+its hero actions, and its lifecycle wiring against the rest of the app. Findings, most severe first:
+
+1. **Mobile bottom-nav tab was completely dead on every phone-width viewport.** `mount()` only
+   bound `.main-nav a[data-player-home]` — but `.main-nav` is `display:none` on phone widths, and
+   the real tap target there is the bottom `<nav class="mobile-nav">` tab, which carries the same
+   `data-player-home` attribute but lives outside `.main-nav` and so was never bound to anything.
+   Tapping it just changed the URL hash to `#player-home`, which nothing on the page targets — on
+   mobile traffic, the single most-used entry point into this whole panel did nothing.
+   **Fixed**: bind every element matching `[data-player-home]`, not just the one inside `.main-nav`.
+2. **Three different "profile" buttons (hero button, the player card itself, its "open full
+   profile" link) all promised a fuller profile screen and did nothing** — `go("profile")` just
+   called `close()` then `open()`, re-rendering the exact same panel from scratch. There is no
+   separate profile screen to open. **Fixed**: rather than fake one, "profile" now scrolls — for
+   real — to the player-card section already inside the open panel (`#zph-playercard`, a new id),
+   without closing it, so the button does something true to what it promises.
+3. **The "ai" destination set `location.hash` instead of scrolling**, inconsistent with every
+   sibling destination — and silently did nothing if the hash was already `#ai` from an earlier
+   click (setting a hash to its current value fires no `hashchange`, so no scroll follows).
+   **Fixed**: `ai` now uses `scrollIntoView` like `challenges`/`sports`.
+4. Stale `'Progress'` entry in `core/app.js`'s module-metadata list — `window.ZIVOZONE.Progress`
+   itself was deleted in 1230.19 (dead alias, zero callers) but this descriptive array was never
+   updated to match, so it was documenting a module that no longer exists. **Fixed**: removed.
+5. `PlayerHub` had no `close()` call wired into the `zivozone-home-reset` event handler in
+   `app-shell.js`, unlike the other modal-style panels there (`closeModal()`, challenge-stop).
+   Minor listener/state-leak risk if a home-reset fired while the panel was open. **Fixed**: added
+   `PlayerHub.close()` alongside the existing calls.
+
+**Nothing was deleted.** All 5 findings had a real, honest fix available — none were unsalvageable
+fakery that had to be ripped out — so per the user's own framing ("make it real, or delete it"),
+fixing took priority and every fix delivers exactly what its button already promised, rather than
+removing the button.
+
+The other 10 destination-grid targets (`challenges`, `sports`, `identity`, `wallet`, `daily`,
+`missions`, `competition`, `achievements`, `mining`, plus the panel's own open/close) were
+confirmed already wired to real, existing functionality — not touched.
+
+**Verified live (Playwright)**: desktop — launcher opens the panel; clicking the hero "profile"
+button leaves the panel open (`panel still open = true`) and scrolls to the player card; clicking
+"ai" closes the panel and scrolls `#ai` into view (`inViewport: true`). Mobile (390×844 viewport,
+`.main-nav` confirmed `display:none` as expected) — tapping the bottom-nav "Player Journey" tab now
+opens the panel (`panel opened by bottom-nav tap: true`), where before this fix it did nothing.
+Zero `pageerror` events across every click in both passes.
+
+Full rebuild (`python3 scripts/release.py 1230.30`). One regression caught and fixed mid-pass:
+new code comments describing the mobile-nav and profile fixes contained literal Arabic UI-text
+phrases, which `qa_no_hardcoded_arabic.py` counts even inside comments — rewrote both comment
+blocks in English-only prose; all 10 QA gates then: ALL PASSED.
