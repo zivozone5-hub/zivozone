@@ -2478,3 +2478,107 @@ Playwright screenshots in both English/LTR and Arabic/RTL:
 - The previously-invisible link-styling bug and its cascade side effect are both confirmed fixed on
   screen, with "Forgot password?", "Sign in," and "Not now, keep browsing" each rendering as intended
   (readable link, and visually secondary/muted where that was the intent) rather than raw browser buttons.
+
+## 1230.27 — Phase 5: every room's "mini" tab becomes a real 10-level skill game (no more disguised quizzes)
+
+The user's instruction this round: drop everything else and rebuild the small mini-game inside every
+room/challenge world, make each one a genuinely creative, real (non-question-based) game with 10
+levels of rising difficulty — level 10 "nearly impossible" — and keep everything else in each room
+(the cinematic intro, the world hub, missions/facts/links tabs, the main 20-question challenge itself)
+exactly as it was.
+
+### What was actually wrong before
+Each room already had a secondary "Mini game" tab (`runner.startMiniGame()` in challenges.js), separate
+from the room's main 20-question challenge. But on inspection, most of its 17 per-room mini-games
+(football, math, science, memory, logic, iq, strategy, probability, visual, code, reaction, focus,
+whoami, language, lateral, forensic, horror) were a disguised multiple-choice quiz wearing a game's
+skin — `button('42', ...)`, `button('64', ...)` etc. picking the one correct answer from 3-4 options,
+capped at a flat 5 rounds with no real difficulty curve. Only football, science, memory, reaction and
+focus had any genuine real-time interaction, and even those were thin. This is exactly the "نظام أسئلة"
+(question-system) the user said they didn't want.
+
+### What's there now — a shared 10-level engine + 17 real, distinct mechanics
+Rebuilt `runner.startMiniGame()` from scratch as a small reusable level-arcade framework (level 1-10,
+3 lives shared across the run, score, a level-up/"try again" flash, a final victory/defeat screen),
+then gave every room a mechanic that's actually played with the mouse/finger, not picked from a list:
+
+- **Football / Football Intelligence** — "Breakthrough Run": steer a ball past a scrolling defensive
+  line through a gap that narrows and speeds up every level (3 successful passes at level 1, 8 at
+  level 10).
+- **Math** — "Equation Race": tap number tiles that sum exactly to the shown target; tile count, value
+  range and negative numbers scale in; no "pick the right total from 4 options" anymore.
+- **Science** — "Stabilize the Reaction": hold ◀/▶ to fight a drifting needle and keep it inside a
+  shrinking gold zone for a growing sustained duration — real dexterity, not a one-shot pH guess.
+- **Memory / Memory Focus / Elite Memory** — Simon-style sequence recall, length 3 → 11, flash speed
+  increasing with level.
+- **Logic / Logic Extreme** — a real Mastermind: pick colors to build a guess, get black/white peg
+  feedback, code length and color count grow while the number of guesses allowed shrinks.
+- **IQ / Pattern Break** — "Spot the Glitch": a grid of identically-rotating icons hides one spinning
+  at a different speed; grid size grows, the gap narrows, the timer shrinks.
+- **Visual Matrix** — the same grid-search idea with color instead of rotation (odd-hue-out), so the
+  two visual rooms stay distinct from each other.
+- **Code Breaker** (also reused for the Forensic mini-tab) — a scrolling list of near-identical code
+  lines hides one real bug; tap it before the timer runs out.
+- **Reaction** (also reused for the Horror mini-tab) — wait for green, press inside a shrinking
+  window; fake red flashes increase with level and punish an early press.
+- **Focus Scanner** — find the one correctly-colored moving dot among a growing, increasingly similar
+  field of decoys.
+- **Strategy** — a real-time triage: tap the highest-priority blips before time runs out, with more
+  blips and fewer allowed misses each level.
+- **Probability Casino** — stop a spinning wheel's pointer inside a shrinking gold arc — a genuine
+  timing/probability game, not a "which bag has better odds" question.
+- **Word Lab** — tap scattered word tiles in the right order to assemble a sentence under time
+  pressure, with filler/decoy words added at higher levels.
+- **Hidden Exit** — a real find-the-object riddle: tap the one icon among a growing, scattered set that
+  answers the riddle.
+- **ZIVO Daily** — mixes three of the above mechanics into one run, the day's combination picked by a
+  deterministic date seed so it's different (but still real) every day.
+- **Decision Mirror (whoami)** — a quick mirror-reflex game (tap the lit side before the window closes).
+
+### New supporting pieces (evolution of existing systems, not new parallel ones)
+- `core/modules/minigame-content.js` — new, small content file for the two games that need actual
+  sentence/riddle text (Word Lab, Hidden Exit). Kept separate and added to the hardcoded-Arabic QA
+  gate's content exemption list for the same reason `question-bank.js` already is: this is game
+  content, not UI chrome. Scope: Arabic + English content, with English used as the shared fallback on
+  the other 5 UI languages — every language still gets a fully real, playable game, just with English
+  sentence/riddle text outside ar/en (documented scope limit, not an oversight).
+- 15 new i18n keys (`mini*`) added across all 7 languages in `i18n.js`, reused across every room instead
+  of hardcoding new Arabic strings per game — this is why the hardcoded-Arabic QA gate still passes
+  cleanly despite ~500 new lines of game logic.
+- New shared CSS for the level HUD (10 pips, 3 lives, win/lose flash, a final-level gold badge) that
+  reuses the Phase 4 gold tokens for level 10 and victory — gold still means "something earned," not a
+  new unrelated color.
+
+### A real bug found and fixed during live testing (not caught by any static check)
+The canvas sits inside a `dir="rtl"` room shell, and Canvas2D's `fillText` bidi-reorders a string when
+`ctx.direction` inherits `rtl` from that ancestor. A numeric HUD like `"0 / 8"` (current sum / target)
+was rendering as `"8 / 0"` — visually reversed — the moment the canvas inherited RTL. Caught by actually
+screenshotting the Math game, not by reading the code. Fixed with one line (`ctx.direction='ltr'`) right
+after creating each game's canvas context; re-verified afterward that real Arabic riddle/sentence text
+(Hidden Exit, Word Lab) still renders correctly shaped and ordered — forcing the base direction only
+affects ordering of weak/neutral runs like bare digits and slashes, not actual Arabic letters.
+
+### Known pre-existing gaps, not caused by this change (flagging rather than silently leaving them)
+- **`reaction` and `whoami` are not reachable as standalone rooms** — they have room-DNA/world entries
+  and now have a real mini-game built for them, but no question bank was ever registered for either id
+  under those exact names, so the site's own gate (`bank(id)` returning null) never lets a user reach
+  them that way. This predates this change. (`horror` DOES reuse the reaction mechanic and IS reachable,
+  and the real "Who Am I?" quiz on the homepage is a completely separate, already-working system in
+  `app-shell.js`, untouched here.)
+- **`forensic`'s mini-tab is also unreachable** — `forensic` is special-cased earlier in the code to
+  route straight to its own full dedicated system (`ForensicCore`'s Detective's Board, from 1230.7) and
+  never reaches the mini-tab at all. A Code Breaker game was still built and mapped to it for
+  completeness/consistency, it's just dead code today given that routing.
+
+### Verified
+`node --check` on every edited/new file; full rebuild (`python3 scripts/release.py 1230.27`); all 10 QA
+gate scripts: ALL PASSED, including the hardcoded-Arabic gate despite the large amount of new game code.
+Live via Playwright, with zero JS runtime errors across every reachable id (math, science, memory,
+logic, football, football_intelligence, strategy, visual_v22, code_v22, focus_v18, probability_v22,
+daily, memory_focus, logic_extreme, memory_v22, horror):
+- Confirmed the shared HUD (10 level pips, 3 lives, score) renders and updates correctly.
+- Played a full Mastermind round in Logic Lock end-to-end: 10 guesses, correct black/white peg
+  feedback each time, the "Try Again" flash fires and a life is correctly spent (confirmed via a
+  pixel-level crop of the lives row) when all guesses are exhausted.
+- Confirmed in both English/LTR and Arabic/RTL, and separately confirmed Arabic riddle/sentence text
+  still renders correctly shaped and right-to-left after the canvas-direction bidi fix above.
