@@ -1,199 +1,229 @@
 {
-  "updatedAt": 1791526064566,
+  "updatedAt": 1791551748196,
   "sports": [
     {
-      "headline": "\"غوغل روسيا\" تحت النار.. هل دخلت حرب أوكرانيا مرحلة جديدة؟",
+      "headline": "عيدروس الزبيدي: شعب الجنوب لن يقبل أن تسرق انتصارات قواته",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897348-%D8%BA%D9%88%D8%BA%D9%84-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%A7%D9%84%D9%86%D8%A7%D8%B1-%D8%AF%D8%AE%D9%84%D8%AA-%D8%AD%D8%B1%D8%A8-%D8%A3%D9%88%D9%83%D8%B1%D8%A7%D9%86%D9%8A%D8%A7-%D9%85%D8%B1%D8%AD%D9%84%D8%A9-%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9",
-      "published": "Fri, 09 Oct 2026 05:58:23 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1897466-%D8%B9%D9%8A%D8%AF%D8%B1%D9%88%D8%B3-%D8%A7%D9%84%D8%B2%D8%A8%D9%8A%D8%AF%D9%8A-%D8%B4%D8%B9%D8%A8-%D8%A7%D9%84%D8%AC%D9%86%D9%88%D8%A8-%D9%8A%D9%82%D8%A8%D9%84-%D8%AA%D8%B3%D8%B1%D9%82-%D8%A7%D9%86%D8%AA%D8%B5%D8%A7%D8%B1%D8%A7%D8%AA-%D9%82%D9%88%D8%A7%D8%AA%D9%87",
+      "published": "Fri, 09 Oct 2026 13:13:24 GMT"
     },
     {
-      "headline": "من الرياض إلى صنعاء.. هل تغيرت قواعد المواجهة؟",
+      "headline": "من مجزرة فورت هود إلى البث المباشر.. من هو نضال حسن؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1897350-%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6-%D8%B5%D9%86%D8%B9%D8%A7%D8%A1-%D8%AA%D8%BA%D9%8A%D8%B1%D8%AA-%D9%82%D9%88%D8%A7%D8%B9%D8%AF-%D8%A7%D9%84%D9%85%D9%88%D8%A7%D8%AC%D9%87%D8%A9",
-      "published": "Fri, 09 Oct 2026 05:55:05 GMT"
+      "url": "https://www.skynewsarabia.com/world/1897461-%D9%85%D8%AC%D8%B2%D8%B1%D8%A9-%D9%81%D9%88%D8%B1%D8%AA-%D9%87%D9%88%D8%AF-%D8%A7%D9%84%D8%A8%D8%AB-%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1-%D9%87%D9%88-%D9%86%D8%B6%D8%A7%D9%84-%D8%AD%D8%B3%D9%86",
+      "published": "Fri, 09 Oct 2026 13:09:29 GMT"
     },
     {
-      "headline": "عضو بالفيدرالي: خفض التضخم سيتطلب المزيد من رفع الفائدة",
+      "headline": "مصدر فلسطيني: عباس سيصدر مرسوما بتأجيل الانتخابات التشريعية",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/business/1897345-%D8%B9%D8%B6%D9%88-%D8%A8%D8%A7%D9%84%D9%81%D9%8A%D8%AF%D8%B1%D8%A7%D9%84%D9%8A-%D8%AE%D9%81%D8%B6-%D8%A7%D9%84%D8%AA%D8%B6%D8%AE%D9%85-%D8%B3%D9%8A%D8%AA%D8%B7%D9%84%D8%A8-%D8%A7%D9%84%D9%85%D8%B2%D9%8A%D8%AF-%D8%B1%D9%81%D8%B9-%D8%A7%D9%84%D9%81%D8%A7%D8%A6%D8%AF%D8%A9",
-      "published": "Fri, 09 Oct 2026 05:19:56 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1897464-%D9%85%D8%B5%D8%AF%D8%B1-%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A-%D8%B9%D8%A8%D8%A7%D8%B3-%D8%B3%D9%8A%D8%B5%D8%AF%D8%B1-%D9%85%D8%B1%D8%B3%D9%88%D9%85%D8%A7-%D8%A8%D8%AA%D8%A3%D8%AC%D9%8A%D9%84-%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B4%D8%B1%D9%8A%D8%B9%D9%8A%D8%A9",
+      "published": "Fri, 09 Oct 2026 12:25:00 GMT"
     },
     {
-      "headline": "\"اتفاق نادر\" بين واشنطن وموسكو.. وزيلينسكي يعترض",
+      "headline": "ترامب: 22 مليون برميل عبرت هرمز في ليلة واحدة",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897284-%D8%A7%D8%AA%D9%81%D8%A7%D9%82-%D9%86%D8%A7%D8%AF%D8%B1-%D9%88%D8%A7%D8%B4%D9%86%D8%B7%D9%86-%D9%88%D9%85%D9%88%D8%B3%D9%83%D9%88-%D9%88%D8%B2%D9%8A%D9%84%D9%8A%D9%86%D8%B3%D9%83%D9%8A-%D9%8A%D8%B9%D8%AA%D8%B1%D8%B6",
-      "published": "Fri, 09 Oct 2026 05:19:12 GMT"
+      "url": "https://www.skynewsarabia.com/business/1897462-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-22-%D9%85%D9%84%D9%8A%D9%88%D9%86-%D8%A8%D8%B1%D9%85%D9%8A%D9%84-%D8%B9%D8%A8%D8%B1%D8%AA-%D9%87%D8%B1%D9%85%D8%B2-%D9%84%D9%8A%D9%84%D8%A9-%D9%88%D8%A7%D8%AD%D8%AF%D8%A9",
+      "published": "Fri, 09 Oct 2026 12:18:04 GMT"
     },
     {
-      "headline": "بطاريات السيارات الكهربائية.. حل قد يطيل عمرها",
+      "headline": "رويترز: إجراءات ترامب عاجزة عن كبح أسعار الديزل",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1897166-%D8%A8%D8%B7%D8%A7%D8%B1%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%83%D9%87%D8%B1%D8%A8%D8%A7%D8%A6%D9%8A%D8%A9-%D8%AD%D9%84-%D9%8A%D8%B7%D9%8A%D9%84-%D8%B9%D9%85%D8%B1%D9%87%D8%A7",
-      "published": "Fri, 09 Oct 2026 05:02:02 GMT"
+      "url": "https://www.skynewsarabia.com/business/1897459-%D8%B1%D9%88%D9%8A%D8%AA%D8%B1%D8%B2-%D8%A5%D8%AC%D8%B1%D8%A7%D8%A1%D8%A7%D8%AA-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D8%B9%D8%A7%D8%AC%D8%B2%D8%A9-%D9%83%D8%A8%D8%AD-%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%AF%D9%8A%D8%B2%D9%84",
+      "published": "Fri, 09 Oct 2026 11:46:38 GMT"
     },
     {
-      "headline": "شبكات الإخوان في أوروبا.. هل اقتربت مرحلة الحساب؟",
+      "headline": "قبل بلوغ 17 عاما.. موهبة أرسنال تجمع 3 أرقام عالمية",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897309-%D8%B4%D8%A8%D9%83%D8%A7%D8%AA-%D8%A7%D9%84%D8%A5%D8%AE%D9%88%D8%A7%D9%86-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%A7%D9%82%D8%AA%D8%B1%D8%A8%D8%AA-%D9%85%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%84%D8%AD%D8%B3%D8%A7%D8%A8",
-      "published": "Fri, 09 Oct 2026 04:55:27 GMT"
+      "url": "https://www.skynewsarabia.com/sport/1897223-%D8%A8%D9%84%D9%88%D8%BA-17-%D8%B9%D8%A7%D9%85%D8%A7-%D9%85%D9%88%D9%87%D8%A8%D8%A9-%D8%A3%D8%B1%D8%B3%D9%86%D8%A7%D9%84-%D8%AA%D8%AC%D9%85%D8%B9-3-%D8%A3%D8%B1%D9%82%D8%A7%D9%85-%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9",
+      "published": "Fri, 09 Oct 2026 11:42:49 GMT"
     },
     {
-      "headline": "سندات فرنسا تحت النار.. لماذا لا يتحرك المركزي الأوروبي؟",
+      "headline": "عام رابع من المعاناة.. شتاء غزة يكشف حجم المأساة",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/business/1897340-%D8%B3%D9%86%D8%AF%D8%A7%D8%AA-%D9%81%D8%B1%D9%86%D8%B3%D8%A7-%D8%A7%D9%84%D9%86%D8%A7%D8%B1-%D9%84%D9%85%D8%A7%D8%B0%D8%A7-%D9%8A%D8%AA%D8%AD%D8%B1%D9%83-%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%8A-%D8%A7%D9%84%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D9%8A",
-      "published": "Fri, 09 Oct 2026 04:49:54 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1897428-%D8%B9%D8%A7%D9%85-%D8%B1%D8%A7%D8%A8%D8%B9-%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%86%D8%A7%D8%A9-%D8%B4%D8%AA%D8%A7%D8%A1-%D8%BA%D8%B2%D8%A9-%D9%8A%D9%83%D8%B4%D9%81-%D8%AD%D8%AC%D9%85-%D8%A7%D9%84%D9%85%D8%A3%D8%B3%D8%A7%D8%A9",
+      "published": "Fri, 09 Oct 2026 11:39:23 GMT"
     },
     {
-      "headline": "إفطار يشعرك بالشبع.. ماذا تضيف لوجبتك الصباحية؟",
+      "headline": "باكستان تؤكد انتشار قواتها في السعودية.. وتكشف المهمة",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1897336-%D8%A5%D9%81%D8%B7%D8%A7%D8%B1-%D9%8A%D8%B4%D8%B9%D8%B1%D9%83-%D8%A8%D8%A7%D9%84%D8%B4%D8%A8%D8%B9-%D8%AA%D8%B6%D9%8A%D9%81-%D9%84%D9%88%D8%AC%D8%A8%D8%AA%D9%83-%D8%A7%D9%84%D8%B5%D8%A8%D8%A7%D8%AD%D9%8A%D8%A9",
-      "published": "Fri, 09 Oct 2026 04:43:52 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1897455-%D8%A8%D8%A7%D9%83%D8%B3%D8%AA%D8%A7%D9%86-%D8%AA%D8%A4%D9%83%D8%AF-%D8%A7%D9%86%D8%AA%D8%B4%D8%A7%D8%B1-%D9%82%D9%88%D8%A7%D8%AA%D9%87%D8%A7-%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9-%D9%88%D8%AA%D9%83%D8%B4%D9%81-%D8%A7%D9%84%D9%85%D9%87%D9%85%D8%A9",
+      "published": "Fri, 09 Oct 2026 11:34:07 GMT"
     },
     {
-      "headline": "\"صديق ألماني\" في منزل بوتين.. احتفال خاص بعيد ميلاده",
+      "headline": "رحلة ملكة تايلاند.. أقلعت بمقاتلة وعادت بزهور",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/varieties/1897332-%D8%B5%D8%AF%D9%8A%D9%82-%D8%A3%D9%84%D9%85%D8%A7%D9%86%D9%8A-%D9%85%D9%86%D8%B2%D9%84-%D8%A8%D9%88%D8%AA%D9%8A%D9%86-%D8%A7%D8%AD%D8%AA%D9%81%D8%A7%D9%84-%D8%AE%D8%A7%D8%B5-%D8%A8%D8%B9%D9%8A%D8%AF-%D9%85%D9%8A%D9%84%D8%A7%D8%AF%D9%87",
-      "published": "Fri, 09 Oct 2026 04:34:58 GMT"
+      "url": "https://www.skynewsarabia.com/varieties/1897425-%D8%B1%D8%AD%D9%84%D8%A9-%D9%85%D9%84%D9%83%D8%A9-%D8%AA%D8%A7%D9%8A%D9%84%D8%A7%D9%86%D8%AF-%D8%A3%D9%82%D9%84%D8%B9%D8%AA-%D8%A8%D9%85%D9%82%D8%A7%D8%AA%D9%84%D8%A9-%D9%88%D8%B9%D8%A7%D8%AF%D8%AA-%D8%A8%D8%B2%D9%87%D9%88%D8%B1",
+      "published": "Fri, 09 Oct 2026 11:30:23 GMT"
     },
     {
-      "headline": "صفقة جديدة لإيلون ماسك تهدد عروش شبكات المحمول الأميركية",
+      "headline": "الذكاء الاصطناعي يسرق وجهك وصوتك.. الدنمارك تتحرك",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/business/1897337-%D8%B5%D9%81%D9%82%D8%A9-%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9-%D9%84%D8%A5%D9%8A%D9%84%D9%88%D9%86-%D9%85%D8%A7%D8%B3%D9%83-%D8%AA%D9%87%D8%AF%D8%AF-%D8%B9%D8%B1%D9%88%D8%B4-%D8%B4%D8%A8%D9%83%D8%A7%D8%AA-%D8%A7%D9%84%D9%85%D8%AD%D9%85%D9%88%D9%84-%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D8%A9",
-      "published": "Fri, 09 Oct 2026 04:34:07 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1897231-%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%8A%D8%B3%D8%B1%D9%82-%D9%88%D8%AC%D9%87%D9%83-%D9%88%D8%B5%D9%88%D8%AA%D9%83-%D8%A7%D9%84%D8%AF%D9%86%D9%85%D8%A7%D8%B1%D9%83-%D8%AA%D8%AA%D8%AD%D8%B1%D9%83",
+      "published": "Fri, 09 Oct 2026 11:18:40 GMT"
     },
     {
-      "headline": "أمل جديد للمكفوفين.. علاج يعيد بعض قدرات الإبصار",
+      "headline": "شبح الـ6% يطارد أسواق السندات الأميركية",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1897286-%D8%A3%D9%85%D9%84-%D8%AC%D8%AF%D9%8A%D8%AF-%D9%84%D9%84%D9%85%D9%83%D9%81%D9%88%D9%81%D9%8A%D9%86-%D8%B9%D9%84%D8%A7%D8%AC-%D9%8A%D8%B9%D9%8A%D8%AF-%D9%82%D8%AF%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D8%A5%D8%A8%D8%B5%D8%A7%D8%B1",
-      "published": "Fri, 09 Oct 2026 04:30:57 GMT"
+      "url": "https://www.skynewsarabia.com/business/1897454-%D8%B4%D8%A8%D8%AD-%D8%A7%D9%846-%D9%8A%D8%B7%D8%A7%D8%B1%D8%AF-%D8%A3%D8%B3%D9%88%D8%A7%D9%82-%D8%A7%D9%84%D8%B3%D9%86%D8%AF%D8%A7%D8%AA-%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D8%A9",
+      "published": "Fri, 09 Oct 2026 11:14:48 GMT"
     },
     {
-      "headline": "بقيمة 6.3 مليار دولار.. \"ريثيون\" تفوز بصفقة صواريخ أميركية",
+      "headline": "\"بوهرنجر إنجلهايم\" تعرض فيلما لتعزيز الوعي بالتليف الرئوي",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897302-%D8%A8%D9%82%D9%8A%D9%85%D8%A9-6-3-%D9%85%D9%84%D9%8A%D8%A7%D8%B1-%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D8%B1%D9%8A%D8%AB%D9%8A%D9%88%D9%86-%D8%AA%D9%81%D9%88%D8%B2-%D8%A8%D8%B5%D9%81%D9%82%D8%A9-%D8%B5%D9%88%D8%A7%D8%B1%D9%8A%D8%AE-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D8%A9",
-      "published": "Fri, 09 Oct 2026 04:17:05 GMT"
+      "url": "https://www.skynewsarabia.com/varieties/1897444-%D8%A8%D9%88%D9%87%D8%B1%D9%86%D8%AC%D8%B1-%D8%A5%D9%86%D8%AC%D9%84%D9%87%D8%A7%D9%8A%D9%85-%D8%AA%D8%B9%D8%B1%D8%B6-%D9%81%D9%8A%D9%84%D9%85%D8%A7-%D9%84%D8%AA%D8%B9%D8%B2%D9%8A%D8%B2-%D8%A7%D9%84%D9%88%D8%B9%D9%8A-%D8%A8%D8%A7%D9%84%D8%AA%D9%84%D9%8A%D9%81-%D8%A7%D9%84%D8%B1%D8%A6%D9%88%D9%8A",
+      "published": "Fri, 09 Oct 2026 11:14:28 GMT"
     },
     {
-      "headline": "منظمة التجارة العالمية ترفع توقعات تجارة السلع بفضل الـ \"AI\"",
+      "headline": "7 طوابق تتحول إلى أنقاض.. مأساة تهز إسطنبول",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/business/1897328-%D9%85%D9%86%D8%B8%D9%85%D8%A9-%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9-%D8%AA%D8%B1%D9%81%D8%B9-%D8%AA%D9%88%D9%82%D8%B9%D8%A7%D8%AA-%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B3%D9%84%D8%B9-%D8%A8%D9%81%D8%B6%D9%84-%D8%A7%D9%84-ai",
-      "published": "Fri, 09 Oct 2026 04:08:25 GMT"
+      "url": "https://www.skynewsarabia.com/world/1897450-7-%D8%B7%D9%88%D8%A7%D8%A8%D9%82-%D8%AA%D8%AA%D8%AD%D9%88%D9%84-%D8%A3%D9%86%D9%82%D8%A7%D8%B6-%D9%85%D8%A3%D8%B3%D8%A7%D8%A9-%D8%AA%D9%87%D8%B2-%D8%A5%D8%B3%D8%B7%D9%86%D8%A8%D9%88%D9%84",
+      "published": "Fri, 09 Oct 2026 11:13:18 GMT"
     },
     {
-      "headline": "ترامب يدعو لاعتماد \"الذكاء الفائق\".. ويصف مخالفيه بـ\"الأعداء",
+      "headline": "فنادق عالمية تراهن على عودة السياحة إلى سوريا",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897308-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D8%AF%D8%B9%D9%88-%D9%84%D8%A7%D8%B9%D8%AA%D9%85%D8%A7%D8%AF-%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D9%81%D8%A7%D8%A6%D9%82-%D9%88%D9%8A%D8%B5%D9%81-%D9%85%D8%AE%D8%A7%D9%84%D9%81%D9%8A%D9%87-%D8%A8-%D8%A7%D9%84%D8%A3%D8%B9%D8%AF%D8%A7%D8%A1",
-      "published": "Fri, 09 Oct 2026 02:00:28 GMT"
+      "url": "https://www.skynewsarabia.com/business/1897452-%D9%81%D9%86%D8%A7%D8%AF%D9%82-%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9-%D8%AA%D8%B1%D8%A7%D9%87%D9%86-%D8%B9%D9%88%D8%AF%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9-%D8%B3%D9%88%D8%B1%D9%8A%D8%A7",
+      "published": "Fri, 09 Oct 2026 11:12:32 GMT"
     },
     {
-      "headline": "بوتين يجدد استعداده للمساعدة في إنهاء حرب الشرق الأوسط",
+      "headline": "أوروبا تلاحق خيوط المال.. ماذا تخفي شبكات الإخوان؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897305-%D8%A8%D9%88%D8%AA%D9%8A%D9%86-%D9%8A%D8%AC%D8%AF%D8%AF-%D8%A7%D8%B3%D8%AA%D8%B9%D8%AF%D8%A7%D8%AF%D9%87-%D9%84%D9%84%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9-%D8%A5%D9%86%D9%87%D8%A7%D8%A1-%D8%AD%D8%B1%D8%A8-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%A7%D9%84%D8%A3%D9%88%D8%B3%D8%B7",
-      "published": "Fri, 09 Oct 2026 01:33:41 GMT"
+      "url": "https://www.skynewsarabia.com/world/1897430-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%AA%D9%84%D8%A7%D8%AD%D9%82-%D8%AE%D9%8A%D9%88%D8%B7-%D8%A7%D9%84%D9%85%D8%A7%D9%84-%D8%AA%D8%AE%D9%81%D9%8A-%D8%B4%D8%A8%D9%83%D8%A7%D8%AA-%D8%A7%D9%84%D8%A5%D8%AE%D9%88%D8%A7%D9%86",
+      "published": "Fri, 09 Oct 2026 11:10:32 GMT"
     },
     {
-      "headline": "كوريا الجنوبية تختبر أول صاروخ فرط صوتي مطور محليا",
+      "headline": "\"نبدأ من الصفر\".. الاتحاد الأوروبي يقود ثورة على \"فيفا\" لعدم تكرار التوقف الدولي الطويل",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d9%83%d9%88%d8%b1%d9%8a%d8%a7-%d8%a7%d9%84%d8%ac%d9%86%d9%88%d8%a8%d9%8a%d8%a9-%d8%aa%d8%ae%d8%aa%d8%a8%d8%b1-%d8%a3%d9%88%d9%84-%d8%b5%d8%a7%d8%b1%d9%88%d8%ae-%d9%81%d8%b1%d8%b7?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 05:32:47 +0300"
+      "url": "https://www.aljazeera.net/sport/2026/10/9/%d9%86%d8%a8%d8%af%d8%a3-%d9%85%d9%86-%d8%a7%d9%84%d8%b5%d9%81%d8%b1-%d8%a7%d9%84%d8%a7%d8%aa%d8%ad%d8%a7%d8%af-%d8%a7%d9%84%d8%a3%d9%88%d8%b1%d9%88%d8%a8%d9%8a-%d9%8a%d9%82%d9%88%d8%af?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 13:00:00 +0300"
     },
     {
-      "headline": "ترمب يهاجم الأمريكيين من أصول صومالية ويتهمهم بإغراق مينيسوتا بالفوضى",
+      "headline": "أضواء تحذيرية في سيارتك.. ماذا تعني ومتى يجب التوقف فورا؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d8%aa%d8%b1%d9%85%d8%a8-%d9%8a%d9%87%d8%a7%d8%ac%d9%85-%d8%a7%d9%84%d8%a3%d9%85%d8%b1%d9%8a%d9%83%d9%8a%d9%8a%d9%86-%d9%85%d9%86-%d8%a3%d8%b5%d9%88%d9%84-%d8%b5%d9%88%d9%85%d8%a7%d9%84%d9%8a%d8%a9?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 05:28:39 +0300"
+      "url": "https://www.aljazeera.net/motors/2026/10/9/%d8%a3%d8%b6%d9%88%d8%a7%d8%a1-%d8%aa%d8%ad%d8%b0%d9%8a%d8%b1%d9%8a%d8%a9-%d9%81%d9%8a-%d8%b3%d9%8a%d8%a7%d8%b1%d8%aa%d9%83-%d9%85%d8%a7%d8%b0%d8%a7-%d8%aa%d8%b9%d9%86%d9%8a-%d9%88%d9%85%d8%aa%d9%89?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 13:00:00 +0300"
     },
     {
-      "headline": "انتخابات البرازيل.. بولسونارو الابن يحصل على دعم مرشح المركز الثالث قبل جولة الإعادة",
+      "headline": "حارس البوسفور الأمين.. كيف حولت تركيا المضائق إلى أداة للنفوذ؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d8%a7%d9%86%d8%aa%d8%ae%d8%a7%d8%a8%d8%a7%d8%aa-%d8%a7%d9%84%d8%a8%d8%b1%d8%a7%d8%b2%d9%8a%d9%84-%d8%a8%d9%88%d9%84%d8%b3%d9%88%d9%86%d8%a7%d8%b1%d9%88-%d8%a7%d9%84%d9%8a%d9%85%d9%8a%d9%86%d9%8a?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 05:28:14 +0300"
+      "url": "https://www.aljazeera.net/politics/2026/10/9/%d8%ad%d8%a7%d8%b1%d8%b3-%d8%a7%d9%84%d8%a8%d9%88%d8%b3%d9%81%d9%88%d8%b1-%d8%a7%d9%84%d8%a3%d9%85%d9%8a%d9%86-%d9%83%d9%8a%d9%81-%d8%ad%d9%88%d9%84%d8%aa-%d8%aa%d8%b1%d9%83%d9%8a%d8%a7?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:57:59 +0300"
     },
     {
-      "headline": "\"لو يقطعوا علينا الهواء\".. أبناء تعز يشكون وطأة الحصار",
+      "headline": "يصل إلى ألف يورو.. لماذا يطارد تجار الزواحف \"الضب العماني\"؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/10/9/%d9%84%d9%88-%d9%8a%d9%82%d8%b7%d8%b9%d9%88%d8%a7-%d8%b9%d9%84%d9%8a%d9%86%d8%a7-%d8%a7%d9%84%d9%87%d9%88%d8%a7%d8%a1-%d8%a3%d8%a8%d9%86%d8%a7%d8%a1-%d8%aa%d8%b9%d8%b2?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 04:43:11 +0300"
+      "url": "https://www.aljazeera.net/science/2026/10/9/%d9%8a%d8%b5%d9%84-%d8%a5%d9%84%d9%89-%d8%a3%d9%84%d9%81-%d9%8a%d9%88%d8%b1%d9%88-%d9%86%d8%ad%d9%88-1080-%d8%af%d9%88%d9%84%d8%a7%d8%b1%d8%a7-%d9%84%d9%85%d8%a7%d8%b0%d8%a7?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:46:33 +0300"
     },
     {
-      "headline": "فورين أفيرز: كيف تتحول هدنة غزة إلى أداة لتهجير الفلسطينيين؟",
+      "headline": "ما أسباب إغلاق القنصلية البريطانية في القدس؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/10/9/%d9%81%d9%88%d8%b1%d9%8a%d9%86-%d8%a3%d9%81%d9%8a%d8%b1%d8%b2-%d9%83%d9%8a%d9%81-%d8%aa%d8%aa%d8%ad%d9%88%d9%84-%d8%a7%d9%84%d9%87%d8%af%d9%86%d8%a9-%d8%a8%d8%ba%d8%b2%d8%a9-%d8%a5%d9%84%d9%89?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 04:35:30 +0300"
+      "url": "https://www.aljazeera.net/video/2026/10/9/%d9%85%d8%a7-%d8%a3%d8%b3%d8%a8%d8%a7%d8%a8-%d8%a5%d8%ba%d9%84%d8%a7%d9%82-%d8%a7%d9%84%d9%82%d9%86%d8%b5%d9%84%d9%8a%d8%a9-%d8%a7%d9%84%d8%a8%d8%b1%d9%8a%d8%b7%d8%a7%d9%86%d9%8a%d8%a9-%d9%81%d9%8a?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:35:40 +0300"
     },
     {
-      "headline": "ترمب يصف مستخدمي مصطلح الذكاء الاصطناعي بـ\"الأعداء\"",
+      "headline": "خريطة تفاعلية لاعتداءات المستوطنين على أراضي المزارعين بالضفة",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d8%aa%d8%b1%d9%85%d8%a8-%d9%8a%d8%b5%d9%81-%d9%85%d8%b3%d8%aa%d8%ae%d8%af%d9%85%d9%8a-%d9%85%d8%b5%d8%b7%d9%84%d8%ad-%d8%a7%d9%84%d8%b0%d9%83%d8%a7%d8%a1?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 03:51:30 +0300"
+      "url": "https://www.aljazeera.net/video/2026/10/9/%d8%ae%d8%b1%d9%8a%d8%b7%d8%a9-%d8%aa%d9%81%d8%a7%d8%b9%d9%84%d9%8a%d8%a9-%d9%84%d8%a7%d8%b9%d8%aa%d8%af%d8%a7%d8%a1%d8%a7%d8%aa-%d8%a7%d9%84%d9%85%d8%b3%d8%aa%d9%88%d8%b7%d9%86%d9%8a%d9%86?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:35:01 +0300"
     },
     {
-      "headline": "في مئات المواقع حول العالم.. حراك لنصرة الشعب الفلسطيني في ذكرى حرب غزة",
+      "headline": "انقطاع الكهرباء في كييف يربك حركة النقل العام",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d9%81%d9%8a-%d9%85%d8%a6%d8%a7%d8%aa-%d8%a7%d9%84%d9%85%d9%88%d8%a7%d9%82%d8%b9-%d8%ad%d9%88%d9%84-%d8%a7%d9%84%d8%b9%d8%a7%d9%84%d9%85-%d8%ad%d8%b1%d8%a7%d9%83-%d9%84%d9%86%d8%b5%d8%b1%d8%a9?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 03:44:58 +0300"
+      "url": "https://www.aljazeera.net/video/2026/10/9/%d8%a7%d9%86%d9%82%d8%b7%d8%a7%d8%b9-%d8%a7%d9%84%d9%83%d9%87%d8%b1%d8%a8%d8%a7%d8%a1-%d9%81%d9%8a-%d9%83%d9%8a%d9%8a%d9%81-%d9%8a%d8%b1%d8%a8%d9%83-%d8%ad%d8%b1%d9%83%d8%a9?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:34:36 +0300"
     },
     {
-      "headline": "رصاص \"الهجرة\" يصيب رجلا في نيويورك وممداني يطالب بوقف عملياتها",
+      "headline": "مع ترسيخ حضور مؤسسات الدولة السورية.. ما تفاصيل التوتر في الحسكة ولماذا الآن؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d8%b1%d8%b5%d8%a7%d8%b5-%d8%a7%d9%84%d9%87%d8%ac%d8%b1%d8%a9-%d9%8a%d8%b5%d9%8a%d8%a8-%d8%b1%d8%ac%d9%84%d8%a7-%d9%81%d9%8a-%d9%86%d9%8a%d9%88%d9%8a%d9%88%d8%b1%d9%83?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 03:00:02 +0300"
+      "url": "https://www.aljazeera.net/news/2026/10/9/%d9%85%d8%b9-%d8%aa%d8%b1%d8%b3%d9%8a%d8%ae-%d8%ad%d8%b6%d9%88%d8%b1-%d9%85%d8%a4%d8%b3%d8%b3%d8%a7%d8%aa-%d8%a7%d9%84%d8%af%d9%88%d9%84%d8%a9-%d8%a7%d9%84%d8%b3%d9%88%d8%b1%d9%8a%d8%a9-%d9%85%d8%a7?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:32:58 +0300"
     },
     {
-      "headline": "\"العفو الدولية\" تندد بزيادة صادرات فرنسا العسكرية لإسرائيل خلال 2025",
+      "headline": "أرقام صادمة من \"فيفا\" عن الإساءات الإلكترونية للاعبين والمدربين",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d8%a7%d9%84%d8%b9%d9%81%d9%88-%d8%a7%d9%84%d8%af%d9%88%d9%84%d9%8a%d8%a9-%d8%aa%d9%86%d8%aa%d9%82%d8%af-%d8%b2%d9%8a%d8%a7%d8%af%d8%a9-%d8%b5%d8%a7%d8%af%d8%b1%d8%a7%d8%aa?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 01:38:04 +0300"
+      "url": "https://www.aljazeera.net/sport/2026/10/9/%d8%a3%d8%b1%d9%82%d8%a7%d9%85-%d8%b1%d8%b3%d9%85%d9%8a%d8%a9-%d8%b5%d8%a7%d8%af%d8%b1%d8%a9-%d9%85%d9%86-%d9%81%d9%8a%d9%81%d8%a7-%d8%b9%d9%86-%d8%a7%d9%84%d8%a5%d8%b3%d8%a7%d8%a1%d8%a7%d8%aa?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:30:00 +0300"
     },
     {
-      "headline": "إسرائيل تستهدف قنصلية بريطانيا والغاية دفن الدولة الفلسطينية",
+      "headline": "إسكات \"الرسل\" حملة نتنياهو ضد الدبلوماسية والحقيقة",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/10/9/%d8%a5%d8%b3%d8%b1%d8%a7%d8%a6%d9%8a%d9%84-%d8%aa%d8%b3%d8%aa%d9%87%d8%af%d9%81-%d9%82%d9%86%d8%b5%d9%84%d9%8a%d8%a9-%d8%a8%d8%b1%d9%8a%d8%b7%d8%a7%d9%86%d9%8a%d8%a7?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 01:06:34 +0300"
+      "url": "https://www.aljazeera.net/opinions/2026/10/9/%d8%a5%d8%b3%d9%83%d8%a7%d8%aa-%d8%a7%d9%84%d8%b1%d8%b3%d9%84-%d8%ad%d9%85%d9%84%d8%a9-%d9%86%d8%aa%d9%86%d9%8a%d8%a7%d9%87%d9%88-%d8%b6%d8%af?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:26:59 +0300"
     },
     {
-      "headline": "هل تبني إسرائيل خط \"بارليف\" جديدا في سوريا؟",
+      "headline": "الجيش الباكستاني يعلن مقتل 7 مسلحين في عملية شمال وزيرستان",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/opinions/2026/10/9/%d9%87%d9%84-%d8%aa%d8%a8%d9%86%d9%8a-%d8%a5%d8%b3%d8%b1%d8%a7%d8%a6%d9%8a%d9%84-%d8%ae%d8%b7-%d8%a8%d8%a7%d8%b1%d9%84%d9%8a%d9%81-%d8%ac%d8%af%d9%8a%d8%af%d8%a7-%d9%81%d9%8a?traffic_source=rss",
-      "published": "Fri, 09 Oct 2026 00:07:56 +0300"
+      "url": "https://www.aljazeera.net/news/2026/10/9/%d8%a7%d9%84%d8%ac%d9%8a%d8%b4-%d8%a7%d9%84%d8%a8%d8%a7%d9%83%d8%b3%d8%aa%d8%a7%d9%86%d9%8a-%d9%8a%d8%ad%d9%8a%d9%91%d8%af-7-%d9%85%d8%b3%d9%84%d8%ad%d9%8a%d9%86-%d9%81%d9%8a?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:15:32 +0300"
     },
     {
-      "headline": "ديمقراطيو أمريكا يتطلعون للنصر وخطأ واحد قد يقلب المشهد",
+      "headline": "حصار طرق ومعارك مرتفعات.. لماذا يسعى الحوثيون لتطويق تعز؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/10/9/%d8%a7%d9%84%d9%85%d9%81%d8%a7%d8%ac%d8%a3%d8%a9-%d9%88%d8%a7%d8%b1%d8%af%d8%a9-%d8%a8%d8%a7%d9%86%d8%aa%d8%ae%d8%a7%d8%a8%d8%a7%d8%aa-%d8%a3%d9%85%d8%b1%d9%8a%d9%83%d8%a7-%d9%87%d9%84?traffic_source=rss",
-      "published": "Thu, 08 Oct 2026 23:51:08 +0300"
+      "url": "https://www.aljazeera.net/news/2026/10/9/%d8%ad%d8%b5%d8%a7%d8%b1-%d8%b7%d8%b1%d9%82-%d9%88%d9%85%d8%b9%d8%b1%d9%83%d8%a9-%d9%85%d8%b1%d8%aa%d9%81%d8%b9%d8%a7%d8%aa-%d9%84%d9%85%d8%a7%d8%b0%d8%a7-%d9%8a%d8%b3%d8%b9%d9%89?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:14:31 +0300"
     },
     {
-      "headline": "\"إعدام علني\".. البنتاغون يقرر تنفيذ الحكم على نضال حسن في بث مباشر",
+      "headline": "الدوري الإيطالي يكسر عقدة التعادلات السلبية بفضل القواعد الجديدة",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d8%a5%d8%b9%d8%af%d8%a7%d9%85-%d8%b9%d9%84%d9%86%d9%8a-%d8%a7%d9%84%d8%a8%d9%86%d8%aa%d8%a7%d8%ba%d9%88%d9%86-%d9%8a%d9%82%d8%b1%d8%b1-%d8%aa%d9%86%d9%81%d9%8a%d8%b0?traffic_source=rss",
-      "published": "Thu, 08 Oct 2026 23:15:34 +0300"
+      "url": "https://www.aljazeera.net/sport/2026/10/9/%d8%a7%d9%84%d8%af%d9%88%d8%b1%d9%8a-%d8%a7%d9%84%d8%a5%d9%8a%d8%b7%d8%a7%d9%84%d9%8a-%d9%8a%d9%83%d8%b3%d8%b1-%d8%b9%d9%82%d8%af%d8%a9-%d8%a7%d9%84%d8%aa%d8%b9%d8%a7%d8%af%d9%84%d8%a7%d8%aa?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 12:00:00 +0300"
     },
     {
-      "headline": "عقدة عمرها ثلاثون عاما.. لِمَ تعجز الانتخابات عن تغيير البوسنة؟",
+      "headline": "العام الثالث للحرب على غزة.. استهداف ممنهج لصحفيي غزة لطمس الحقيقة",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/opinions/2026/10/9/%d8%b9%d9%82%d8%af%d8%a9-%d8%b9%d9%85%d8%b1%d9%87%d8%a7-%d8%ab%d9%84%d8%a7%d8%ab%d9%88%d9%86-%d8%b9%d8%a7%d9%85%d8%a7-%d9%84%d9%85-%d8%aa%d8%b9%d8%ac%d8%b2?traffic_source=rss",
-      "published": "Thu, 08 Oct 2026 23:08:26 +0300"
+      "url": "https://www.aljazeera.net/video/2026/10/9/%d8%a7%d9%84%d8%b9%d8%a7%d9%85-%d8%a7%d9%84%d8%ab%d8%a7%d9%84%d8%ab-%d9%84%d9%84%d8%ad%d8%b1%d8%a8-%d8%b9%d9%84%d9%89-%d8%ba%d8%b2%d8%a9-%d8%a7%d8%b3%d8%aa%d9%87%d8%af%d8%a7%d9%81?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 11:45:06 +0300"
     },
     {
-      "headline": "من القطيعة إلى التكريم.. ترمب يعيد ماسك إلى دائرة المقربين",
+      "headline": "انتخابات صعبة على الجمهوريين وتفوق للديمقراطيين في استطلاعات الرأي الأمريكية",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/10/9/%d9%85%d9%86-%d8%a7%d9%84%d9%82%d8%b7%d9%8a%d8%b9%d8%a9-%d8%a5%d9%84%d9%89-%d8%a7%d9%84%d8%aa%d9%83%d8%b1%d9%8a%d9%85-%d8%aa%d8%b1%d9%85%d8%a8-%d9%8a%d8%b9%d9%8a%d8%af-%d9%85%d8%a7%d8%b3%d9%83?traffic_source=rss",
-      "published": "Thu, 08 Oct 2026 22:42:35 +0300"
+      "url": "https://www.aljazeera.net/video/2026/10/9/%d8%a7%d9%86%d8%aa%d8%ae%d8%a7%d8%a8%d8%a7%d8%aa-%d8%b5%d8%b9%d8%a8%d8%a9-%d8%b9%d9%84%d9%89-%d8%a7%d9%84%d8%ac%d9%85%d9%87%d9%88%d8%b1%d9%8a%d9%8a%d9%86-%d9%88%d8%aa%d9%81%d9%88%d9%82?traffic_source=rss",
+      "published": "Fri, 09 Oct 2026 11:44:03 +0300"
     }
   ],
   "general": [
+    {
+      "headline": "مقتل ثلاثة سعوديين بهجمات على مطار الرياض ومصدر يربط الهدنة باستعادة الحكومة اليمنية كل الأراضي التي خسرتها",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cw80zv045evno?at_medium=RSS&at_campaign=rss",
+      "published": "Fri, 09 Oct 2026 12:01:11 GMT"
+    },
+    {
+      "headline": "هل تطيح أزمة الإسكان بحكومة سانشيز أم تنقذها؟ - الغارديان",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cvy0rpn3551zo?at_medium=RSS&at_campaign=rss",
+      "published": "Fri, 09 Oct 2026 11:19:20 GMT"
+    },
+    {
+      "headline": "منح جائزة نوبل للسلام للجنوب أفريقية نافانيثيم بيلاي",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cvde89ny1r0ko?at_medium=RSS&at_campaign=rss",
+      "published": "Fri, 09 Oct 2026 10:04:41 GMT"
+    },
+    {
+      "headline": "وزير الدفاع الأمريكي يعلن عن بث تنفيذ الإعدام بحق نضال حسن على الهواء مباشرة",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cxnv0qdj9y6vo?at_medium=RSS&at_campaign=rss",
+      "published": "Fri, 09 Oct 2026 10:11:56 GMT"
+    },
+    {
+      "headline": "الكاس تتوقع إصدار قرار بشأن الفائز بكأس أفريقيا \"في غضون أيام\"",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cwe8lx8nz6g7o?at_medium=RSS&at_campaign=rss",
+      "published": "Fri, 09 Oct 2026 07:30:14 GMT"
+    },
+    {
+      "headline": "سيدة تنجب طفلاً بفضل أنسجة المبيض المُجمَّدة، بعد صراع مع السرطان وانقطاع الطمث المبكر",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/ckpdgvdyvn4xo?at_medium=RSS&at_campaign=rss",
+      "published": "Fri, 09 Oct 2026 07:34:31 GMT"
+    },
     {
       "headline": "ترامب يستبعد مهاجمة إيران قبل الانتخابات النصفية ويعلن عن محادثات \"مثمرة\" مع طهران",
       "source": "BBC عربي",
       "url": "https://www.bbc.com/arabic/articles/ckpqg9x4rz70o?at_medium=RSS&at_campaign=rss",
       "published": "Thu, 08 Oct 2026 23:54:47 GMT"
-    },
-    {
-      "headline": "أنصار الله يجددون استهداف مطار الرياض وأنباء عن تضرّر طائرات",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/c5kgl1en13xzo?at_medium=RSS&at_campaign=rss",
-      "published": "Thu, 08 Oct 2026 17:01:26 GMT"
     },
     {
       "headline": "نيكولاس مادورو يواجه اتهامات بالتآمر لارتكاب أعمال تعذيب",
@@ -206,36 +236,6 @@
       "source": "BBC عربي",
       "url": "https://www.bbc.com/arabic/articles/cqp8g30kjke9o?at_medium=RSS&at_campaign=rss",
       "published": "Thu, 08 Oct 2026 16:37:30 GMT"
-    },
-    {
-      "headline": "احتجاجات تلاميذ المدارس في فرنسا تتصاعد... فما جذور هذا الغضب؟",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/cq2e9x4ml4nro?at_medium=RSS&at_campaign=rss",
-      "published": "Thu, 08 Oct 2026 16:22:22 GMT"
-    },
-    {
-      "headline": "لماذا تحمي الولايات المتحدة لواءً سورياً مطلوباً يقيم في لبنان؟",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/cwdd86m02q2yo?at_medium=RSS&at_campaign=rss",
-      "published": "Thu, 08 Oct 2026 11:51:45 GMT"
-    },
-    {
-      "headline": "\"ألمانيا تواجه مشكلة خطيرة في أجهزتها الاستخباراتية\" - في التلغراف",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/c6m24vly2e28o?at_medium=RSS&at_campaign=rss",
-      "published": "Thu, 08 Oct 2026 11:52:50 GMT"
-    },
-    {
-      "headline": "بطاريق الجنتو: كيف \"انتصرت\" في الصراع بين الطبيعة والبشر؟",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/ck9qz7ejw92xo?at_medium=RSS&at_campaign=rss",
-      "published": "Thu, 08 Oct 2026 12:50:13 GMT"
-    },
-    {
-      "headline": "ارتفاع نسبة السكر في الدم \"ليس بالضرورة خبراً سيئاً\"",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/crkg7d7g0ngvo?at_medium=RSS&at_campaign=rss",
-      "published": "Thu, 08 Oct 2026 08:05:12 GMT"
     },
     {
       "headline": "احتجاجات الطلاب في فرنسا مستمرة.. فماذا نعرف عنها؟",
@@ -274,94 +274,94 @@
       "published": "Sat, 03 Oct 2026 08:29:45 GMT"
     },
     {
-      "headline": "\"غوغل روسيا\" تحت النار.. هل دخلت حرب أوكرانيا مرحلة جديدة؟",
+      "headline": "عيدروس الزبيدي: شعب الجنوب لن يقبل أن تسرق انتصارات قواته",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897348-%D8%BA%D9%88%D8%BA%D9%84-%D8%B1%D9%88%D8%B3%D9%8A%D8%A7-%D8%A7%D9%84%D9%86%D8%A7%D8%B1-%D8%AF%D8%AE%D9%84%D8%AA-%D8%AD%D8%B1%D8%A8-%D8%A3%D9%88%D9%83%D8%B1%D8%A7%D9%86%D9%8A%D8%A7-%D9%85%D8%B1%D8%AD%D9%84%D8%A9-%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9",
-      "published": "Fri, 09 Oct 2026 05:58:23 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1897466-%D8%B9%D9%8A%D8%AF%D8%B1%D9%88%D8%B3-%D8%A7%D9%84%D8%B2%D8%A8%D9%8A%D8%AF%D9%8A-%D8%B4%D8%B9%D8%A8-%D8%A7%D9%84%D8%AC%D9%86%D9%88%D8%A8-%D9%8A%D9%82%D8%A8%D9%84-%D8%AA%D8%B3%D8%B1%D9%82-%D8%A7%D9%86%D8%AA%D8%B5%D8%A7%D8%B1%D8%A7%D8%AA-%D9%82%D9%88%D8%A7%D8%AA%D9%87",
+      "published": "Fri, 09 Oct 2026 13:13:24 GMT"
     },
     {
-      "headline": "من الرياض إلى صنعاء.. هل تغيرت قواعد المواجهة؟",
+      "headline": "من مجزرة فورت هود إلى البث المباشر.. من هو نضال حسن؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1897350-%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6-%D8%B5%D9%86%D8%B9%D8%A7%D8%A1-%D8%AA%D8%BA%D9%8A%D8%B1%D8%AA-%D9%82%D9%88%D8%A7%D8%B9%D8%AF-%D8%A7%D9%84%D9%85%D9%88%D8%A7%D8%AC%D9%87%D8%A9",
-      "published": "Fri, 09 Oct 2026 05:55:05 GMT"
+      "url": "https://www.skynewsarabia.com/world/1897461-%D9%85%D8%AC%D8%B2%D8%B1%D8%A9-%D9%81%D9%88%D8%B1%D8%AA-%D9%87%D9%88%D8%AF-%D8%A7%D9%84%D8%A8%D8%AB-%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1-%D9%87%D9%88-%D9%86%D8%B6%D8%A7%D9%84-%D8%AD%D8%B3%D9%86",
+      "published": "Fri, 09 Oct 2026 13:09:29 GMT"
     },
     {
-      "headline": "عضو بالفيدرالي: خفض التضخم سيتطلب المزيد من رفع الفائدة",
+      "headline": "مصدر فلسطيني: عباس سيصدر مرسوما بتأجيل الانتخابات التشريعية",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/business/1897345-%D8%B9%D8%B6%D9%88-%D8%A8%D8%A7%D9%84%D9%81%D9%8A%D8%AF%D8%B1%D8%A7%D9%84%D9%8A-%D8%AE%D9%81%D8%B6-%D8%A7%D9%84%D8%AA%D8%B6%D8%AE%D9%85-%D8%B3%D9%8A%D8%AA%D8%B7%D9%84%D8%A8-%D8%A7%D9%84%D9%85%D8%B2%D9%8A%D8%AF-%D8%B1%D9%81%D8%B9-%D8%A7%D9%84%D9%81%D8%A7%D8%A6%D8%AF%D8%A9",
-      "published": "Fri, 09 Oct 2026 05:19:56 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1897464-%D9%85%D8%B5%D8%AF%D8%B1-%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%D9%8A-%D8%B9%D8%A8%D8%A7%D8%B3-%D8%B3%D9%8A%D8%B5%D8%AF%D8%B1-%D9%85%D8%B1%D8%B3%D9%88%D9%85%D8%A7-%D8%A8%D8%AA%D8%A3%D8%AC%D9%8A%D9%84-%D8%A7%D9%84%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%B4%D8%B1%D9%8A%D8%B9%D9%8A%D8%A9",
+      "published": "Fri, 09 Oct 2026 12:25:00 GMT"
     },
     {
-      "headline": "\"اتفاق نادر\" بين واشنطن وموسكو.. وزيلينسكي يعترض",
+      "headline": "ترامب: 22 مليون برميل عبرت هرمز في ليلة واحدة",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897284-%D8%A7%D8%AA%D9%81%D8%A7%D9%82-%D9%86%D8%A7%D8%AF%D8%B1-%D9%88%D8%A7%D8%B4%D9%86%D8%B7%D9%86-%D9%88%D9%85%D9%88%D8%B3%D9%83%D9%88-%D9%88%D8%B2%D9%8A%D9%84%D9%8A%D9%86%D8%B3%D9%83%D9%8A-%D9%8A%D8%B9%D8%AA%D8%B1%D8%B6",
-      "published": "Fri, 09 Oct 2026 05:19:12 GMT"
+      "url": "https://www.skynewsarabia.com/business/1897462-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-22-%D9%85%D9%84%D9%8A%D9%88%D9%86-%D8%A8%D8%B1%D9%85%D9%8A%D9%84-%D8%B9%D8%A8%D8%B1%D8%AA-%D9%87%D8%B1%D9%85%D8%B2-%D9%84%D9%8A%D9%84%D8%A9-%D9%88%D8%A7%D8%AD%D8%AF%D8%A9",
+      "published": "Fri, 09 Oct 2026 12:18:04 GMT"
     },
     {
-      "headline": "بطاريات السيارات الكهربائية.. حل قد يطيل عمرها",
+      "headline": "رويترز: إجراءات ترامب عاجزة عن كبح أسعار الديزل",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1897166-%D8%A8%D8%B7%D8%A7%D8%B1%D9%8A%D8%A7%D8%AA-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%83%D9%87%D8%B1%D8%A8%D8%A7%D8%A6%D9%8A%D8%A9-%D8%AD%D9%84-%D9%8A%D8%B7%D9%8A%D9%84-%D8%B9%D9%85%D8%B1%D9%87%D8%A7",
-      "published": "Fri, 09 Oct 2026 05:02:02 GMT"
+      "url": "https://www.skynewsarabia.com/business/1897459-%D8%B1%D9%88%D9%8A%D8%AA%D8%B1%D8%B2-%D8%A5%D8%AC%D8%B1%D8%A7%D8%A1%D8%A7%D8%AA-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D8%B9%D8%A7%D8%AC%D8%B2%D8%A9-%D9%83%D8%A8%D8%AD-%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%AF%D9%8A%D8%B2%D9%84",
+      "published": "Fri, 09 Oct 2026 11:46:38 GMT"
     },
     {
-      "headline": "شبكات الإخوان في أوروبا.. هل اقتربت مرحلة الحساب؟",
+      "headline": "قبل بلوغ 17 عاما.. موهبة أرسنال تجمع 3 أرقام عالمية",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897309-%D8%B4%D8%A8%D9%83%D8%A7%D8%AA-%D8%A7%D9%84%D8%A5%D8%AE%D9%88%D8%A7%D9%86-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%A7%D9%82%D8%AA%D8%B1%D8%A8%D8%AA-%D9%85%D8%B1%D8%AD%D9%84%D8%A9-%D8%A7%D9%84%D8%AD%D8%B3%D8%A7%D8%A8",
-      "published": "Fri, 09 Oct 2026 04:55:27 GMT"
+      "url": "https://www.skynewsarabia.com/sport/1897223-%D8%A8%D9%84%D9%88%D8%BA-17-%D8%B9%D8%A7%D9%85%D8%A7-%D9%85%D9%88%D9%87%D8%A8%D8%A9-%D8%A3%D8%B1%D8%B3%D9%86%D8%A7%D9%84-%D8%AA%D8%AC%D9%85%D8%B9-3-%D8%A3%D8%B1%D9%82%D8%A7%D9%85-%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9",
+      "published": "Fri, 09 Oct 2026 11:42:49 GMT"
     },
     {
-      "headline": "سندات فرنسا تحت النار.. لماذا لا يتحرك المركزي الأوروبي؟",
+      "headline": "عام رابع من المعاناة.. شتاء غزة يكشف حجم المأساة",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/business/1897340-%D8%B3%D9%86%D8%AF%D8%A7%D8%AA-%D9%81%D8%B1%D9%86%D8%B3%D8%A7-%D8%A7%D9%84%D9%86%D8%A7%D8%B1-%D9%84%D9%85%D8%A7%D8%B0%D8%A7-%D9%8A%D8%AA%D8%AD%D8%B1%D9%83-%D8%A7%D9%84%D9%85%D8%B1%D9%83%D8%B2%D9%8A-%D8%A7%D9%84%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D9%8A",
-      "published": "Fri, 09 Oct 2026 04:49:54 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1897428-%D8%B9%D8%A7%D9%85-%D8%B1%D8%A7%D8%A8%D8%B9-%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D9%86%D8%A7%D8%A9-%D8%B4%D8%AA%D8%A7%D8%A1-%D8%BA%D8%B2%D8%A9-%D9%8A%D9%83%D8%B4%D9%81-%D8%AD%D8%AC%D9%85-%D8%A7%D9%84%D9%85%D8%A3%D8%B3%D8%A7%D8%A9",
+      "published": "Fri, 09 Oct 2026 11:39:23 GMT"
     },
     {
-      "headline": "إفطار يشعرك بالشبع.. ماذا تضيف لوجبتك الصباحية؟",
+      "headline": "باكستان تؤكد انتشار قواتها في السعودية.. وتكشف المهمة",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1897336-%D8%A5%D9%81%D8%B7%D8%A7%D8%B1-%D9%8A%D8%B4%D8%B9%D8%B1%D9%83-%D8%A8%D8%A7%D9%84%D8%B4%D8%A8%D8%B9-%D8%AA%D8%B6%D9%8A%D9%81-%D9%84%D9%88%D8%AC%D8%A8%D8%AA%D9%83-%D8%A7%D9%84%D8%B5%D8%A8%D8%A7%D8%AD%D9%8A%D8%A9",
-      "published": "Fri, 09 Oct 2026 04:43:52 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1897455-%D8%A8%D8%A7%D9%83%D8%B3%D8%AA%D8%A7%D9%86-%D8%AA%D8%A4%D9%83%D8%AF-%D8%A7%D9%86%D8%AA%D8%B4%D8%A7%D8%B1-%D9%82%D9%88%D8%A7%D8%AA%D9%87%D8%A7-%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9-%D9%88%D8%AA%D9%83%D8%B4%D9%81-%D8%A7%D9%84%D9%85%D9%87%D9%85%D8%A9",
+      "published": "Fri, 09 Oct 2026 11:34:07 GMT"
     },
     {
-      "headline": "\"صديق ألماني\" في منزل بوتين.. احتفال خاص بعيد ميلاده",
+      "headline": "رحلة ملكة تايلاند.. أقلعت بمقاتلة وعادت بزهور",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/varieties/1897332-%D8%B5%D8%AF%D9%8A%D9%82-%D8%A3%D9%84%D9%85%D8%A7%D9%86%D9%8A-%D9%85%D9%86%D8%B2%D9%84-%D8%A8%D9%88%D8%AA%D9%8A%D9%86-%D8%A7%D8%AD%D8%AA%D9%81%D8%A7%D9%84-%D8%AE%D8%A7%D8%B5-%D8%A8%D8%B9%D9%8A%D8%AF-%D9%85%D9%8A%D9%84%D8%A7%D8%AF%D9%87",
-      "published": "Fri, 09 Oct 2026 04:34:58 GMT"
+      "url": "https://www.skynewsarabia.com/varieties/1897425-%D8%B1%D8%AD%D9%84%D8%A9-%D9%85%D9%84%D9%83%D8%A9-%D8%AA%D8%A7%D9%8A%D9%84%D8%A7%D9%86%D8%AF-%D8%A3%D9%82%D9%84%D8%B9%D8%AA-%D8%A8%D9%85%D9%82%D8%A7%D8%AA%D9%84%D8%A9-%D9%88%D8%B9%D8%A7%D8%AF%D8%AA-%D8%A8%D8%B2%D9%87%D9%88%D8%B1",
+      "published": "Fri, 09 Oct 2026 11:30:23 GMT"
     },
     {
-      "headline": "صفقة جديدة لإيلون ماسك تهدد عروش شبكات المحمول الأميركية",
+      "headline": "الذكاء الاصطناعي يسرق وجهك وصوتك.. الدنمارك تتحرك",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/business/1897337-%D8%B5%D9%81%D9%82%D8%A9-%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9-%D9%84%D8%A5%D9%8A%D9%84%D9%88%D9%86-%D9%85%D8%A7%D8%B3%D9%83-%D8%AA%D9%87%D8%AF%D8%AF-%D8%B9%D8%B1%D9%88%D8%B4-%D8%B4%D8%A8%D9%83%D8%A7%D8%AA-%D8%A7%D9%84%D9%85%D8%AD%D9%85%D9%88%D9%84-%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D8%A9",
-      "published": "Fri, 09 Oct 2026 04:34:07 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1897231-%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D8%A7%D8%B5%D8%B7%D9%86%D8%A7%D8%B9%D9%8A-%D9%8A%D8%B3%D8%B1%D9%82-%D9%88%D8%AC%D9%87%D9%83-%D9%88%D8%B5%D9%88%D8%AA%D9%83-%D8%A7%D9%84%D8%AF%D9%86%D9%85%D8%A7%D8%B1%D9%83-%D8%AA%D8%AA%D8%AD%D8%B1%D9%83",
+      "published": "Fri, 09 Oct 2026 11:18:40 GMT"
     },
     {
-      "headline": "أمل جديد للمكفوفين.. علاج يعيد بعض قدرات الإبصار",
+      "headline": "شبح الـ6% يطارد أسواق السندات الأميركية",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1897286-%D8%A3%D9%85%D9%84-%D8%AC%D8%AF%D9%8A%D8%AF-%D9%84%D9%84%D9%85%D9%83%D9%81%D9%88%D9%81%D9%8A%D9%86-%D8%B9%D9%84%D8%A7%D8%AC-%D9%8A%D8%B9%D9%8A%D8%AF-%D9%82%D8%AF%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D8%A5%D8%A8%D8%B5%D8%A7%D8%B1",
-      "published": "Fri, 09 Oct 2026 04:30:57 GMT"
+      "url": "https://www.skynewsarabia.com/business/1897454-%D8%B4%D8%A8%D8%AD-%D8%A7%D9%846-%D9%8A%D8%B7%D8%A7%D8%B1%D8%AF-%D8%A3%D8%B3%D9%88%D8%A7%D9%82-%D8%A7%D9%84%D8%B3%D9%86%D8%AF%D8%A7%D8%AA-%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D8%A9",
+      "published": "Fri, 09 Oct 2026 11:14:48 GMT"
     },
     {
-      "headline": "بقيمة 6.3 مليار دولار.. \"ريثيون\" تفوز بصفقة صواريخ أميركية",
+      "headline": "\"بوهرنجر إنجلهايم\" تعرض فيلما لتعزيز الوعي بالتليف الرئوي",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897302-%D8%A8%D9%82%D9%8A%D9%85%D8%A9-6-3-%D9%85%D9%84%D9%8A%D8%A7%D8%B1-%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D8%B1%D9%8A%D8%AB%D9%8A%D9%88%D9%86-%D8%AA%D9%81%D9%88%D8%B2-%D8%A8%D8%B5%D9%81%D9%82%D8%A9-%D8%B5%D9%88%D8%A7%D8%B1%D9%8A%D8%AE-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D8%A9",
-      "published": "Fri, 09 Oct 2026 04:17:05 GMT"
+      "url": "https://www.skynewsarabia.com/varieties/1897444-%D8%A8%D9%88%D9%87%D8%B1%D9%86%D8%AC%D8%B1-%D8%A5%D9%86%D8%AC%D9%84%D9%87%D8%A7%D9%8A%D9%85-%D8%AA%D8%B9%D8%B1%D8%B6-%D9%81%D9%8A%D9%84%D9%85%D8%A7-%D9%84%D8%AA%D8%B9%D8%B2%D9%8A%D8%B2-%D8%A7%D9%84%D9%88%D8%B9%D9%8A-%D8%A8%D8%A7%D9%84%D8%AA%D9%84%D9%8A%D9%81-%D8%A7%D9%84%D8%B1%D8%A6%D9%88%D9%8A",
+      "published": "Fri, 09 Oct 2026 11:14:28 GMT"
     },
     {
-      "headline": "منظمة التجارة العالمية ترفع توقعات تجارة السلع بفضل الـ \"AI\"",
+      "headline": "7 طوابق تتحول إلى أنقاض.. مأساة تهز إسطنبول",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/business/1897328-%D9%85%D9%86%D8%B8%D9%85%D8%A9-%D8%A7%D9%84%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9-%D8%AA%D8%B1%D9%81%D8%B9-%D8%AA%D9%88%D9%82%D8%B9%D8%A7%D8%AA-%D8%AA%D8%AC%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%B3%D9%84%D8%B9-%D8%A8%D9%81%D8%B6%D9%84-%D8%A7%D9%84-ai",
-      "published": "Fri, 09 Oct 2026 04:08:25 GMT"
+      "url": "https://www.skynewsarabia.com/world/1897450-7-%D8%B7%D9%88%D8%A7%D8%A8%D9%82-%D8%AA%D8%AA%D8%AD%D9%88%D9%84-%D8%A3%D9%86%D9%82%D8%A7%D8%B6-%D9%85%D8%A3%D8%B3%D8%A7%D8%A9-%D8%AA%D9%87%D8%B2-%D8%A5%D8%B3%D8%B7%D9%86%D8%A8%D9%88%D9%84",
+      "published": "Fri, 09 Oct 2026 11:13:18 GMT"
     },
     {
-      "headline": "ترامب يدعو لاعتماد \"الذكاء الفائق\".. ويصف مخالفيه بـ\"الأعداء",
+      "headline": "فنادق عالمية تراهن على عودة السياحة إلى سوريا",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897308-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D8%AF%D8%B9%D9%88-%D9%84%D8%A7%D8%B9%D8%AA%D9%85%D8%A7%D8%AF-%D8%A7%D9%84%D8%B0%D9%83%D8%A7%D8%A1-%D8%A7%D9%84%D9%81%D8%A7%D8%A6%D9%82-%D9%88%D9%8A%D8%B5%D9%81-%D9%85%D8%AE%D8%A7%D9%84%D9%81%D9%8A%D9%87-%D8%A8-%D8%A7%D9%84%D8%A3%D8%B9%D8%AF%D8%A7%D8%A1",
-      "published": "Fri, 09 Oct 2026 02:00:28 GMT"
+      "url": "https://www.skynewsarabia.com/business/1897452-%D9%81%D9%86%D8%A7%D8%AF%D9%82-%D8%B9%D8%A7%D9%84%D9%85%D9%8A%D8%A9-%D8%AA%D8%B1%D8%A7%D9%87%D9%86-%D8%B9%D9%88%D8%AF%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%A7%D8%AD%D8%A9-%D8%B3%D9%88%D8%B1%D9%8A%D8%A7",
+      "published": "Fri, 09 Oct 2026 11:12:32 GMT"
     },
     {
-      "headline": "بوتين يجدد استعداده للمساعدة في إنهاء حرب الشرق الأوسط",
+      "headline": "أوروبا تلاحق خيوط المال.. ماذا تخفي شبكات الإخوان؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1897305-%D8%A8%D9%88%D8%AA%D9%8A%D9%86-%D9%8A%D8%AC%D8%AF%D8%AF-%D8%A7%D8%B3%D8%AA%D8%B9%D8%AF%D8%A7%D8%AF%D9%87-%D9%84%D9%84%D9%85%D8%B3%D8%A7%D8%B9%D8%AF%D8%A9-%D8%A5%D9%86%D9%87%D8%A7%D8%A1-%D8%AD%D8%B1%D8%A8-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%A7%D9%84%D8%A3%D9%88%D8%B3%D8%B7",
-      "published": "Fri, 09 Oct 2026 01:33:41 GMT"
+      "url": "https://www.skynewsarabia.com/world/1897430-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%AA%D9%84%D8%A7%D8%AD%D9%82-%D8%AE%D9%8A%D9%88%D8%B7-%D8%A7%D9%84%D9%85%D8%A7%D9%84-%D8%AA%D8%AE%D9%81%D9%8A-%D8%B4%D8%A8%D9%83%D8%A7%D8%AA-%D8%A7%D9%84%D8%A5%D8%AE%D9%88%D8%A7%D9%86",
+      "published": "Fri, 09 Oct 2026 11:10:32 GMT"
     }
   ]
 }
