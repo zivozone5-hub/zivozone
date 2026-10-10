@@ -5105,3 +5105,321 @@ Full 18-gate suite and the admin-panel Playwright test both still pass after the
 
 **Conclusion: the codebase is clean.** One dead rule removed; everything else checked came back
 either already-handled by a documented, deliberate decision, or genuinely in active use.
+
+## 1230.70 — "every room gets its own game" request: audit found 6/7 already had one, built the 7th
+
+User asked for every room to have its own dedicated mini-game: 40-50 levels, rising difficulty, a
+real login/score system, mobile-friendly, each distinct from the others. Before building anything,
+audited what already existed (evolution-not-layering: never duplicate a system that's already there).
+
+**Finding**: Dark Room, Puzzle Room, Beauty Room, Forensic Lab, Story Room, and Health World *already*
+each had exactly this — a full 50-level, 5-band game on the shared `epic50.js` engine, with mobile
+pointer-input, scoring, lives, and reward wiring. Verified all 6 live via Playwright on a 390px mobile
+viewport (not just read in the source): each one's Epic50 entry point actually mounts a working
+canvas with 5 bands and real tap-to-score gameplay. No rebuild needed or attempted for these.
+
+**Genuine gap found**: football had no signature room at all — only two 10-question quiz challenges
+(`football`, `football_intelligence`) inside the regular Challenge Center, not a dedicated room.
+
+**Built**: `core/modules/football-room.js` — "Reading the Pitch" (قراءة الملعب), a 7th signature room
+on the same proven `epic50.js` engine. A tactics-board tap game: one teammate glows (ball incoming),
+tap him before the decision window closes. Band 2+ adds a defender mark that flips the correct target
+to his free teammate; band 3+ reshuffles the formation after every correct pass; band 4+ mirrors the
+whole pitch left/right; band 5 combines everything at the fastest tempo. Reuses the same
+pairMode/reshuffleMode/mirrorMode/chainLen difficulty-curve math beauty-room.js's "Perfect Touch"
+already shipped and proved across 50 levels — deliberately, rather than inventing a new unverified
+curve — but with entirely its own pitch/jersey-number rendering and copy, so it reads as a genuinely
+distinct room.
+
+Integration done the same way every other room's epic reward was (and, learning from the 1230.59/.60
+history above, done to BOTH sides in the same change this time): `football_epic_reward` (value 5,
+full-clear only) added to `economy.js`'s `credit()` policy switch AND `firestore.rules`'
+`rewardTypeValid()`/`rewardAmountValid()`/`validRewardClaim()` together. New `dist/styles/football-room.css`
+(compiled from `core/styles/football-room.css`). 15 new i18n keys added via `scripts/add_i18n_keys.py`
+(intro-screen chrome + the new homepage signature card), all 7 languages, real translations not
+placeholders. New signature card added to `index.html`'s `.zivo-signature-grid`, which propagates to
+every room's SEO landing page automatically via `scripts/prerender-rooms.mjs` (also updated the
+existing `rooms/football-pitch` landing page's CTA to open the new room directly instead of the old
+quiz, and refreshed its copy to describe the real game). `qa_seo_basics.py`'s CTA-detection regex was
+missing `data-football-room` — fixed in the same pass (would have been a real gate failure otherwise,
+not a false one: the new room's own landing page genuinely had no recognized CTA pattern yet).
+
+Verified live via Playwright, mobile viewport (390px): signature card visible and clickable → intro
+screen renders → Epic50 game mounts (canvas, 5 bands, Level 1/50, no horizontal overflow) → real taps
+on the rendered glowing target (found by scanning canvas pixel data, not by reading internal state)
+scored points and advanced from level 1 to level 2. Re-ran the full 6-room regression check after
+all changes — no other room broken. Full 18-gate suite passes.
+
+**Flagged to the user, not yet decided**: Dark Room's and Puzzle Room's Epic50 games are reached via
+an extra step first (a 30-question quiz with a "bonus" button, and a stage-1 intro screen,
+respectively) rather than being the room's immediate front door the way Beauty/Forensic/Story/Health/
+Football's are. Left as-is pending the user's answer on whether to make it the direct, primary path.
+
+## 1230.71 — generalized lazy-loading for all room games + stopped SEO pages from wasting network/DB calls
+
+User asked (after the Football room build above) to fix the Challenge Center duplication-across-rooms
+issue "properly, with real technical/architectural engineering," and specifically to make room game
+code load only when a visitor actually enters that room — and to be told the plan before starting.
+Plan presented: (1) generalize the existing forensic-lab lazy-load pattern to the other 5 room game
+modules, (2) reduce the wasted work the SEO room/story pages do on every load. User delegated the
+final call ("do whatever is in the site's best interest") — proceeded with both parts.
+
+**Part 1 — lazy-loading, generalized from the proven `forensic-case-core.js` precedent:**
+`horror-room.js`, `puzzle-room.js`, `beauty-room.js`, `rooms.js` (Story/Health), and the new
+`football-room.js` were all previously shipped eagerly inside `app.bundle.js` on every page load,
+even for a visitor who never opens a single room. Moved all 5 into `scripts/build_bundle.py`'s
+`LAZY_MODULES` list (same mechanism forensic already used): each is still minified to its own file
+under `dist/lazy/`, but none is in the eager bundle manifest anymore.
+
+Built one generic loader, `core/modules/runtime/room-loader.js`, replacing what would otherwise have
+been 5 copy-pasted ad-hoc loaders: a capture-phase document click/keydown listener matches a room's
+trigger attribute (`[data-horror-room]`, `[data-puzzle-room]`, `[data-beauty-room]`,
+`[data-zivo-story-room]`, `[data-zivo-health-room]`, `[data-football-room]`), fetches that room's lazy
+file on first use only (cached per key so a second click doesn't re-fetch), shows a brief loading
+toast, then calls the room's own `start()`/`enter()`. Once a room is loaded, the loader steps aside
+(no `preventDefault`) and lets that room's own click listener take over permanently — verified by
+Playwright that clicking the same card twice never double-mounts the room.
+
+Two real regressions this change would otherwise have caused, found and fixed in the same pass:
+- `challenges.js`'s Dark Room quiz "bonus" button referenced `window.ZIVOZONE?.HorrorRoom` directly —
+  would have silently no-op'd once HorrorRoom became lazy-loaded via a different path. Fixed to go
+  through `window.ZIVOZONE_ROOM_LOADER.ensure('horror')` first.
+- `router.js`'s `specialAvailable()` checked for the module's eager presence to decide if puzzle/
+  beauty/story/health were "available" — would have made all of them report unavailable now that
+  they're not separate eager `<script>` tags. Fixed to `return true` unconditionally for all of them
+  plus football, matching the exact precedent already set for forensic (the file is always on the
+  server and loads on demand, so no runtime presence check is needed).
+
+Measured eager `app.bundle.js`: 1,677,249 → 1,567,534 bytes (~110KB / 6.5% smaller) on every page
+load, for every visitor, whether or not they ever open a room. Verified via Playwright network
+interception, mobile viewport: for each of the 6 rooms, the matching `dist/lazy/*.js` file is NOT
+requested at page load, and IS requested exactly once when that room is actually opened; each room's
+Epic50 canvas still mounts correctly (5 bands, no overflow) and the real tap-to-score gameplay still
+works after the lazy fetch.
+
+**Part 2 — stopped SEO room/story pages from doing real work for a game that's never shown:**
+Every `rooms/*/index.html` and `stories/*/index.html` is a full clone of the real homepage (hero,
+newsbar, all 7 signature cards, challenge center) with everything but one SEO article hidden via CSS,
+so the real app can still boot underneath for a genuine working CTA. But `app-shell.js`'s
+`applyLanguage()` was unconditionally calling `renderChallenges()`, `renderNewsSources()`, and
+`sports()` on every page — including these SEO pages, where that output is never shown (the sections
+stay `display:none` the entire time). That meant every SEO page load was doing real Firestore reads
+plus two real network fetches (`news.js`/`match-center.js`) for content no visitor to that page would
+ever see.
+
+Fixed by skipping those 3 calls specifically when `document.body` carries the `zivo-seo-route` class
+(the same marker `challenges.js` and `rooms.js` already used for a couple of narrower boot-time
+skips) — `profile()` and the i18n text pass still run unconditionally, since those do matter on every
+page. Updated `scripts/qa_no_duplicate_boot_fetch.py`'s expectations to match: `index.html` (the real
+homepage) still expects exactly 2 `news.json` fetches; `stories/tale-01/index.html` now correctly
+expects 0 (previously, before this fix, it was *also* wastefully fetching 2 — this isn't a new
+expectation invented to dodge a failure, it's the gate catching that stories pages had the identical
+waste rooms pages did, and both are now fixed the same way).
+
+Verified live via Playwright after the fix: the real homepage (`index.html`, not an SEO route) still
+shows all 7 signature cards, a populated news list, and the sports section, with exactly 2
+`news.json` fetches — unchanged. `rooms/football-pitch/index.html` (an SEO route) still has its real
+article and working CTA intact, now with 0 `news.json` fetches instead of 2. Full 18-gate suite
+passes, including the updated boot-fetch gate.
+
+**Not done in this pass** (flagged, not forgotten): the HTML markup itself in every room/story SEO
+page is still a full literal clone of the homepage's DOM (every signature card's markup, challenge
+list container, etc.), even though most of it is invisible and inert. Reducing that duplication at
+the markup level — rather than just the JS-execution-cost side fixed here — was considered and set
+aside: many existing modules assume specific container element IDs exist in the DOM on every page,
+so trimming the markup safely would need a careful module-by-module audit to avoid silently breaking
+something that currently works. Flagging this as a real follow-up, not closing it as done.
+
+## 1230.72 — actually removed the duplicated homepage markup from every room/story SEO page
+
+Continuation of 1230.71's SEO-efficiency work, now addressing the part explicitly flagged as not
+yet done: every `rooms/*/index.html` and `stories/*/index.html` was still a full literal clone of
+the homepage's `<main>` (hero, newsbar, all 7 signature cards, challenge center with its ad slots,
+identity/ai/sports sections) with everything but one real SEO article hidden via CSS — real markup,
+shipped on every page, never shown to a visitor there.
+
+**Audit before cutting anything** (the same discipline as every other round): read every module that
+queries an element living inside those hidden sections, to find which ones have a genuine hard
+dependency on the markup existing versus which are already null-guarded or event-delegated and don't
+care. Findings:
+- Every room's real entry point (`data-horror-room`, `data-puzzle-room`, etc.) is read by a
+  **document-level** click listener (`room-loader.js`, each room module's own listener, and
+  `router.js`'s feature-reconcile pass) using `e.target.closest()` / `querySelectorAll()` — none of
+  them care *where* in the DOM that attribute lives. The room/story SEO article already carries its
+  own copy of the real trigger attribute directly on its own CTA button, so the full duplicated
+  7-card signature grid was pure dead weight — the real CTA never needed it.
+- `challenges.js`'s `renderCenter()` (populates `#challenge-list`) and `app-shell.js`'s
+  `renderNewsSources()`/`sports()` (news/sports containers) are already null-guarded or already
+  skipped on `zivo-seo-route` pages (1230.71) — removing those containers changes nothing for them.
+- One genuine hard dependency found: `app-shell.js`'s `bind()` had an **unguarded**
+  `$('#ai-form').onsubmit=...` — on a page without that element this throws, and because `bind()` is
+  one function, everything after that line (critically, the mobile hamburger-nav wiring) would
+  silently never run. Fixed in the same change: `const aiForm=$('#ai-form'); if(aiForm) aiForm.onsubmit=...`,
+  consistent with how every other optional element in that function is already guarded.
+
+**Change**: `scripts/prerender-rooms.mjs` and `scripts/prerender-stories.mjs` now replace the entire
+`<main>...</main>` block with just the one real SEO article (previously they kept the full homepage
+`<main>` and hid the rest with `display:none!important`), and drop the dead `.mobile-nav` bottom tab
+bar outright (its `#home`/`#challenges`/`#ai`/`#sports` links pointed at sections that no longer
+exist on these pages; nothing in JS depends on it being present — confirmed by grep, only
+`querySelectorAll().forEach()` usage, which is a no-op on zero matches).
+
+**Measured**: room pages ~29KB → ~13KB each (55% smaller); story pages ~32.5KB → ~18.7KB each (42%
+smaller) — across all 8 room pages and 84 story-language variants, roughly 3.46MB → 2.26MB of total
+static HTML (~35% / 1.2MB cut), real bytes removed, not just hidden.
+
+**Verified live via Playwright** (mobile viewport), after regenerating every page and running a full
+version-sync release (`scripts/release.py 1230.72`, which also regenerates the 6 per-language
+homepage variants from the current `index.html` — a separate gate that catches homepage drift,
+unrelated to this fix but caught by the same full gate run):
+- Football Pitch SEO page: real CTA → lazy-loads `football-room.js` → Epic50 canvas mounts, 5 bands.
+- Forensic Lab SEO page: `data-challenge="forensic"` CTA (a different trigger path, through
+  `app-shell.js`'s generic `[data-challenge]` delegate, not `room-loader.js`) → cinema/case screen opens.
+- Daily Challenge SEO page: its `onclick` trigger (not a data-attribute at all — the only room using
+  this older pattern) → the real daily-challenge overlay opens.
+- Mobile hamburger nav-toggle still works on a slimmed page (regression check specifically for the
+  `bind()` fix above — confirms nothing after the fixed line silently stopped running).
+- A story SEO page still has its article and "back to home" link, zero console errors.
+- The real homepage (`index.html`, not a SEO route) is completely unaffected: still has all 7
+  signature cards, a populated news list, the sports section, exactly 2 `news.json` fetches.
+- Re-ran the full 6-signature-room regression (Dark Room, Puzzle Room, Beauty Room, Story Room,
+  Health World, Football Pitch) on the real homepage — all 6 still mount their Epic50 canvas (5
+  bands) with their lazy module fetched exactly once, on demand. Full 18-gate suite passes.
+
+This closes out the SEO-duplication concern end to end: V1230.71 stopped the wasted JS execution
+(Firestore reads + network fetches) these pages were doing for sections no visitor could see, and
+this round stopped shipping the dead markup for those sections too.
+
+## 1230.73/.74 — Match Center redesign: a real "live now" experience, not a number in a stats row
+
+User asked for a stronger, more modern, more innovative way to present live football matches
+specifically — "طريقة عرض المباريات المباشرة اشي جديد وسهل وقوي" — after confirming the existing
+data engine (ESPN live + JFA-sourced static snapshot fallback, filters, search, per-match detail
+modal with events, 30s/120s auto-refresh) already does real work; the complaint was about
+presentation, not data. Gave no further preference when asked to narrow it down ("اكتب وحل شو ما
+بدك انا واثق فيك" — do whatever, I trust you), so the call on what to build was mine.
+
+**Kept entirely untouched**: `fetchLeague`, `normEvent`, `normalizeStatic`, the ESPN API calls, the
+static-snapshot fallback chain (`fetchStaticDate`/`fetchStaticWithFallback`), `merge()`, `load()`'s
+refresh scheduling. All of it already worked; this was a presentation-layer rewrite only.
+
+**Rebuilt**:
+1. **A "Live Now" strip** at the very top of the Match Center, built from every live match
+   regardless of the day/league filters below it, with a pulsing red dot — the literal thing asked
+   for, not a number buried in a 4-column stats row the way it was before.
+2. **Fixed a real latent bug while touching the day-nav**: clicking "Yesterday"/"Today"/"Tomorrow"
+   used to only change which button *looked* active — `render()` unconditionally built all three
+   days' panels side by side every time, so the pill was cosmetic. Now `state.day` actually drives
+   which day's matches the feed shows.
+3. **Replaced the per-league 3-narrow-column day grid with one mobile-first feed** (one column, one
+   card per match, sorted by kickoff time) and **replaced the league `<select>` dropdown with a
+   horizontally scrollable chip row** — every league is visible and tappable without opening an
+   OS-rendered dropdown list, closer to how a native sports app presents league choice on a phone.
+4. **Score-change flash**: each live match's score is snapshotted at the end of every `render()`
+   call; the next render compares against that snapshot and adds a one-shot flash animation class
+   only to a card whose score actually changed — verified live (mutated a mock match's score on
+   disk between two auto-refreshes, confirmed the flash fires exactly once on the changed card and
+   not on a subsequent refresh where nothing changed).
+5. **Found and fixed a real, pre-existing data loss, not a hypothetical one**: the static-snapshot
+   files already contain genuine Jordanian Pro League matches (`leagueId:"jor.1"`, sourced from JFA
+   — see `data/matches/*.json`) that were **silently invisible under every filter, including "All
+   leagues"**, because (a) `jor.1` was never registered in the `LEAGUES` list, so it fell back to a
+   generic/unknown-league treatment, and (b) `matchesFor()`'s `'all'` branch wrongly capped
+   everything at `priority<=5` — identical to `'major'` — a bug invisible before because all 5
+   previously-registered leagues happened to be priority 1–5. Added `jor.1` as a full league entry
+   (name, short label, icon, priority 6 — outside "major") and fixed the `'all'` filter to show every
+   registered league. **Verified live against the project's own real (not mocked) stale snapshot
+   data**: clicking "All leagues" now surfaces a real Jordan Pro League match (البقعة vs الفيصلي)
+   that was completely unreachable before this fix, in any filter state.
+   Honesty note: ESPN's live-API support for `jor.1` could not be verified from this workspace (no
+   network route to espn.com here) — the addition is safe regardless (a league ESPN doesn't support
+   just contributes zero live rows via the already-existing `Promise.allSettled` handling, no crash),
+   but whether ESPN itself carries live Jordanian Pro League data needs confirming on the live site.
+
+**Verified live via Playwright** (mobile viewport, with a temporary mock dataset carrying live
+matches across multiple leagues including Jordan — written to `data/matches/2026-10-1{0,9}.json`,
+used only for this verification pass, deleted immediately after, real snapshot data untouched):
+live strip renders with the correct live count; clicking a league chip filters the feed correctly;
+clicking "Yesterday" actually swaps the feed to yesterday's match and hides today's (the day-nav
+fix); the match-detail modal still opens with real data; the search filter still works; the
+score-flash fires exactly once per real score change and never on an unchanged refresh; zero page
+errors throughout. Re-ran against the project's real (stale, Sep 2026) snapshot data afterward to
+confirm the Jordan-league fix holds outside the mock dataset too (screenshot above). Full 18-gate
+suite passes, including a deliberate re-baseline of `scripts/hardcoded_arabic_baseline.json` (the
+new UI strings are, like everything else in this file, real 7-language dictionary entries — verified
+in Node that all 7 languages are present and non-empty for each new key before re-baselining, same
+discipline the gate's own docstring describes for the 1229.17 precedent).
+
+## 1230.75
+
+**Redesigned "Discover Your Personality" (`identity()` in `core/modules/runtime/app-shell.js`)**
+per an explicit, negotiated user request: make the section feel psychologically smart and give
+visitors real comfort/self-understanding, while (a) keeping results fully private, and (b) giving it
+an expert, personally-insightful voice. On "feel like a psychologist analyzing you" specifically, I
+pushed back on literally branding this as clinical/medical diagnosis — real risk of a visitor
+substituting it for actual mental-health care — and proposed instead a warm, specific, intelligent
+"expert analyst/guide" voice with an honest, visible disclaimer. The user accepted this explicitly
+("بلش ويكون تطوير وليس طبقات" — start, and make it an evolution, not a parallel system) before any
+code was written. Evolved the existing `identity()` function in place; no parallel system was built.
+
+**What changed, concretely:**
+1. **Removed the 10-second per-question countdown entirely** — deleted `clearIdentityTimer()`,
+   `startIdentityTimer()`, `identityTimeout()`, the `identityTimer`/`identityDeadline` state, the
+   `#identity-timer`/`.question-timer` markup and its now-fully-unused CSS block (`.question-timer`
+   and friends were used ONLY by this quiz — confirmed via grep before deleting — the questions now
+   wait for the visitor at their own pace). The `pagehide` listener's now-dangling call to
+   `clearIdentityTimer()` was removed too. (Pre-existing, already-unreferenced-anywhere-else dead
+   code — `updateTimerUI`/`remainingSeconds`/`questionDeadline` — was left alone; it predates this
+   quiz's own timer and removing it isn't part of this task.)
+2. **Added an intro screen** before question 1: warm framing, an explicit 🔒 privacy note (answers
+   and result are private, device-only, never shared), and an honest disclaimer that this is for
+   self-understanding and enjoyment, not a medical/clinical diagnosis — shown again on the result
+   screen. The privacy note also appears under every question, not just once.
+3. **Replaced winner-take-all single-trait scoring with a multi-dimensional result**: all 4 traits
+   now show as a percentage breakdown (bar chart), not just the top one. The headline archetype is
+   still the highest-scoring trait, but a "secondary trait" line surfaces the second-highest one too,
+   so the result reads as a blend rather than a single box.
+4. **Personalized the narrative to the visitor's actual answers** (addressing the Barnum-effect risk
+   in the old static per-trait paragraph): the result now quotes one real question the visitor
+   answered and the real answer they picked — chosen from the middle of their run so it reads as a
+   pattern across the quiz, not the first click — instead of only generic boilerplate text.
+5. **Football-themed archetype titles** replacing the plain trait name as the result headline (e.g.
+   "العقل التكتيكي" / "The Tactical Mind", "القائد الميداني" / "The Field Captain", "قلب الفريق
+   النابض" / "The Heart of the Team", "الجوكر المبدع" / "The Creative Playmaker") — tying the result
+   to the site's sports identity. All 4 titles written natively in all 7 site languages (not
+   machine-translated placeholders — verified each language's set in Node before re-baselining the
+   hardcoded-Arabic gate).
+6. **Visual, saveable result card**: a "Save result as image" button renders the archetype title,
+   secondary-trait line, and the 4-trait percentage bars onto a `<canvas>` (branded, dark, matching
+   site style) and downloads it as a PNG — no external library, no network call, works fully
+   offline. Handles RTL (Arabic/Farsi) via `canvas.direction` so bar labels/percentages mirror
+   correctly — verified visually via screenshot in Arabic.
+7. **Retake + compare-over-time**: a "Retake the test" button restarts the quiz in place (same
+   session); the last up-to-5 attempts (timestamp + archetype title) are stored and shown as a small
+   history row on the result screen once a visitor has taken it more than once.
+8. **Privacy architecture unchanged and reconfirmed**: `state.identity` is still saved only via
+   `saveState()` → `localStorage.setItem('zivozone_identity_v1', ...)`. Re-ran
+   `grep -rn "\.identity\b" core/modules/*.js core/modules/runtime/*.js` excluding app-shell.js after
+   this change — zero hits, confirming it is still never touched by Firestore, economy.js, or
+   auth.js. The new history array lives inside the same localStorage-only object.
+
+**New strings**: 13 new global i18n keys (intro/disclaimer/privacy/buttons/labels — "chrome" text,
+reusable, routed through `i18n.js` via `scripts/add_i18n_keys.py`, all 7 languages) plus 4 new
+football-archetype titles added to the existing per-module inline 7-language `ARCH` dict (the
+established content pattern already used by this file's `qs` questions). Deliberately re-baselined
+`scripts/hardcoded_arabic_baseline.json` (9236 → 9255 fragments, +19 in `app-shell.js` only) after
+verifying every new entry has real, distinct, non-empty text in all 7 languages.
+
+**Verified live via Playwright** (mobile viewport, both English and Arabic/RTL): intro screen shows
+with privacy note, disclaimer and no timer markup; all 20 questions answerable with no countdown;
+result screen shows the correct archetype title, secondary-trait line, 4-trait percentage bars (with
+the chosen trait highlighted), a real quoted question+answer from the visitor's own run, privacy
+note, disclaimer, and working Save/Retake/Close buttons; `localStorage['zivozone_identity_v1']`
+correctly stores `{primary, secondary, scores, percentages, at, history}`; `sessionStorage` confirmed
+empty (never touched); clicking Retake restarts the quiz and a second completed attempt correctly
+adds a history chip; clicking "Save result as image" triggers a real PNG download (confirmed file
+size, not just that the click handler ran). Re-ran the full flow in Arabic with `dir=rtl` — all text
+renders correctly, the downloaded image renders Arabic text correctly on the canvas (screenshot
+verified). Zero JS errors in either language (only the expected sandbox-network failures —
+ERR_TUNNEL_CONNECTION_FAILED / 404 — for Firebase/ESPN calls this workspace cannot reach, same as
+every other feature in this project). Full 18-gate suite passes.
