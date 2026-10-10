@@ -5423,3 +5423,106 @@ renders correctly, the downloaded image renders Arabic text correctly on the can
 verified). Zero JS errors in either language (only the expected sandbox-network failures —
 ERR_TUNNEL_CONNECTION_FAILED / 404 — for Firebase/ESPN calls this workspace cannot reach, same as
 every other feature in this project). Full 18-gate suite passes.
+
+## 1230.76 — Football Pitch clarity fix + Dark Room hub redesign
+
+Two explicit user complaints, verbatim: **"غرفة ملعب القرار مش مفهومه نهائيا"** (the Football Pitch
+room isn't understandable at all) and **"بدي هاي اللعبه جزء من الغرفه مش تخلي اللعبه هيه كل الغرفه"**
+(for the Dark Room, I want the game to be *part of* the room, not the whole room). Two clarifying
+questions were asked before writing code: whether the Football Pitch fix should be visual, textual,
+or both (answered **"الاثنين مع بعض"** — both together), and what exactly "part of the room" should
+include for the Dark Room (answered **"اعمل كل شي ... لحتى تزبط كل شي"** — do everything, iterate
+until it all works). Both fixes evolve existing files in place (`football-room.js`, `horror-room.js`)
+— no parallel systems.
+
+### Football Pitch ("Reading the Pitch", `core/modules/football-room.js`)
+
+**Root cause found by reading the code**: from band 2 onward (`pairMode`), the actual rule is "tap
+the *other*, free teammate — not the glowing one a defender is marking" — but nothing on screen ever
+showed *which* teammate was free. The only red dashed ring sat on the glowing (wrong-to-tap) player,
+and the real target (paired by slot-index parity, e.g. (2,3) are diagonal corners, not necessarily
+adjacent) had to be inferred purely from a rule read once on the band-transition screen.
+
+**What changed**: `draw()`'s pairMode branch now draws (1) a dashed green line connecting the marked
+player straight to his actual free teammate, (2) a distinct green glowing ring + light-green fill on
+the free teammate ("tap here"), keeping the existing red dashed ring on the marked player ("don't tap
+this one"), and (3) a persistent, always-on-screen hint line at the top of the canvas (new
+`wrapFtText()` word-wrap helper, 2-line max) — reusing the existing, already-translated
+`EPIC_BANDS_FT[band-1].twist` text, so this needed zero new i18n strings. Gameplay logic
+(`pairOf()`, hit/miss detection, scoring, lives, countdown) is completely unchanged — only the
+rendering changed.
+
+### Dark Room (`core/modules/horror-room.js`)
+
+**Root cause**: the Dark Room was never actually a "room" — clicking it launched straight into the
+Epic50 "Light Escape" maze game with no room page around it at all, unlike every other signature room
+(Beauty Room, Puzzle Room) which each have a proper hub (story/content tabs, a small companion game,
+the big Epic50 game as one clearly separate option).
+
+**What changed**: rebuilt the Dark Room as a full hub, modeled directly on `beauty-room.js`'s
+`root()`/`render(tab)` pattern:
+- **New hub (`renderHub(tab)`)**: header with a return button, a hero section with two clear CTAs
+  ("Try the survival test" and "Light Escape — The Grand Challenge // 50 Levels"), and three tabs —
+  Story, Creatures, Chapters — each backed by new inline 7-language content dicts (`DARK_STORY`,
+  `CREATURES` — 2 entries, `SURVIVAL_SCENARIOS` — 4 entries), thematically tied to the existing Light
+  Escape mechanics. `horror-room.js` was already in `qa_no_hardcoded_arabic.py`'s `CONTENT_FILES`
+  exemption list, so no baseline re-generation was needed for this new inline content.
+- **New basic game — "The Survival Decision"**: 4 quick branching scenarios (right/wrong option
+  order randomized each run), one wrong pick ends the run immediately, pass = at most 1 mistake
+  across all 4. A real small interactive game (not a quiz), same spirit as Beauty Room's
+  order-your-routine game.
+- **Reward reuse, not a new reward type**: `grantSurvivalReward()` deliberately reuses the existing
+  `horror_reward` type (value 2) — a legacy, fully-wired-but-orphaned type left over from before the
+  1230.59 Light Escape rebuild — instead of registering a new type, avoiding the exact
+  "added to only one side, silently rejected" mistake this file's own header already documents from
+  1230.59/.60. Confirmed matching entries already exist in both `economy.js` and `firestore.rules`
+  before relying on it; neither file needed editing.
+- **Light Escape (Epic50 maze) kept as-is, now reachable only via the hub's epic CTA**, with its exit
+  paths changed: the epic intro screen's own exit and a mid-game exit (`backToHubWithGuard`, reusing
+  the existing `lightEscapeBackConfirm` confirm text) now return to the **hub**, not a full close to
+  home. Only the hub's own return button does a full guarded exit to home, using a new
+  `darkRoomExitConfirm` confirm text — distinct from the mid-game one, verified live (different
+  strings shown in each case).
+- `window.ZIVOZONE.HorrorRoom.start` now opens the hub (`gatedHubStart` → `renderHub("story")`);
+  added `startEpic` for direct access to the maze. The pre-existing
+  `ZIVOZONE_CHALLENGE_CORE.start('horror')` quiz-bonus path and `room-loader.js`'s
+  `[data-horror-room]` wiring both resolve through the same `start()`, so both correctly land on the
+  hub now with no changes needed on their end.
+
+**New strings**: 25 new global i18n keys (hub chrome, tabs, hero, basic-game screens) added via
+`scripts/add_i18n_keys.py`, all 7 languages. `shareDarkRoomName` already existed and was reused as-is.
+
+**CSS**: appended hub + basic-game styles to `core/styles/horror-room.css` (`.zhr-hub-shell`,
+`.zhr-head`, `.zhr-hero`, `.zhr-tabs`, `.zhr-card`, `.zdg-*` for the basic game), re-themed to the
+room's existing dark/red palette. Caught one bug before any live testing: `.zhr-hub-shell` was
+initially written with `min-height:100%;overflow:auto` by analogy to Beauty Room, but `.zhr-root`
+here (unlike Beauty Room's) is `position:fixed;overflow:hidden`, so the hub wouldn't have scrolled
+correctly — fixed to `height:100%;overflow-y:auto`.
+
+**Verified live via Playwright** against a local server serving the fresh build:
+- **Football Pitch**: screenshotted band-2 gameplay confirming the dashed connecting line, green
+  "tap here" ring, red "don't tap" ring, and persistent hint text all render correctly together.
+  Confirmed gameplay correctness is unchanged by locating the exact free-teammate and marked-player
+  canvas positions via pixel-color sampling (not guessed coordinates) and dispatching real
+  `pointerdown` events: tapping the free (green) teammate correctly continues the level without
+  losing a heart; tapping the marked (glowing) player correctly triggers "Try Again" (loses a life,
+  retries the level with a fresh shuffle).
+- **Dark Room hub**: confirmed entering via `[data-horror-room]` lands on the hub (not the game);
+  all three tabs (Story/Creatures/Chapters) render their correct content on click. Played the full
+  Survival Decision game twice end-to-end: a clean win (0 mistakes) correctly reaches the result
+  screen with a claim button, claiming persists `{survival_game:1}` to
+  `localStorage['zivo_light_escape_progress']` and returns to the hub; a deliberate wrong first pick
+  correctly ends the run immediately with no claim button offered. Confirmed the Light Escape epic
+  game launches from the hub's epic CTA, and verified both of its exit paths: exiting from the epic
+  intro screen returns directly to the hub with no confirm, while exiting mid-level shows a confirm
+  dialog (the reused `lightEscapeBackConfirm` text) and, on confirming, also returns to the hub (not
+  home) — confirmed via the room root's `active` class/visibility, since this room (like every other
+  room) hides via CSS rather than DOM removal. Separately confirmed the hub's own return button shows
+  a different, new confirm message (`darkRoomExitConfirm`) and, on confirming, does a full exit to
+  home (`location.hash === '#home'`, root no longer active/visible).
+- Re-ran the full 18-gate suite after all changes — all pass.
+- **Not separately re-tested this round**: full non-English/RTL language QA for these two specific
+  fixes (the broader i18n-completeness gate confirms all 7 languages have the new strings, and the
+  existing exit-guard/RTL layout was visually confirmed correct in Arabic during this testing, but a
+  dedicated Arabic click-through of the new hub tabs and football hint text was not captured as
+  screenshots this round).
