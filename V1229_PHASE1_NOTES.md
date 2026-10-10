@@ -5526,3 +5526,110 @@ correctly — fixed to `height:100%;overflow-y:auto`.
   existing exit-guard/RTL layout was visually confirmed correct in Arabic during this testing, but a
   dedicated Arabic click-through of the new hub tabs and football hint text was not captured as
   screenshots this round).
+
+## 1230.77 — real room-by-room progress on the Player Journey hub + an actually-separate, real Player Profile page
+
+User request (verbatim): "طيب بدي الان صفحة رحلة اللاعب وملف اللاعب تحذف كل شي فيهم وتحط فيهم كل اشي
+حقيقي مرتبط بالغرف والتحديات واللاعب اخبرني شو بدك تعمل" — delete everything in the Player Journey
+page and the Player Profile and put in everything real, connected to the rooms/challenges/player.
+Asked 3 clarifying questions first (whether Profile should be a real separate page, whether
+per-room progress was the key gap, whether "delete everything" meant redesign or content-only); the
+user's answers were "do whatever serves the site and is genuinely connected — otherwise delete it"
+for the Profile page, and no preference on the other two, leaving both judgment calls to this pass.
+
+**What was found (investigation before writing anything)**: the Journey hub already showed real
+player/wallet/mission/achievement data, but nothing about the rooms themselves, and its "player
+profile" button (left over from 1230.30) just scrolled to the existing player card — there was no
+separate profile. Mapped exactly how each signature room persists progress, since that's what any
+real per-room section has to be built on:
+- Football (`zivo_tactics_progress`) and Dark Room (`zivo_light_escape_progress`) both save a real
+  `highestLevel`; Dark Room also saves a `survival_game` flag.
+- Beauty Room (`zivo_beauty_progress`) saves only a `beauty_game` done/not flag — no level number.
+- Forensic Lab (`ZIVOZONE_FORENSIC_V1180:completed`) saves a real per-case completion record; 25
+  total cases.
+- Story Room / Health World (`zivo_rooms_progress`) saves per-story and per-door read flags; 12
+  stories, 12 health doors (counted directly from their data files).
+- **Puzzle Room saves nothing at all** — confirmed by reading the whole file: no localStorage calls
+  anywhere, no level-saving `onFinish` on its Epic50 mount, its 5-stage flow is pure in-memory
+  session state. This is a real gap in the room itself, not something to paper over with an invented
+  number on the hub.
+- `economy.js`'s reward-claim history requires both a logged-in user AND Firestore, so it's not
+  available for guest/local-only players — ruled out as the data source in favor of each room's own
+  local progress key, which works for everyone.
+
+**What was built**:
+- `roomsProgressData()` in `player-hub.js` reads all 7 rooms' own real, already-persisted progress
+  keys (read-only — no new storage, no new reward types) and returns one real stat line per room.
+  Puzzle Room is shown with an honest "progress here isn't saved between visits yet" line instead of
+  a fabricated number.
+- A new "ROOMS" section on the Journey hub (between the stats row and the Today/Sports panels)
+  showing all 7 rooms as cards — icon, title, real stat, a gold-tinted "started" state for rooms with
+  any saved progress — each one a real button that closes the hub and jumps straight into that room's
+  own actual entry point (`[data-football-room]`, `[data-horror-room]`, etc., or the forensic
+  challenge runner), not just a link to a static page.
+- An actually-separate **Player Profile page** (`openProfile()`/`renderProfile()`, its own overlay,
+  own DOM root, own event subscriptions) — reachable from the hero's "👤 Player profile" button and
+  the player-card's "Open full profile" button (both pre-existing buttons/labels, now wired to the
+  real thing instead of a scroll). Shows: level/XP, a stats row including a rooms-started count, the
+  full 7-room breakdown (same cards/data as the hub's compact version), the last 20 real activity
+  events (vs. the hub's last 8), and an achievements card showing the real unlocked count with a
+  button into the existing achievements panel (`Achievements.open()` — this file never had access to
+  the achievement list itself, only the count and the existing panel, so it reuses that panel rather
+  than rebuilding it). Every number on the page is a real value from the same state this file already
+  treats as canonical — no placeholder content anywhere on it.
+- 15 new i18n keys (room-stat phrasing, the Profile page's own chrome) added in all 7 languages via
+  `scripts/add_i18n_keys.py`; two already-existing keys (`playerProfileBtn`, `openFullProfileBtn`)
+  were reused as-is since their text already matched the real behavior now wired to them.
+- New CSS for the room-card grid (`.zph-rooms`/`.zph-room-grid`/`.zph-room-card`, with a `.started`
+  modifier) and the Profile page's own section classes (`.zpp-note`, `.zpp-rooms`, `.zpp-bottom`,
+  `.zpp-activity`), matching the file's existing dark-glass/gold-accent visual language and
+  `850px`/`620px` responsive breakpoints. The achievements card on the Profile page intentionally
+  reuses the existing `.zph-identity-card` styling rather than adding a parallel class for it.
+
+**Bugs found and fixed before calling this done** (all three only surfaced once this was actually
+clicked through in a real browser, not just read as code):
+1. **Hardcoded-Arabic gate failure**: a few of this file's own code *comments* (not UI text) used
+   Arabic phrases in quotes to reference the feature by its Jordanian-dialect name. The
+   no-hardcoded-Arabic QA gate (correctly) doesn't distinguish comments from strings, and this file
+   had a clean (zero) baseline, so it failed. Reworded the comments in English; no UI-facing text was
+   ever affected.
+2. **Real crash on opening the Profile page**: `go("profile")` opened the new Profile overlay
+   without closing the Journey hub first — the only destination in `go()` that skipped the shared
+   `close()` call. With both overlays left open and subscribed to the same player-data state/events
+   at once, clicking into the Profile page threw `RangeError: Maximum call stack size exceeded`
+   (visible in the browser console, caught only by actually opening the page with Playwright — this
+   would not have been visible from reading the code). Fixed by closing the Journey hub before
+   opening the Profile page, same as every other destination.
+3. **"Back to journey" button visually broken**: the Profile header's new "Back to journey" button
+   matched the existing `.zph-head-tools button` rule, which forces a fixed 38×38px icon-only box
+   (built for the × close button next to it) — the text wrapped into three cramped lines overlapping
+   the × button. Fixed with a specific override giving that button auto width and single-line text.
+   Caught from a screenshot, not from reading the CSS.
+
+**Verified live via Playwright** against a local server serving the rebuilt bundle (1230.77):
+- Seeded real localStorage progress for Football (level 14), Dark Room (level 7 + survival game
+  done), Beauty Room (game done), Forensic Lab (3 of 25 cases), and Story/Health (2 stories, 3 health
+  doors read) — confirmed the Journey hub's new ROOMS section renders the exact correct stat line for
+  every one of the 7 rooms, including Puzzle Room's honest "not saved" line, with 6 of 7 correctly
+  marked "started" and Puzzle Room correctly not.
+- Confirmed clicking the real `[data-zph="profile"]` button (not calling the API directly) opens the
+  Profile overlay with no console errors, after the crash above was fixed.
+- Confirmed the Profile page's fuller rooms breakdown shows the identical real data as the hub's
+  compact version, its activity list shows up to 20 real events (own event history was short in this
+  test run, so fewer than 20 appeared — correct behavior, not a bug), and its achievements card and
+  "View all achievements" button are present and wired to `Achievements.open()` (verified via direct
+  markup inspection after the `.zpp-achieve-card` dead-CSS cleanup below).
+- Confirmed "Back to journey" correctly closes the Profile page and reopens the Journey hub (not
+  both at once), and that clicking a room card correctly closes whichever overlay is open and hands
+  off to that room's real entry point.
+- Screenshotted desktop (1280px) and mobile (390px) viewports for both the Journey hub's rooms
+  section and the full Profile page — responsive grid collapses (4→3→2 columns) correctly at both
+  breakpoints, RTL layout (Arabic, default language) renders correctly, no layout breaks.
+- Re-ran the full 18-gate suite after every fix in this round — all pass, including the
+  no-hardcoded-Arabic gate after the comment rewording.
+- **Not done this round**: no automated unit test exists for `roomsProgressData()`'s localStorage
+  parsing (it's a small pure function reading known keys with safe JSON-parse fallbacks, same
+  pattern as the rest of this file, but there's no test harness for this file at all, matching its
+  existing coverage level); Puzzle Room itself was not touched — its lack of persisted progress is an
+  existing gap in that room, honestly surfaced here rather than fixed, since fixing it is a
+  Puzzle-Room-specific change outside this request's scope.
