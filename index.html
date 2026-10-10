@@ -33,11 +33,20 @@
 <link rel="icon" href="assets/icons/zivo-192.png" type="image/png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="assets/icons/zivo-192.png">
+<!-- V1230.64 — manifest.webmanifest already says display:"standalone" (full screen once installed),
+     but that property is an Android/Chrome thing; iOS Safari ignores the Web App Manifest entirely
+     for "Add to Home Screen" and needs its own proprietary tags instead, which this site never had.
+     Without apple-mobile-web-app-capable, an iPhone opens every page — even one launched from the
+     home-screen icon — inside ordinary Safari chrome (address bar, tab bar), never full screen. -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ZIVOZONE">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="core/styles/index.css?v=1230.31">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.69">
 
 
 
@@ -61,13 +70,13 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="core/styles/core.css?v=1230.31">
-<link rel="stylesheet" href="core/styles/forensic-case.css?v=1230.31">
-<link rel="stylesheet" href="core/styles/puzzle-room.css?v=1230.31">
-<link rel="stylesheet" href="core/styles/beauty-room.css?v=1230.31">
-<link rel="stylesheet" href="core/styles/horror-room.css?v=1230.31">
-<link rel="stylesheet" href="core/styles/player-hub.css?v=1230.31">
-<link rel="stylesheet" href="core/styles/rooms.css?v=1230.31"></head>
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.69">
+<link rel="stylesheet" href="dist/styles/forensic-case.css?v=1230.69">
+<link rel="stylesheet" href="dist/styles/puzzle-room.css?v=1230.69">
+<link rel="stylesheet" href="dist/styles/beauty-room.css?v=1230.69">
+<link rel="stylesheet" href="dist/styles/horror-room.css?v=1230.69">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.69">
+<link rel="stylesheet" href="dist/styles/rooms.css?v=1230.69"></head>
 <body>
 <noscript><div style="padding:24px;text-align:center;color:#fff;background:#05060b">ZIVOZONE يحتاج إلى تفعيل JavaScript. / ZIVOZONE requires JavaScript.</div></noscript>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -153,26 +162,26 @@
   <div class="zivo-newsbar-window"><div class="zivo-newsbar-track" id="zivoNewsTicker"><span class="zivo-ticker-item"><span class="zivo-ticker-tag general">ZIVOZONE</span><span class="zivo-ticker-headline">جاري تحميل الأخبار...</span></span></div></div>
 </section>
 
-<section class="zivo-signature-zone" id="zivo-rooms-hub" aria-label="تجارب ZIVOZONE الرئيسية">
-  <div class="zivo-signature-head"><div><span class="eyebrow">ZIVOZONE SIGNATURE</span><h2>تجارب ZIVOZONE الرئيسية</h2><p>قسم واحد بارز لتجربتين لا تشبهان أي تحدٍ آخر.</p></div><span class="zivo-signature-live">● دخول مباشر</span></div>
+<section class="zivo-signature-zone" id="zivo-rooms-hub" aria-label="تجارب ZIVOZONE الرئيسية" data-i18n-aria-label="sigTitle">
+  <div class="zivo-signature-head"><div><span class="eyebrow">ZIVOZONE SIGNATURE</span><h2 data-i18n="sigTitle">تجارب ZIVOZONE الرئيسية</h2><p data-i18n="sigDesc">قسم واحد بارز لتجربتين لا تشبهان أي تحدٍ آخر.</p></div><span class="zivo-signature-live">● <span data-i18n="sigLive">دخول مباشر</span></span></div>
   <div class="zivo-signature-grid">
-    <article class="zivo-signature-card dark" data-horror-room tabindex="0" role="button" aria-label="دخول الغرفة المظلمة">
+    <article class="zivo-signature-card dark" data-horror-room tabindex="0" role="button" aria-label="دخول الغرفة المظلمة" data-i18n-aria-label="sigDarkAria">
       <div class="zivo-signature-media"><img src="assets/challenge-posters/horror.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">FULL SCREEN</span></div>
-      <div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 الغرفة المظلمة</h3><p>تجربة سينمائية كاملة الشاشة. اضغط في أي مكان للدخول مباشرة.</p><b>دخول الغرفة ↗</b><a href="/rooms/dark-room" class="zivo-seo-link" onclick="event.stopPropagation()">تفاصيل الغرفة</a></div>
+      <div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 <span data-i18n="sigDarkTitle">الغرفة المظلمة</span></h3><p data-i18n="sigDarkDesc">تجربة سينمائية كاملة الشاشة. اضغط في أي مكان للدخول مباشرة.</p><b><span data-i18n="sigDarkCta">دخول الغرفة</span> ↗</b><a href="/rooms/dark-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
-    <article class="zivo-signature-card puzzle-room" data-puzzle-room tabindex="0" role="button" aria-label="دخول غرفة الألغاز">
-      <div class="zivo-signature-media"><div style="height:100%;display:grid;place-items:center;background:radial-gradient(circle,#19334a,#070b12);font-size:80px">🧩</div><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">10 مراحل</span></div>
-      <div class="zivo-signature-copy"><span>03 // PUZZLE EXPERIENCE</span><h3>🧩 غرفة الألغاز</h3><p>غرفة متسلسلة تجمع الذاكرة والمنطق والمتاهة والشيفرة والأدلة والخزنة النهائية.</p><b>دخول غرفة الألغاز ↗</b><a href="/rooms/puzzle-room" class="zivo-seo-link" onclick="event.stopPropagation()">تفاصيل الغرفة</a></div>
+    <article class="zivo-signature-card puzzle-room" data-puzzle-room tabindex="0" role="button" aria-label="دخول غرفة الألغاز" data-i18n-aria-label="sigPuzzleAria">
+      <div class="zivo-signature-media"><div style="height:100%;display:grid;place-items:center;background:radial-gradient(circle,#19334a,#070b12);font-size:80px">🧩</div><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigPuzzleStatus">10 مراحل</span></div>
+      <div class="zivo-signature-copy"><span>03 // PUZZLE EXPERIENCE</span><h3>🧩 <span data-i18n="sigPuzzleTitle">غرفة الألغاز</span></h3><p data-i18n="sigPuzzleDesc">غرفة متسلسلة تجمع الذاكرة والمنطق والمتاهة والشيفرة والأدلة والخزنة النهائية.</p><b><span data-i18n="sigPuzzleCta">دخول غرفة الألغاز</span> ↗</b><a href="/rooms/puzzle-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
-    <article class="zivo-signature-card room-card-story" data-zivo-story-room tabindex="0" role="button" aria-label="دخول غرفة القصص"><div class="zivo-signature-media" style="background:radial-gradient(circle,#4b1f5d,#07040d);display:grid;place-items:center;font-size:78px">📖</div><div class="zivo-signature-copy"><span>05 // CINEMATIC STORIES</span><h3>📖 غرفة القصص</h3><p>قصص أصلية متنوعة: رعب وغموض وبوليسي وخيال علمي وألغاز. اختر الحكاية وادخل عالمها.</p><b>دخول غرفة القصص ↗</b></div></article>
-    <article class="zivo-signature-card room-card-health" data-zivo-health-room tabindex="0" role="button" aria-label="دخول غرفة صحتك بالدنيا"><div class="zivo-signature-media" style="background:radial-gradient(circle,#0d5948,#06100e);display:grid;place-items:center;font-size:78px">❤</div><div class="zivo-signature-copy"><span>06 // HEALTH EXPERIENCE</span><h3>❤ صحتك بالدنيا</h3><p>أبواب مستقلة للصحة والرياضة والطعام والنوم والوزن والنفسية وغيرها.</p><b>دخول غرفة الصحة ↗</b><a href="/rooms/health-world" class="zivo-seo-link" onclick="event.stopPropagation()">تفاصيل الغرفة</a></div></article>
-    <article class="zivo-signature-card beauty" data-beauty-room tabindex="0" role="button" aria-label="دخول غرفة الجمال">
+    <article class="zivo-signature-card room-card-story" data-zivo-story-room tabindex="0" role="button" aria-label="دخول غرفة القصص" data-i18n-aria-label="sigStoryAria"><div class="zivo-signature-media" style="background:radial-gradient(circle,#4b1f5d,#07040d);display:grid;place-items:center;font-size:78px">📖</div><div class="zivo-signature-copy"><span>05 // CINEMATIC STORIES</span><h3>📖 <span data-i18n="sigStoryTitle">غرفة القصص</span></h3><p data-i18n="sigStoryDesc">قصص أصلية متنوعة: رعب وغموض وبوليسي وخيال علمي وألغاز. اختر الحكاية وادخل عالمها.</p><b><span data-i18n="sigStoryCta">دخول غرفة القصص</span> ↗</b></div></article>
+    <article class="zivo-signature-card room-card-health" data-zivo-health-room tabindex="0" role="button" aria-label="دخول غرفة صحتك بالدنيا" data-i18n-aria-label="sigHealthAria"><div class="zivo-signature-media" style="background:radial-gradient(circle,#0d5948,#06100e);display:grid;place-items:center;font-size:78px">❤</div><div class="zivo-signature-copy"><span>06 // HEALTH EXPERIENCE</span><h3>❤ <span data-i18n="sigHealthTitle">صحتك بالدنيا</span></h3><p data-i18n="sigHealthDesc">أبواب مستقلة للصحة والرياضة والطعام والنوم والوزن والنفسية وغيرها.</p><b><span data-i18n="sigHealthCta">دخول غرفة الصحة</span> ↗</b><a href="/rooms/health-world" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div></article>
+    <article class="zivo-signature-card beauty" data-beauty-room tabindex="0" role="button" aria-label="دخول غرفة الجمال" data-i18n-aria-label="sigBeautyAria">
       <div class="zivo-signature-media beauty-cinematic-poster"><div class="beauty-poster-symbol">✦</div><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">BEAUTY & CARE</span></div>
-      <div class="zivo-signature-copy"><span>04 // BEAUTY EXPERIENCE</span><h3>✦ غرفة الجمال</h3><p>عناية راقية بالبشرة والجسد والشعر، وصفات بسيطة، وعادات يومية وإطلالات إكسسوارات.</p><b>دخول غرفة الجمال ↗</b><a href="/rooms/beauty-room" class="zivo-seo-link" onclick="event.stopPropagation()">تفاصيل الغرفة</a></div>
+      <div class="zivo-signature-copy"><span>04 // BEAUTY EXPERIENCE</span><h3>✦ <span data-i18n="sigBeautyTitle">غرفة الجمال</span></h3><p data-i18n="sigBeautyDesc">عناية راقية بالبشرة والجسد والشعر، وصفات بسيطة، وعادات يومية وإطلالات إكسسوارات.</p><b><span data-i18n="sigBeautyCta">دخول غرفة الجمال</span> ↗</b><a href="/rooms/beauty-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
-    <article class="zivo-signature-card forensic" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي">
-      <div class="zivo-signature-media forensic-cinematic-poster"><img src="assets/forensic-cinema/entry.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">مسرح القضية</span></div>
-      <div class="zivo-signature-copy"><span>02 // تجربة التحقيق</span><h3>🕵️ المختبر الجنائي</h3><p>ادخل مسرح القضية، افحص الأدلة، اربط الزمن والوقائع، وابنِ استنتاجك بنفسك.</p><b>بدء التحقيق ↗</b><a href="/rooms/forensic-lab" class="zivo-seo-link" onclick="event.stopPropagation()">تفاصيل الغرفة</a></div>
+    <article class="zivo-signature-card forensic" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي" data-i18n-aria-label="sigForensicAria">
+      <div class="zivo-signature-media forensic-cinematic-poster"><img src="assets/forensic-cinema/entry.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigForensicStatus">مسرح القضية</span></div>
+      <div class="zivo-signature-copy"><span data-i18n="sigForensicKicker">02 // تجربة التحقيق</span><h3>🕵️ <span data-i18n="sigForensicTitle">المختبر الجنائي</span></h3><p data-i18n="sigForensicDesc">ادخل مسرح القضية، افحص الأدلة، اربط الزمن والوقائع، وابنِ استنتاجك بنفسك.</p><b><span data-i18n="sigForensicCta">بدء التحقيق</span> ↗</b><a href="/rooms/forensic-lab" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
   </div>
 </section>
@@ -227,7 +236,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1230.31"></script>
+<script type="module" src="zivo-ai.js?v=1230.69"></script>
 
 
 
@@ -250,7 +259,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.31"></script>
+<script src="dist/app.bundle.js?v=1230.69"></script>
 
 
 

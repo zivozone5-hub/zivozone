@@ -16,11 +16,37 @@ import { initializeAppCheck, ReCaptchaEnterpriseProvider, getToken } from 'https
   let ready = false;
   let lastError = '';
 
-  function usage() {
-    const n = Number(localStorage.getItem(KEY) || 0);
-    return Number.isFinite(n) ? n : 0;
+  /* V1230.66 — security audit finding: the daily cap used to live only in localStorage, so clearing
+     site data (or just opening an incognito window) reset it instantly, and this backend is billed
+     per use. There is no way to make a purely client-side cap unbeatable without Cloud Functions
+     (blocked on the free Spark plan), but mirroring the counter into a same-day cookie as well means
+     a visitor now has to clear BOTH storages (or use a fresh profile) instead of one click on
+     "clear site data" / localStorage.clear(). This raises the bar for casual abuse; it does not close
+     the ceiling a scripted, incognito-cycling attacker could still hit. */
+  function cookieGet(name) {
+    try {
+      const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)'));
+      return m ? decodeURIComponent(m[1]) : null;
+    } catch (e) { return null; }
   }
-  function bump() { localStorage.setItem(KEY, String(usage() + 1)); }
+  function cookieSet(name, value) {
+    try {
+      const d = new Date(); d.setUTCHours(23, 59, 59, 999);
+      document.cookie = `${name}=${encodeURIComponent(value)}; expires=${d.toUTCString()}; path=/; SameSite=Strict`;
+    } catch (e) {}
+  }
+  function usage() {
+    const fromLs = Number(localStorage.getItem(KEY) || 0);
+    const fromCookie = Number(cookieGet(KEY) || 0);
+    const a = Number.isFinite(fromLs) ? fromLs : 0;
+    const b = Number.isFinite(fromCookie) ? fromCookie : 0;
+    return Math.max(a, b);
+  }
+  function bump() {
+    const n = usage() + 1;
+    try { localStorage.setItem(KEY, String(n)); } catch (e) {}
+    cookieSet(KEY, String(n));
+  }
 
   function playerContext() {
     const s = window.ZIVOZONE_STATE || window.ZIVOZONE_PLAYER || {};

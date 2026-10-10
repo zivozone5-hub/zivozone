@@ -6,8 +6,46 @@ service cloud.firestore {
     function isOwner() { return signedIn() && request.auth.token.email == 'raefalbtish@gmail.com' && request.auth.token.email_verified == true; }
     function isSelf(id) { return signedIn() && request.auth.uid == id; }
     function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastRewardClaimId']); }
-    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward']; }
-    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 2); }
+    // V1230.61 — reward-forgery hardening (see economy.js's startGameSession() for the full writeup).
+    function validGameSessionKeys() { return request.resource.data.keys().hasOnly(['sessionId','gameId','startedAt']); }
+    // V1230.68 — zero-cost client-side error tracking (see core/modules/runtime/error-tracker.js).
+    // Anonymous-write like siteStats/visitors below (most runtime errors fire before/without a
+    // signed-in user), size-capped on every field, write-once (no update/delete), admin-only read.
+    function validErrorLogKeys() { return request.resource.data.keys().hasOnly(['type','message','stack','url','userAgent','lang','appVersion','uid','day','createdAt']); }
+    function validErrorLog() {
+      return validErrorLogKeys()
+        && request.resource.data.type in ['error','unhandledrejection','manual']
+        && request.resource.data.message is string && request.resource.data.message.size() <= 500
+        && request.resource.data.stack is string && request.resource.data.stack.size() <= 3000
+        && request.resource.data.url is string && request.resource.data.url.size() <= 200
+        && request.resource.data.userAgent is string && request.resource.data.userAgent.size() <= 300
+        && request.resource.data.lang is string && request.resource.data.lang.size() <= 10
+        && request.resource.data.appVersion is string && request.resource.data.appVersion.size() <= 20
+        && request.resource.data.day is string && request.resource.data.day.size() <= 10
+        && request.resource.data.createdAt == request.time
+        // uid is never trusted blindly: either absent (anonymous visitor) or it must be the
+        // writer's own authenticated uid — never someone else's, to stop one player from writing
+        // error logs that frame another player's account.
+        && (request.resource.data.uid == null || (signedIn() && request.resource.data.uid == request.auth.uid));
+    }
+    function validGameSessionShape() {
+      return request.resource.data.sessionId is string && request.resource.data.sessionId.size() > 5
+        && request.resource.data.gameId is string && request.resource.data.gameId.size() > 0
+        && request.resource.data.startedAt == request.time;
+    }
+    // V1230.59 — added light_escape_reward (per-world clear, Dark Room's new "Light Escape" game)
+    // and light_escape_epic_reward (full 50-level clear).
+    // V1230.60 — the bug flagged above is now fixed: beauty_epic_reward, forensic_epic_reward,
+    // puzzle_epic_reward, story_epic_reward and health_epic_reward (each room's own Epic50
+    // "full clear" bonus, credit(5,{type:'…_epic_reward'}) in beauty-room.js/forensic-case-core.js/
+    // puzzle-room.js/rooms.js) were never in this list or in economy.js's matching switch, so every
+    // one of those claims was silently rejected by credit() returning false before ever reaching
+    // Firestore — confirmed by reading every live call site client-side, not just the client-side
+    // reward policy table. horror_epic_reward is NOT added here: horror-room.js no longer calls it
+    // at all (that mechanic was replaced by light_escape_epic_reward in 1230.59), so it is genuinely
+    // dead and adding it would just be an unused allow-rule.
+    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward']; }
+    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5); }
     function validRewardClaim(claimId) {
       return request.resource.data.claimId == claimId
         && request.resource.data.status == 'consumed'
@@ -24,7 +62,14 @@ service cloud.firestore {
         && (request.resource.data.type != 'story_reward' || request.resource.data.policy == 'story_reward')
         && (request.resource.data.type != 'health_reward' || request.resource.data.policy == 'health_reward')
         && (request.resource.data.type != 'beauty_reward' || request.resource.data.policy == 'beauty_reward')
-        && (request.resource.data.type != 'horror_reward' || request.resource.data.policy == 'horror_reward');
+        && (request.resource.data.type != 'horror_reward' || request.resource.data.policy == 'horror_reward')
+        && (request.resource.data.type != 'light_escape_reward' || request.resource.data.policy == 'light_escape_reward')
+        && (request.resource.data.type != 'light_escape_epic_reward' || request.resource.data.policy == 'light_escape_epic_reward')
+        && (request.resource.data.type != 'beauty_epic_reward' || request.resource.data.policy == 'beauty_epic_reward')
+        && (request.resource.data.type != 'forensic_epic_reward' || request.resource.data.policy == 'forensic_epic_reward')
+        && (request.resource.data.type != 'puzzle_epic_reward' || request.resource.data.policy == 'puzzle_epic_reward')
+        && (request.resource.data.type != 'story_epic_reward' || request.resource.data.policy == 'story_epic_reward')
+        && (request.resource.data.type != 'health_epic_reward' || request.resource.data.policy == 'health_epic_reward');
     }
     function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
     function perfectClaim() {
@@ -37,7 +82,22 @@ service cloud.firestore {
         && request.resource.data.source == 'game-platform'
         && request.resource.data.validated == true
         && request.resource.data.validatedSessionId is string
-        && request.resource.data.validatedSessionId.size() > 5;
+        && request.resource.data.validatedSessionId.size() > 5
+        // V1230.61 — the historical gap this was flagged for: challenges.js self-asserted this whole
+        // "perfect 10/10" shape client-side with nothing here tying it to real elapsed time, so a
+        // console one-liner could mint an unlimited stream of fake claims instantly. Now cross-checked
+        // against users/{uid}/zivozone/gameSession (economy.js's startGameSession(), written when a
+        // real round genuinely begins, server-timestamped): the claimed session must exist, match this
+        // claim's game, and at least 15s of real server-measured time must separate its start from
+        // this claim. Not a complete anti-cheat — there is no server compute on the free Spark plan to
+        // replay the actual 10 answers — but it closes the zero-effort, zero-elapsed-time forgery, and
+        // the gameSession doc's own update cooldown (see that match block) stops pre-staging many
+        // sessions to batch-drain claims once the window opens for all of them at once.
+        && request.resource.data.challenge is string && request.resource.data.challenge.size() > 0
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/zivozone/gameSession)
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)/zivozone/gameSession).data.sessionId == request.resource.data.validatedSessionId
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)/zivozone/gameSession).data.gameId == request.resource.data.challenge
+        && request.time >= get(/databases/$(database)/documents/users/$(request.auth.uid)/zivozone/gameSession).data.startedAt + duration.value(15, 's');
     }
 
     match /users/{userId} {
@@ -62,9 +122,10 @@ service cloud.firestore {
             getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/mining).data.lastMiningAt == request.time) ||
           (request.resource.data.zivo > resource.data.zivo &&
             request.resource.data.lastRewardClaimId is string &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.amount == request.resource.data.zivo - resource.data.zivo &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.consumedAt == request.time)
+            // V1230.68: rewardClaims is a sibling of zivozone now, not nested under it — see the fix note at match /rewardClaims/{claimId} below.
+            getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.amount == request.resource.data.zivo - resource.data.zivo &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.consumedAt == request.time)
         ));
         allow delete: if false;
       }
@@ -83,12 +144,36 @@ service cloud.firestore {
         allow delete: if false;
       }
 
-      match /zivozone/rewardClaim {
+      // V1230.61 — one fixed doc, not an unbounded subcollection (same shape as wallet/mining
+      // above): a real challenge round's start, anchored with request.time so the client can't lie
+      // about when it began. The update cooldown below is the actual rate limit — it stops an
+      // attacker from pre-creating many sessions in a burst and draining them all at once the moment
+      // perfectClaim()'s minimum-elapsed-time window opens for all of them simultaneously; only one
+      // session can be "in flight" at a time, and starting a new one requires waiting out the last.
+      match /zivozone/gameSession {
         allow read: if isOwner() || isSelf(userId);
-        allow write: if false;
+        allow create: if isSelf(userId) && validGameSessionKeys() && validGameSessionShape();
+        allow update: if isSelf(userId) && validGameSessionKeys() && validGameSessionShape()
+          && resource.data.startedAt + duration.value(15, 's') <= request.time;
+        allow delete: if false;
       }
 
-      match /zivozone/rewardClaims/{claimId} {
+      // V1230.69 — dead-code audit: removed the singular `zivozone/rewardClaim` rule that used to be
+      // here. No JS anywhere references a 'rewardClaim' document id (singular) — confirmed by search
+      // — and it already denied all writes (allow write: if false), so removing it changes nothing
+      // functionally. The real, actively-used claim path is the plural `rewardClaims/{claimId}`
+      // collection just below (moved to be a sibling of `zivozone` in V1230.68's reward-path fix).
+
+      // V1230.68 — CRITICAL FIX: this was previously nested as `match /zivozone/rewardClaims/{claimId}`,
+      // which is not a reachable document path. 'zivozone' (see /zivozone/wallet etc. above) is a
+      // COLLECTION (users/{userId}/zivozone); a collection's children are documents, not more
+      // collections, so "zivozone/rewardClaims/{claimId}" is a 3-segment (odd = collection-level) path,
+      // not a document — the matching economy.js code tried to reach it via
+      // root(uid).collection('rewardClaims'), i.e. .collection() on a CollectionReference, which the
+      // Firestore SDK does not support and throws at runtime. Moved here as a sibling of 'zivozone'
+      // (users/{userId}/rewardClaims/{claimId} — 4 segments, even, a real document), matching
+      // economy.js's corrected rewardClaims(uid) helper.
+      match /rewardClaims/{claimId} {
         allow read: if isOwner() || isSelf(userId);
         allow create: if isSelf(userId) && validRewardClaim(claimId);
         allow update,delete: if false;
@@ -110,8 +195,9 @@ service cloud.firestore {
           (
             request.resource.data.eventId == entryId
             && request.resource.data.claimId == entryId
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.status == 'consumed'
-            && getAfter(/databases/$(database)/documents/users/$(userId)/zivozone/rewardClaims/$(entryId)).data.amount == request.resource.data.amount
+            // V1230.68: rewardClaims is a sibling of zivozone now, not nested under it — see the fix note at match /rewardClaims/{claimId}.
+            && getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(entryId)).data.status == 'consumed'
+            && getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(entryId)).data.amount == request.resource.data.amount
             && ((request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10)
               || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2])
               || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5])
@@ -119,7 +205,14 @@ service cloud.firestore {
               || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 2)
               || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 2)
               || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 2)
-              || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 2))
+              || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 2)
+              || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 2)
+              || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5)
+              || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5)
+              || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5)
+              || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5)
+              || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5)
+              || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5))
           )
         );
         allow update,delete: if false;
@@ -135,6 +228,16 @@ service cloud.firestore {
       match /attempts/{attemptId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
       match /gameAttempts/{attemptId} { allow read,create: if isOwner() || isSelf(uid); allow update,delete: if false; }
       match /wallet/{doc} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
+    }
+
+    // V1230.68 — zero-cost client-side error tracking; see validErrorLog() above and
+    // core/modules/runtime/error-tracker.js. Anyone (signed in or not) may create a log entry so
+    // real errors are never lost to a missing sign-in; only the admin can read them back, and
+    // nothing can ever be edited or removed once written.
+    match /errorLogs/{errorId} {
+      allow read: if isOwner();
+      allow create: if validErrorLog();
+      allow update, delete: if false;
     }
 
     match /questions/{id} { allow read: if signedIn(); allow write: if false; }
@@ -193,5 +296,29 @@ service cloud.firestore {
       allow delete: if isOwner();
     }
         match /public/{document=**} { allow read: if true; allow write: if false; }
+
+    /* V1230.68 — FUTURE TIGHTENING, INERT, NOT ACTIVE. ===============================================
+       Written alongside functions/index.js (real server-side game-result verification; see that
+       file's header for full context and deploy steps) for the day the user upgrades off the free
+       Spark plan and deploys Cloud Functions. Everything below this line is a comment, not a rule —
+       it changes NOTHING about current behavior. Once Cloud Functions are deployed and trusted:
+
+       Replace perfectClaim()'s current client-attested shape check:
+         function perfectClaim() {
+           return request.resource.data.amount == 10 && ... && request.resource.data.source == 'game-platform' ...
+         }
+       with a check that the claim was written by the Cloud Function specifically (which uses the
+       Admin SDK and so is never actually evaluated against these rules at all — Admin SDK writes
+       bypass firestore.rules entirely). The real tightening is therefore not a rule change here, but
+       a CLIENT change: once functions/index.js is deployed and server-verify.js's
+       CLOUD_FUNCTIONS_ENABLED flag is on and proven reliable, economy.js's own client-side
+       'zivozone-result' listener (onChallenge/rewardPerfect in core/modules/economy.js) can be
+       retired, leaving the Cloud Function as the ONLY path that can ever write a challenge_reward
+       claim — at which point perfectClaim()'s whole client-attested-shape check becomes moot and
+       could be replaced with simply `allow create: if false;` for type=='challenge_reward' claims
+       (only the Admin SDK, which ignores these rules, could still write one). That is a deliberate,
+       separate, future change — not made now, since the client-side path is still the ONLY working
+       path today and must keep working until the server path is deployed and verified for real.
+    ================================================================================================= */
   }
 }

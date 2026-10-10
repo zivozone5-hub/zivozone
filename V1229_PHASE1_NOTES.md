@@ -2800,3 +2800,2308 @@ Full rebuild (`python3 scripts/release.py 1230.31`); one regression caught mid-p
 `roomsGenreAria` ("Genre") flagged as an untranslated copy of English — it's the real French word
 too, added to `qa_i18n_coverage.py`'s known-shared-words allowlist with a comment, same precedent as
 `epic50Points` in 1230.29. All 10 QA gates: ALL PASSED.
+
+## 1230.32 — "اعمل كل شي": universal-translator pass, part 2 — challenges.js's `ROOM_DNA`
+
+Continuing the explicit instruction to make switching the site's language change *everything*, not
+just UI chrome — part 1 (this same round) translated the six Epic-50 game/band-name dictionaries
+across `horror-room.js`, `puzzle-room.js`, `beauty-room.js`, `forensic-case-core.js` and `rooms.js`
+(×2) into all 7 languages, and fixed a pre-existing bug where 3 of those files' entry-point CTA
+buttons were hardcoded to read `.ar` directly off those dictionaries regardless of the visitor's
+chosen language (so the translations existed but the button that opens the game never used them).
+
+This entry is part 2: **`core/modules/challenges.js`'s `ROOM_DNA`** — the cinematic "entering the
+room" sequence shown before every one of the 23 challenge types (football, math, science, memory,
+logic, IQ, strategy, probability, visual, pattern, code, reaction, focus, daily, who-am-i, forensic,
+horror, language, lateral) — was Arabic-only: its kicker, title, intro line, 4 step
+titles/descriptions, and closing hint for every single challenge. A visitor playing in French or
+Hindi would get a fully-translated question bank but an Arabic-only cinematic intro screen
+immediately before it, which is exactly the "half-translated" experience this round is meant to
+eliminate.
+
+**What changed:**
+- `ROOM_DNA` (a flat Arabic object) replaced with `ROOM_DNA_I18N`: every field (`title`, `kicker`,
+  `line`, `roomHint`, and each of the 4 `steps` entries) is now a `{ar,en,zh,hi,es,fr,fa}` dictionary
+  with real, hand-written translations — not machine-literal — for all 23 challenge ids. That's
+  ~230 source strings × 7 languages ≈ 1,610 translated strings.
+- `roomDNA(id)` rewritten to resolve the visitor's current language through the file's existing
+  `text()` helper (the same lookup already used elsewhere in this file for bilingual dicts) before
+  returning the flat `{theme,icon,file,seal,title,kicker,line,steps,roomHint}` shape the cinematic
+  renderer (`cinema.intro`/`cinema.start`) already expects — so no call site needed to change.
+- The one case where a challenge's displayed *name* was itself Arabic (`football`'s title, "غرفة
+  كرة القدم") now has a proper translated title in every language ("Football World" / "دنیای فوتبال"
+  / "足球世界" / etc.), matching the naming style already used by its `WORLD_I18N` entry.
+- The `roomDNA()` fallback object (used only if an unknown id is ever passed) was also converted to
+  the same 7-language shape, for consistency.
+- `theme`/`icon`/`file`/`seal` were left as-is: these are internal technical codes (CSS theme
+  classes, room art lookups, cosmetic file/seal labels like "PITCH-01" / "VAR // READY") with no
+  user-facing language content, same reasoning as before.
+
+**Not touched by this entry** (explicitly still open, see below): `WORLD_ATLAS`'s `facts`/`links`/
+`mini` fields and the French/Persian gaps in `WORLD_I18N`/`ATLAS_COPY`; `question-bank.js`'s
+question/option text (only ar/en are passed per question); `minigame-content.js`'s lateral riddles
+and language-order content; `forensic-case-core.js`'s full case dataset; `rooms.js`'s `DOOR_LINES`.
+
+**Verified live** via Playwright: switched language to Spanish, Persian, Chinese and French and
+opened 4 different challenges' cinematic intros (`memory_v22`, `logic_extreme`, `horror`) — kicker,
+title, intro line, first step, and closing hint all rendered correctly in the target language with
+zero `pageerror` events. Confirmed programmatically (not just visually) that all 23 entries have
+non-empty `title`/`kicker`/`line`/`roomHint` and exactly 4 two-part `steps` in every one of the 7
+languages.
+
+Rebuild (`python3 scripts/release.py 1230.32`). One expected QA signal, not a regression: translating
+`ROOM_DNA` into Persian (which shares Arabic's Unicode block) raises `qa_no_hardcoded_arabic.py`'s
+raw character-run count the same way completing Persian coverage did for this same file back in
+1229.17 — confirmed the diff is genuine new-language text (every one of the 23 entries checked
+programmatically above) rather than new hardcoding, then re-ran
+`scripts/gen_hardcoded_arabic_baseline.py` to lock in the new, lower-hardcoding baseline, per that
+gate's own documented procedure. All 10 QA gates: ALL PASSED after re-baselining.
+
+## 1230.33 — "اعمل كل شي", part 3 — the World Atlas header, zones and missions
+
+Part 3 of the universal-translator pass: **`challenges.js`'s "World Atlas" system**
+(`WORLD_I18N`/`ATLAS_COPY`, consumed by `atlas()`/`atlasMissions()` to render the "world hub" screen
+shown when a player enters a challenge's world — the header title/tagline, the zone list, and the
+mission list). Before this entry:
+- 5 of the 23 challenge ids (`football_intelligence`, `memory_focus`, `logic_extreme`, `iq`,
+  `pattern_v18`) had **no entry at all** in `WORLD_I18N` — not even in English — so a non-Arabic
+  visitor entering those 5 worlds saw a blank/fallback header instead of a translated one.
+  4 of those 5 (all but `pattern_v18`) were also missing from `ATLAS_COPY`'s mission lists.
+- Of the 18 ids that did have entries, only `en`/`zh`/`hi`/`es` were covered — French and Persian
+  visitors got whichever fallback the lookup functions happened to resolve to (English, in
+  practice), not their own language.
+
+**Fixed:** added the 5 missing ids to `WORLD_I18N` and the 4 missing ids to `ATLAS_COPY` for
+`en`/`zh`/`hi`/`es` (closing the English-language gap first), then added full `fr` and `fa` entries
+to both dictionaries for **all 23 ids** (title + tagline + zone names for `WORLD_I18N`; mission
+names for `ATLAS_COPY`). No function changes were needed — `atlas()` and `atlasMissions()` already
+look the current language up generically (`WORLD_I18N[lang]?.[id]`, `ATLAS_COPY[l]?.[id]`), so once
+the data existed the existing code picked it up on its own. Verified programmatically that all 23
+ids now have a complete, non-empty title/tagline/zones/missions entry in all 6 non-Arabic languages.
+
+**Verified live** via Playwright: entered three different challenge worlds
+(`football_intelligence` in French, `logic_extreme` in Persian, `pattern_v18` in Spanish) and
+confirmed the header title, tagline, all 4–5 zone names, all 4–6 mission names, and the tab labels
+("Missions"/"Connaissances"/"Mini-jeu", etc.) all rendered in the target language with zero
+`pageerror` events.
+
+**Not covered by this entry, confirmed still Arabic-only while testing it live:**
+- `WORLD_ATLAS`'s `facts` (3 per id), `links` (label + URL per id) and `mini` (1 per id) fields —
+  `atlas()` never overrides these regardless of language, so the "Knowledge"/"Sources"/"Mini-game"
+  tabs inside the world hub still show Arabic content in every language. ~23×3 facts + ~23×2–3
+  links + 23 mini-labels ≈ 250–300 strings.
+- **Newly discovered while live-testing this entry**: `ROOM_WORLD` (a separate, still fully
+  Arabic-only object used by `worldFor()`) supplies the world hub's hero tagline (`w.intro`, e.g.
+  "أنت أمام مباراة حية…") — visible directly under the zone/mission list in every language in this
+  round's screenshots. Not part of the original 7-item inventory; added to the list of what's left.
+- The question/answer text shown inside each mission card comes from `question-bank.js`, already a
+  separately tracked, much larger item (~900 fields, ar/en only).
+
+Rebuild (`python3 scripts/release.py 1230.33`). Same expected signal as 1230.32: the new Persian
+content raised `qa_no_hardcoded_arabic.py`'s raw count (4606 → 5380); confirmed the diff was
+genuinely new `fr`/`fa` dictionary text (not accidental re-duplication) by inspecting the parsed
+objects directly, then re-ran `scripts/gen_hardcoded_arabic_baseline.py`. All 10 QA gates: ALL
+PASSED after re-baselining.
+
+One implementation mistake caught and fixed before shipping this entry, worth recording: the first
+attempt at inserting the 5 missing `WORLD_I18N` ids and 4 missing `ATLAS_COPY` ids used a
+string-splice that put the new keys *after* each language object's closing `}` instead of *before*
+it — syntactically valid JS (`node --check` passed) but semantically wrong (the new ids became
+sibling top-level keys of `WORLD_I18N`/`ATLAS_COPY` instead of living inside `en:{...}`/`zh:{...}`
+etc., so `WORLD_I18N.en.football_intelligence` was `undefined`). Caught by writing a small Node
+verification script that actually parses the resulting object and checks every id/language
+combination exists, rather than trusting a syntax check alone. Restored `challenges.js` from the
+last verified zip and redid the insertion correctly before proceeding — no broken state was ever
+built, rebuilt, or shipped.
+
+## 1230.34 — "اعمل كل شي", part 4 — the actual gameplay screen (`ROOM_WORLD`), and a `dir="rtl"` bug
+
+Part 4 of the universal-translator pass: `ROOM_WORLD`, the dictionary behind `worldFor()` that
+drives **`renderWorld()`** — the main gameplay/question screen itself (not the world-hub landing
+screen fixed in 1230.33, the screen the player actually spends the whole challenge on). Before this
+entry it was 100% Arabic-only, so a French/Persian/Spanish/Chinese/Hindi player saw an Arabic world
+label, subtitle, zone list, mode names and hero line on every single question, no matter what
+language the rest of the site was in. Also found and fixed while touching this screen:
+
+- A **hardcoded `dir="rtl"`** on `renderWorld()`'s root element and on the finish screen — both
+  ignored the visitor's actual language direction, so an English/French/Spanish player got a
+  right-to-left gameplay screen even though the rest of the site had correctly switched to LTR.
+  Changed both to `dir="${document.documentElement.dir||'rtl'}"`, matching the pattern already used
+  correctly elsewhere (e.g. `renderWorldHub()`).
+- A batch of **hardcoded Arabic UI chrome** sitting alongside `ROOM_WORLD` in the same three
+  methods — none of it game content, all of it interface text that should have followed the site's
+  language from the start: the phase label (Exploration/Interaction/Final), the no-choices answer
+  form's placeholder/button/aria text, the location/mode/phase bar, the "World Map" panel title, the
+  mission label, the scene instruction line, the footer's score/correct-count summary, the "Return
+  to site" button (in three places), the finish screen's three title variants and four message
+  variants, the "Retry" button, and the "are you sure you want to leave" confirmation — 25 new i18n
+  keys added for all 7 languages (`scripts/add_i18n_keys.py`, 3 batches, each with a `--note`
+  recording what it covers).
+
+**Fixed:** added `ROOM_WORLD_I18N`, a new 23-id × 6-language (`en`/`zh`/`hi`/`es`/`fr`/`fa`)
+dictionary covering every field `worldFor()` returns (`label`, `sub`, `zones`, `modes`, `intro`),
+and rewrote `worldFor(id)` to merge the Arabic base (still the structural source of truth) with the
+current language's pack when the visitor's language isn't Arabic — same merge-over-base pattern
+already used for `roomDNA()` in 1230.32, so no call site anywhere else in the code had to change.
+Also discovered and filled a pre-existing gap: `memory_focus` had **no `ROOM_WORLD` entry at all**
+(not even in Arabic), so it was silently falling back to `iq`'s world content for every visitor
+regardless of language — added the missing Arabic base entry too, not just translations of it.
+
+**A real bug found only by live testing, not by any static check:** after this was coded and all 10
+QA gates passed, a live Playwright run throwing `renderWorld()` into French, Persian and Spanish hit
+`ReferenceError: Cannot access 't' before initialization` on every attempt — a runtime-only
+Temporal-Dead-Zone bug invisible to `node --check` and to every gate, since all of them check syntax
+and static structure, not execution order. Traced it to `renderWorld()`'s 20-second countdown timer:
+`let left=20;const t=m.querySelector('#zrw-time');...`, a local `const t` used as shorthand for "the
+timer element" — declared further down in the same method body, after the method's own `t(...)`
+i18n calls had already been written earlier in that same scope. In JavaScript a `const`/`let` is
+hoisted to the top of its enclosing scope and is unreachable ("dead zone") until its declaration
+line actually runs, so every earlier `t('challengesPhaseExplore')`-style call in the method was
+silently poisoned by a local variable declared *after* it, textually and at runtime. This is the
+exact same bug class documented in the 1230.31 entry for `rooms.js` (there: `t` shadowed as a
+destructured map-callback parameter; here: `t` shadowed as a DOM-element reference) — same root
+cause, different local variable. **Fixed** by renaming the local variable to `timeEl`; nothing else
+in the method referenced it, so no other change was needed. Re-ran `node --check`, rebuilt, and
+re-ran all 10 QA gates (still ALL PASSED — this class of bug does not show up in any of them, which
+is exactly why the live Playwright pass caught it and the gates didn't) and the live Playwright test
+again: zero `pageerror` events across French/`football`, Persian/`memory_focus` and
+Spanish/`horror`, correct `dir="ltr"`/`dir="rtl"` on each, and every piece of UI chrome (location,
+mode, phase, world-map title, mission label, scene instruction, footer score line, zone names, the
+hero intro line) rendering in the target language.
+
+The hardcoded-Arabic-count gate's raw count had already risen to 6098 (from 5380) purely from adding
+`ROOM_WORLD_I18N`'s Persian text and the 25 new keys' Arabic/Persian entries — verified genuine (not
+duplicated Arabic) by parsing `ROOM_WORLD_I18N.fa` directly and inspecting representative entries —
+and re-baselined via `scripts/gen_hardcoded_arabic_baseline.py` to 7168 *before* the TDZ bug was
+found; the rename fix itself touched zero Arabic text, so no further re-baselining was needed after
+it.
+
+## 1230.35 — "اعمل كل شي", part 5 — the Knowledge/Sources/Mini-game tabs, and two more gaps found while testing them
+
+Part 5: `WORLD_ATLAS`'s `facts` (3 per id), `links` (label + URL per id) and `mini` (1-line label
+per id) fields — the content shown in the world hub's "Knowledge" / "Sources" / "Mini-game" tabs,
+flagged as not covered back in the 1230.33 entry. Before this entry these were 100% Arabic-only in
+every language, so switching the site's language translated the tab *names* but never their
+*content* — a French or Persian visitor still read Arabic facts and Arabic link titles inside tabs
+labeled in their own language.
+
+**Fixed:** added `ATLAS_EXTRA_I18N`, a new 23-id × 6-language (`en`/`zh`/`hi`/`es`/`fr`/`fa`)
+dictionary with translated `facts`, `links` (label translated, URL kept identical to the Arabic
+base — same destination page) and `mini` for every challenge id, and extended `atlas(id)` to merge
+it in for non-Arabic visitors, same base+pack merge pattern used throughout this whole translator
+pass. No other function needed to change — `renderWorldHub()` already reads `a.facts`/`a.links`/
+`a.mini` generically.
+
+**Two more gaps found while live-testing this tab, fixed in the same pass since leaving them would
+have shipped a half-translated panel right next to the newly-translated one:**
+- `miniDescription()` — the one-line description shown under the mini-game title — turned out to be
+  missing the **same 5 ids** (`football_intelligence`, `memory_focus`, `logic_extreme`, `iq`,
+  `pattern_v18`) in **every language including Arabic**, falling back to a generic placeholder
+  sentence regardless of the visitor's language. This is the identical gap shape found twice before
+  in this pass (`WORLD_I18N` in 1230.33, `ROOM_WORLD` in 1230.34) — the same 5 ids keep surfacing as
+  "added later, never backfilled everywhere." Wrote and added the missing description for all 5 ids
+  in all 7 languages.
+- `worldResources()` / `WORLD_RESOURCES` — a second, separate set of external links (H5P/PhET
+  activities etc.) that `renderWorldHub()` appends after `a.links` in the same "Sources" tab. These
+  were also 100% Arabic-only, so even after fixing `ATLAS_EXTRA_I18N.links` above, the same tab
+  would have shown a mix of translated links followed by Arabic ones. Added
+  `WORLD_RESOURCES_I18N` (22 ids × 6 languages — `memory_focus` has no entry even in the Arabic
+  base and correctly falls back to `iq`'s resources, same as before) translating each entry's label
+  and description while keeping the URL from the Arabic base; product/brand names that are already
+  identical across languages (H5P, PhET, "Branching Scenario", etc.) were left as-is, the same
+  treatment "FIFA" and "MDN" got earlier in this pass.
+
+**Verified live** via Playwright across French/`football`, Persian/`memory_focus`,
+Spanish/`horror` and Chinese/`logic_extreme`: opened the Facts, Sources and Mini-game tabs for each
+and confirmed every fact, every link label and description (both the `ATLAS_EXTRA_I18N` ones and the
+`WORLD_RESOURCES_I18N` ones appended after them), and the mini-game title and description all
+render in the target language with zero `pageerror` events and correct `dir`.
+
+Hardcoded-Arabic count rose twice while building this (6098→6972 after `ATLAS_EXTRA_I18N`'s Persian
+text; 6972→7439 after `WORLD_RESOURCES_I18N`'s Persian text plus the 5 new Arabic `miniDescription`
+entries) — verified genuine both times by parsing the relevant objects directly and inspecting
+representative Persian entries, then re-baselined via `scripts/gen_hardcoded_arabic_baseline.py`
+(final: 8509). This time the structural-insertion check from the 1230.33 lesson was run proactively,
+*before* rebuilding, by parsing each new dictionary straight out of the file and confirming all 23
+(or 22) ids existed as children of each language key — no sibling-key bug this round.
+
+**Not covered by this entry, still pending:** `question-bank.js`'s ~900 question/option fields
+(ar/en only — confirmed still showing Arabic question/answer text live in this round's own Persian
+and Spanish test runs); `minigame-content.js`'s lateral/language riddle content (~20 strings, ar/en
+only); `forensic-case-core.js`'s ~2500-line case dataset (no i18n infrastructure at all yet — the
+largest remaining item, and now the only one left in the original inventory).
+
+## 1230.36 — "اعمل كل شي", part 6 — the two real mini-games, and the mini-game canvas shell
+
+Part 6: `minigame-content.js` (the "lateral" hidden-object riddles and the "language" sentence-order
+rush — the two mini-games whose content is actual language text, not emoji/numbers like the other
+~20 games). This file had a *documented* scope limit from V1230.27: Arabic + English content only,
+with English used as the shared fallback for the other 5 UI languages. That was a deliberate decision
+at the time, but it directly contradicts this session's standing instruction ("كل شي حرفيا بالموقع
+تتغير لغته" — literally everything on the site changes language) — a Chinese or Persian visitor
+playing either game still got English riddles/sentences, not their own language.
+
+**Fixed:** wrote real riddle text for all 5 lateral riddles and real sentence-order puzzles for all 5
+language-game levels in all 5 previously-missing languages (`zh`/`hi`/`es`/`fr`/`fa`), on top of the
+existing `ar`/`en`. Decoy/filler emoji needed no translation. For the sentence-order game specifically,
+each language's sentence was written fresh (not word-for-word translated) so the puzzle stays
+grammatically sound once shuffled and reassembled in that language's own word order, rather than
+forcing Arabic/English syntax onto languages that order words differently. `pickSet()`'s fallback to
+`en` is now only a last-resort for an unrecognized language code, never a substitute for any of the
+7 supported languages.
+
+**A second gap found while testing this, fixed in the same pass:** the mini-game's own canvas shell
+— the wrapper every single mini-game (football, math, science, lateral, language, all ~20 of them)
+renders into — had the same `dir="rtl"` hardcoded-direction bug found and fixed several times
+already in this pass (`renderWorld()` in 1230.34, the finish screen in 1230.34), plus three hardcoded
+Arabic UI strings: the "World Game // HTML5" header label, the "Points" label (shown twice — once
+during play, once on the result screen), and the canvas's `aria-label`. Also found and fixed:
+`worldArt()`, the small decorative scene snippets shown behind the question on the main gameplay
+screen, had 9 hardcoded Arabic strings baked into its football/math/science scene markup (Transfer
+Market / Speed / Accuracy / Budget / Free Kick / Live Match / Sample / Hypothesis ×2) — the other
+~19 game themes in `worldArt()` use only emoji, numbers and already-English labels (VAR, LIVE DATA,
+DISCOVERY), so this was contained to 3 of the ~20 decorative scenes. Added 11 new i18n keys for all
+7 languages and routed every one of these strings through `t()`.
+
+Checked `startMiniGame()`'s entire ~590-line body (it implements all ~20 individual canvas games)
+line by line for Arabic text before stopping: beyond the shell chrome and `worldArt()`'s 3 scenes,
+the only Arabic found was already-translated data (`GAME_NAMES_BY_LANG`, already covering all 7
+languages from an earlier round) — every individual game's in-canvas drawing (numbers, shapes,
+score HUD) is language-neutral by construction, so there was nothing further to translate here.
+
+**Verified live** via Playwright: played the mini-game shell in French, Persian, Spanish and
+Chinese (header label, points label, aria-label, level indicator all localized, correct `dir`), and
+checked `worldArt()`'s translated scenes directly (French `football` at scene index 3 → "Marché des
+transferts / ⚡ Vitesse / 🎯 Précision / 💰 Budget"; Persian `science` at indices 1 and 3 → "🔬نمونه
+04" and "فرضیه A ? فرضیه B"). Zero `pageerror` events throughout.
+
+`qa_i18n_coverage.py` flagged `miniPointsLabel` and `worldArtBudget` as suspiciously English-identical
+French translations — verified both are genuine cognates ("Points", "Budget" are the real French
+words) and added to `ALLOW_FR`, same pattern as five earlier rounds. The hardcoded-Arabic count for
+`challenges.js` actually *dropped* this round (7439 → 7420, since Arabic chrome literals moved out of
+the file and into `i18n.js`'s already-exempt translation table) — no re-baselining needed, since the
+gate only fires on an increase.
+
+**Not covered by this entry, still pending — now the only two items left in the original
+7-item inventory:** `question-bank.js`'s ~900 question/option fields (ar/en only); `forensic-case-core.js`'s
+~2500-line case dataset (no i18n infrastructure at all yet — the largest and last remaining item).
+
+## 1230.37 — "اعمل كل شي", part 7 — question-bank.js: real scope found, and the first slice fixed
+
+Started on `question-bank.js`, the item flagged in every earlier entry as "~900 fields, ar/en only."
+Before writing a single translation, measured the actual scope programmatically (loading the real
+bank object in Node rather than guessing from source text), since this file is the single largest
+remaining item and a wrong estimate here would waste a lot of work. The real picture is bigger and
+different in shape than "ar/en only":
+
+- **640 total questions** across 21 challenge banks (not ~900 fields — ~900 undercounted it; with
+  up to 4 answer options per question it's closer to 2,500 individual text fields).
+- **15 banks (520 questions)** already have the full 7-language object structure (an `O(ar,en,zh,
+  hi,es,fr,fa)` helper, with `zh`/`hi`/`es`/`fr` defaulting to the English text and `fa` to the
+  Arabic text when not explicitly given) — but measured directly, only 200 of those 520 questions
+  (38%) and 212 of their 1,836 answer options (12%) actually have real, distinct translations; the
+  rest are silently falling back to English (or Arabic for Persian).
+- **6 banks (120 questions — `logic_v18`, `pattern_v18`, `focus_v18`, `logic_extreme`,
+  `memory_focus`, `football_intelligence`) have no i18n structure at all** — `q` is a plain Arabic
+  string with no `en`/`zh`/etc. at all, not even the English-fallback safety net the other banks
+  have. These are a strictly worse gap than "ar/en only" and were not visible from the file's own
+  header comment ("Five-language question data with safe fallback") — that claim is true for 15 of
+  21 banks, not all of them.
+
+Given the real size (full treatment is thousands of translated strings, not hundreds), this is being
+worked in slices like every other part of this pass, most-broken-first rather than biggest-first:
+the 3 smallest zero-i18n banks (`logic_v18`, `pattern_v18`, `focus_v18` — 30 questions total) went
+first in this entry, since a bank with literally no fallback is a worse experience for a non-Arabic
+visitor than a bank quietly falling back to English.
+
+**Fixed:** rewrote all 30 questions in these 3 banks from plain Arabic strings into full
+`{ar,en,zh,hi,es,fr,fa}` objects for the question text, and — for every question whose expected
+answer is a *word* rather than a number (e.g. "which word doesn't belong: apple, orange, banana,
+chair?" → "chair") — did the same for the `answer` field. Two things this required getting right,
+checked against the actual grading code (`answer(q,value)` in `challenges.js`) before writing a
+single line, not assumed:
+- The grading function already resolves `q.answer` through the same `text()` helper used for
+  everything else localized in this pass (`v[document.documentElement.lang]||v.ar||v.en||...`), so
+  turning `answer` from a plain string into a `{ar,en,...}` object is safe and the engine will grade
+  against the *current UI language's* version automatically — verified live by switching to French
+  and literally typing "vert" as the answer to the translated color-naming question and confirming
+  it was accepted as correct, not just that the question text displayed correctly.
+- Two questions (`focus18_02`, `focus18_10`) are inherently script-specific — one counts how many
+  times a letter appears in an Arabic word, the other asks for the first letter of the Arabic word
+  for "attention." A literal translation of either is nonsensical in another script (the letter
+  count changes, and "attention" starts with a different letter in every language). Rebuilt both as
+  equivalent, self-consistent puzzles per language instead of translating the Arabic prompt word-for-
+  word — e.g. English: "how many times does 'o' appear in 'door'?" (answer 2); Persian: "چند بار «ا»
+  در «بابا» تکرار شده؟" (answer 2); the first-letter puzzle correctly gives a different answer letter
+  per language ("attention"→A, 注意→注, ध्यान→ध, atención→a, توجه→ت), each verified by hand before
+  writing it down, not guessed.
+- Two free-text riddles (`logic18_07`'s 3-switches-3-lamps puzzle, `logic18_10`'s 8-balls-balance
+  puzzle) got real translations of both the question and the core expected answer phrase, but their
+  Arabic `alternatives` (paraphrase variants for more lenient grading) were left Arabic-only — a
+  documented, deliberate scope limit: translating a free-text riddle's *one* correct phrasing is
+  tractable, translating every paraphrase a player might type in 6 more languages is not, and the
+  existing Arabic-only fallback already degrades gracefully (exact-match still works; only the lenient
+  paraphrase-matching is Arabic-only).
+
+**A second gap found while live-verifying the grading fix, fixed in the same pass:** `submitWorld()`'s
+correct/wrong feedback line (shown after every single answer, in every challenge, not just these 3
+banks) was two more hardcoded Arabic strings never caught by any earlier round of this pass. Added
+`challengesFeedbackCorrect`/`challengesFeedbackWrong` for all 7 languages and routed both through `t()`.
+
+**Verified live** via Playwright in English, French and Spanish: question text renders translated for
+all 3 fixed banks with zero `pageerror` events, and — the correctness-critical check — submitting the
+correct French word ("vert") for a translated color-naming question was graded correct and showed the
+now-translated feedback message, confirming the fix is not just cosmetic.
+
+**Not covered by this entry, still pending (real scope, not the old ~900-field estimate):** 3 more
+zero-i18n banks (`logic_extreme`, `memory_focus`, `football_intelligence` — 90 questions, these are
+multiple-choice so will need answer-option translation too, not just free-text answers); 15 banks
+(520 questions, ~1,624 answer options) with the 7-language structure already in place but only
+partially translated — 320 questions and ~1,624 options currently falling back to English/Arabic;
+`forensic-case-core.js`'s ~2500-line case dataset (no i18n infrastructure at all, still the largest
+single item in the whole pass).
+
+## 1230.38 — "اعمل كل شي", part 8 — the 3 remaining zero-i18n multiple-choice banks, and a content-duplication shortcut that completed 8 banks at once
+
+Picked up exactly where 1230.37 left off: `logic_extreme`, `memory_focus` and `football_intelligence`
+were the last 3 "zero-i18n" banks (90 questions, 100% Arabic, including the answer *options* this
+time — these are multiple-choice, not free-text, so every option a player can click needed its own
+translation, not just the question stem).
+
+**Key discovery before writing a single translation:** `question-bank.js` builds each of these 3
+bank names in two separate places — a "V40" block that defines `id`/`title`/`description` and the
+first 10 questions, and a later "V22" `mk()`-pack block that *appends* 20 more questions by id-based
+dedup (10+20=30 total). Comparing the appended 20-question portion across all 21 banks in the file
+turned up byte-identical content hiding under different bank names:
+- `iq` (its last 20 of 50), `logic`, and `logic_extreme` all share the exact same 20 questions.
+- `football` and `football_intelligence` share the exact same 20 questions.
+- `memory`, `memory_v22`, and `memory_focus` all share the exact same 20 questions.
+
+(An earlier, narrower pairwise check had suggested `iq` was *not* part of the first group — that
+turned out to be an off-by-slice-window artifact: `iq` has 50 questions total, not 30, so its shared
+portion sits at a different index range than the others'. Direct comparison of the correct index
+ranges confirmed all three.)
+
+That meant translating each shared 20-question set **once** and applying the identical translation
+object to every one of the banks that contains that literal array — not a reference, each bank has
+its own copy of the source array — brought **8 banks (260 questions total)** to full, real, per-
+language translation in a single pass: `iq`, `logic`, `logic_extreme`, `football`,
+`football_intelligence`, `memory`, `memory_focus`, `memory_v22`.
+
+**What got translated, concretely:**
+- The 3 unique 10-question "V40" sets (`logic_extreme`, `memory_focus`, `football_intelligence` —
+  genuinely different content, not shared with anything else): full `{ar,en,zh,hi,es,fr,fa}` objects
+  for both the question text and every multiple-choice option.
+- The 3 shared 20-question "V22 pack" sets (used by 8 bank-literal-arrays total, each edited
+  separately since the arrays aren't shared by reference): same full-object treatment.
+- Pure numeric/digit options (e.g. `"40"`, `"6-1-8-3"`, `"90°"`) were deliberately left as plain
+  strings rather than wrapped in 7-language objects — a number reads the same in every language, so
+  wrapping it would add noise without adding meaning. Only options that are actual words (weekday
+  names, shape names, football terms, logical connectives, "cannot tell", etc.) got full per-language
+  translation. This mirrors the existing `ALLOW_FR`/`ALLOW_FA` cognate-allowlist pattern already used
+  elsewhere in this project for genuinely-identical-across-languages strings.
+- One Arabic-specific formatting detail (a list of decimals separated by Arabic commas, `،`) was
+  normalized to a regular comma for every non-Arabic language rather than left looking foreign.
+
+**Verification before touching the real file:** every one of the 11 generated replacement blocks
+(8 mk-pack lines + 3 V40 question arrays) was first written to a standalone file and `require()`-d as
+a plain Node module to confirm it parses as valid, well-formed JS with the right question count,
+*before* being spliced into `question-bank.js` — the same "verify in isolation first" discipline used
+in 1230.37 to avoid repeating the 1230.33 sibling-key insertion bug.
+
+**Live-verified** via Playwright, in addition to the standard `node --check` + full 10-gate QA run:
+- Pulled the translated question text for all 8 completed banks directly from the loaded bank data in
+  6 languages (en/fr/es/fa/zh/hi) and confirmed every cell is a real, distinct translation, not a
+  fallback to Arabic or English.
+- Played `football_intelligence` live in French through the actual mission UI and confirmed the
+  rendered question text matches the translated V40-struct content (not just the shared pack).
+- **The correctness-critical check:** for 5 separate bank/language combinations (`football_intelligence`/
+  French, `logic_extreme`/Spanish, `memory_focus`/Persian, `iq`/Chinese, `memory`/Hindi), looked up the
+  live question's correct-answer index directly from the loaded bank data, clicked the matching
+  on-screen *translated* option button, and confirmed the grading engine returned the correct ✓/✕
+  feedback in every case — proving the multiple-choice grading (which resolves each option through
+  the same `text()` helper used throughout this pass) still works correctly once the options
+  themselves are per-language objects instead of plain Arabic strings, not just that the UI text
+  looks right.
+- Zero `pageerror` events across all test runs.
+
+**Not covered by this entry, still pending:** the other 15 "object-structure" banks (`iq`'s and
+`science`'s remaining fallback portions, `daily`, `horror`, `strategy`, `math`, `probability_v22`,
+`lateral_v22`, `code_v22`, `language_v22`, `visual_v22`) still have real-but-partial coverage —
+roughly 320 questions and ~1,624 answer options across them still fall back to English/Arabic and
+were not touched in this pass. `forensic-case-core.js`'s ~2,500-line case dataset remains completely
+unstarted and still has no i18n infrastructure at all — still the single largest remaining item.
+
+## 1230.39 — "اعمل كل شي", part 9 — `math` and `science`'s fallback-20 completed (90 → 130 fully-translated questions so far)
+
+Continued straight on from 1230.38's 8-bank sweep. Audited the remaining fallback across every bank
+and picked the next two highest-value, fully self-contained targets: `math`'s and `science`'s 20
+trailing "V22 pack" questions (both banks already had their first portion translated from an earlier
+round — only this trailing block was still 100% Arabic, question text *and* multiple-choice options).
+
+**What got translated:** full `{ar,en,zh,hi,es,fr,fa}` objects for all 20 `math` questions and all 20
+`science` questions, question text and every word-based option (planet names, body organs, SI units,
+states of matter, etc.). Purely numeric options (`"35"`, `"5%"`, `"144÷12"`-style answers) were left
+as plain strings, same deliberate reasoning as 1230.38 — a number is identical in every language, so
+wrapping it in a 7-key object adds nothing. Both banks now show `realQ = total` with zero fallback
+questions.
+
+**Verification:** `node --check` + all 10 QA gates pass. Live Playwright run confirmed the translated
+text renders for both banks in French, Chinese, Spanish, Hindi and Persian. For the grading check, the
+adaptive difficulty-matching question-selector (`chooseQuestions()` in `challenges.js`) made it
+awkward to force the *live UI* to land on a specific new question on every attempt — it mixes in
+older already-used questions once a few runs have gone by, which is existing, unrelated behavior, not
+something this pass touches. Rather than fight that, pulled the exact same `text()`/`norm()`/`answer()`
+functions used by the real grading engine out of `challenges.js` and ran them directly in Node against
+representative questions from every pack touched in 1230.38 and 1230.39
+(`qb_math_09`, `qb_logic_extreme_09`, `qb_memory_focus_05`, `qb_football_intelligence_12`, plus a full
+live-UI pass that did land on `qb_math_01` and `qb_science_01` and graded both correct and incorrect
+clicks right in French/Chinese/Spanish/Hindi/Persian) — confirming the production grading logic
+returns the correct true/false verdict in all 6 non-Arabic languages for every one, not just that the
+translated text displays.
+
+**Running total so far across 1230.37–1230.39:** 130 questions now carry full, real, per-language
+translation that didn't before this round of work began (30 free-text + 90 multiple-choice + 20 math +
+20 science, with the multi-bank dedup in 1230.38 extending that work's benefit to 260 total question
+slots across 8 bank names).
+
+**Not covered by this entry, still pending:** `daily`, `horror`, `strategy`, `probability_v22`,
+`lateral_v22`, `code_v22`, `language_v22`, `visual_v22` each still have a 20-question fallback block
+(roughly 160 more questions, each needing the same question+option treatment); `forensic-case-core.js`
+remains completely untouched and still has no i18n infrastructure.
+
+## 1230.40 — "اعمل كل شي", part 10 — `daily` and `strategy`'s fallback-20 completed
+
+Same pattern as 1230.39, two more banks: `daily` (general-knowledge trivia — capitals, oceans,
+continents, everyday facts) and `strategy` (football tactical-decision scenarios, prose-heavy). Both
+had their first 10 questions already translated from an earlier round; this entry completes their
+trailing 20-question fallback block — full `{ar,en,zh,hi,es,fr,fa}` objects for question text and
+every word-based option (country/city/ocean/continent names for `daily`; tactical-decision phrases
+for `strategy`, which runs noticeably longer per option than any bank translated so far since these
+are full tactical sentences, not single words or numbers).
+
+**Verification:** `node --check` + all 10 QA gates pass. Live Playwright check confirmed the
+translated text renders correctly in English/French/Persian/Chinese for both banks with zero
+`pageerror` events. For grading correctness, pulled the exact same `text()`/`norm()`/`answer()`
+functions straight out of `challenges.js` and ran them in Node against 4 representative questions
+(`qb_daily_01`, `qb_daily_14`, `qb_strategy_03`, `qb_strategy_18`) across all 6 non-Arabic languages —
+every one graded the correct option as correct and the wrong option as wrong, in every language,
+confirming the mechanism holds for these two banks too, not just the ones from 1230.38/39.
+
+**Running total across 1230.37–1230.40:** 170 questions now carry full, real, per-language
+translation that didn't before this stretch of work began (reaching 300 question-slots once the
+1230.38 cross-bank duplication is counted).
+
+**Not covered by this entry, still pending:** `horror` (20 questions) and the four remaining V22
+banks — `probability_v22`, `lateral_v22`, `code_v22`, `language_v22`, `visual_v22` (roughly 100-120
+more questions, with `code_v22` and `language_v22` likely needing some script-specific rebuilding
+rather than literal translation, similar to the V18 puzzles in 1230.37). `forensic-case-core.js`
+remains completely untouched and still has no i18n infrastructure.
+
+## 1230.41 — "اعمل كل شي", part 11 — `horror` and `probability_v22`'s fallback-20 completed
+
+Two more banks finished: `horror` (the Dark Room psychological-horror trivia bank — scenarios about
+how to handle the experience safely, not actual scary content) and `probability_v22` (probability
+questions). Same treatment as the previous rounds: full `{ar,en,zh,hi,es,fr,fa}` objects for question
+text and every word-based option. `probability_v22`'s options were mostly plain fractions (`1/2`,
+`1/6`, `0.8`) left untouched since numbers read the same everywhere, except for the handful of
+word-based answers (`"يزداد"`/"increases", `"مستحيل"`/"impossible", `"أحيانًا حسب النرد"`/"sometimes,
+depending on the die", etc.) which got full per-language translation.
+
+**Verification:** `node --check` + all 10 QA gates pass. Live Playwright check confirmed translated
+text renders in English/French/Persian/Chinese for both banks, zero `pageerror`. Grading correctness
+re-confirmed the same way as 1230.39/40 — ran the actual `text()`/`norm()`/`answer()` functions from
+`challenges.js` directly against 4 representative questions (`qb_horror_01`, `qb_horror_15`,
+`qb_probability_v22_02`, `qb_probability_v22_17`) across all 6 non-Arabic languages; every one graded
+correctly.
+
+**Running total across 1230.37–1230.41:** 210 questions now carry full, real, per-language
+translation that didn't before this stretch began (340 question-slots once the 1230.38 cross-bank
+duplication is counted).
+
+## 1230.42 — "اعمل كل شي", part 12 — the last 4 V22 banks finished: `lateral_v22`, `code_v22`, `language_v22`, `visual_v22`
+
+The final four fallback-20 blocks in the V22 mk-pack are done. This closes out the full
+question-bank translation effort started in 1230.37 — every bank in `question-bank.js` now carries
+genuine, distinct `{ar,en,zh,hi,es,fr,fa}` text instead of an Arabic-only fallback.
+
+- **`lateral_v22`** (20 lateral-thinking riddles): straightforward full translation — every riddle
+  and every answer option got real, distinct wording in all 6 languages (e.g. "ما الشيء الذي كلما
+  أخذت منه كبر؟" → "What grows bigger the more you take from it?" / "你从中拿得越多它就越大的东西是什么？" / etc.,
+  answer "الحفرة" → "A hole" / "洞" / "एक गड्ढा" / "Un agujero" / "Un trou" / "گودال").
+- **`code_v22`** (20 programming/JS questions): code tokens and type names that are genuinely
+  language-neutral (`Boolean`, `String`, `const`, `===`, `JSON.parse`, numeric answers like `5`/`0`)
+  were left as plain strings, matching the project's existing cognate-allowlist pattern used
+  elsewhere in the bank; the Arabic-only prose (the question text itself, and distractor options
+  like "حذف الإنترنت"/"deletes the internet", "تنفيذ فرع حسب شرط"/"executes a branch based on a
+  condition") got full per-language translation.
+- **`visual_v22`** (20 geometry/pattern questions): shape and color words (triangle/square/circle/
+  hexagon, red/blue/green/yellow) got full translation; symbols, arrows, and digit sequences
+  (`▲`, `↑`, `AB-AB`, `1-2-3-4`) were left untouched since they read identically in every script.
+- **`language_v22`** (20 questions) was the one bank flagged since 1230.41 as needing more than
+  literal translation: the Arabic source tests Arabic-specific grammar (plural patterns, i'rab case
+  endings like اللاعبُ سريعٌ vs اللاعب سريعًا, hamzat qat' identification, the مسؤول/مسئول spelling
+  dispute). None of those have a literal equivalent in English/Chinese/Hindi/Spanish/French/Persian,
+  so each of the 20 questions was rebuilt as an **equivalent, self-consistent grammar puzzle in each
+  language** — testing the nearest analogous concept that language actually has (plural formation,
+  antonym/synonym, part-of-speech identification, word order / subject-verb agreement, a commonly
+  confused spelling pair, a proper-noun/silent-letter distinction) — while keeping the same
+  correct-option index as the Arabic original, so grading still resolves correctly per language.
+  This is disclosed explicitly here because it is translation-by-equivalence, not translation-by-
+  substitution, for this one bank only; all 3 other banks in this round are literal, word-for-word
+  translations like every prior round since 1230.37.
+
+**Verification:** all 4 blocks were first `require()`-checked in isolation (20/20 real-object
+questions, 4-option arrays, before touching the real file). After splicing: `node --check` clean,
+`python3 scripts/release.py 1230.42` succeeded, and `bash scripts/run_all_gates.sh` reports
+`ALL GATES PASSED`. Grading correctness was verified by extracting the real `text()`/`norm()`/
+`answer()` functions from `challenges.js` and running them in Node against 3 representative
+questions from each of the 4 banks (12 questions total) across all 6 non-Arabic languages, checking
+both that the correct option grades `true` and a wrong option grades `false` — 144/144 checks
+passed. A live Playwright pass against `index.html` switched through all 6 languages with zero
+`pageerror` events.
+
+**Running total across 1230.37–1230.42:** 290 questions now carry full, real, per-language
+translation that didn't before this stretch began (420 question-slots once the 1230.38 cross-bank
+duplication is counted). With this, every named bank in `question-bank.js`'s V22 mk-pack IIFE and
+the V40-struct IIFE is fully translated — the only remaining wholly-untranslated, infrastructure-
+less item in the whole Phase C universal-translator effort is `forensic-case-core.js`'s ~2,500-line
+case dataset, which is a different kind of content (narrative case files, not a quiz bank) and will
+need its own treatment.
+
+## 1230.43 — Forensic Lab (`forensic-case-core.js`): i18n infrastructure retrofit + case-01 fully translated
+
+This module turned out to need different treatment than every bank in `question-bank.js`. It wasn't
+just missing translation data — it had **no i18n plumbing at all**: every rendered string (headers,
+buttons, labels, the 25-case dataset itself) was a raw Arabic literal baked directly into the
+template-literal HTML, with no `text()`/`norm()` resolution chain like `challenges.js` has. Switching
+the site's language did nothing to this module; it always rendered in Arabic regardless of the
+selected UI language. That's a real gap in the "the whole site changes language" goal, so this round
+builds the missing infrastructure rather than translating data that had nowhere to resolve to.
+
+**What was built:**
+1. **A `text()`/`T()`/`DL()` resolution layer**, mirroring `challenges.js`'s existing `text(v)` pattern
+   (`v[document.documentElement.lang]||v.ar||v.en||...`) — added locally since this module has its own
+   closure and didn't import it.
+2. **A `UI` dictionary** (~60 entries) covering every piece of hardcoded chrome text across all 7
+   screens of the Forensic Lab flow — the cinematic entry, the case-list board, the case brief, the
+   question/evidence screen, the AI-hint flow, the verdict screen, and the finish/result screen — each
+   with full `{ar,en,zh,hi,es,fr,fa}` translations. Every template literal in `entry()`, `board()`,
+   `brief()`, `question()`, `aiHint()`, `pin()`, `verdict()`, `finish()`, and the exit-confirmation
+   dialog in `backToSite()` now resolves through `T('key')` instead of a bare Arabic string.
+3. **`STAGES`** (the 5 chapter names + descriptions shown throughout the flow) converted from plain
+   strings to translation objects.
+4. **Difficulty labels** (`متوسط`/`متقدم`/`صعب`/`خبير`) get a `DIFF_LABELS`/`DL()` display-translation
+   layer, while the underlying `c.difficulty` field is deliberately left as the plain Arabic canonical
+   value — that value is also used as a filter key (`data-d` attribute matched against the filter
+   buttons), and touching it would have broken filtering for all 25 cases, most of which aren't
+   translated yet. This keeps filtering correct today and ready for more cases to translate later.
+5. **The AI-hint feature** (`aiHint()`, which calls `window.ZIVOZONE_REAL_AI.ask(...)` for a dynamic
+   hint) now builds its system instruction from a per-language `AI_SYS` template, so the assistant is
+   told to answer in the *current* UI language instead of always being instructed in Arabic — the
+   case content fed into the prompt (title, story, facts, question, options) already resolves through
+   `text()` to the current language too.
+6. **`case-01` ("ساعة الصمت" / "The Hour of Silence")** — all 25 cases share one array, so case-01 was
+   translated in full as the proof that the new infrastructure actually works end-to-end: title,
+   subtitle, scene, victim line, all 3 suspects (name + role + note), all 10 clues (label + question +
+   4 options each), the `why` explanation, the 4 tags, location, setting, all 10 facts, the story text,
+   and the investigator's brief — every field, genuinely translated into all 6 languages, not a copy of
+   the Arabic.
+7. Cases 2–25 were deliberately left as plain Arabic strings for this round — `text()` safely falls
+   back to returning a plain string unchanged regardless of the selected language, so nothing breaks;
+   they simply still display in Arabic when the UI is set to another language, exactly like every
+   other not-yet-translated bank in this project has displayed throughout this effort.
+
+**Verification:** `node --check` clean. After confirming every leftover raw-Arabic string in the file
+is now confined to either the `UI` dictionary (translation data, expected) or the untranslated
+cases 2–25 (expected, not yet in scope) — not leaked into render code — ran `python3 scripts/release.py
+1230.43` and `bash scripts/run_all_gates.sh`: `ALL GATES PASSED`. A live Playwright run started the
+Forensic Lab, skipped the cinematic intro, opened case-01, and read the case title, the exit button
+label, and the first question + its first option, across all 6 non-Arabic languages plus Arabic — all
+7 rendered correctly in their own language with zero `pageerror` events. A second check opened
+case-02 (still untranslated) under the English UI and confirmed it correctly falls back to displaying
+in Arabic rather than erroring or showing `undefined`.
+
+**What's still pending:** cases 2–25 (24 of 25) still need the same full-data treatment case-01 just
+got — title, subtitle, scene, suspects, clues, why, tags, location, setting, facts, story, and brief,
+each genuinely translated into 6 languages. That's a large amount of narrative content (~94,000
+characters of Arabic source remaining across those 24 cases) and is explicitly not done yet; it will
+be completed in batches in subsequent rounds, the same way `question-bank.js`'s banks were completed
+incrementally across 1230.37–1230.42. The infrastructure built this round (the `UI` dict, `text()`/
+`T()`/`DL()`, the translated `STAGES`) is now in place and doesn't need to be touched again — each
+future round only needs to add translated case data.
+
+**Not covered by this entry, still pending:** the last four V22 banks — `lateral_v22`, `code_v22`,
+`language_v22`, `visual_v22` (roughly 80 more questions). `code_v22` and `language_v22` in particular
+are expected to need some script-specific rebuilding rather than literal translation (programming
+syntax questions and word-order/letter puzzles don't always translate word-for-word), similar to the
+V18 puzzles handled in 1230.37. `forensic-case-core.js` remains completely untouched and still has no
+i18n infrastructure.
+
+## 1230.44 — Forensic Lab: all 24 remaining cases (02–25) fully translated — `forensic-case-core.js` complete
+
+Finished what 1230.43 started: every one of the 25 forensic cases is now genuinely translated into
+`{ar,en,zh,hi,es,fr,fa}`, using the i18n infrastructure (`text()`/`T()`/`DL()`, the `UI` dict, `STAGES`)
+built in that round. The Forensic Lab now changes language completely, for every case, same as the
+rest of the site.
+
+**How 24 cases' worth of content got done without 24x the hand-translation:** diffing all 25 cases
+field-by-field in Node turned up massive template duplication in the original Arabic design itself:
+- The 10 clue **questions** are word-for-word identical across all 25 cases.
+- Clues 6–9 come in exactly **2 template variants** (15 cases use variant A, 10 use variant B) —
+  variant B's own clues 6–7 have 8 genuinely new option phrases, and its clues 8–9 silently reuse
+  variant A's clue-6/clue-7 options under a different question. Confirmed via the per-clue answer-index
+  arrays, which are identical within each variant across every case in it.
+- `clue[2].opt[0]` and `clue[5].opt[2]` are the only genuinely case-unique sentences in clues 0–5 —
+  a suspect's name spliced into an otherwise fixed template ("X being near the location proves ...").
+- Suspect roles/notes (positions 1–2 of the 3-item suspect array) are identical across all 25 cases;
+  only the name (position 0) differs.
+- `facts[1–9]`, `tags`, and `scoring` are identical across all 25 cases; only `facts[0]` is case-unique,
+  and even that follows a fixed template with just the `setting` spliced in.
+- `scene` = `story` + a fixed trailing disclaimer sentence; `subtitle` = `location` + "• Level " +
+  `difficulty`; `victim` = "A fictional investigation case — " + `title`; `why` = a fixed
+  evidence-summary sentence with the *correct* suspect's name spliced in.
+
+Net result: the only content that actually needed fresh translation per case was `title`, `location`,
+`setting`, `story`, and `investigatorBrief` (5 fields × 24 cases), plus transliterating 64 unique
+suspect names into 6 languages and the 8 new variant-B option phrases — not 24 full nested case
+objects. All of it was translated as real, distinct text (not copied or auto-generated filler), then
+an assembly script spliced the unique fields together with the reusable template pieces (reading the
+correct suspect index straight out of the pre-translation Arabic source for each `clue[2]`/`clue[5]`
+substitution and each `why` name, rather than guessing a fixed formula) to build each case's complete
+translated object before splicing it into the live `CASES` array.
+
+**A real bug found and fixed along the way, affecting case-01 too:** the `clue[2].opt[0]` template's
+non-Arabic translations used a fixed masculine pronoun ("he"/他/"il"/"el") regardless of the named
+suspect's actual gender. The Arabic source's own masculine default ("أنه") is just how the noun
+"الفاعل" (the perpetrator) is grammatically marked by default in Arabic and isn't a statement about
+the referenced person's gender — but several suspects placed in that slot across the 25 cases are
+female (Sara, Lara, Mees, Lina, Roaa, Rama...), so a literal "he"/"il"/"el" would visibly misgender
+them in languages where that pronoun is read as a real gender marker. Fixed by making en/zh/es/fr
+gender-neutral ("X's presence ... proves they are the perpetrator" / 此人 / "el o la culpable" / "il
+ou elle ... le ou la coupable"), matching the gender-neutral phrasing `clue[5].opt[2]` already used.
+hi/fa were already gender-neutral and needed no change. Patched both the newly-assembled 24 cases and
+case-01 (already live since 1230.43) so the fix is consistent across the whole dataset. Also tightened
+two variant-B option phrases in English ("clears him"/"he was there" → "clears them"/"they were there")
+for the same reason — they're generic answer options, not tied to a specific suspect, but singular
+"they" is the correct modern default there too.
+
+**Verification:** `node --check` clean on the fully-assembled file. `python3 scripts/release.py
+1230.44` and `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (all 10 gates). Structural
+verification in Node confirmed every one of the 25 cases now has full `{ar,en,zh,hi,es,fr,fa}`
+coverage on every text field (title, subtitle, scene, victim, why, location, setting, story,
+investigatorBrief, all 10 facts, all 10 clues' labels/questions/options, all 3 suspects'
+names/roles/notes) with no leftover plain-Arabic-string fields. Grading-logic verification (the
+module's scoring is choice-index-based, `choice===clue[3]` and `verdict===c.answer`, so language-
+independent) confirmed every clue's answer index is a valid 0–3 integer and every case's answer index
+is a valid 0–2 integer across all 25 cases. Live Playwright verification: (1) `cases()` list rendered
+correct titles and difficulty labels for 6 sampled cases across all 7 languages (ar/en/zh/hi/es/fr/fa)
+with zero `pageerror` events (only pre-existing sandboxed-network noise for unrelated external
+resources); (2) a full in-game walkthrough of case-13 (a variant-B case) — board → case brief → first
+question + its 4 options — rendered correctly in en, zh, and fa; (3) a complete 10-question run through
+case-20 (a newly-translated variant-A case) in Spanish, through to the verdict screen (investigator's
+brief, all 3 suspect names) and the finish screen (the `why` paragraph with the correct suspect's name
+correctly spliced in) — all rendered correctly with zero page errors.
+
+**Scope note:** with this round, every named question bank in `question-bank.js` and all 25 cases in
+`forensic-case-core.js` are now genuinely translated into all 7 site languages. This closes out the
+two modules explicitly flagged as outstanding across 1230.37–1230.43. A final site-wide audit for any
+remaining untranslated content is still worth doing before considering the universal-translator effort
+(Phase C) fully complete.
+
+## 1230.45
+
+Ran the site-wide audit flagged as the next step after 1230.44 — checked every remaining player-facing
+module for hardcoded Arabic that bypasses the `t()`/`text()` i18n path. Found and fixed three real gaps:
+
+**`question-bank.js`:** 6 question banks (`logic_v18`, `pattern_v18`, `focus_v18`, `logic_extreme`,
+`memory_focus`, `football_intelligence`) had plain-Arabic-or-English-only `title` strings (3 of them
+also had plain `description` strings), confirmed player-visible via `challenges.js`'s
+`text(b.title||b.name||worldFor(id).label)` render call. All 6 converted to full
+`{ar,en,zh,hi,es,fr,fa}` translation objects.
+
+**`match-center.js`:** the Match Center widget had zero i18n infrastructure at all — every string
+(hero copy, day/league/search controls, status labels, modal content, error messages) was hardcoded
+Arabic, and date/time formatting was pinned to the `ar-JO` locale regardless of UI language. Fully
+rewritten: added `LANG()`/`text()` helpers, a `LOCALE` map + `loc()` for locale-aware date/time
+formatting, a ~50-key `UI`/`T()` dictionary, a `LEAGUE_NAMES` dict translating the 5 tracked leagues
+(Premier League, La Liga, Serie A, Bundesliga, Ligue 1), and 4 per-language sentence-template helpers
+(`wonSentence`, `drawSentence`, `matchCountLabel`, `noMatchesSentence`) for full-sentence strings whose
+word order differs by language. Every render path (`matchCard`, `dayPanel`, `competitionSection`,
+`render`, `openDetails`, `statusText`, `score`, `outcome`, `catalog`) now resolves through these.
+
+**`rooms.js`:** the Health Room's 12 door-card subtitle lines (`DOOR_LINES`) were hardcoded
+Arabic-only, bypassing the room's own `t()` helper that every other door label already goes through.
+Added the 12 lines (`doorLine01`–`doorLine12`) to `i18n.js` in all 7 languages, and changed
+`DOOR_LINES` from a direct Arabic-string map to a door-id → i18n-key map resolved via `t()` at render
+time.
+
+**Verification:** `node --check` clean on all three changed files. `python3 scripts/release.py
+1230.45` and `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (all 10 gates, including
+`qa_no_hardcoded_arabic.py` — match-center.js's fragment count rose as expected from its new
+translation-dictionary values, confirmed as a legitimate increase rather than new hardcoded chrome by
+isolating the dict blocks and verifying only ~27 fragments remained, all inside the per-language
+sentence-template functions; baseline regenerated and locked in via
+`scripts/gen_hardcoded_arabic_baseline.py`). Live Playwright verification across all 7 languages: (1)
+Match Center's hero title/subtitle, day-nav buttons, league dropdown, search placeholder, refresh
+button, KPI labels, and footer all rendered correctly with zero `pageerror` events; pure-function unit
+tests (via a `window.__TESTHOOKS__` injection into the module's closures, evaluated in Node) confirmed
+`wonSentence`/`drawSentence`/`matchCountLabel`/`noMatchesSentence` and league-name resolution produce
+correct, distinct, grammatically appropriate text in every language — the sandbox's only available
+match snapshot is a non-tracked league filtered out by a pre-existing (unchanged) priority filter, so
+this covered the logic that couldn't be exercised with real rendered match cards; (2) Health Room door
+cards: all 12 subtitle lines rendered as genuinely distinct, correctly translated text in every one of
+the 7 languages, with zero page errors.
+
+**Scope note:** per the same audit, `achievements.js`, `news.js` (chrome only, not headlines),
+`puzzle-room.js`, and `beauty-room.js` still have real untranslated content and remain outstanding;
+`app-shell.js`'s identity quiz degrades gracefully to English for 5 languages rather than failing, and
+`admin.js` is owner-only and lowest priority. Continuing down this list next.
+
+## 1230.46
+
+Fixed `achievements.js`, the next item on the audit's prioritized list — it was fully untranslated:
+the panel header ("إنجازات اللاعب"), the "المستوى" (Level) label, the share button, the share/copy
+confirmation alert, and all 7 badge names + descriptions were hardcoded Arabic or a stray mix of
+English-only badge names with Arabic descriptions. Added `achPanelTitle`, `achLevelLabel`,
+`achShareBtn`, `achShareAlert`, `achRewardLabel`, `achDefaultPlayerName`, and one `achName*`/`achDesc*`
+pair per badge (7 badges × 2 = 14 keys) to `i18n.js` in all 7 languages — genuinely distinct
+translations, not copies (e.g. "Streak"/"سلسلة"/"连胜"/"स्ट्रीक"/"Racha"/"Série"/"استریک"). Rewired
+`achievements.js`'s `defs` array to carry i18n keys instead of literal strings, added the module's
+standard `t()` resolver, and wired a `zivozone-language` listener so the panel's static chrome
+(title/level-label/share-button) updates immediately on a language switch even while already open,
+not just on next open.
+
+**Verification:** `node --check` clean on both files. `python3 scripts/release.py 1230.46` surfaced a
+real gate failure first: `qa_i18n_coverage.py` flagged the new `achRewardLabel` ("+1 ZIVO · 15 XP") as
+an apparent untranslated leftover in French and Persian — correctly identical across all 7 languages
+by design, since it's a brand name plus numerals with no translatable words (the same reasoning the
+gate's own allowlist already uses for `xp`/`coins`). Added `achRewardLabel` to both `ALLOW_FR` and
+`ALLOW_FA` in `scripts/qa_i18n_coverage.py` with a comment explaining why, then `bash
+scripts/run_all_gates.sh` → `ALL GATES PASSED` (all 10 gates). Live Playwright verification: opened
+the achievements panel in all 7 languages and read back the title, level label, share button, and all
+7 badges' name/description text — every language produced fully distinct, correctly translated copy
+with zero `pageerror` events.
+
+**Scope note:** `news.js` chrome, `puzzle-room.js`, and `beauty-room.js` remain outstanding from the
+audit; continuing down that list next.
+
+## 1230.47
+
+Fixed `news.js`'s chrome — the ticker tag labels ("⚽ رياضة"/"🌐 عام"), the Jordan-news-section empty
+state (title + subtext shown when no Jordanian headline matches today), and the "فتح الخبر" link text
+on each Jordan news card were all hardcoded Arabic, bypassing the rest of the site's `t()` path. The
+headlines themselves (both fetched and the `FALLBACK` set) are intentionally left Arabic-only — they
+go through the existing `arabic()` validator gate by design, and the audit explicitly flagged chrome
+only, not headline content. Added `newsTagSports`, `newsTagGeneral`, `newsJordanEmptyTitle`,
+`newsJordanEmptyText`, and `newsOpenArticle` to `i18n.js` in all 7 languages, added the module's
+standard `t()` resolver to `news.js`, and wired a `zivozone-language` listener that re-renders the
+ticker and Jordan section immediately on a language switch (previously neither reacted to language
+changes at all — a switch took effect only on the next 30-minute data refresh).
+
+**Verification:** `node --check` clean on both files. `python3 scripts/release.py 1230.47` and `bash
+scripts/run_all_gates.sh` → `ALL GATES PASSED` (all 10 gates, no coverage-gate exceptions needed this
+time). Live Playwright verification across all 7 languages: loaded news data, then switched language
+and read back the ticker tag text and the Jordan section's empty-state markup — every language showed
+fully distinct, correctly translated tag labels, empty-state heading/subtext, with zero `pageerror`
+events.
+
+**Scope note:** `puzzle-room.js` and `beauty-room.js` — the two remaining "whole room" gaps, each with
+a fully untranslated main screen sitting alongside an already-internationalized mini-game — are next.
+
+## 1230.48
+
+Fully translated the Puzzle Room (`puzzle-room.js`) — the larger of the two remaining "whole room"
+gaps. Before this round the room had `t()`/`L()`/`fmt()` helpers and translated its Epic50 grand
+challenge, but every stage title/intro, in-game prompt, hint, success/fail message, and the
+finish/exit-confirm screens were hardcoded Arabic. Added 81 new keys to `i18n.js` in all 7 languages:
+room chrome (title, stage-of label, score/attempts counters, exit confirm, "real challenge" rules box,
+start/replay/return buttons, finish screen), and full content for all 10 stages — the silent-gate
+symbol question, sequence-rule hint, memory-vault instruction, rotation piece/target labels, secret-code
+hints and progress feedback, maze hint and fail/success messages, timeline-sort labels, the deduction
+logic puzzle's three statements, the pattern hint, and the final vault's seal/score summary and
+formula.
+
+The logic puzzle (stage 8) needed a structural fix, not just new strings: it previously compared the
+clicked button against the literal Arabic name `'ليان'`. Translating the display name would have broken
+answer-checking in every other language. Refactored it to compare against stable, language-independent
+ids (`'lian'/'sami'/'rami'`) while the displayed button text and statements are fully translated —
+verified in a Node unit test (loading `i18n.js` + `util-esc.js` + the module standalone, calling
+`logic()` directly) that the correct answer's id matches `s.data.logic` identically in en/fr/zh, with
+the dialogue and names genuinely different text in each language (e.g. the accusation "Rami took the
+key" renders as "«Rami a pris la clé»" in French and "「拉米拿了钥匙。」" in Chinese, while the underlying
+`data-logic="rami"` stays the same).
+
+**Verification:** `node --check` clean on both files. `python3 scripts/release.py 1230.48` surfaced a
+gate failure: `qa_i18n_coverage.py` flagged `puzzleScoreValueFmt`/`puzzleLiveScoreFmt` ("points" is the
+real French word too) and the three logic-puzzle character names (`Lian`/`Sami`/`Rami`, deliberately
+spelled the same in French as in English) as apparent untranslated leftovers. Added all 5 to
+`ALLOW_FR` in `scripts/qa_i18n_coverage.py` with a comment, then `bash scripts/run_all_gates.sh` → `ALL
+GATES PASSED` (all 10 gates). Live Playwright verification across all 7 languages: opened the room,
+read back the header/stage-progress/score counter/return button and the full intro screen (title,
+intro text, rules box, start button), then advanced into stage 1's live board and confirmed the
+question, hint (with its embedded `<b>` emphasis rendering correctly, not escaped to literal tags),
+live attempts/score counter, and each symbol's aria-label — all fully distinct, correctly translated
+text per language, zero `pageerror` events. The logic-puzzle id refactor was verified separately via
+the Node unit test described above, since playing linearly to stage 8 in the browser for all 7
+languages would have been impractically slow for this pass.
+
+**Scope note:** `beauty-room.js` — the last remaining "whole room" gap from the audit — is next.
+
+## 1230.49
+
+Fully translated the Beauty Room (`beauty-room.js`) — the last remaining "whole room" gap from the
+Phase C audit. Before this round, the room's mini-game and Epic50 content were already translated,
+but the entire main screen was Arabic-only: the header, hero copy, the four tab labels, all 16
+skin/body/recipe/habit advice cards, the PANDORA editorial section, the safety note, and the
+exit-confirm dialog. Added 47 new keys to `i18n.js` in all 7 languages with genuinely distinct
+translations for every card (e.g. the "Sensitive Skin" card reads as its own real sentence in each
+language, not a mechanical gloss).
+
+The card content (`data`) was a frozen object literal built once at module load, so it had to become
+a function (`data()`) that resolves every title/description through `t()` on each call — otherwise a
+language switch would never update the cards, and the room would always show whichever language was
+active the first time it was opened. `renderGame()`'s routine-step rounds, which are built by parsing
+`data.skin[0][1]`/`data.skin[1][1]` with `parseSteps()`, were updated to call `data()` the same way.
+
+That exposed a real, independent bug in `parseSteps()`: it truncates the last routine step at the
+first `.` to drop the trailing commentary sentence ("Gentle cleanser → ... → sunscreen. Simplicity
+beats a crowded routine." → step is just "sunscreen"). The regex only recognized the ASCII period.
+Chinese correctly uses "。" and Hindi correctly uses "।" as their sentence-final punctuation, not ".",
+so with real zh/hi translations in place the mini-game's last step in each morning/evening round came
+out as the whole sentence instead of just the step name — a genuine rendering bug that only an actual
+translation pass could have surfaced, since every language used so far (ar/en/es/fr/fa) happens to use
+the ASCII period. Fixed the regex to `/^[^.。।]+/` so it stops at any of these three sentence-final
+marks.
+
+**Verification:** `node --check` clean on both files. `python3 scripts/release.py 1230.49` and `bash
+scripts/run_all_gates.sh` → `ALL GATES PASSED` on the first run (no coverage-gate exceptions needed).
+Live Playwright verification across all 7 languages: read back the header, subtitle, hero
+title/text, all 4 tab labels, the "choose what matters to you" label, all 5 skin-tab cards plus
+sampled titles from the body/recipes/habits tabs (16 cards total), the brand section, the safety note,
+and the return button — all fully distinct, correctly translated text, zero `pageerror` events. Then
+specifically re-tested the mini-game after the `parseSteps()` fix: started the "Order Your Routine"
+game in all 7 languages and confirmed round 1 (the morning routine) produces exactly 3 clean,
+correctly-truncated step options with no trailing sentence fragments, in every language — confirming
+both the translation and the bug fix.
+
+**Scope note:** this closes out every "whole room" and "whole widget" gap flagged by the Phase C
+site-wide audit (match-center.js, question-bank.js titles, rooms.js door lines, achievements.js,
+news.js chrome, puzzle-room.js, beauty-room.js). Remaining lower-priority items from that audit:
+`app-shell.js`'s identity quiz (degrades gracefully to English for 5 languages, not a failure) and
+`admin.js` (owner-only, never seen by regular players).
+
+## 1230.50
+
+Fully translated the "Who Am I" identity quiz in `app-shell.js`'s `identity()` function — the last
+remaining i18n gap flagged by the Phase C site-wide audit. Before this round, the quiz's 20 questions
+and their 4 options each existed only in Arabic/English, with the lookup `lang()==='ar'?q[0]:q[1]`
+silently falling back to English for zh/hi/es/fr/fa (not a crash, but every non-ar/en player saw an
+untranslated quiz). The `paragraphs` object holding the 4 personality-result descriptions had the
+same ar/en-only gap.
+
+Rebuilt the `qs` array so each entry carries all 7 languages — `{q:{ar,en,zh,hi,es,fr,fa}, opts:[{...}
+×4]}` — instead of the old 4-element tuple `[arQ, enQ, [ar×4opts], [en×4opts]]`. Added a small
+resolver `const LL=dict=>dict[lang()]||dict.en||dict.ar;` and replaced the ternary lookup with
+`question=LL(q.q), options=q.opts.map(LL)`. Translated every one of the 20 questions and their 4
+options into zh/hi/es/fr/fa as genuinely distinct sentences (not a mechanical gloss), matching the
+voice of the existing ar/en originals. Extended `paragraphs` with zh/hi/es/fr/fa versions of all 4
+personality-result descriptions (analytical/decisive/social/creative types), keeping the existing
+ar/en text unchanged.
+
+Also confirmed, correcting an earlier audit note: the short result LABELS (`t('analysis')`,
+`t('adventurer')`, `t('teamPlayer')`, `t('creative')`) were already fully translated in all 7
+languages in `i18n.js` — only the full descriptive paragraphs and the 20 Q&A pairs were actually
+missing, not "4 result labels" as the original audit had characterized it.
+
+**Verification:** `node --check` clean. `python3 scripts/release.py 1230.50` and `bash
+scripts/run_all_gates.sh` — the Arabic/Persian-content gate (`qa_no_hardcoded_arabic.py`) initially
+failed (`app-shell.js` 353 -> 953 fragments), exactly the known, documented false-positive case: Farsi
+(fa) shares Unicode's Arabic block, so adding real fa text to 20 questions + 80 options + 4 paragraphs
+legitimately raises the raw Arabic-script count. Verified the 100 new `fa:"..."` literals are real,
+distinct translations (not copies), then ran `python3 scripts/gen_hardcoded_arabic_baseline.py` to
+lock in the new baseline — same procedure used for challenges.js in 1229.17 and beauty-room.js's own
+fa additions. `ALL GATES PASSED` after that. Live Playwright across all 7 languages: opened the quiz,
+confirmed question 1's text and all 4 options render as genuinely distinct, correctly translated text
+in every language, answered all 20 questions, and confirmed the result screen's title and full
+personality paragraph are also genuinely translated per language — zero `pageerror` events in any
+language.
+
+**Scope note:** this closes the Phase C site-wide i18n audit's last substantive translation gap.
+Remaining item from that audit: `admin.js` (owner-only, never seen by regular players) — lowest
+priority, not started.
+
+## 1230.51
+
+Fixed the three "player journey" (`player-hub.js`) systems that were decorative or disconnected,
+found by auditing every one of the panel's 10 destinations against the actual code paths that back
+them (requested directly: real wiring vs. cosmetic layer that doesn't act in harmony with the rest
+of the site).
+
+**1) Competition ("ساحة المنافسة") was completely dead since it was written.** `competition.js`'s
+streak/reward logic was correct, but its `complete()` function — the only thing that ever marks a day
+"done" — had zero callers anywhere in the codebase. Every player, however active, would open this
+panel and always see the claim button locked and "start today's challenge to build the streak,"
+forever. Worse, the home screen's main streak KPI showed a real, nonzero number the whole time —
+taken from the unrelated, real `player.js` streak — so the panel's own "0" directly contradicted what
+the player had just seen on the home screen one tap earlier.
+
+**2) The Daily Challenge overlay ("تحدي اليوم") never recorded a real result — for two independent
+reasons.** `challenges.js` only forwarded a finished game's result to `daily.js` when the finished
+game's id was the literal string `'daily'` (one specific themed room). But the overlay's own `pick()`
+deterministically picks a different challenge by date (`iq`, `football`, etc.) — so this almost never
+matched. On top of that, the one call site used a method name, `.persistResult`, that `daily.js` never
+actually exported (only `.recordResult` exists) — so even the rare literal-`'daily'` case was silently
+a no-op. Net effect: the overlay marked itself "played" the instant the player clicked Start, before
+answering a single question, and the real score/correctness was never saved or queued for sync,
+despite the offline-sync queue infrastructure for it being fully built and working.
+
+**3) The "آخر ما أنجزته" (recent activity) feed was reading a mostly-empty event stream.**
+`player-hub.js` listens for 9 event names to build this feed and to live-refresh itself while open.
+Audited `events.js`'s entire `KNOWN_EVENTS` list against the whole codebase: 8 of those 9 names —
+`MINING_COMPLETED`, `REWARD_GRANTED`, `ACHIEVEMENT_UNLOCKED`, `MISSION_UPDATED`, `MATCH_UPDATED`,
+`AUTH_CHANGED`, `PLAYER_UPDATED`, `WALLET_UPDATED` — were declared and listened for but never emitted
+by anything, anywhere. Only `CHALLENGE_COMPLETED` was real. So a player who mined, earned an
+achievement, claimed a mission, or logged in would see none of it in "what you just did" — only
+challenge completions ever showed up, even though every one of those other actions was genuinely
+happening in the real economy/achievements/missions systems underneath.
+
+**Fixes (all client-side event wiring — no new Firestore reads/writes, no change to any security rule
+or paid-tier feature):**
+- `challenges.js`'s post-game hook now compares the finished game's id against `Daily.state().challenge`
+  (set when the overlay's Start button is clicked) or `Daily.pick()` as a fallback, and calls the real
+  `Daily.recordResult()`. A genuine completion (no timeouts) also calls `Competition.complete()` —
+  chaining the two fixes together exactly the way the Competition panel's own existing copy already
+  described ("start today's challenge to build the streak").
+- `economy.js`'s `mine()` now emits `MINING_COMPLETED`; its `credit()` — the one transaction every
+  reward source already converges on — now emits `ACHIEVEMENT_UNLOCKED`/`MISSION_UPDATED` for those
+  specific types and a generic `REWARD_GRANTED` for the rest (story/health/beauty/horror/competition
+  rewards), skipping `challenge_reward` since `CHALLENGE_COMPLETED` already covers that moment
+  elsewhere — one real source of truth instead of duplicating emits in every caller. `syncUI()` emits
+  `WALLET_UPDATED` only when the balance actually changed (gated against a tracked last-announced
+  value, so the existing 30s poll doesn't spam the bus with no-op emits).
+- `auth.js`'s single internal `emit()` — already the one place every login/logout/account-creation
+  path converges on — now also emits `AUTH_CHANGED` on the real event bus alongside its existing native
+  `zivozone-auth` DOM event (the two were never connected before).
+- `match-center.js` emits `MATCH_UPDATED` after a load cycle, gated on a live-match id+score signature
+  so it only fires when scores actually changed, not on every 30-120s background poll.
+- `player.js`'s `publishState()` emits `PLAYER_UPDATED` gated on a level/xp/games/bestScore signature,
+  for the same no-op-spam reason.
+
+**Verification:** `node --check` clean on all 6 touched files. `python3 scripts/release.py 1230.51`,
+`python3 scripts/build_bundle.py 1230.51` (bundle gate requires a rebuild after any source edit made
+post-release-stamp), and `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (one round of fixes
+needed: several of my own explanatory code comments quoted existing Arabic UI copy for context,
+which the hardcoded-Arabic gate correctly flagged — reworded those comments in English rather than
+touching the gate). Live-verified in a real browser: `Daily.pick()` returns a real challenge id;
+calling the exact chain `challenges.js`'s `finish()` now runs (`Daily.recordResult()` →
+`Competition.complete()`) against that real pick genuinely persists a result (correct count recorded)
+and flips the competition day to completed with the right streak/XP math (streak 1 → 30 XP reward,
+matching `25 + min(streak*5, 75)`); confirmed the same chain does NOT fire for a different, non-today
+challenge id (negative test); confirmed all 8 previously-dead event names now flow end-to-end through
+`Events.emit()` → `Events.on()` → `Events.getHistory()`, which is exactly what `player-hub.js` reads
+for its live re-render and its activity feed. Zero `pageerror` events throughout.
+
+**Scope note:** these were the three real defects found in `player-hub.js`'s 10 destinations; the
+other 7 (challenges, missions, achievements, wallet, mining, identity quiz, sports) were already
+confirmed genuinely wired to real data in the audit that preceded this fix. Nothing in this fix
+required Firebase's paid (Blaze) tier — it's pure client-side event-bus wiring reusing transactions
+that already exist. Separately flagged for later, if ever wanted: a live site-wide "today's miners" /
+"total ZIVO mined" counter would need either a scheduled aggregation (Cloud Functions, which requires
+the Blaze plan even at zero cost) or a cheap client-side aggregate written to a single shared document
+— the latter stays on Spark and was not built here since it wasn't asked for.
+
+## 1230.52
+
+Free-plan punch-list items from the pre-launch audit (`تقييم ZIVOZONE قبل الإطلاق`), tackled in
+priority order right after the audit was delivered. Scope: everything here stays on Firebase's free
+Spark tier — the one item that needs the paid Blaze tier (the reward-farming security hole) is
+intentionally untouched, pending the user's explicit approval to activate billing.
+
+**1. `player-hub.js` full translation (real, high-impact fix).** Found during the audit: almost the
+entire Player Home panel body was hardcoded Arabic in template literals — only the header title
+routed through `t()`. Live-verified by switching language to English and reading the rendered panel.
+Added ~50 new i18n keys across all 7 languages in `i18n.js` (kicker, hero copy, every stat label,
+every destination card, activity-feed labels, locale-aware timestamp formatting) and rewired
+`player-hub.js`'s `render()`/`activityRows()` to use them instead of literal Arabic strings. Also
+fixed `player.js`'s default guest name (`'لاعب ZIVO'` hardcoded regardless of language) to reuse the
+already-translated `achDefaultPlayerName` key, and fixed two `PLAYER_UPDATED`/`PLAYERDATA_UPDATED`
+activity-feed entries that fell back to printing the raw event name instead of a label (a
+pre-existing bug independent of language). Live-verified in both English and Arabic: zero hardcoded
+Arabic text remains in the panel's UI chrome in English mode (only real match data — team/league
+names — stays Arabic, which is a separate, already-documented sports-data-source issue).
+
+**2. Room title translations in `challenges.js` — self-correction.** The audit (and an earlier
+subagent pass) found 22 of 23 challenge rooms repeating their English `title` field identically
+across all 7 language keys in `ROOM_DNA_I18N`. Real translations were written and landed for all 22.
+However, tracing where `roomDNA(id).title` is actually consumed turned up **nothing** — grepped the
+whole file for `dna.title`/`.room.title` and found zero reads; it's dead data from an earlier
+cinematic-entry design that was never wired to any render path. The fields that *are* actually shown
+to players — the home-grid card titles (`question-bank.js`'s `bank.<id>.title`, built with `O()` and
+already fully translated for all 23 rooms) and the in-room "world atlas" screen's `kicker`/`roomHint`
+(also already fully translated) — were correct all along. Net effect: the fix is harmless and
+real translation work, worth keeping for when/if that field is ever wired up, but it does **not**
+move anything a player currently sees. Flagging this honestly rather than counting it as a visible win.
+
+**3. Two real mobile bugs fixed, both reproduced live with Playwright screenshots before touching
+any CSS.** `.topbar{height:58px!important}` (≤700px) and `.topbar{height:64px}` (base rule, affects
+701–950px too) forced a fixed box height on a bar that switches to `flex-wrap:wrap` below 950px —
+so once the pill row (Player journey / wallet / Mine / Account) no longer fit one line, the wrapped
+second row rendered outside the sticky header's layout box instead of growing it, overlapping the
+hero's `.eyebrow` text ("DIGITAL WORLD · ZIVOZONE") right underneath. Changed both to `min-height`.
+Verified with real screenshots at 375px (phone) and 800px (tablet): the eyebrow text is now fully
+visible with no overlap at either width. The second "mobile" bug from the audit (Player Hub
+mixed-language rendering) was already resolved as a direct result of fix #1 above.
+
+**4. Question-bank French/Farsi translation gap — investigated, NOT fixed, flagged for a decision.**
+`question-bank.js`'s `O(ar,en,zh=en,hi=en,es=en,fr=en,fa=ar)` helper defaults French to English and
+Farsi to Arabic when fewer than 7 arguments are passed. Counted every `O(` call in the file
+programmatically: **864 of 882 calls (98%) pass fewer than 7 arguments** — meaning the large majority
+of individual questions and answer choices silently fall back and are not actually in French or
+Farsi at all. This is real and confirmed, but it is a content-writing task of a completely different
+scale than the three above (hundreds of distinct question/answer strings needing real translation,
+not a handful of UI labels), so it was intentionally not started without checking in first.
+
+All four items gate-verified (`bash scripts/run_all_gates.sh` → `ALL GATES PASSED`, after rebuilding
+`dist/app.bundle.js` via `build_bundle.py` and regenerating `scripts/hardcoded_arabic_baseline.json`
+twice — once for player-hub.js's legitimate 142→0 Arabic-fragment decrease, once for challenges.js's
+legitimate increase from writing real Arabic translations into the room-title data). Nothing here
+required Firebase's paid Blaze tier.
+
+## 1230.52 (continued) — question-bank.js French/Farsi translation, item 4 above actually done
+
+User approved proceeding through the full French/Farsi gap on the free plan ("تابع"). Wrote real
+French and Farsi for every natural-language question stem and answer option across:
+
+- `daily` (10 questions), `football` (10), `logic` (10), `horror` (30, including restructuring the
+  `horrorExtra` compact array format for hr-11..hr-30 from 2-part `'ar|en'` pipe strings to 4-part
+  `'ar|en|fr|fa'` so it could carry the new languages at all), `science` (30), `iq` (30) — six of
+  the original legacy banks, 622 of the file's `O()` calls, all gate-verified and spot-checked live
+  via Playwright reading `window.ZIVOZONE_CHALLENGES`.
+
+**Important self-correction, same spirit as the room-title finding above.** While starting on the
+`memory`/`strategy`/`math` banks, translated their original `bank.memory`/`bank.strategy`/`bank.math`
+question arrays first (mem-01..13, str-01..10, math-01..50) — then discovered a `const fill=(id,items)
+=>{bank[id].questions=items.map(...)}` helper, called as `fill('memory',[...])`, `fill('strategy',
+[...])`, `fill('math',[...])`, running **after** those bank definitions and **replacing** (not
+appending to) `.questions` for exactly those three banks. Confirmed live with Playwright
+(`window.ZIVOZONE_CHALLENGES.memory.questions` etc.): the ids actually present are `memory-01..10`
++ `qb_memory_01..20` (30 total) — none of the `mem-01..13` ids I'd just translated are reachable.
+Same for `strategy` (`strategy-01..10` + `qb_strategy_01..20`) and `math` (`math-01..20` +
+`qb_math_01..20`, from `fill('math',...)`'s real 20-item array, not the 50-question `bank.math`
+definition above it). The `qb_*` items come from a separate, already-fully-translated V22
+content pack that merges in additively — only the `fill()` items were missing fr/fa.
+
+Net effect: the translation work on `mem-01..13`/`str-01..10` is harmless but inert dead code
+(unreachable, left in place rather than deleted, per evolution-not-layering — removing dead code
+wasn't asked for and risks touching something another system depends on). Redirected effort to
+the actually-live content instead: edited the `fill()` helper itself to pass `x.fr||x.en` /
+`x.fa||x.ar` through to `O()`, then added real French/Farsi to all 10 `fill('memory',...)` items,
+10 `fill('strategy',...)` items, and 20 `fill('math',...)` items (stems + the handful of
+non-numeric answer options — most math/memory/strategy options here are bare numbers or symbols,
+which are language-neutral and correctly left untranslated). This was actually a much *smaller*
+real scope than the original math-01..50 definition suggested, since 20 of the "50" were already
+dead and the rest were replaced by a 20-item live set.
+
+Final state: every question bank that is actually reachable through `window.ZIVOZONE_CHALLENGES`
+now has real French and Farsi for its natural-language content. All gate-verified
+(`bash scripts/run_all_gates.sh` → `ALL GATES PASSED`, 10/10 gates, zero hardcoded-Arabic-count
+regressions, zero i18n-coverage failures) and spot-checked live via Playwright with zero page
+errors. Still on the free Spark plan throughout.
+
+## 1230.53 — ZIVOZONE Signature section (6 room cards) i18n wiring
+
+Responded to "طيب كمل تمام في اشي تعدلو" (continue, fix something) by going back to an old,
+previously-flagged-but-never-fixed item: the "ZIVOZONE Signature" section in `index.html`
+(`#zivo-rooms-hub`) — the 6 high-visibility experience cards (Dark Room, Puzzle Room, Story Room,
+Health Room, Beauty Room, Forensic Lab) that sit right under the hero/news-ticker, above the
+challenge center. This section was 100% hardcoded Arabic with zero `data-i18n` wiring, so every
+other language (en/zh/hi/es/fr/fa) fell back to showing raw Arabic for the single most prominent
+card grid on the page.
+
+Checked the other two old flagged items first (`logic_extreme`/`memory_focus`/`football_intelligence`
+banks missing fr/fa) — already fixed in an earlier session, confirmed complete, no work needed there.
+
+Added ~30 new i18n keys (`sigTitle`, `sigDesc`, `sigLive`, `sigDetails` shared + per-card aria/title/
+description/CTA/status keys) to `core/modules/runtime/i18n.js`, with real translations for all 7
+languages (ar/en/zh/hi/es/fr/fa) — following the existing `Object.assign(T.xx,{...})` block
+convention. Wired `data-i18n` / `data-i18n-aria-label` attributes onto every corresponding element
+in `index.html`'s Signature section, following the site's established convention (Arabic kept as
+literal fallback content inside each tag; `applyLanguage()` already in `app-shell.js` handles the
+rest — no runtime code changed).
+
+Two small copy decisions along the way:
+- The section's old description said "لتجربتين" ("for two experiences") — stale copy from when the
+  section had 2 cards instead of 6. Rewrote `sigDesc` without a specific count ("every signature
+  ZIVOZONE room — each with its own character") so it's accurate regardless of how many cards exist.
+- Left the English-style kicker/status labels as-is ("FULL SCREEN", "BEAUTY & CARE", "01 //
+  PSYCHOLOGICAL EXPERIENCE", etc.) since they read as intentional stylistic brand labels, consistent
+  across 5 of the 6 cards. Only the Forensic Lab's kicker ("02 // تجربة التحقيق") was actually in
+  Arabic, inconsistent with the other five — that one got real translated keys (`sigForensicKicker`,
+  `sigForensicStatus`) so it now switches language like its own card's other text, instead of being
+  the only hardcoded-Arabic kicker on an otherwise-English-labeled row of cards.
+- For titles like "🌑 الغرفة المظلمة" where `applyLanguage()` replaces `.textContent` wholesale, wrapped
+  the emoji/arrow outside the translated `<span data-i18n="...">` so the emoji doesn't get wiped out
+  when the span's text is swapped (e.g. `<h3>🌑 <span data-i18n="sigDarkTitle">...</span></h3>`).
+
+Verified: `node --check` on i18n.js, `python3 scripts/release.py 1230.53`, `bash
+scripts/run_all_gates.sh` → `ALL GATES PASSED` (10/10, zero hardcoded-Arabic regressions since the
+Arabic text is unchanged — just now reachable as a translatable fallback instead of a dead end), and
+live Playwright reads of `#zivo-rooms-hub` in English, Arabic and Farsi — all three render fully
+correct, language-appropriate text for every card's aria-label, title, description, CTA and the
+details links, with zero page errors. Still on the free Spark plan.
+
+## 1230.54 — audit pass: confirmed challenges.js/match-center.js translation systems are complete; one real gap found and fixed
+
+After finishing the Signature section (1230.53), did a systematic sweep of the two largest files in
+the hardcoded-Arabic baseline (`challenges.js` at ~7,500 raw Arabic runs, `match-center.js` at ~415)
+to check whether the big raw counts meant real untranslated UI chrome, or just legitimate Arabic text
+sitting inside already-complete per-language systems (the baseline is a ratchet on raw character
+counts, not a semantic "is this translated" check — Persian text also trips the same regex since it
+shares Arabic's Unicode block).
+
+Wrote a small script that extracts each known i18n-overlay object (`WORLD_ATLAS`/`WORLD_I18N`/
+`ATLAS_COPY`/`ATLAS_EXTRA_I18N`, `ROOM_DNA_I18N`, `WORLD_RESOURCES`/`WORLD_RESOURCES_I18N`,
+`ROOM_WORLD`/`ROOM_WORLD_I18N`, `GAME_NAMES_BY_LANG`, and the local `dict`/`D` lookups) and checked,
+per challenge id and per language, whether each system actually has real content for all 6 non-Arabic
+languages. Result: every one of these systems is already fully, genuinely translated (verified fr/fa
+text differs from en/ar, not copy-pasted placeholders) across all ~23 challenge ids. The three items
+flagged in old project notes as "likely next targets" (atlas zone labels, canvas mini-game prompts,
+external link descriptions) turned out to already be done — resolved in an earlier, unsummarized
+session, same as `logic_extreme`/`memory_focus`/`football_intelligence` found complete on this round
+too. `match-center.js`'s ~415 count is the same story: every UI string there already has a full
+ar/en/zh/hi/es/fr/fa object.
+
+One real, genuine gap did turn up: `localAIReply()` in `app-shell.js` — the canned fallback the ZIVO
+AI assistant gives when no real backend (Gemini/Firebase callable/HTTP endpoint) is configured, which
+is the actual behavior on the free plan right now since there's no live AI backend wired in. It
+matched the player's typed message against keywords for "level"/"challenge"/"sport" in Arabic,
+English, Chinese and Spanish only — Hindi, French and Farsi speakers typing their own language's word
+for any of these got the generic welcome message instead of a relevant canned reply. Added the missing
+keyword stems (स्तर/चुनौ/खेल for Hindi, niveau/défi for French — "sport" is spelled the same in French
+so it already matched, سطح/چالش/ورزش for Farsi). Verified the matching logic directly in Node for all
+three languages plus an unrelated-message control case — all correct.
+
+Verified: `node --check` on app-shell.js, `python3 scripts/release.py 1230.54` (re-stamped version +
+rebuilt bundle), `python3 scripts/gen_hardcoded_arabic_baseline.py` (deliberately re-baselined since
+the +3 increase is real new-language coverage, not careless hardcoding — same judgment call as the
+1229.17 precedent), `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (17/17). Still on the free
+Spark plan.
+
+## 1230.55 — global SEO: wired the already-built per-language URLs into the release pipeline (was silently rotting)
+
+User picked this as the priority: improve the site's global search visibility. Investigated what
+"multi-language SEO architecture" actually needed, expecting to build it from scratch per the old
+project-memory note calling it "a hosting/architecture project bigger than an SEO pass."
+
+Found it was already built: `scripts/prerender-lang-home.mjs` (V1230.20, an earlier unsummarized
+session) already generates real, separately-crawlable homepage URLs for all 6 non-Arabic languages
+(`/en/`, `/zh/`, `/hi/`, `/es/`, `/fr/`, `/fa/` — each a full clone of `index.html` with translated
+`<title>`/description/OG tags, correct `lang`/`dir`, and the stored-language preference pre-set so the
+app boots straight into that language), and `index.html` already carries the reciprocal 7-language +
+x-default `hreflang` block pointing at them. This is exactly the right shape of fix for a crawler that
+currently only ever sees one URL declaring `lang="ar"`.
+
+The actual gap: nothing ever re-ran that generator. It was run once by hand, and every release since
+(`scripts/release.py`, which re-stamps `index.html`'s version, rebuilds the bundle, etc.) left the 6
+generated pages frozen at that one snapshot — confirmed live, they were still serving `?v=1230.20`
+assets while the real site was already at `1230.54`, and missing everything built since then
+(including this session's Signature-section fix). Exactly the same "the page looks current but isn't"
+risk `qa_bundle_freshness.py` already exists to catch for the JS bundle — just for this instead.
+
+Fixed at the root: `scripts/release.py` now calls `prerender-lang-home.mjs` itself, after the version
+stamp and bundle rebuild, so the 6 pages regenerate from fully up-to-date `index.html` on every single
+release automatically — not something to remember to do by hand. Also added
+`scripts/qa_lang_home_freshness.py` (same backup/restore/regenerate-and-diff pattern as
+`qa_bundle_freshness.py`) as an 18th gate, so if someone edits `index.html` directly and ships without
+running `release.py`, the gate fails loudly instead of the per-language pages silently going stale
+again. Tested the gate actually catches drift (manually staled `/en/` with an injected comment,
+confirmed FAIL + correct byte diff, confirmed it restores the file state afterward either way).
+
+Ran `python3 scripts/release.py 1230.55` to catch the 6 pages up right now. Verified live via
+Playwright at the real `/en/`, `/fr/`, `/fa/` URLs (not just `index.html`): each has the correct
+`<html lang dir>`, canonical, title, and reciprocal hreflang set, and each now renders the current
+Signature-section fix in its own language — zero page errors. `bash scripts/run_all_gates.sh` →
+`ALL GATES PASSED` (18/18). Still on the free Spark plan — this is pure static-file generation, no
+new Firebase usage at all.
+
+Scope note: `rooms/*/index.html` and `stories/*/index.html` are a different, correctly-scoped thing —
+dedicated single-language (Arabic) SEO landing pages per room/story with their own hand-written copy,
+not full multi-language app clones, so they don't need the same hreflang treatment. Left untouched.
+
+## 1230.56 — follow-up: sitemap lastmod for the 6 lang-home pages was also going stale
+
+Continuing straight on from 1230.55. While double-checking that fix, noticed `sitemap.xml`'s
+`<lastmod>` for `/en/`, `/fr/`, `/fa/` etc. was still frozen at `2026-10-07` even after regenerating
+the pages — `prerender-lang-home.mjs`'s own sitemap-append code only ever writes a `<lastmod>` the
+first time a URL is added to the sitemap (its `if (sitemap.includes(...)) continue` guard skips any
+URL already present), so once created, these 6 entries' dates never moved again no matter how often
+the pages themselves changed. Search engines use `lastmod` to decide whether a URL is worth
+re-crawling, so a permanently-stale date works against the exact goal of this whole effort.
+
+`release.py` already solved this correctly for the homepage, privacy, terms and every story page via
+a `PAGE_FOR_URL` map that reads each file's real mtime — just never had the 6 lang-home paths in that
+map. Added them, and also moved the `prerender-lang-home.mjs` regeneration step to run *before* the
+sitemap `<lastmod>` pass (it was previously running after), so the mtime it reads is the page's
+brand-new write, not the previous release's.
+
+Verified: ran `python3 scripts/release.py 1230.56`, confirmed `/en/`, `/fr/`, `/fa/` etc. now show
+today's date in `sitemap.xml`. `python3 scripts/qa_lang_home_freshness.py` and the full
+`bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (18/18). Still free Spark plan, static files
+only.
+
+## 1230.57 — closing out global SEO: hreflang reciprocity now gated, 6 lang-home pages covered by qa_seo_basics.py
+
+Last piece to call the global-SEO topic fully closed: `qa_seo_basics.py` (title/description/canonical/
+structured-data checks) never actually looked at the 6 per-language homepage pages themselves, and
+nothing anywhere verified hreflang *reciprocity* — that index.html and all 6 lang pages agree on
+exactly the same set of alternates, each pointing at a page that actually exists. A mismatched or
+partial hreflang set is one of the most common real-world hreflang mistakes, and search engines
+respond by ignoring the whole annotation rather than just the broken entry, so it's worth gating,
+not just getting right once.
+
+Added: the 6 lang-home pages now go through the same title/description/canonical checks as every
+other page (with a clean `exists()` guard instead of crashing if one is ever missing — e.g. on a
+fresh checkout before the first `release.py` run); and a new reciprocity pass that reads every
+page's `hreflang` block, checks it has exactly the 8 expected tags (ar + 6 langs + x-default), checks
+every href actually resolves to a page that exists on disk, and checks all 7 pages declare the
+identical set index.html does.
+
+Verified the new checks actually catch breakage, not just pass trivially: temporarily corrupted one
+hreflang href in `/fr/`'s page to a non-existent URL, confirmed two specific, correctly-worded
+failures (`points at a page that actually exists` and `reciprocal`), restored the file, confirmed
+clean again. `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (18/18) on version 1230.57. Still
+free Spark plan, no new Firebase usage — this entire multi-session SEO effort (per-language URLs,
+hreflang, sitemap lastmod, now gate coverage) was pure static-file + build-script work.
+
+This closes the "global SEO visibility" track end-to-end: real crawlable per-language URLs exist,
+regenerate automatically on every release, keep accurate sitemap dates, and are now gated against
+drift the same way the rest of the codebase already is. Moving to the next priority the user picked:
+the reward-claim forgery gap in challenges.js/economy.js (documented since 1229.6, never fixed —
+challenges.js currently self-asserts a "perfect 10/10 score" client-side with no server-side
+verification and no rate limit, so a player could fabricate a reward claim without actually playing).
+
+## 1230.58
+
+User feedback, direct and specific: "the mini-games in the rooms are completely below the required
+level, even though these kinds of games are what will bring me a huge audience — what's the
+solution." Interrupted the reward-forgery work queued above to investigate honestly before proposing
+anything — read puzzle-room.js, horror-room.js, beauty-room.js and the shared epic50.js engine in
+full rather than guessing. Finding: the game *logic* was not actually weak (10 distinct puzzle
+mechanics, a genuinely tense phase-based tension mechanic in the Dark Room, 50-level "Epic" modes
+with real per-band rule twists, all properly randomized) — the gap was production polish: flat
+canvas primitives with no atmosphere, zero feedback on success, and in one case an outright layout
+bug. Asked the user which room to start with and what specifically felt weak (`AskUserQuestion`);
+answer: Dark Room first, and all three of "visuals weak / no feel of success / gameplay itself
+repetitive."
+
+Shipped for Dark Room only (Puzzle Room / Beauty Room get the same pass next, same priority order
+the user set):
+- **Real bug fixed**: "Whisper of the Dark" (the room's 50-level Epic mode) was mounting into
+  `.zhr-intro-content` — a 760px, centered, *text* column meant for the intro screen's copy — instead
+  of a full-stage container. Confirmed live via Playwright: the entire playable game rendered as a
+  small boxed card in a sea of black on desktop. New `.zhr-epic-wrap` class gives it the same
+  full-stage footprint `.zhr-play` already uses for the classic mode. This alone was likely the
+  single biggest "looks cheap" contributor.
+- **Atmosphere**: `playShadow()`'s board now fills with a radial fog gradient instead of a flat
+  color, and each eye has a soft time-based pulsing glow instead of a static circle.
+- **Immediate feedback, Epic mode**: a correct tap now gets an instant teal ping + sound; a wrong
+  (decoy) tap gets an instant red flash + sound — previously nothing happened until the engine's
+  end-of-level overlay fired, so taps felt unacknowledged.
+- **Success feel, classic "Hold Your Breath" mode**: surviving a danger phase now triggers a green
+  inset flash plus a floating "+N" score popup (`.zhr-safe-flash` / `.zhr-scorepop`), mirroring the
+  drama the red flash/scream already gave to getting caught. Previously a survive only changed a text
+  toast.
+- **Mechanic depth, classic mode**: added a consecutive-survival streak with a scaling score bonus
+  (same `(+{bonus} streak 🔥{streak})` shape as Puzzle Room's existing streak system, new
+  `horrorGameStreakBonus`/`horrorGameBestStreakNote` i18n keys across all 7 languages) — rewards
+  skill instead of every survive being worth a flat 10 points. Also added a difficulty ramp across
+  the 45s round (`rampCalmWindow`/`rampDangerWindow`): calm windows shrink and danger windows
+  lengthen as the round progresses, so the back half plays tighter than the front half instead of
+  sampling the same fixed ranges the whole time — directly answers the "gameplay itself feels
+  repetitive" feedback.
+
+Verified live via Playwright against the rebuilt bundle (not just read the code): overrode
+`window.ZIVOZONE_REQUIRE_PLAY` for local testing only (production gate untouched — still requires a
+real account) to reach both game modes without Firebase Auth in this sandbox. Confirmed: Epic mode
+now fills the stage and shows the fog/glow atmosphere; a deliberate wrong click produced the red
+flash and correctly ended the attempt; holding through a danger phase produced the green flash and a
+"+10" popup; no console/page errors in any run. `bash scripts/run_all_gates.sh` → `ALL GATES PASSED`
+(18/18) including the hardcoded-Arabic ratchet (all new on-screen text goes through `t()`/`fmt()`,
+not raw strings). Still free Spark plan — this is pure client-side CSS/canvas/JS work, no new
+Firebase usage.
+
+Not yet done, and said plainly: Puzzle Room and Beauty Room still have the same production-polish gap
+(flat canvas primitives, minimal success feedback) and have not been touched this round — the user
+picked Dark Room first on purpose. After confirming this lands well, the same treatment should go to
+the other two rooms. The reward-claim-forgery security work from 1230.57's closing note is still
+queued behind that.
+
+## 1230.59
+
+User request: "بدي لعبة في اغرقة المظلمه جديدة كليا" — a completely new game in the Dark Room,
+replacing both existing mini-games entirely (explicit: delete both, no preference on genre). After
+agreeing on a concept ("آخر عود كبريت" / The Last Match), the user instead uploaded a full written
+spec for "LIGHT ESCAPE" (الهروب من الظلام) — a top-down point-of-light maze-escape game with 6 named
+enemy families, 50 individually hand-authored levels, a Light Energy resource, full i18n, and
+Economy integration, while itself insisting on "ONE core, ONE engine, no duplication." 50 unique
+hand-built maps was not realistically deliverable in one pass; asked the user how to resolve that
+gap, they said "اعطيني حل مناسب" (give me the appropriate solution) — deferred to judgment. Built the
+honest, buildable interpretation below and said so plainly rather than quietly shipping less than
+what was asked for.
+
+**What shipped**: `core/modules/horror-room.js` rewritten completely. Both prior games ("Hold Your
+Breath", "Whisper of the Dark") are gone. The replacement, "Light Escape": the player is a single
+point of light inside a procedurally generated maze (real-time WASD/arrows or touch-drag movement,
+real circle-vs-wall collision against a recursive-backtracker "perfect maze" with extra random loop
+edges for alternate routes), must collect light shards and reach an exit gate before Light Energy
+hits zero, while avoiding two enemy types with real per-frame state machines:
+- **Stalking Shadow** — patrols randomly, switches to chasing the player directly within range, and
+  speeds up if the player stands still while being chased.
+- **Lurking Predator** — waits motionless, winds up, dashes in a burst toward where the player was,
+  cools down, and drifts back to its post.
+
+50 levels across 5 "worlds" (the project's existing `epic50.js` 5-band/10-level shared engine — reused,
+not duplicated, per the spec's own rule), each adding a genuinely new mechanic rather than just bigger
+numbers: World 1 teaches movement with no shard gate; World 2 adds the Lurking Predator and a required
+shard; World 3 makes some corridors open/close mid-run ("the Living Maze"); World 4 drains energy
+faster with more enemies of both kinds; World 5 adds a pulsing darkness hazard near the exit and
+combines everything. Difficulty, maze size, and enemy counts scale smoothly within each world and
+step up again at each world boundary, matching the "two axes of difficulty" pattern the other Epic50
+rooms already use. True fog-of-war: the maze, shards, enemies and exit are all drawn in full color,
+then covered by a separate dark canvas layer with a soft hole cut around the player sized by
+remaining energy — a real flashlight, not a decorative tint.
+
+**Honest scope cut, stated plainly**: the brief asked for 6 enemy families and 50 hand-authored unique
+levels; this ships 2 enemy families with real AI and 50 *procedurally generated* mazes (structurally
+distinct per world, not just re-skinned), chosen as the deliverable interpretation of "give me the
+appropriate solution." No level-select map screen and no per-level star ratings this round — what
+persists is "continue from the last level reached" plus the current run's score, via
+`zivo_light_escape_progress` in localStorage (same pattern the prior mechanic used, renamed).
+
+**Reward wiring**: two new narrow reward types, `light_escape_reward` (2 ZIVO, per-world clear) and
+`light_escape_epic_reward` (5 ZIVO, full 50-level clear), added to `economy.js`'s `credit()` policy
+switch AND to `firestore.rules`' `rewardTypeValid()`/`rewardAmountValid()`/`validRewardClaim()` in the
+same change — not a new economy, the same single transactional `credit()` path every room already
+uses. **Found while doing this, out of scope to fix now, flagged in code comments in both files**:
+every other room's existing Epic50 "full clear" reward type (`horror_epic_reward`,
+`beauty_epic_reward`, `puzzle_epic_reward`, `forensic_epic_reward`, `story_epic_reward`,
+`health_epic_reward`) was never added to either `economy.js`'s switch or `firestore.rules`' allow-list
+— meaning those five rooms' full-clear rewards have silently never paid out, since before this round,
+independent of anything changed here. Worth a dedicated follow-up pass.
+
+**A real bug caught and fixed during testing, not just read-reviewed**: the first version of the
+fog-of-war drew the darkness directly onto the same canvas as the scene (`fillRect` with
+`source-over`, then a `destination-out` "hole"). That math-blends the darkness into the already-drawn
+bright pixels first (`scene×0.06 + dark×0.94`), so the "hole" only ever un-hid that already-crushed
+6%-brightness blend — verified by sampling canvas pixels directly: brightest pixel in the whole frame
+was 48/765, exactly the predicted 6%. Visually this meant the entire game looked almost uniformly
+black with no real light reveal. Fixed by giving the fog its own offscreen canvas layer (opaque dark
+fill, hole cut via `destination-out` on that separate layer, then composited onto the scene with
+`drawImage`) — re-verified via pixel sampling after the fix: brightest pixel became 765/765 (true
+white), and screenshots confirm a correctly lit player, walls, shards and nearby enemies inside a
+believable flashlight radius.
+
+Verified live via Playwright against the rebuilt bundle, not just read the code: real keyboard
+movement and wall collision (confirmed via direct position sampling, not just visually); pause/resume
+and mute/unmute buttons; the intro screen's Start vs. Continue-from-level-N vs. Restart logic
+(confirmed via localStorage); the exit-guard confirmation on the back button; shard-gated exits
+correctly blocking exit until the real internal shard counter — not just the visual markers — is
+incremented (this was caught as a *pass*, not a bug, when a test shortcut that only toggled the
+visual markers was correctly rejected by the gate); enemy contact draining energy and triggering
+invulnerability + screen shake; energy hitting zero correctly ending the level and regenerating a
+fresh maze on retry; and a full clear of all 50 levels in one run, confirming the world-clear reward
+call fires exactly once at each of the 5 world boundaries and the full-clear reward call fires exactly
+once at level 50, with zero console/page errors anywhere in any run (the only console errors seen were
+pre-existing, unrelated 404s for missing sample match-data JSON files). `bash scripts/run_all_gates.sh`
+→ `ALL GATES PASSED` (18/18), including a new French-translation-allowlist entry for `lightEscapePause`
+("Pause" is the same real word in French, not a leftover copy) and the hardcoded-Arabic ratchet
+(`horror-room.js`'s world-name/twist dictionaries are content, like the other five rooms' own Epic50
+band dictionaries, already in that gate's exclusion list by name). Still free Spark plan — this is
+client-side JS/canvas/CSS plus the same single-transaction reward path every other room uses, no new
+Firebase product or paid tier required.
+
+Not yet done, said plainly: no level-select map or star ratings (scope cut, see above); the other five
+rooms' broken `_epic_reward` types found during this work are not fixed yet (separate follow-up); the
+reward-claim-forgery security work queued since 1230.57 is still queued.
+
+## 1230.60
+
+Follow-up to the bug flagged (not fixed) in 1230.59: every other room's own Epic50 "full clear" bonus
+was calling `Economy.credit(5,{type:'…_epic_reward'})` client-side (confirmed by reading every live
+call site: `beauty-room.js`, `forensic-case-core.js`, `puzzle-room.js`, and `rooms.js` for story and
+health), but none of those five types — `beauty_epic_reward`, `forensic_epic_reward`,
+`puzzle_epic_reward`, `story_epic_reward`, `health_epic_reward` — were ever in `economy.js`'s
+policy/allowed switch inside `credit()`, so every one of those claims returned `false` silently before
+ever reaching Firestore. Fixed now, the same way `light_escape_reward`/`light_escape_epic_reward` were
+wired in 1230.59: added all five to `economy.js`'s `credit()` (policy + allowed, amount 5, matching
+each room's existing call sites exactly — no client-side code in any of the five rooms needed to
+change) and to all four places `firestore.rules` needs to agree: `rewardTypeValid()`,
+`rewardAmountValid()`, `validRewardClaim()`'s per-type policy check, and the `wallet/ledger`
+subcollection's own mirrored `allow create` condition.
+
+`horror_epic_reward` (the sixth type named in the original bug report) was deliberately NOT added:
+grepped the whole codebase and confirmed `horror-room.js` no longer calls it anywhere — that call site
+was removed when the room's game was replaced by "Light Escape" in 1230.59, so the type is genuinely
+dead. Adding an allow-rule for a type nothing calls would just be unused surface area.
+
+Verified, not just read: wrote an isolated Node harness that evals the real `economy.js` against a
+minimal mocked Firebase and calls `Economy.credit()` directly with each of the newly-added types.
+Confirmed all five now pass the `policy`/`allowed` gate inside `credit()` (the exact code this change
+touched) and proceed into the wallet/transaction logic, while `horror_epic_reward` — intentionally left
+unwired — is still correctly rejected at that same gate. `python3 scripts/qa_rules_syntax.py` confirms
+the rules file is still structurally sound (balanced braces, every function still referenced).
+`bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (18/18). No client-side game code changed in any
+of the five rooms — this is purely closing the gap between code that was already calling `credit()`
+correctly and the policy tables that were silently rejecting it. Still free Spark plan; no new
+Firebase product or paid tier involved.
+
+## 1230.61 — reward-claim-forgery hardening (queued since 1229.6/1230.57)
+
+Picked up the next priority queued since 1230.57: `challenges.js` paying out its `challenge_reward`
+(10 ZIVO for a perfect 10/10 round, the single highest-value, most-repeatable reward in the whole
+economy — every one of ~10 challenge types can trigger it) with **no real server-side verification and
+no rate limit**. Traced the full path before touching anything: `recordProviderResult()` →
+`GameResultValidator.validate()` only sanity-checks the *shape* of the self-reported result (types,
+ranges, correct≤total, no timeout+completed together) — it does not, and architecturally cannot on its
+own, verify the score is real, because every number it checks (`score`, `correct`, `total`, `duration`,
+`completed`) is supplied by the same client claiming the perfect round. Confirmed the actual exploit:
+a single call from the browser console —
+`window.ZIVOZONE.GamePlatform.recordProviderResult({gameId:'iq',room:'puzzle',version:'1226.0',
+score:10,correct:10,total:10,duration:30000,completed:true,timedOut:false})` — mints a fully
+"validated" result and a fresh `sessionId` instantly, with zero real play, which could then be fed to
+`Economy.rewardChallenge()` for a real 10 ZIVO payout. Worse: since that `sessionId` (and therefore the
+derived `claimId`) is different every call, nothing stopped the same exploit being looped forever for
+unlimited free currency — there was no rate limit of any kind on this path, not even a daily cap.
+
+**Why a complete fix isn't possible here, said plainly**: proving a quiz was really played requires
+either replaying the actual questions server-side or cryptographically signing each real answer as
+it's submitted — both need server compute, and Cloud Functions require Firebase's paid Blaze plan,
+which conflicts with "stay on the free Spark plan." So this is a genuine architectural ceiling, not a
+corner cut for time. What Spark-plan Firestore Security Rules *can* enforce on their own: a server
+timestamp the client cannot lie about (`request.time`), which is enough to close the practical, 
+near-zero-effort version of this exploit even though it can't close every theoretical one.
+
+**What shipped**: a new single, fixed Firestore doc per user — `users/{uid}/zivozone/gameSession`
+(same shape as the existing `wallet`/`mining` docs, not an unbounded subcollection) — written the
+moment a real challenge round genuinely begins, not when it ends. `economy.js` gets a new exported
+`startGameSession({sessionId, gameId})` (fire-and-forget; a network hiccup here must never block real
+play, matching the app's existing offline-tolerant pattern). `challenges.js`'s `reset()` — the actual
+start of real gameplay, called right after the cinematic intro finishes and before the first question
+renders — now mints a fresh `sessionId` and calls it, and that *same* sessionId (not a fresh one minted
+later at completion time) is threaded through to the final reward claim and to the offline-retry
+payload in `localStorage`. `firestore.rules`' `perfectClaim()` now requires the claimed
+`validatedSessionId`/`challenge` to match this doc's `sessionId`/`gameId`, and at least 15 real
+server-measured seconds to have passed since it started — closing the one-line, zero-elapsed-time
+console forgery. The `gameSession` doc's own `allow update` rule adds a matching 15s cooldown on
+*starting a new session at all* (mirroring the existing 24h mining-cooldown pattern already proven
+elsewhere in this same file) specifically so an attacker can't pre-create many sessions in a burst and
+drain them all at once the instant the minimum-elapsed-time window opens for all of them simultaneously
+— only one session can be "in flight" per user at a time.
+
+**Residual risk, stated honestly, not hidden**: this does not stop a determined attacker who is willing
+to write a script that (1) creates a real session, (2) actually waits out the 15s, then (3) still
+forges a fake "perfect" result rather than playing — that specific path remains open because nothing
+here can verify the 10 answers were real without server compute. What it does close is the practical,
+copy-paste-from-a-forum version of this exploit (one console command, zero elapsed time, infinitely
+repeatable), which was the overwhelmingly more likely real-world risk. A complete fix would need either
+Cloud Functions (Blaze plan, explicitly ruled out) or moving quiz-answer validation into security
+rules item-by-item (a much larger redesign, not attempted here).
+
+**Verified, scope stated honestly**: `node --check` on both changed JS files; `qa_rules_syntax.py`
+confirms every rules function (including the two new ones) is still referenced and the file is
+structurally balanced; a Node harness evaluating the real `economy.js` against a mocked Firestore
+confirmed `startGameSession()` writes exactly the intended `{sessionId, gameId, startedAt:
+SERVER_TIMESTAMP}` shape and rejects malformed calls before ever reaching Firestore; live in the
+browser via Playwright (the same `ZIVOZONE_REQUIRE_PLAY` override used throughout this engagement),
+confirmed `reset()` genuinely calls `startGameSession` with a correctly-shaped sessionId at the exact
+moment a real "IQ Lab" round begins (after the ~8s cinematic intro, before the first question), and
+confirmed by exhaustive grep that `this.sessionId` is set in exactly one place and read in exactly the
+two places that need it, with no intervening reassignment. **What could NOT be verified in this
+sandbox, said plainly**: the actual Firestore Security Rules enforcement itself — there is no real
+Firebase project or local rules emulator reachable here (no network access to install `firebase-tools`,
+confirmed by trying), so the new `perfectClaim()`/`gameSession` rule logic has been written and
+reasoned through carefully, mirrors the already-proven mining-cooldown pattern already shipped
+elsewhere in this exact file, and passes the structural syntax gate — but it has not been exercised
+against a real rules engine. This should be verified for real (Firebase Console's Rules Playground, or
+`firebase emulators:start` on a machine with Firebase CLI access) before being trusted blindly; flagging
+this rather than claiming a test that was never actually run. `bash scripts/run_all_gates.sh` → `ALL
+GATES PASSED` (18/18). Still free Spark plan — no Cloud Functions, no paid tier, one extra small
+Firestore doc per user.
+
+## 1230.62 — Puzzle Room / Beauty Room quality pass (queued since 1230.58/.59)
+
+Dark Room's 1230.58 pass flagged this explicitly as the next thing in the queue: Puzzle Room and
+Beauty Room both still had the same production-polish gap, flat canvas primitives and little to no
+success feedback, and neither had been touched that round. Read both rooms' full source and CSS
+before changing anything, and found the gap was narrower than expected in places — Puzzle Room's
+classic 10-stage vault already has a streak/bonus system Dark Room didn't have before its own pass,
+and Beauty Room's order-your-routine mini-game already shakes a button red on a wrong pick. The real
+gap in both rooms was the complete absence of any "you got it" moment to match: Puzzle Room's
+`success()`/`fail()` only ever swapped a text string under the board, with zero motion either way, and
+both rooms' Epic50 canvas games (Puzzle's "Infinite Vault", Beauty's "Perfect Touch") drew flat,
+un-glowing `fillRect` blocks with no feedback on a correct tap beyond the next color simply appearing.
+
+Puzzle Room: `success()`/`fail()` now pulse `#zpr-board` — a green inset glow on success, a shake on
+fail — the same pattern `horror-room.css`'s shake keyframes already established for Dark Room, just
+under new `zpr-flash`/`zpr-shake` class names so the two rooms don't share a selector by accident.
+Success also spawns a floating `+N` score popup (`.zpr-scorepop`) so the actual reward amount, streak
+bonus included, is seen rather than only read in small print. The "Infinite Vault" canvas game
+(`playVault`) now draws rounded, glowing tiles instead of flat rectangles, and a correct tap pulses
+the hit tile white for 140ms before the next one lights, instead of jumping straight there.
+
+Beauty Room: the order-your-routine mini-game now pulses the whole `.zbg-card` (`zbg-pulse`, a soft
+green box-shadow ring) on a correct step, on top of the per-button `right`/`wrong` classes that were
+already there. The "Perfect Touch" canvas game (`playStyle`) now gives the target swatch a glow in its
+own color (so it reads as "the thing to find" rather than a flat chip) and pulses a white outline on a
+correctly-tapped swatch before reshuffling/advancing, instead of advancing instantly.
+
+Both rooms' module versions bumped to `1230.62` so a stale cached copy is visibly distinguishable.
+Every new animation respects `prefers-reduced-motion` the same way Dark Room's did.
+
+**Verified**: `node --check` on both changed JS files; live in the browser via Playwright
+(`ZIVOZONE_REQUIRE_PLAY` override), confirmed the Puzzle Room board actually gains `zpr-flash` and
+spawns a `.zpr-scorepop` on a real correct answer and `zpr-shake` on a real wrong one, with zero
+console errors; confirmed the Beauty Room mini-game's `.zbg-card` gains `zbg-pulse` on a real correct
+step by walking the shuffled button set until the room's own logic accepted one (not by guessing the
+order), with zero console errors; clicked into both rooms' Epic50 canvas games live and confirmed no
+crash. `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (18/18), via the full `scripts/release.py
+1230.62` (not just a bundle rebuild), so `index.html`, `sw.js`, and all 6 per-language homepages carry
+the matching version. **Not done, stated plainly**: no change to either room's actual puzzle logic,
+difficulty curve, or reward amounts — this was a visual/feedback pass only, same scope as Dark Room's
+1230.58. Forensic Lab, Story Room, and Health World's own Epic50 games were not touched this round and
+likely have the same flat-canvas starting point; not queued explicitly yet, so left alone rather than
+assumed.
+
+## 1230.63 — every room's Epic 50 game now actually fills the screen when it starts
+
+User asked directly for this one: any game, in any room, should show full screen when it starts. Went
+looking across every room rather than guessing which one they meant, since 1230.62 had only just
+touched Puzzle and Beauty. Found the real bug was wider than those two: Story Room's and Health World's
+Epic50 games (`openStoryEpic()`/`openHealthEpic()` in `rooms.js`) were both mounted inside `.zr-reader`,
+a 900px reading-article column built for long-form story text — complete with a 90px top margin and
+38px of padding eating into the game's own vertical space. This is the exact same "game boxed into a
+text column" bug Dark Room had before its 1230.58 fix (`.zhr-intro-content`, 760px) and Puzzle/Beauty's
+`success()`/`fail()` visual gap fixed in 1230.62 — just one more room each hadn't been checked for it
+yet. Beauty Room's own "Perfect Touch" epic game had a smaller version of the same thing: mounted in
+`.zbg-wrap`, a 720px column sized for the order-your-routine mini-game's option buttons.
+
+Fix, same shape in every room: a new full-bleed wrapper class per room (`.zr-epic-wrap` for Story/
+Health, `.zbr-epic-wrap` for Beauty) replaces the narrow reading column *only* for the epic game mount
+— `.zr-reader` and `.zbg-wrap` themselves are untouched, since the story text and the order-your-
+routine game both still want that narrower, readable width. Each new wrapper fills its room's own
+full-screen overlay (`#zivo-real-room` / `.zbr-root`, both already `position:fixed;inset:0` from day
+one — the room itself was never the problem, only what got nested inside it), with the actual game
+shell (`.zrg-shell`, from the shared `epic50.js` engine) centered at a sane 1100px inside that, the
+same split Dark Room's `.zhr-epic-wrap` already established: the backdrop fills the screen, the
+playable area stays a sane width rather than stretching edge-to-edge on a wide monitor. Puzzle Room's
+`.zpr-main` (1150px) and Forensic Lab's `.zfc-shell` (already unconstrained) didn't need a markup
+change — just added the same scoped `.zrg-shell{max-width:1100px;margin:0 auto}` rule to both for
+visual parity, so all five rooms' epic games now share one consistent "full screen stage, centered
+play area" shape instead of four different container widths by accident.
+
+**Verified**: `node --check` on all three changed JS files (`rooms.js`, `beauty-room.js`; `puzzle-room.js`
+and `forensic-case-core.js` had no JS changes, CSS only). Live in the browser via Playwright, drove
+each of the four previously-affected epic games through its real entry point (Puzzle Room's intro
+screen CTA, Beauty Room's `startEpic()`, Story Room's and Health World's own epic CTAs inside
+`openStories()`/`openHealth()`) and measured the mounted wrapper's actual rendered width at a 1400px
+viewport: Story and Health's `.zr-epic-wrap` and Beauty's `.zbr-epic-wrap` all measured the full 1400px
+(previously capped at 900/720px), with the Epic50 canvas confirmed present and mounted inside each, and
+confirmed Story's wrapper is no longer a descendant of `.zr-reader` at all. Zero console errors in any
+of the four. Regression-checked the two narrow containers that were deliberately left alone: Beauty
+Room's order-your-routine mini-game still renders `.zbg-wrap` at 720px as before, and Story Room's
+plain story list still renders normally. `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (18/18),
+via the full `scripts/release.py 1230.63`. **Not done**: the room's own *classic*-mode content layouts
+(story reading view, health door cards, puzzle's 10-stage vault, the order-your-routine game) were
+deliberately left at their existing, narrower reading widths — the request and this fix are both about
+the Epic 50 games specifically, not a redesign of every screen in every room.
+
+## 1230.64 — any page, on the phone, now actually opens full screen (iOS)
+
+Follow-up to 1230.63, but a different and much bigger bug: the user this time asked for ANY page,
+not just the game rooms, to be full screen on the phone. Checked `manifest.webmanifest` first —
+it already says `"display": "standalone"`, which is the correct, and only, way Android/Chrome decides
+whether an installed site opens full screen (no browser address bar/tab bar) instead of as a normal
+tab. That part was never broken. The actual bug is that iOS Safari does not read the Web App Manifest
+for this at all — "Add to Home Screen" on an iPhone has always used its own proprietary, Apple-only
+meta tags instead, and this site had never had them. Confirmed with a sitewide grep: zero occurrences
+of `apple-mobile-web-app-capable` anywhere. Without it, every page — even the one launched from the
+home-screen icon — opens inside ordinary Safari chrome on an iPhone, full screen or not, standalone
+manifest or not. This is very plausibly the actual complaint, since it would reproduce on literally
+every page, exactly as described, and specifically on iPhone (most likely what the user's on).
+
+Added `<meta name="apple-mobile-web-app-capable" content="yes">` plus
+`apple-mobile-web-app-status-bar-style` (`black-translucent`, so the status bar overlays the page
+instead of leaving a plain bar), `apple-mobile-web-app-title` (`ZIVOZONE`, the name under the home
+screen icon), and the newer non-prefixed `mobile-web-app-capable` (belt-and-suspenders for any
+Android/Chrome version that prefers it over the manifest) to `index.html`'s `<head>`. Every page this
+site generates at build time — the 6 per-language homepages, all 12 stories × 7 languages (84 pages),
+and all 8 room/challenge landing pages — clones `index.html` as its template (confirmed by reading
+`prerender-lang-home.mjs`/`prerender-stories.mjs`/`prerender-rooms.mjs`: each does
+`fs.readFile(...,"index.html")` then a targeted `<head>` replace), so one edit plus re-running all
+three generators propagated it everywhere automatically — this is exactly why that template
+architecture exists, same reasoning as every previous "one source of truth" fix this engagement.
+`privacy/index.html`, `terms/index.html`, and `404.html` are the only three pages that are *not*
+built from that template (confirmed the same way, by grepping for the string and finding none); those
+three got the same four tags added by hand, plus a `<link rel="manifest">` on privacy/terms (they
+didn't have one at all before — harmless either way, since standalone-mode navigation to an in-scope
+same-origin page doesn't need a manifest link to stay full screen, but there's no reason the manifest
+should be missing from pages that already carry the site's icons).
+
+**Verified**: sitewide grep after regenerating confirms all 4 tags present, verbatim, on `index.html`,
+every per-language homepage, a sampled story page (`stories/tale-01/`, both the Arabic original and
+an `/en/` translation), a sampled room page (`rooms/dark-room/`), and all three hand-edited pages.
+Live in the browser via Playwright with an iPhone 17 user-agent and viewport, loaded `/`, `/privacy/`,
+`/terms/`, `/en/`, `/stories/tale-01/`, and `/rooms/dark-room/` and read each page's actual `<meta>`
+DOM values back (not just grepping source) to confirm the browser parses them as intended, zero
+console errors on any of the six. `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (18/18), via
+the full `scripts/release.py 1230.64`. **What could not be verified in this sandbox, stated
+plainly**: whether this actually renders full screen on a *real* iPhone with the site actually
+installed to the home screen — there is no real iOS device or Safari engine reachable here, only
+Playwright's Chromium with a spoofed iPhone user-agent, which can confirm the tags are present and
+correctly parsed as DOM properties but cannot execute Safari's own "Add to Home Screen" full-screen
+behavior. This is the standard, universally-documented fix for exactly this symptom (confirmed by its
+own meta tag's well-known name, not guessed), but it should be checked on the user's actual phone —
+removing the app from the home screen and re-adding it is likely required, since iOS reads these tags
+only at the moment of "Add to Home Screen," not on every subsequent launch.
+
+## 1230.65 — same success-feel pass, now for Forensic Lab / Story Room / Health World
+
+Given the explicit choice when asked what to do next: redo 1230.62's quality pass (success feel,
+visible tap feedback) for the three remaining Epic 50 games — Forensic Lab's "The Case That Never
+Closes" (`playCase`, `forensic-case-core.js`), Story Room's "The Plot Twist" (`playPlot`, `rooms.js`),
+and Health World's "Full Balance" (`playBalance`, also `rooms.js`). Read all three in full before
+touching anything, same as every prior round of this pass.
+
+Forensic Lab had the worst version of this gap, not just the same one: from band 2 onward the level
+asks the player to find *two* odd tiles, but clicking the first one changed nothing on screen at all —
+no mark, no color shift, nothing — so there was no way to tell a correct tap had even registered while
+still hunting for the second tile. `draw()` now rings every already-found tile in green, and a correct
+tap redraws immediately instead of leaving the board exactly as it was; also guarded against reusing
+the same correct tap twice (clicking an already-found tile again does nothing, instead of harmlessly
+re-adding it to the set, same no-penalty behavior as before, just now explicit). Story Room's and
+Health World's games had the exact shape of gap 1230.62 fixed in Puzzle/Beauty's Epic50 games: a
+*wrong* tap already got a real flash for free from the shared `epic50.js` engine's own `loseLevel()`,
+but a *correct* tap that wasn't the level's last one did nothing but silently advance — `hits++` then
+straight into the next round or a reshuffle. Both now give that tap a brief glow (green pulse at the
+tapped side of Story Room's "glow" game; a green ring on the tapped icon in Health World's grid)
+before moving on.
+
+**Verified**: `node --check` on both changed JS files. Live in the browser via Playwright: added a
+temporary debug hook to each of the three `archFn`s (guarded by `window.ZIVOZONE_DEBUG_TESTING`,
+exposing just enough internal state — which side/tile was actually correct — to click the *right*
+target instead of guessing), confirmed all three games accept real correct taps and advance without
+error, then drove Forensic Lab's game through 9 consecutive real level-ups in a row (reading the
+engine's own on-screen level counter before/after each round) to confirm the new "ring the found tile"
+logic doesn't break progression anywhere in band 1. Removed all three debug hooks afterward, confirmed
+by grep that zero occurrences remain, then rebuilt and re-ran a final no-debug-hook smoke test on all
+three games (mount + one click each) with zero console errors, before stamping the real release.
+`bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (18/18), via the full `scripts/release.py 1230.65`
+plus a `prerender-rooms.mjs` re-run (these three games' code lives in the JS bundle referenced by the
+room landing pages, not inlined in their HTML, so re-running that generator was only needed to keep
+those pages' own `?v=` bundle-cache-buster current — not because their markup changed). **Not done**:
+no change to any of the three games' actual difficulty, scoring, or win conditions — visual/feedback
+only, same scope as every prior round of this pass. This closes out every Epic 50 game across all six
+rooms (Dark Room, Puzzle, Beauty, Forensic, Story, Health) at the same success-feel bar.
+
+## 1230.66
+
+Requested a full security audit of the live site, then asked to fix whatever was found. The audit
+covered `firestore.rules` (258 lines, read in full), `firebase.json` (154 lines, read in full),
+`zivo-ai.js`, `core/modules/auth.js`, `core/config.js`, `core/modules/chat.js`,
+`core/modules/util-esc.js`, and a sitewide grep for unescaped `innerHTML` interpolation across every
+module in `core/modules/`. Five real findings came out of it, three of which were fixable at zero
+cost on the free Spark plan and are fixed in this release; the other two are disclosed honestly
+instead, because fixing them for real is out of reach on this plan.
+
+Fixed: `firebase.json` had zero HTTP security headers configured anywhere — only `Cache-Control`
+rules. Added a site-wide header block (`"source": "**"`, placed before the existing
+path-specific `Cache-Control` entries so there's no key conflict) setting `X-Content-Type-Options:
+nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`,
+`Permissions-Policy` disabling camera/microphone/geolocation/payment/usb (the site uses none of
+them), and a `Content-Security-Policy` built from an actual inventory of what the site loads
+(grepped every `https://` reference and every `<script src>` in `index.html` and `core/*.js` first,
+rather than guessing): `script-src`/`connect-src` scoped to `'self'` plus the Firebase/Google
+domains the app genuinely calls (`gstatic.com`, `*.googleapis.com`, `*.google.com`,
+`googletagmanager.com`), `frame-ancestors 'none'` and `object-src 'none'` closing off clickjacking
+and plugin-based attacks, `base-uri 'self'` blocking base-tag injection. `script-src`/`style-src`
+still need `'unsafe-inline'` because the codebase genuinely uses inline `<script>` blocks and inline
+`style=""` attributes throughout (confirmed by grep before deciding this, not assumed) — removing
+that would need a nonce/hash refactor across every generated page, which is a much larger change than
+"add security headers" and risks breaking something untestable here, so it was left out of scope
+rather than attempted blind. This CSP still meaningfully narrows what an attacker could load or embed
+even with `unsafe-inline` in place.
+
+Fixed: `firebase.json`'s hosting `ignore` list excluded `**/*.md` and specific internal JSON files
+(`QUESTION_BANK_MANIFEST.json`, `data/news-sources.json`) from deployment, but missed
+`V1228_AUDIT.json` — a root-level internal QA summary that would have been publicly deployed. Added
+it to the ignore list. (Its content was checked and is low-sensitivity — a pass/fail JSON summary —
+but it was never meant to be public.)
+
+Fixed, partially: `zivo-ai.js`'s daily AI-usage cap (10 messages/day, enforced against a backend
+that is billed per use) lived only in `localStorage`, so clearing site data or opening an incognito
+window reset it instantly. There is no way to make a purely client-side cap unbeatable without
+server-side enforcement (Cloud Functions, blocked on the free Spark plan, or a Firestore-rule-backed
+per-account counter, which would require every AI chat user to be signed in first — a product change
+beyond "fix the security gap," so it was not made unilaterally). What was fixed: the counter is now
+mirrored into a same-day cookie as well as `localStorage`, and `usage()` takes the max of the two.
+A visitor now has to clear both storages (or use a genuinely fresh browser profile) instead of one
+click on "clear site data." This raises the bar for casual abuse; it does **not** close the ceiling a
+determined, incognito-cycling scripted attacker could still hit — that residual gap is architectural
+on this plan and is disclosed here rather than quietly left unmentioned.
+
+**Not fixed, disclosed instead**: the owner's real email is hardcoded in plaintext in
+`core/config.js` (`ADMIN_EMAIL`), which ships to every visitor's browser as part of the public JS
+bundle — this is only used for a client-side admin-UI check (the real enforcement is server-side in
+`firestore.rules`, confirmed safe), but the email itself is still exposed to anyone who opens dev
+tools. There is no code fix for this without either removing the admin-only UI entirely or moving the
+check behind Cloud Functions (both bigger, product-level changes), so the practical mitigation is
+account-level: turning on 2-factor authentication on that Gmail account. **Not fixed, already known,
+re-disclosed for completeness**: a patient scripted attacker can still mint fake "perfect 10/10"
+`challenge_reward` claims roughly every 15-20 seconds indefinitely, because there is no server-side
+answer verification — this was already an accepted architectural ceiling on the free Spark plan,
+documented in the 1230.61 changelog, and nothing in this pass changed that.
+
+Also checked and confirmed already safe, for balance: `firestore.rules`'s `isOwner()` check uses a
+server-verified Firebase Auth token claim, not anything the client supplies, so the admin-email
+exposure above does not translate into an actual privilege escalation. `core/modules/chat.js`'s
+public chat properly escapes both display name and message text through `util-esc.js`'s `esc()`
+before writing to `innerHTML`, ruling out stored XSS there. A sitewide grep for other
+`innerHTML = ... ${...}` patterns surfaced candidates in `achievements.js`, `economy.js`,
+`puzzle-room.js`, and `forensic-case-core.js`; each was read and traced by hand — every one
+interpolates either a localized string via `t()`, a value already passed through `esc()`, or static
+content hardcoded in the module's own data arrays, never raw user input. No XSS found beyond what was
+already known to be safe.
+
+**Verified**: `python3 -c "import json; json.load(...)"` on `firebase.json` (valid JSON after both
+edits). `node --input-type=module -c` on `zivo-ai.js` (valid syntax; a plain `node -c` doesn't apply
+here since the file uses top-level ES module `import`). A pure-logic unit test of the extracted
+`usage()`/`bump()`/cookie-helper functions against a mocked `localStorage`/`document.cookie`,
+confirming: clearing `localStorage` alone leaves the cookie-backed count intact (usage stays at 3,
+not reset to 0), and clearing both drops it back to 0 — the intended behavior. Live in the browser via
+Playwright: the AI bridge module (`zivo-ai.js`) could **not** be exercised end-to-end here, because
+its top-level `import` pulls `firebase-app.js`/`firebase-ai.js` from `gstatic.com`, and this sandbox's
+egress proxy rejects that domain outright (confirmed via a direct `curl` to the same URL, which also
+failed) — this is an environment limitation, not something this change introduced, and it was true of
+this file before this session too. What *was* verified live: the full site still loads cleanly at the
+new `1230.66` bundle version with zero console errors on a phone-width viewport after both the
+`firebase.json` and `zivo-ai.js` edits, confirming neither edit broke page load or the existing
+in-app UI. `bash scripts/run_all_gates.sh` → `ALL GATES PASSED` (18/18), via
+`scripts/release.py 1230.66` plus `prerender-stories.mjs` and `prerender-rooms.mjs` re-runs (neither
+edit touched room/story markup, but re-running both keeps every generated page's `?v=` cache-buster
+in sync with the new version, per the established convention). Sitemap re-checked for duplicate
+`<loc>` entries after both generator re-runs: zero. **Not done**: the CSP's real-world behavior
+against actual Firebase Auth/Firestore/App Check traffic could not be confirmed against a live
+Firebase project from this sandbox (no real network path to Firebase here) — it was built from a
+complete inventory of every external domain the code actually references, not guessed, but the
+honest statement is that it has not been observed working end-to-end against production Firebase
+traffic, and should be watched for any blocked-request console warnings on the next real deploy.
+
+## 1230.67 — Performance pass (requested via an external optimization prompt)
+
+The user supplied a detailed, structured performance-optimization brief (analysis table, strict
+rules against removing features or creating parallel versions, measured before/after targets,
+mandatory acceptance tests, a required final report). This entry IS that report, in the same place
+every other release's report has lived all along.
+
+**Baseline audit, before touching anything.** Full project: 19MB. Backed up first —
+`/home/claude/project/ZIVOZONE_V1230_66_PREOPT_BACKUP.zip` (5.9MB, zip-integrity verified with
+`unzip -tq`), a complete restorable snapshot of V1230.66 exactly as it was deployed. Measured the
+actually-deployed surface (Hosting's own `ignore` list already excludes `docs/`, `**/*.md`, `scripts/`,
+etc. — those were never shipped and aren't part of this report). Found by largest-file scan: ONE
+single `<script src="dist/app.bundle.js">` tag, present on literally every page, concatenating all 51
+of this site's JS modules — including `core/modules/forensic-case-core.js` (1.34MB — ~42% of the
+entire 3.19MB bundle, all by itself) — into one eager, render-blocking, unminified file, regardless of
+whether the visitor ever opens Forensic Lab. CSS told the same story at smaller scale: 8 separate
+`core/styles/*.css` files (332KB combined, unminified) all linked on every page. Deliberately did
+**not** assume the biggest file was automatically the biggest problem (the brief's own instruction):
+question-bank.js (623KB) and challenges.js (393KB) were checked for where they're actually consumed
+— both back the homepage's own challenge-hub tiles, not one gated room — so splitting them out would
+risk breaking the homepage itself for a smaller, content-bound payoff (minification barely helps
+them either, see below), and they were left alone, on purpose, not out of oversight. Audio files
+(nine ~289KB ambient loops) were checked for accidental duplication via `md5sum` — all genuinely
+distinct content, nothing to dedupe.
+
+**What changed, file by file, and why:**
+
+1. `scripts/bundle_manifest.txt` — removed `core/modules/forensic-case-core.js` from the eager-bundle
+   file list (one line removed, one explanatory comment added). The file itself is untouched and
+   still fully present on disk at its usual path; it simply stopped being concatenated into everyone's
+   first download.
+2. `core/modules/challenges.js` — added `loadForensicCore()`: a small on-demand loader that injects a
+   `<script>` tag for the module the first time someone actually opens Forensic Lab, caches the
+   in-flight promise (so a second open or a double-click doesn't refetch), and clears that cache on
+   failure so a retry (manual or just clicking again) gets a fresh attempt instead of being stuck on a
+   dead promise forever — the brief explicitly required this exact failure-handling shape. Added a
+   small `toast()` helper (copied from the identical, already-live pattern in
+   `core/modules/runtime/router.js` — same `#toast-container` element every page already has, not a
+   new UI system) to show "preparing the room…" / "couldn't open it, check your connection and try
+   again" feedback during that fetch.
+3. `core/modules/runtime/router.js` and `core/boot.js` — Forensic Lab's "is this feature available"
+   checks used to require the module to already be present as a `<script>` tag in the page (true by
+   construction when it was baked into the eager bundle). Now that it loads on demand, that check
+   would have hidden the Forensic Lab button on every single page load — a real feature regression,
+   not a cosmetic one — so both checks now say the room is always available (which is true: the file
+   is always on the server, fetched the moment someone clicks in). Confirmed live via Playwright that
+   the button is never hidden and the room opens correctly end to end.
+4. `core/modules/runtime/i18n.js` — added two new keys (`forensicPreparing`, `forensicLoadFailed`)
+   to all 7 languages (full translations for ar/en/zh/hi/es, the project's established
+   English/Arabic-derived override pattern for fr/fa), instead of hardcoding the Arabic toast text
+   directly in challenges.js. This wasn't optional polish — the project has a real enforced gate,
+   `scripts/qa_no_hardcoded_arabic.py`, specifically built to stop new un-translated UI text from
+   sneaking in (it failed the build on first attempt, exactly as designed, pointing at the two
+   hardcoded strings); a second gate (translation completeness) then caught that fr/zh/hi/es/fa also
+   needed real entries, not just ar/en. Both gates pass clean now.
+5. `scripts/build_bundle.py` — added `_minify()`: pipes the concatenated bundle through `esbuild
+   --minify --charset=utf8` (esbuild was already present in this sandbox's preinstalled tools; not a
+   new external dependency added to the project). `--charset=utf8` is load-bearing, not cosmetic: a
+   first attempt without it made the bundle BIGGER, not smaller, because esbuild's default output
+   escapes every non-ASCII character (Arabic/Chinese/Hindi/Persian/Spanish — this entire site's UI
+   text) as `\uXXXX` 6-byte sequences. If esbuild isn't found on whatever machine runs this script, the
+   build prints one clear warning and ships the unminified bundle instead of failing — minification is
+   a size optimization, never a hard dependency the release can break on. Also added
+   `build_lazy_modules()`, which writes a separately-minified copy of `forensic-case-core.js` to
+   `dist/lazy/forensic-case-core.js` (same fallback behavior) — being loaded on demand shouldn't mean
+   being unminified.
+6. `scripts/build_css.py` (new file) — the CSS equivalent of the above: minifies each
+   `core/styles/*.css` into `dist/styles/*.css`, same esbuild-with-graceful-fallback shape. Source CSS
+   files stay exactly as they are, readable and directly editable, same split as JS already had between
+   `core/modules/` (source) and `dist/app.bundle.js` (built artifact) — this just extends a pattern
+   that already existed instead of inventing a new one.
+7. `index.html` — its 8 CSS `<link>` tags now point at `dist/styles/*.css` instead of
+   `core/styles/*.css`. Because every generated page (6 language homepages, 84 story pages, 8 room
+   pages) is built by cloning `index.html`'s `<head>` (confirmed by re-reading the three generator
+   scripts, same architecture this engagement has relied on since V1230.63/.64), this one change
+   propagated to all of them automatically on the next `prerender-*` run — nothing else needed editing
+   by hand.
+8. `scripts/release.py` — now calls `build_lazy_modules()` and `build_css.build()` in the same place
+   it already called `bb.build()`, so every future release regenerates both automatically; this was
+   not optional (release.py calls `bb.build()` directly rather than through `build_bundle.py`'s own
+   `main()`, so without this the new minified lazy/CSS artifacts would silently go stale the next time
+   anyone ran a normal release).
+9. `sw.js` and all generated pages — version-stamped to `1230.67` and the service worker's precache
+   list regenerated through the existing mechanism (it scans `index.html`'s own `<link>`/`<script>`
+   tags, so it picked up the new `dist/styles/*.css` paths with no manual edit). `dist/lazy/
+   forensic-case-core.js` is deliberately **not** in the precache list — it's meant to load only when
+   actually needed, so pre-caching it on every visit would undo the entire point of deferring it.
+
+**No files were deleted.** No room, game, language, button, or reward mechanic was removed or
+replaced with a placeholder — every change above either moved WHEN a file is fetched, or made an
+existing file smaller in transit, never WHAT it does.
+
+**Measured, not claimed — before/after** (real `python3 -m http.server` serving both the backed-up
+V1230.66 and the new V1230.67 side by side, measured with Playwright at a 390×844 mobile viewport,
+`waitUntil:'load'` + 1.2s settle, counting actual HTTP response `content-length` headers, not file
+sizes on disk):
+
+| Metric | V1230.66 (before) | V1230.67 (after) | Change |
+|---|---|---|---|
+| JS transferred at homepage load | 3,196,841 bytes | 1,659,570 bytes | **-48.1%** |
+| CSS transferred at homepage load | 315,618 bytes | 286,417 bytes | **-9.3%** |
+| Total JS+CSS at homepage load | 3,541,678 bytes | 1,975,206 bytes | **-44.2%** |
+| Forensic Lab's 1.3MB module | always downloaded | downloaded only if that room is opened | — |
+| Requests at homepage load | 13 | 13 | unchanged (same files, smaller) |
+| `load`-event time, local server | 2381ms | 2107ms | -274ms (local-network only; real gains on a slow connection come from the byte reduction above, not this number) |
+
+This meets/exceeds the brief's own stated targets (30–60% JS reduction, 30%+ total resource
+reduction at homepage load). **Not measured**: real Core Web Vitals (LCP/INP/CLS) from an actual
+Chrome instance on an actual phone over an actual slow connection — this sandbox has no such device
+or network to test against, and reporting a number without one would be the "claim success before
+measuring" mistake the brief explicitly forbids. The byte-transfer numbers above are real, measured,
+and reproducible (the exact test script and both server instances are described here faithfully), but
+they are a proxy for the brief's real target, not the target itself.
+
+**Acceptance tests — each one actually run via Playwright against the live local server, not
+assumed:**
+
+| Area | Result |
+|---|---|
+| Homepage loads, renders, matches the pre-optimization screenshot's layout/colors/fonts | PASS |
+| iq challenge opens and starts | PASS |
+| Dark Room (horror) opens and starts | PASS |
+| Story Room opens | PASS |
+| Health World opens | PASS |
+| Puzzle Room opens | PASS |
+| Beauty Room opens | PASS |
+| Forensic Lab: button visible with no eager download; lazy-loads on click; opens correctly; loading/retry toast shows the correct translated text | PASS |
+| Language switch ar→en→ar: text and RTL/LTR direction both flip correctly, zero console errors | PASS |
+| Service worker registers and reaches `active` state | PASS |
+| Offline reload (service worker serves the cached shell with no network) | PASS |
+| Admin module present on the page (not erroring for a non-admin visitor; real admin-only access was already enforced server-side, untouched by this pass) | PASS |
+| Match center module loads without error | PASS |
+| `bash scripts/run_all_gates.sh` (all 18 existing automated gates, including the two i18n-hygiene gates this pass specifically had to satisfy) | PASS (18/18) |
+| Login / register / logout with a real account | **NOT TESTED** — this sandbox has no network path to Firebase at all (confirmed in the 1230.66 security pass via a direct `curl` to `gstatic.com`, which is rejected by the sandbox's egress policy); this was never testable from here, before or after this change |
+| Wallet / mining / XP / reward claims against real Firestore | **NOT TESTED** — same reason |
+| Real audio playback (ambient tracks, SFX) | **NOT TESTED** — this sandbox cannot play or verify audio output; `audio.js` itself was not touched by this pass, so its risk is unchanged, not newly introduced |
+| PWA "Add to Home Screen" install flow, and updating an already-installed copy | **NOT TESTED** — needs a real device; same limitation already disclosed in the 1230.64 changelog for a different feature |
+| Desktop browser width (1440px) | Spot-checked: service worker, admin module, match center, language switching all confirmed working at this width with zero console errors |
+
+**Known residual items, disclosed rather than hidden:**
+- Minification's gain on `question-bank.js`/`challenges.js`/`forensic-case-core.js` is modest
+  (roughly 3%, measured) compared to the 7–11% seen on more code-dense files — these three are
+  dominated by actual translated STRING CONTENT (question text, story text, in up to 7 languages),
+  not whitespace or long variable names, so there's a hard ceiling on what pure minification can do
+  for them without touching the content itself, which this pass does not do.
+- `i18n.js` (327KB, all 7 languages' full dictionaries in one file, loaded eagerly like everything
+  else in the bundle) was deliberately NOT split per-language. It backs literally every piece of UI
+  text on the page from the first frame, so a lazy-load mistake there would be a site-wide, highest-
+  blast-radius regression, and this sandbox cannot verify a change like that across a real multi-
+  device/multi-language test matrix. Flagged here as a legitimate future optimization, not attempted
+  blind.
+- `question-bank.js` (623KB) and `challenges.js` (393KB) were likewise left eager for the reason
+  given in the baseline-audit section above — real homepage dependency, not an oversight.
+- Minification does strip the `//# sourceURL=/path` comments `build_bundle.py` injects per source
+  file for DevTools stack-trace clarity. A production error's stack trace will now show minified
+  variable names and the one bundle file rather than the original per-module names — a standard,
+  accepted trade-off of shipping minified code, not a functional regression (`console.warn`/`.error`
+  calls themselves are all still intact, nothing was stripped there).
+
+**Deployment:** nothing has been pushed anywhere — this sandbox has no network path to the real
+Firebase project (same standing limitation disclosed throughout this engagement). To actually ship
+this: `firebase deploy` from a machine with real access to the `zivozone-fc6ed` Firebase project, same
+as every prior release. After deploying, check the browser console once on the live site for any
+blocked-resource warnings (the same honest caveat already logged for 1230.66's CSP) and confirm
+Forensic Lab still opens correctly from a real device.
+
+**Rollback plan:** `/home/claude/project/ZIVOZONE_V1230_66_PREOPT_BACKUP.zip` is a complete, verified,
+restorable snapshot of the exact V1230.66 state this pass started from. To roll back: unzip it over
+the project directory (or deploy straight from an unzip of it with `firebase deploy`), which restores
+every file — including `dist/app.bundle.js` with forensic-case-core.js back inside it and the
+unminified CSS — to exactly how it was before this entry.
+
+## 1230.68
+
+**Critical, previously-undiscovered bug found and fixed: the entire ZIVO reward-crediting path
+(`core/modules/economy.js`'s `credit()`) has never actually been able to write a reward claim to
+Firestore, for ANY reward type.**
+
+### How it was found
+
+This was not something reported by the user — it surfaced while investigating the real Firestore
+document paths `economy.js` writes to, in order to design a server-side Cloud Function that grades
+challenge answers and credits rewards itself (the user's second requested priority, see below).
+
+`economy.js` defines:
+```js
+const root = (uid) => db().collection('users').doc(uid).collection('zivozone');
+```
+`root(uid)` is a Firestore **CollectionReference** (`users/{uid}/zivozone`). `credit()` then did:
+```js
+const claimRef = r.collection('rewardClaims').doc(claimId);
+```
+calling `.collection()` directly on that CollectionReference. The Firestore SDK (this site loads
+`firebase-firestore-compat.js` 10.12.2) only exposes `.collection()` on a **DocumentReference** or
+the root Firestore instance — never on a CollectionReference, which only has `.doc()` and query
+methods (`where`/`get`/`onSnapshot`/...). This call throws `TypeError: r.collection is not a
+function` immediately, before the Firestore transaction below it ever runs.
+
+The throw happened inside `credit()`'s own `try { ... } catch (e) { console.warn(...); return
+false; }` block, so it never surfaced as a crash anywhere — it just silently failed every single
+reward claim and logged a warning to the browser console that nothing was watching for (this is
+exactly the kind of gap the error-tracking system below exists to close).
+
+Because `credit()` is the ONE function behind every non-mining reward — `challenge_reward`,
+`mission_reward`, `competition_reward`, `achievement_reward`, `story_reward`, `health_reward`,
+`beauty_reward`, `horror_reward`, `light_escape_reward`, and all five `*_epic_reward` variants —
+this means **no reward of any of these types has ever actually been written to a real player's
+wallet**, in any version of the site containing this code. (Daily mining is unaffected — it writes
+directly to the `wallet`/`mining` docs via `root(uid).doc(...)`, never through this broken line.)
+
+This was never caught earlier because this sandbox has no real Firebase network access, so the
+reward-crediting path has never actually been exercised against real Firestore in any session —
+every prior report's "NOT TESTED: real Firebase wallet/rewards" disclosure was, unknowingly,
+flagging the exact area that was broken.
+
+### Root cause, precisely
+
+`users/{uid}/zivozone` is a collection (sibling docs: `wallet`, `mining`, `gameSession`,
+`rewardClaim` legacy singular). Firestore documents can only contain collections, and collections
+can only contain documents — a collection cannot directly contain another collection. So
+`zivozone/rewardClaims/{claimId}` is a 3-segment (odd ⇒ collection-level) path relative to the user
+document, not a reachable document path. `firestore.rules` had the identical conceptual mistake
+baked in (`match /zivozone/rewardClaims/{claimId}`) — both layers agreed on a path shape Firestore
+cannot represent.
+
+### The fix
+
+- **`core/modules/economy.js`**: added `rewardClaims(uid)`, a sibling top-level subcollection of the
+  user document (`users/{uid}/rewardClaims`), separate from `zivozone`. `credit()`'s `claimRef` now
+  comes from `rewardClaims(u.uid).doc(claimId)` — a valid 4-segment document path. Nothing else in
+  `credit()`'s logic, amounts, policies, or ledger writes changed.
+- **`firestore.rules`**: moved `match /zivozone/rewardClaims/{claimId}` to a sibling
+  `match /rewardClaims/{claimId}` (same nesting level as `/zivozone/wallet` etc., directly inside
+  `match /users/{userId}`), and updated the four `getAfter(...)` references in the wallet-update and
+  ledger-create rules that read a claim document to drop the stale `zivozone/` prefix. No security
+  policy changed — `validRewardClaim()`, `perfectClaim()`, and every amount/type check are untouched;
+  only the path these rules point at was corrected to match where the (now-working) client code
+  actually writes.
+- Rebuilt `dist/app.bundle.js` (minified, includes the fix), `dist/styles/*`, `dist/lazy/*`, all 6
+  homepage language variants, all 84 story pages, and all 8 room pages via `release.py` 1230.68 +
+  `prerender-stories.mjs` + `prerender-rooms.mjs`, so the fix is in every generated artifact, not
+  just the source file.
+
+### Verification performed
+
+- A standalone Node script modeled the real Firestore SDK's reference-type contract (the exact
+  method sets of `CollectionReference` vs `DocumentReference`) and reproduced the old code's crash
+  (`TypeError: r.collection is not a function`) on the unmodified line, confirming the bug is real
+  and not a misreading — then confirmed the corrected line produces a valid, even-segment document
+  path with no crash.
+- A Playwright test loaded the real page with the real `economy.js`, with `window.firebase` replaced
+  by a mock enforcing that same real-SDK reference contract (not a loose stub — calling `.collection()`
+  on its CollectionReference throws, exactly like the real SDK), and called
+  `window.ZIVOZONE.Economy.credit(10, {type:'challenge_reward', ...})` exactly as `rewardChallenge()`
+  does for a perfect round. Result: `credit()` resolved `true`, with no thrown error, and wrote to
+  `users/testUser123/rewardClaims/challenge_iq_test_session_001` (claim), `.../zivozone/wallet`
+  (balance), and `.../zivozone/wallet/ledger/challenge_iq_test_session_001` (ledger) — the correct
+  three documents, at the correct corrected paths.
+- Re-ran the full 18-gate QA suite after the fix and rebuild: all gates pass, including
+  `qa_game_platform.py`'s Firestore-rule/economy-contract cross-checks.
+- Re-ran the broad Playwright smoke test (service worker, admin module, match center, language
+  switching both directions): all pass, zero console errors.
+
+**NOT tested** (same limitation as every prior report): this sandbox has no real Firebase project
+to deploy to, so the fix has not been verified against the real, live Firestore service or the real
+compiled `firestore.rules` (via `firebase emulators:start` or a real deploy) — only against a
+contract-accurate mock of the SDK and a careful manual trace of the real rules file. Deploying
+`firestore.rules` (`firebase deploy --only firestore:rules`) and the updated static site is still a
+user action, same as every other pending deployment in this project.
+
+### Why this matters beyond what was asked
+
+This was found in the course of addressing the user's second priority (server-side game-result
+verification), not something they reported. It is a bigger and more urgent finding than that
+original ask: before this fix, server-side verification would have been verifying results for a
+reward system that could never actually pay out, and worse, every real player who has ever reached
+"perfect 10/10" on any challenge in any deployed version believing they earned ZIVO has, in reality,
+received nothing, with no visible error (the UI still shows the `rewardChallenge()` toast on
+`ok === true`... except `ok` was `false` here, so the toast never even fired — meaning the player
+likely just saw nothing happen and no explanation, which independently corroborates the error-
+tracking gap being addressed next: this entire failure mode produced zero signal anywhere a human
+could see it).
+
+
+### New: zero-cost client-side error tracking (the other requested priority)
+
+Added `core/modules/runtime/error-tracker.js` — captures every uncaught `window.onerror` and
+`unhandledrejection` in a real visitor's browser and writes it to a new Firestore collection
+(`errorLogs`), entirely within the free Spark plan (no new account, no SDK, no dependency — reuses
+the same Firestore connection `economy.js`/`auth.js` already open, same pattern as `ui.js`'s
+anonymous `siteStats/visitors` telemetry writes).
+
+- **Noise filtering**: cross-origin `"Script error."` (no diagnostic value by design) and
+  third-party ad/analytics network failures are dropped before ever reaching Firestore.
+- **Abuse/quota protection** (all client-side, defense-in-depth with the server-side schema check
+  below): max 15 reports per page session; identical recurring errors (same type+message+stack
+  prefix) are de-duplicated in memory, so one error thrown in a loop costs one write, not thousands.
+- **`firestore.rules`**: new `validErrorLogKeys()`/`validErrorLog()` + `match /errorLogs/{errorId}`
+  — anonymous create allowed (most errors happen before/without sign-in), every field size-capped,
+  `uid` (if present) must be the writer's own authenticated uid (never forgeable to someone else's),
+  `createdAt` must equal `request.time` (server-trusted), and read is admin-only; update/delete are
+  always denied.
+- **Admin panel**: `core/modules/admin.js`'s existing owner dashboard now also fetches the latest
+  100 `errorLogs` and renders them as a new "🐞 الأخطاء الحقيقية" panel (type, message, page, app
+  version, time), plus an "أخطاء مسجّلة" KPI tile — reusing the dashboard's existing panel/activity
+  styling, no new CSS.
+- **Wired into the exact failure this was built for**: `economy.js`'s `credit()` catch block (the
+  one that hid the `rewardClaims` bug above) now also calls
+  `window.ZIVOZONE?.ErrorTracker?.report?.(...)`, so a future `credit()` failure of any kind — this
+  bug or a new one — is no longer invisible.
+
+**Verified** (Playwright, against a mock Firestore, since this sandbox has no real Firebase
+network): a thrown error and an unhandled rejection are both captured and written once each; the
+exact same error thrown twice produces only one write (dedupe); an injected cross-origin-style
+`"Script error."` event produces zero writes (noise filter); the manual `.report()` path economy.js
+now uses works; the admin panel, given mock `errorLogs` documents, opens without throwing and
+displays them, including a realistic reproduction of the exact `rewardClaims` error message. Full
+18-gate suite and the broad functional smoke test (service worker, admin module present, match
+center, language switching) all still pass after both changes.
+
+**NOT tested**: real Firestore writes/reads (no network in this sandbox — same limitation as every
+other Firebase-dependent feature in this project to date). `firestore.rules` for `errorLogs` has not
+been deployed or checked against the real Firestore Rules simulator.
+
+### Still pending from this request (next entry)
+
+Real server-side verification of game results (Cloud Functions) — written and ready, per the user's
+explicit instruction to stay on the Spark (free) plan: **not deployed, and nothing here requires
+adding a billing method to the Firebase project.** See the next changelog entry for what was built
+and how to activate it later.
+
+### New: real server-side game-result verification (written, NOT deployed)
+
+Added a complete Cloud Function scaffold under `functions/` — see `functions/README.md` and
+`functions/index.js`'s header comment for the full writeup; summarized here:
+
+- **`functions/grading.js`**: pure, dependency-free Node port of `challenges.js`'s `text()`/`norm()`/
+  `answer()` grading logic (deliberately no firebase-admin/firebase-functions import, so it is
+  unit-testable without an emulator, install, or network — exactly what this sandbox can run).
+- **`functions/index.js`**: `verifyChallengeResult`, an `onCall` function that requires real
+  sign-in, rejects the admin account, re-checks the same server-anchored `gameSession` doc and 15s
+  minimum-elapsed-time window `firestore.rules`' `perfectClaim()` already enforces today, re-grades
+  the player's actual submitted answers against `functions/data/answer-key.json` (generated by
+  `scripts/export_answer_key.js` from the live question bank — never hand-maintained), and only then
+  runs the same idempotent credit transaction `economy.js`'s `credit()` performs, via the Admin SDK,
+  at the exact corrected paths from the bug fix above.
+- **`functions/data/answer-key.json`**: regenerated (633 questions, 21 banks) to pick up the current
+  question bank.
+- **Client-side hook, dormant by design**: `core/modules/runtime/server-verify.js` exposes
+  `ZIVOZONE.ServerVerify.verify(...)`, which returns `null` on its very first line while
+  `window.ZIVOZONE_CONFIG.CLOUD_FUNCTIONS_ENABLED` is unset — today's value, and the value every
+  generated page still has after this release. `challenges.js` now also tracks each round's raw
+  per-question answers (`this.answersLog`) and calls this hook once a perfect round completes, purely
+  so the payload is ready the moment the flag is ever turned on; neither change alters any existing
+  behavior while the flag is off.
+- **`firestore.rules`**: an explicit, clearly-marked "FUTURE TIGHTENING, INERT, NOT ACTIVE" comment
+  block at the end of the file explains what could be tightened once the server path is deployed and
+  proven — no live rule changed.
+
+**Verified**: `node functions/test/grading.test.js` — 10/10 pass, run against the real, current
+`answer-key.json` (not a hand-made fixture): correctly grades a real perfect round, correctly
+rejects a single wrong answer out of 10, and rejects three distinct tamper attempts (wrong answer
+count, a question id borrowed from an easier bank, answering the same question 10 times). A
+follow-up sanity sweep graded every chunk of 10 questions across all 21 banks against their own
+recorded correct answers: 0 mismatches. Separately verified (Playwright) that with the feature flag
+unset, `ServerVerify.verify()` returns `null` immediately and fires zero network requests toward
+`firebase-functions-compat.js` — the dormant path is a genuine no-op today, not just one that's
+supposed to be. Full 18-gate suite and the broad functional + reward-crediting smoke tests all still
+pass after these additions.
+
+**NOT tested / NOT deployed**: the Cloud Function itself has never run against real Cloud Functions
+infrastructure, a real Firestore project, or `firebase-admin`/`firebase-functions` installed (no
+npm registry access in this sandbox, and this project is intentionally staying on the free Spark
+plan, which cannot run Cloud Functions at all). `functions/README.md` has the exact steps to deploy
+and activate this later, whenever the user decides to upgrade.
+
+## 1230.69 — i18n completeness audit (Task #13)
+
+Audited translation completeness across all 7 languages (ar/en/zh/hi/es/fr/fa), loading the real
+`i18n.js` and `question-bank.js`/`question-bank-expansion.js` in a Node `vm` context (same approach
+as `export_answer_key.js`) rather than inspecting source by eye.
+
+**UI chrome** (`core/modules/runtime/i18n.js`): 713 distinct keys, all 713 present in all 7
+languages — 100% key parity, no silent fallback-to-English/Arabic gaps. Checked further for
+*disguised* gaps (a key present but holding fr's/fa's inherited en/ar override value verbatim,
+which key-presence alone wouldn't catch): 30/713 fr values are byte-identical to their en
+counterpart, 10/713 fa values are byte-identical to their ar counterpart. Inspected every one of
+those 40 by hand — all are legitimate (brand name "ZIVOZONE", abbreviations "XP"/"ZIVO", French
+cognates spelled identically in English — "Score", "Mode", "Pause", "Budget", "Points",
+"Exploration", "Interaction", "Genre" — character names "Lian/Sami/Rami", a currency/format string,
+and for fa/ar: common Arabic loanwords Persian uses natively and spells identically — خروج/exit,
+سؤال/question, حساب/account — not translation debt).
+
+**Question-bank content** (633 questions across 21 challenge banks): every question's answer
+choices and prompt text have real `fr`/`fa` entries (0 missing out of 633), not inherited defaults —
+confirmed by direct field-presence check, not just that *some* language resolves.
+
+**Hardcoded-Arabic-outside-i18n gate** (`qa_no_hardcoded_arabic.py`): already an enforced,
+regression-proof gate (count can only go down, never up, per file) with a deliberate
+content-vs-chrome allowlist (question banks, per-room Epic-50 content dictionaries, admin.js).
+Nothing newly found here — this was already solved infrastructure, not an open gap.
+
+**Conclusion: no i18n completeness gaps found.** This audit did not change any file — it is a clean
+result, not a fix.
+
+## 1230.69 — Mobile UX audit (Task #14)
+
+Playwright, 3 mobile viewports (iPhone SE 375px, iPhone 14 390px, a 360px small-Android size) across
+7 pages: the Arabic/English/Chinese/Persian homepages, a story page, and two of the four signature
+rooms (dark room, beauty room) — chosen to cover both LTR and RTL layouts and both generated-page
+templates (homepage clone vs room/story clone).
+
+**Horizontal overflow**: zero found, on any page, at any of the 3 viewport widths (`scrollWidth`
+never exceeded `innerWidth` by more than the measurement's own tolerance). This was the most likely
+class of real mobile bug (a fixed-width element forcing sideways scroll) and it did not occur
+anywhere tested.
+
+**Tap targets**: the header bar's four controls (logo, ZIVO balance, Mine, Account) are a consistent
+34px tall sitewide, on every page and language tested — a deliberate, uniform compact-header choice,
+not a one-off bug, but a few pixels under the commonly-cited 44x44px comfortable-tap-target
+guideline. Noted as a minor, low-priority observation; not changed, since it is intentional shared
+header chrome used on every single page, and resizing it is a real visual-design decision that
+affects every page, not a bug fix — a call this report is flagging for the user to make rather than
+one to make unilaterally.
+
+**In-game screens**: confirmed one real gameplay screen (a challenge's cinematic intro) renders
+cleanly on a 375px viewport with properly wrapped text and no overflow (screenshot captured).
+Automating deeper into the actual question/answer screen hit animation/transition timing that proved
+fragile specifically under headless automation (the cinematic-to-quiz transition didn't complete
+reliably across repeated headless runs) — this reads as a test-harness limitation, not a mobile
+rendering bug, but it was not re-verified exhaustively here and is disclosed as such rather than
+assumed fine.
+
+**Conclusion: no critical mobile issues found.** One minor, deliberate, sitewide design observation
+(34px vs 44px tap targets) is flagged for the user's call, not changed.
+
+## 1230.69 — Scalability / load-readiness audit (Task #15)
+
+The site's core architecture is inherently scale-friendly: it's static-first (Firebase Hosting serves
+every page from a CDN, scaling automatically with traffic at no extra effort), and almost every
+Firestore read/write is scoped to one user's own document subtree (`users/{uid}/...`) — there is no
+shared "hot document" that every player's request contends on, so player-to-player traffic doesn't
+create write contention as the user base grows. Searched every client-side `.get()` call across
+`core/modules/` for an unbounded collection read (the classic scalability bug: a query with no
+`.limit()` that gets slower and more expensive as a collection grows) — found none outside
+`admin.js`, which already caps every collection query (`.limit(500)`/`.limit(1000)`/etc.).
+
+**Real finding: the admin dashboard's own background refresh could approach the free-plan daily
+quota at real scale.** `admin.js`'s summary queries (`users` ≤500, `players` ≤500, today's
+`visitors` ≤1000, `publicChat` ≤80, `publicChatBans` ≤500, `errorLogs` ≤100 — six capped reads) cost
+up to ~2,680 reads per call once those collections are actually near their caps. The periodic
+auto-refresh (added in V1230.18 specifically to stop the *per-user detail fan-out* from doing this)
+still re-ran that same ~2,680-read summary scan every 5 minutes — a dashboard tab left open all day
+could reach roughly 770,000 reads/day at real scale, well past Spark's 50,000 reads/day free quota,
+even though the expensive 6-reads-per-user loop was already being skipped. **Fixed**: widened the
+auto-refresh interval from 5 to 15 minutes (a ~3x reduction, a safe one-line change that doesn't
+touch what each refresh actually queries). This is today a low-probability risk (the site doesn't
+yet have 500+ daily users/visitors), but cheap to de-risk now rather than discover it as a quota
+outage later. **Not done** (flagged for later, not implemented now to avoid changing a working
+dashboard's query shape without a concrete need in front of it): if traffic ever approaches those
+collection caps, the next real fix is giving the *background* refresh smaller limits than the
+manual/initial one (e.g. a visitor-count summary doesn't need all 1,000 documents, just a count).
+
+**Other scale-relevant checks, no issues found**:
+- The new `errorLogs` write path (this release) is capped client-side at 15 writes per visitor
+  session with in-memory de-duplication, so a client-side error loop cannot itself threaten the
+  write quota (see the error-tracking section above).
+- `leaderboard/{id}` is read-only to every client (`allow write: if false`) — no client-side write
+  path exists for it, so it cannot become a write hot-spot regardless of traffic.
+- The service worker's precache list is version-stamped per release (`?v=1230.69`), so cache
+  invalidation on deploy is O(1) per client (a normal fetch-and-compare, not a cost that grows with
+  traffic).
+
+**NOT tested**: actual load/throughput under concurrent real traffic (no real Firebase project or
+load-testing tool reachable from this sandbox) — this audit is a static analysis of query shapes and
+quota math, not a live load test.
+
+## 1230.69 — Dead-code / redundant-layer audit (Task #16)
+
+Checked for the three classes of dead code most likely in a project this size: orphaned files,
+orphaned exported APIs, and stale security rules.
+
+- **Orphaned source files**: compared every `.js` file under `core/` against `scripts/bundle_manifest.txt`.
+  Exactly one file is outside the manifest — `core/modules/forensic-case-core.js` — and that is the
+  deliberate, documented V1230.67 lazy-load exclusion (fetched on demand, not missing). No other
+  orphaned files found.
+- **Legacy runtime references**: `economy.js`'s own header references "the legacy ZIVOZONE_ECONOMY
+  runtime" it replaced — confirmed no such file or reference still exists anywhere; that migration
+  was already fully completed in an earlier version.
+- **Unbounded Firestore reads** (a different kind of "dead weight" — queries that silently get more
+  expensive over time): none found outside `admin.js` (covered in the scalability audit above);
+  every other `.get()` call in the codebase is a single-document read, not a collection scan.
+- **Dead security rule, removed**: `firestore.rules` had a `match /zivozone/rewardClaim` rule
+  (singular) alongside the real, actively-used `rewardClaims` (plural) collection. Confirmed via
+  search that no JS anywhere references a singular `rewardClaim` document id, and the rule already
+  denied all writes (`allow write: if false`) — so removing it changes no behavior, just removes a
+  misleading, unused rule that could confuse a future reader into thinking it does something.
+- **Intentional aliases, left alone**: `admin.js` exposes both `window.ZIVOZONE.Admin` and
+  `window.ZIVOZONE_MONITOR` pointing at the same `{open, collect}` functions. No file calls the
+  `ZIVOZONE_MONITOR` name, but this looks like a deliberate console-accessible alias (e.g. for the
+  site owner to type `ZIVOZONE_MONITOR.open()` in the browser console) rather than orphaned code —
+  left untouched since removing it risks breaking a manual workflow this audit can't see from the
+  code alone, for zero real benefit (it costs nothing to keep).
+
+Full 18-gate suite and the admin-panel Playwright test both still pass after the rule removal.
+
+**Conclusion: the codebase is clean.** One dead rule removed; everything else checked came back
+either already-handled by a documented, deliberate decision, or genuinely in active use.
