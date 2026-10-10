@@ -44,8 +44,11 @@ service cloud.firestore {
     // reward policy table. horror_epic_reward is NOT added here: horror-room.js no longer calls it
     // at all (that mechanic was replaced by light_escape_epic_reward in 1230.59), so it is genuinely
     // dead and adding it would just be an unused allow-rule.
-    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward']; }
-    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5); }
+    // V1230.70 — football_epic_reward (football-room.js's new "Tactics Trainer" Epic50 game) added
+    // here AND in economy.js's credit() switch in the SAME change, learning from the 1230.59/.60
+    // history above: every previous room's epic reward was added to one side and not the other first.
+    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward']; }
+    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5); }
     function validRewardClaim(claimId) {
       return request.resource.data.claimId == claimId
         && request.resource.data.status == 'consumed'
@@ -69,7 +72,8 @@ service cloud.firestore {
         && (request.resource.data.type != 'forensic_epic_reward' || request.resource.data.policy == 'forensic_epic_reward')
         && (request.resource.data.type != 'puzzle_epic_reward' || request.resource.data.policy == 'puzzle_epic_reward')
         && (request.resource.data.type != 'story_epic_reward' || request.resource.data.policy == 'story_epic_reward')
-        && (request.resource.data.type != 'health_epic_reward' || request.resource.data.policy == 'health_epic_reward');
+        && (request.resource.data.type != 'health_epic_reward' || request.resource.data.policy == 'health_epic_reward')
+        && (request.resource.data.type != 'football_epic_reward' || request.resource.data.policy == 'football_epic_reward');
     }
     function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
     function perfectClaim() {
@@ -212,7 +216,8 @@ service cloud.firestore {
               || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5)
               || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5)
               || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5))
+              || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5)
+              || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5))
           )
         );
         allow update,delete: if false;
