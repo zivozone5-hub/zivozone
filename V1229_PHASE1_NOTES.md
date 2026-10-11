@@ -5792,3 +5792,161 @@ mobile in a professional, full-screen way instead of as a small part of the scre
   390x664 (full viewport) with `position:fixed`, the exit button present and functional, and the
   body scroll-lock correctly released on exit. Re-ran the 1230.78 merged-hub regression test
   (room cards, achievements button, consent-banner/nav clearance) with no regressions.
+
+## 1230.80
+
+User request (translated): asked for an opinion on a 5-point "how to make the site professional"
+plan, and to act on whichever points were actually appropriate — rather than just discuss them.
+
+Fact-checked all 5 points against the real codebase before acting on any of them:
+- "Prerendering integration via React Snap / migrate to Next.js" — false premise, the site is not
+  React; full prerendering for all languages already exists and runs (prerender-lang-home.mjs,
+  prerender-stories.mjs, prerender-rooms.mjs).
+- Theming/navigation reorg (split beauty/health rooms under a "lifestyle" tab) — a real IA/design
+  decision affecting site-wide navigation; not implemented without the owner's explicit direction.
+- Interactive visual-novel stories with branching choices + audio — confirmed
+  data/stories/manuscripts/*.md are plain static text with no choice/branching structure; this is
+  a real, substantial content/feature build, not implemented this round without explicit scope.
+- Hiding the empty AdSense placeholder boxes until a real account is configured — confirmed
+  genuinely true and low-risk, implemented this round (see below).
+- PWA install button — confirmed sw.js has real offline caching, but there is no site-level
+  manifest.json, so the site is not actually installable yet; not implemented this round (needs
+  icons + manifest + install-prompt wiring, a scoped follow-up, not a one-line fix).
+
+Implemented: `core/modules/runtime/ads.js`'s `apply()` now hides the `.ad-slot` placeholder boxes
+entirely (`slot.hidden = !showPlaceholders`) whenever `ADSENSE_PUBLISHER_ID` is still the
+placeholder value, instead of showing an empty "your ad space here" box to every visitor. The
+instant a real AdSense ID is set in core/config.js, `adsenseConfigured()` flips true and the same
+slots render exactly as before — no further code change needed then.
+
+Updated `scripts/qa_ads_consent.py`'s consent-gating check to match the refactored
+`showPlaceholders` variable (same logic, just renamed/restructured) and added a new check
+confirming the placeholder-hiding behavior explicitly.
+
+Caught and fixed a self-introduced mistake before it reached the gate: the first version of the
+new code comment quoted the literal Arabic placeholder text ("مساحتك الإعلانية هنا") to describe
+what it said — tripped `qa_no_hardcoded_arabic.py` immediately (3 fragments). Fixed by describing
+it in English only ("your ad space here") with no Arabic characters in the comment at all.
+
+Verification: `python3 scripts/release.py 1230.80` (version stamped everywhere, dist rebuilt) +
+`bash scripts/run_all_gates.sh` → ALL GATES PASSED. Live Playwright check against the rebuilt
+`dist/` on a local server: 6 `.ad-slot` elements exist in the DOM, 0 are visible (all `hidden`) —
+confirmed the fix actually works, not just that the gate suite is satisfied.
+
+## 1230.81
+
+User request (translated): a detailed live-review of the deployed site (hreflang/duplicate-content
+risk on /en/ etc., 6 empty ad boxes, beta badge, wrong "two experiences" copy, out-of-order room
+card numbering 01/03/05/06/04/02/07, story card missing its "room details" link, a seemingly
+duplicated language menu, a useless "exit site" button, a dark-room CTA that seemed to bounce back
+to the homepage instead of opening the room, and a www/non-www duplicate-domain note) — asked to
+start with the quick UI + ads fixes.
+
+Investigated each claim against the real code/live render before changing anything:
+
+- **Confirmed and fixed — the real SEO bug**: `/en/`, `/zh/`, `/hi/`, `/es/`, `/fr/`, `/fa/` only had
+  their `<title>`/meta/OG swapped by `scripts/prerender-lang-home.mjs`; the entire visible BODY was
+  still the raw Arabic markup from index.html, translated only client-side after JS ran. To a
+  crawler that doesn't execute JS (confirmed by loading `/en/` with Playwright's
+  `javaScriptEnabled:false`), this read as a duplicate of the Arabic homepage wearing an English
+  title — exactly the risk flagged. Fixed by extending prerender-lang-home.mjs to run the SAME i18n
+  table core/modules/runtime/app-shell.js's applyLanguage() uses at runtime, at build time instead,
+  over every data-i18n/data-i18n-placeholder/data-i18n-aria-label element already in the page (i18n.js
+  is executed in a throwaway Node vm sandbox with minimal window/document/localStorage stand-ins,
+  purely to read back its T table — nothing in that file changed). Verified live with JS disabled:
+  Arabic character count in /en/'s body text dropped from 1790 to 199 (the 199 remaining are the
+  bilingual noscript line and the language picker's own native-script option labels, both correct to
+  leave as-is). Residual gap, not fixed this round: a few dynamically-rendered widgets (news ticker,
+  challenge-list blurb, sports/match-center blurb) still show their Arabic skeleton placeholder in the
+  pre-JS snapshot, since those are populated from live data by JS at runtime, not static data-i18n
+  text — flagged in the tracker, not attempted here (would mean replicating live-data rendering at
+  build time, a materially bigger job).
+- **hreflang tags** — already present (8 tags, both index.html and every /<lang>/index.html) since a
+  prior round; the user likely reviewed an older deployed copy that predates 1230.79/80. No action
+  needed.
+- **Empty ad placeholders** — already fixed in 1230.80 (delivered before this message); the user's
+  review was against the still-deployed older version.
+- **"تجارب ZIVOZONE الرئيسية" claiming "two experiences"** — confirmed: the static Arabic text in
+  index.html was stale (`"قسم واحد بارز لتجربتين..."`), while the i18n.js T.ar table already had the
+  corrected wording from an earlier round with no "two" ("قسم واحد يجمع أبرز تجارب ZIVOZONE..."). The
+  live JS-rendered page was already showing the fixed text; only the pre-JS static markup (what a
+  crawler or a very first paint sees) was stale. Synced it to match.
+- **Card numbering 01/03/05/06/04/02/07** — confirmed: five of the seven kicker labels are plain
+  static text (not i18n-driven) and two (sigForensicKicker, sigFootballKicker) are, but none were
+  renumbered when cards were reordered in a past round. Renumbered all to match actual DOM order
+  (01 Dark, 02 Puzzle, 03 Story, 04 Health, 05 Beauty, 06 Forensic, 07 Football) in index.html and,
+  for the two i18n-driven ones, across all 7 languages in i18n.js.
+- **Story room card missing "room details" link** — confirmed: every other card has a
+  `<a href="/rooms/..." data-i18n="sigDetails">` anchor; the story card didn't. There is no dedicated
+  `/rooms/story-room` SEO landing page (prerender-rooms.mjs has no entry for it), so linked it to the
+  real, working `/stories` SPA route instead (confirmed valid via firebase.json rewrites) rather than
+  inventing a new prerendered page this round.
+- **Duplicate language menu** — investigated live with Playwright at 1400px, 700px and 375px
+  (hamburger open): the two `<select>` elements (`#language-select` for desktop, `#language-select-nav`
+  inside the mobile hamburger panel) were NEVER both visible at the same time in any tested state —
+  confirmed by computed-style + offsetParent checks, not just reading CSS. This matches the user's own
+  caveat that their review tool only reads page text, which would see both `<option>` lists even
+  though one select is `display:none`. Not a real bug; no change made.
+- **Dark Room CTA "returns to homepage"** — investigated live: clicking `[data-horror-room]` on both
+  `/rooms/dark-room` and the homepage's own card triggers the EXACT same flow — the room's module
+  lazy-loads correctly (confirmed `window.ZIVOZONE.HorrorRoom` populated), but a guest (not logged in)
+  hits the existing "browse free, register to play" account gate (core/modules/runtime/app-shell.js's
+  requirePlay()/playGateModal(), by design, V1230.25) before the room opens. This is consistent,
+  intentional product behavior (also found: a genuine small bug within it — the gate's own "Not now,
+  keep browsing" dismiss button just closes the modal and does not resume opening the room in guest
+  mode, unlike completing signup/login which does resume via `after()`), not the routing bug described
+  — not changed this round without the owner's product decision on whether "keep browsing" should
+  resume the original action.
+- **www vs non-www duplicate domain** — confirmed no `redirects` in firebase.json, and Firebase
+  Hosting doesn't support cross-host redirects via firebase.json (only same-site path redirects/
+  rewrites) — this needs a Firebase Console action (Hosting → connected domains → set www to redirect
+  to the apex domain, or disconnect it), not a code change. Flagged for the owner.
+- **Removed the "⏻ Exit site" button** (confirm-dialogs the visitor away to google.com) from both its
+  static copies in index.html (desktop `.main-nav` and the mobile bottom nav bar) and stopped
+  `core/modules/runtime/exit-guard.js`'s `ensure()` from re-injecting it — per the user's own
+  recommendation. The shared `request()`/`cleanupUI()`/`goHome()` machinery it's built on is untouched,
+  since other in-room "leave this room" actions reuse it.
+
+Verification: `python3 scripts/release.py 1230.81` + `bash scripts/run_all_gates.sh` → ALL GATES
+PASSED. Live Playwright checks: `/en/` body is genuinely English with JS disabled; 0 ad-slot elements
+visible; card kickers read 01→07 in DOM order; story card now has a working details link; 0 exit-site
+buttons in the DOM (was 2); dark-room CTA behavior reproduced and root-caused precisely.
+
+## 1230.82
+
+User request (translated): resolve the two open decisions from the 1230.81 review (the play-gate's
+"keep browsing" dismiss button, and a final call on the beta badge), plus fix first-visit landing
+and make sign-up clearer.
+
+- **"Not now, keep browsing" now actually opens the room as a guest** instead of just closing the
+  modal and abandoning the attempt — `core/modules/runtime/app-shell.js`'s `playGateModal()`
+  dismiss handler now calls `action()` after `closeModal()`. Confirmed safe: economy.js's reward/
+  progress-saving path (line 165) already independently checks for a logged-in user and no-ops
+  (prompting login) rather than erroring if one plays as a guest, so this doesn't bypass any
+  server-side protection — a guest can now actually try the room, same as the gate's own "Browsing
+  is always free" copy promises; signup is still required to save progress/rewards. Verified live:
+  dismissing now shows the real Dark Room UI (confirmed via screenshot), not the homepage.
+- **Beta badge removed** from index.html's header (the one spot it existed). Decided in the owner's
+  favor of a "ready to launch" look over an explicit beta signal, per this round's request to make
+  the final call.
+- **Found and fixed a real, significant bug while investigating "first visit should land at the
+  top"**: confirmed live — a completely fresh tab with NO hash in the URL loaded scrolled to
+  scrollY≈6700 (the Match Center / sports section), not the top. Root cause: `core/modules/
+  match-center.js`'s `bind()` runs after every `render()` call — including the fully automatic ones
+  `load()` triggers on page boot before any user interaction — and unconditionally called
+  `scrollIntoView({block:'nearest'})` on the active league chip. With no scrollable ancestor between
+  the chip and the page itself, "nearest" scrolled the whole window down to reveal it. Fixed by
+  moving that scrollIntoView call into the day/league chip click handlers themselves (a real user
+  action), removing it from the unconditional tail of `bind()`. Verified live: scrollY is now 0 on
+  a fresh load.
+- **Sign-up clarity**: reviewed the actual auth modal live (screenshot) — distinct "Create account"/
+  "Sign in" tabs, plain-language field labels, and an explicit "Play as a guest, but an account
+  saves your level, XP and results" subtitle were already in place and read clearly. The practical
+  clarity problem was the scroll bug above: a visitor landing scrolled past the top nav never saw
+  the clearly-labeled "Create account / Sign in" button in the first place. No separate UI changes
+  made to the modal itself this round; flagged this read-back to the owner in case a specific
+  clarity complaint was intended beyond what the scroll fix addresses.
+
+Verification: `python3 scripts/release.py 1230.82` + `bash scripts/run_all_gates.sh` → ALL GATES
+PASSED. Live Playwright: scrollY=0 on fresh load (was ~6700), beta badge absent, play-gate dismiss
+now shows the real Dark Room overlay (not the homepage).
