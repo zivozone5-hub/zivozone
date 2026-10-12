@@ -46,7 +46,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Sans+Devanagari:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.82">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.83">
 
 
 
@@ -70,14 +70,14 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.82">
-<link rel="stylesheet" href="dist/styles/forensic-case.css?v=1230.82">
-<link rel="stylesheet" href="dist/styles/puzzle-room.css?v=1230.82">
-<link rel="stylesheet" href="dist/styles/beauty-room.css?v=1230.82">
-<link rel="stylesheet" href="dist/styles/horror-room.css?v=1230.82">
-<link rel="stylesheet" href="dist/styles/football-room.css?v=1230.82">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.82">
-<link rel="stylesheet" href="dist/styles/rooms.css?v=1230.82"></head>
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.83">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.83">
+<!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
+     football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
+     even for visitors who never open a single room. Each one is now injected on demand by
+     core/modules/runtime/room-loader.js (and challenges.js's loadForensicCore() for the forensic
+     case specifically) at the exact moment its room's JS is lazy-loaded — same trigger, same click,
+     just CSS alongside it instead of upfront. See room-loader.js's header for the full design. --></head>
 <body>
 <noscript><div style="padding:24px;text-align:center;color:#fff;background:#05060b">ZIVOZONE يحتاج إلى تفعيل JavaScript. / ZIVOZONE requires JavaScript.</div></noscript>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
@@ -112,6 +112,7 @@
       <option value="fr">Français</option>
       <option value="fa">فارسی</option>
     </select>
+    <button id="pwa-install-btn" class="btn btn-ghost" type="button" data-i18n="installApp" data-i18n-aria-label="installAppAria" hidden>⬇️ ثبّت التطبيق</button>
     <button id="login-btn" class="btn btn-primary" data-i18n="login">🔐 إنشاء حساب / دخول</button>
   </div>
 </header>
@@ -241,7 +242,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1230.82"></script>
+<script type="module" src="zivo-ai.js?v=1230.83"></script>
 
 
 
@@ -264,7 +265,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.82"></script>
+<script src="dist/app.bundle.js?v=1230.83"></script>
 
 
 
