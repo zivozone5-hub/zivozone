@@ -116,7 +116,7 @@ service cloud.firestore {
         && rewardTypeValid()
         && rewardAmountValid()
         // SECURITY FIX (was dead code): a challenge_reward claim must also satisfy
-        // perfectClaim() below, otherwise any signed-in user could mint 10 ZIVO
+        // perfectClaim() below, otherwise any signed-in user could mint 5 ZIVO
         // by writing a matching document directly, without ever playing.
         && (request.resource.data.type != 'challenge_reward' || perfectClaim())
         && (request.resource.data.type != 'mission_reward' || request.resource.data.policy == 'mission_reward')
@@ -136,13 +136,21 @@ service cloud.firestore {
         && (request.resource.data.type != 'football_epic_reward' || request.resource.data.policy == 'football_epic_reward');
     }
     function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
+    // V1230.89 — this used to hardcode an exact question count (10, then briefly 20) that had to be
+    // kept in sync by hand across this file AND economy.js/challenges.js/functions/* every time the
+    // room's question count changed — and each time it drifted, EVERY challenge_reward claim was
+    // silently rejected (see the dated history this replaces: V1230.84 changed the paid amount without
+    // updating this function, then V1230.88 found total/correct were ALSO still hardcoded to the old
+    // count). Checking correct==total generically — a real perfect run, whatever the round's actual
+    // size is — removes the whole class of bug: a future count change needs no edit here at all.
+    // total>0 keeps an empty/zero-length claim from vacuously satisfying correct==total (0==0).
     function perfectClaim() {
-      return request.resource.data.amount == 10
-        && request.resource.data.total == 10
-        && request.resource.data.correct == 10
+      return request.resource.data.amount == 5
+        && request.resource.data.total > 0
+        && request.resource.data.correct == request.resource.data.total
         && request.resource.data.timedOut == 0
         && request.resource.data.status == 'consumed'
-        && request.resource.data.policy == '10_of_10_only'
+        && request.resource.data.policy == 'perfect_score_only'
         && request.resource.data.source == 'game-platform'
         && request.resource.data.validated == true
         && request.resource.data.validatedSessionId is string
