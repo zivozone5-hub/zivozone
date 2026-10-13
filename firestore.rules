@@ -6,6 +6,61 @@ service cloud.firestore {
     function isOwner() { return signedIn() && request.auth.token.email == 'raefalbtish@gmail.com' && request.auth.token.email_verified == true; }
     function isSelf(id) { return signedIn() && request.auth.uid == id; }
     function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastRewardClaimId']); }
+    // V1230.87 — progress sync (players/{uid}.xp/level/streak/... and the public leaderboard/{uid}
+    // projection it feeds). Same honest trade-off already documented for ZIVO reward claims
+    // elsewhere in this file: on the Spark plan there is no Cloud Functions layer to verify these
+    // numbers server-side, so these rules bound each write (must not decrease, capped delta per
+    // write) rather than cryptographically proving it — a real deterrent against a one-shot
+    // "set my score to 999999999" forgery, not a guarantee against a patient attacker replaying many
+    // small writes. That ceiling is deliberately well above any real single reward in economy.js
+    // (the largest is 80 XP for a football epic clear) to tolerate several rewards debouncing into
+    // one sync call, while still being far below what forging a top leaderboard spot would need.
+    function validProgressUpdate() {
+      let d = request.resource.data;
+      let keys = d.diff(resource.data).affectedKeys();
+      let prevXp = resource.data.get('xp', 0);
+      let prevGames = resource.data.get('gamesPlayed', 0);
+      return keys.hasOnly(['xp','level','streak','bestStreak','gamesPlayed','bestScore','updatedAt'])
+        && d.updatedAt == request.time
+        && d.xp is number && d.xp >= prevXp && d.xp - prevXp <= 500
+        && d.level is number && d.level >= 1 && d.level <= 999
+        && d.streak is number && d.streak >= 0 && d.streak <= 3660
+        && d.bestStreak is number && d.bestStreak >= 0
+        && d.gamesPlayed is number && d.gamesPlayed >= prevGames
+        && d.bestScore is number && d.bestScore >= 0;
+    }
+    // Separate, narrower path for the handful of benign self-profile fields (setLanguage(),
+    // Auth.update()'s name/language/age patches) — kept apart from validProgressUpdate() so
+    // loosening one can never accidentally loosen the other.
+    function validProfileUpdate() {
+      let keys = request.resource.data.diff(resource.data).affectedKeys();
+      return keys.hasOnly(['language','name','age','updatedAt'])
+        && (!keys.hasAny(['language']) || (request.resource.data.language is string && request.resource.data.language.size() <= 5))
+        && (!keys.hasAny(['name']) || (request.resource.data.name is string && request.resource.data.name.size() <= 24))
+        && (!keys.hasAny(['age']) || (request.resource.data.age is number && request.resource.data.age >= 13 && request.resource.data.age <= 100));
+    }
+    // auth.js's touchSession() — the existing "last seen" presence ping (players/{uid}.lastSeenAt/
+    // lastSeenPath). Pre-existing, already-active write path; carved out here so the progress-sync
+    // rules above don't accidentally break it.
+    function validPresenceUpdate() {
+      let keys = request.resource.data.diff(resource.data).affectedKeys();
+      return keys.hasOnly(['lastSeenAt','lastSeenPath'])
+        && request.resource.data.lastSeenAt == request.time
+        && request.resource.data.lastSeenPath is string && request.resource.data.lastSeenPath.size() <= 100;
+    }
+    // The public leaderboard/{uid} projection: only name/level/xp/streak ever leave players/{uid}'s
+    // private doc (never email) — see core/modules/leaderboard.js and auth.js's syncProgress().
+    function validLeaderboardEntry(uid) {
+      let d = request.resource.data;
+      let prevXp = resource == null ? 0 : resource.data.get('xp', 0);
+      return d.keys().hasOnly(['uid','name','level','xp','streak','updatedAt'])
+        && d.uid == uid
+        && d.name is string && d.name.size() <= 24
+        && d.level is number && d.level >= 1 && d.level <= 999
+        && d.xp is number && d.xp >= prevXp && d.xp - prevXp <= 500
+        && d.streak is number && d.streak >= 0 && d.streak <= 3660
+        && d.updatedAt == request.time;
+    }
     // V1230.61 — reward-forgery hardening (see economy.js's startGameSession() for the full writeup).
     function validGameSessionKeys() { return request.resource.data.keys().hasOnly(['sessionId','gameId','startedAt']); }
     // V1230.68 — zero-cost client-side error tracking (see core/modules/runtime/error-tracker.js).
@@ -48,7 +103,12 @@ service cloud.firestore {
     // here AND in economy.js's credit() switch in the SAME change, learning from the 1230.59/.60
     // history above: every previous room's epic reward was added to one side and not the other first.
     function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward']; }
-    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5); }
+    // V1230.84 — unified every "finished a test/game perfectly" reward to a flat 5 ZIVO (challenge_reward
+    // was 10; story/health/beauty/horror/light_escape_reward were 2). Must match economy.js's credit()
+    // switch exactly, in the SAME change — see that file's V1230.84 note for why a mismatch here
+    // silently rejects every claim of the changed type (same failure mode as the 1230.59/.60 history
+    // above). Achievement/mission/competition rewards are untouched (different mechanic).
+    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5); }
     function validRewardClaim(claimId) {
       return request.resource.data.claimId == claimId
         && request.resource.data.status == 'consumed'
@@ -227,7 +287,7 @@ service cloud.firestore {
     match /players/{uid} {
       allow read: if isOwner() || isSelf(uid);
       allow create: if isSelf(uid) && request.resource.data.get('zivo', 0) == 0 && request.resource.data.get('coins', 0) == 0;
-      allow update: if isOwner() || (isSelf(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['zivo','coins']));
+      allow update: if isOwner() || (isSelf(uid) && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['zivo','coins']) && (validProgressUpdate() || validProfileUpdate() || validPresenceUpdate()));
       match /events/{eventId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid) && request.resource.data.keys().hasOnly(['event','meta','createdAt']) && request.resource.data.event is string && request.resource.data.event.size() <= 80 && request.resource.data.createdAt == request.time; allow update,delete: if false; }
       match /results/{resultId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid) && request.resource.data.keys().size() <= 30 && request.resource.data.createdAt == request.time; allow update,delete: if false; }
       match /attempts/{attemptId} { allow read: if isOwner() || isSelf(uid); allow create: if isSelf(uid); allow update,delete: if false; }
@@ -253,7 +313,11 @@ service cloud.firestore {
     // real purpose. Denied outright; re-open with real validation if a feature needs it.
     match /results/{id} { allow read: if signedIn(); allow write: if false; }
     match /wallets/{uid} { allow read: if isOwner() || isSelf(uid); allow write: if false; }
-    match /leaderboard/{id} { allow read: if true; allow write: if false; }
+    match /leaderboard/{id} {
+      allow read: if true;
+      allow create, update: if isSelf(id) && validLeaderboardEntry(id);
+      allow delete: if false;
+    }
     match /admins/{uid} { allow read: if isOwner() && request.auth.uid == uid; allow write: if false; }
     match /siteStats/visitors/{day}/{visitorId} { allow read: if isOwner(); allow create,update: if request.resource.data.type == 'guest' && request.resource.data.status == 'visitor' && request.resource.data.visitorId == visitorId && visitorId.size() <= 64 && request.resource.data.keys().hasOnly(['visitorId','type','status','firstSeenAt','lastSeenAt','lastSeenPath','referrer','language','userAgent','updatedAt']) && request.resource.data.lastSeenAt == request.time && request.resource.data.updatedAt == request.time && request.resource.data.lastSeenPath.size() <= 100 && request.resource.data.referrer.size() <= 200 && request.resource.data.language.size() <= 10 && request.resource.data.userAgent.size() <= 180; allow delete: if false; }
     match /siteStats/{document=**} { allow read: if isOwner(); allow write: if false; }

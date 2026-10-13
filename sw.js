@@ -8,11 +8,11 @@ const LEGAL_ROUTE=/^\/(?:privacy|terms)(?:\/|$)/i;
 const SHELL=[
   '/',
   '/index.html',
-  '/dist/styles/index.css?v=1230.83',
-  '/dist/styles/core.css?v=1230.83',
-  '/dist/styles/player-hub.css?v=1230.83',
-  '/zivo-ai.js?v=1230.83',
-  '/dist/app.bundle.js?v=1230.83',
+  '/dist/styles/index.css?v=1230.87',
+  '/dist/styles/core.css?v=1230.87',
+  '/dist/styles/player-hub.css?v=1230.87',
+  '/zivo-ai.js?v=1230.87',
+  '/dist/app.bundle.js?v=1230.87',
   '/assets/icons/zivo-192.png',
   '/assets/icons/zivo-512.png',
   '/manifest.webmanifest'
@@ -33,7 +33,14 @@ async function staleWhileRevalidate(request){
 }
 self.addEventListener('fetch',event=>{
   const u=new URL(event.request.url);if(event.request.method!=='GET'||u.origin!==location.origin)return;
-  if(HTML.test(u.pathname)||u.pathname==='/'||APP_CODE.test(u.pathname)){event.respondWith(networkFirst(event.request));return}
+  if(HTML.test(u.pathname)||u.pathname==='/'){event.respondWith(networkFirst(event.request));return}
+  // V1230.86 — every .js/.css URL on this site is version-stamped (?v=<release>) by release.py, so a
+  // new release always means a new URL; the OLD url is simply never requested again. That makes
+  // no-store+network-first on JS/CSS pure waste: it was forcing a full re-download of the ~1.6MB
+  // bundle (and every CSS file) on every single page view, even for a returning visitor on the exact
+  // same version. cacheFirst is safe here for the same reason index.html itself CAN'T use it (its own
+  // URL never changes) — see the Cache-Control note in firebase.json for the matching HTTP-cache fix.
+  if(APP_CODE.test(u.pathname)){event.respondWith(cacheFirst(event.request));return}
   if(LIVE.test(u.pathname)){event.respondWith(networkFirst(event.request));return}
   if(CONTENT.test(u.pathname)){event.respondWith(staleWhileRevalidate(event.request));return}
   if(STORY_ROUTE.test(u.pathname)||LEGAL_ROUTE.test(u.pathname)){event.respondWith(networkFirst(event.request));return}
