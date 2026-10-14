@@ -1,0 +1,86 @@
+{
+  "tale-01": [
+    {"q": "¿Cuál es el trabajo de Salma en el estadio?", "options": ["Vigilante nocturna y empleada de mantenimiento", "Exjugadora del equipo", "Periodista deportiva", "Ingeniera estructural"], "correct": 0},
+    {"q": "¿De qué advertía realmente el extraño murmullo?", "options": ["Un posible derrumbe en la grada este", "Un ataque al estadio", "La cancelación del partido final", "Un fallo en la iluminación"], "correct": 0},
+    {"q": "¿A quién llamó Salma para revisar los pilares?", "options": ["Al ingeniero Yusuf, su viejo amigo", "Al director del estadio", "A la policía de la ciudad", "Al equipo oficial de mantenimiento"], "correct": 0},
+    {"q": "¿Qué encontró Yusuf al golpear el hierro en el tercer punto?", "options": ["Un sonido hueco que revelaba que el óxido había corroído el hierro por dentro", "Un sonido metálico completamente sano", "Agua filtrándose desde dentro", "Nada fuera de lo normal"], "correct": 0},
+    {"q": "¿Qué pasó finalmente con el partido de la final?", "options": ["Se trasladó a otro estadio tras cerrar la parte superior de la grada", "Se celebró según lo planeado sin cambios", "Se canceló definitivamente", "Se postergó una temporada entera"], "correct": 0}
+  ],
+  "tale-02": [
+    {"q": "¿Cuál fue la primera pista que despertó las sospechas del inspector Nader?", "options": ["La capa uniforme de polvo bajo la copa, sin ninguna marca de haberla levantado", "Una rotura evidente en la cerradura", "La cámara de la alarma estaba desconectada", "Un testigo que mentía en su relato"], "correct": 0},
+    {"q": "¿Cómo demostró Nader que la copa en la vitrina era una réplica?", "options": ["Comparando una abolladura en una foto antigua que no estaba en la copa actual", "Con un análisis químico del metal", "Por una confesión directa de Hind", "Analizando huellas en el cristal"], "correct": 0},
+    {"q": "¿Quién sustituyó la copa original por una réplica, y cuándo?", "options": ["El tesorero Fawzi, hace once años", "El jefe de seguridad Abu Ramzi, la semana pasada", "La conservadora Hind, hace un mes", "Un exjugador de identidad desconocida"], "correct": 0},
+    {"q": "¿Por qué vendió Fawzi la copa original?", "options": ["Para salvar la academia del club del cierre y pagar los salarios de los entrenadores", "Para pagar una deuda personal", "Para comprar un auto nuevo", "Para invertir en un negocio propio"], "correct": 0},
+    {"q": "¿Qué pasó finalmente con la copa de cobre (la réplica)?", "options": ["Permaneció en la vitrina junto a un cartel que explicaba toda la verdad", "Fue devuelta al coleccionista que se la había comprado a Fawzi", "Fue destruida ante los socios del club", "La copa original volvió a su lugar"], "correct": 0}
+  ],
+  "tale-03": [
+    {"q": "¿De dónde venía en realidad la voz de los mensajes por radio?", "options": ["De Lina misma, enviada desde el futuro", "De un colega en el centro de la capital", "De una estación meteorológica vecina", "De un dispositivo de espionaje instalado"], "correct": 0},
+    {"q": "¿Qué peligro advertía la voz?", "options": ["Una inundación repentina en el valle por lluvias intensas lejanas", "Un incendio dentro de la estación", "Un fallo total del equipo de comunicación", "El ataque de un animal salvaje"], "correct": 0},
+    {"q": "¿Por qué era engañosa la lectura del pluviómetro número cuatro?", "options": ["El instrumento se congeló y se quedó atascado en cero, a pesar de la lluvia real arriba", "El instrumento estaba completamente averiado", "Medía desde el principio una zona equivocada", "No había ninguna lectura registrada"], "correct": 0},
+    {"q": "¿A quién salvó Lina con su advertencia por radio?", "options": ["A un grupo de excursionistas con su guía en la ruta turística", "A todo el equipo de la estación", "A un pueblo cercano al valle", "Solo a su gata gris"], "correct": 0},
+    {"q": "¿Qué verdad comprendió Lina al final sobre el origen del mensaje?", "options": ["Que era ella misma quien enviaría el mensaje a su propio pasado, en un bucle temporal", "Que una vieja colega le había gastado una broma", "Que el aparato solo grababa el eco de su propia voz", "Que había estado soñando todo el tiempo"], "correct": 0}
+  ],
+  "tale-04": [
+    {"q": "¿Qué sonido escuchó Yazan proveniente de la pared?", "options": ["Una canción de cuna o tonada de una madre para su hijo", "Golpes repetidos y agudos", "El sonido de un animal encerrado", "Solo el ruido de las tuberías de agua"], "correct": 0},
+    {"q": "¿Qué encontraron dentro del hueco escondido en la pared?", "options": ["Una vieja grabadora y cintas con la inscripción \"Para Khalil\"", "Joyas valiosas", "Documentos de propiedad de la casa", "Solo fotos familiares"], "correct": 0},
+    {"q": "¿Para quién era la carta escrita que estaba dentro de la caja?", "options": ["Para su hijo Khalil, que se fue a trabajar al extranjero", "Para su difunto esposo", "Para su nieto Yazan", "Para una vieja vecina suya"], "correct": 0},
+    {"q": "¿Cómo encontró finalmente la familia a Khalil?", "options": ["A través de páginas de emigrantes en internet y preguntando a los vecinos", "Por una dirección escrita dentro de la caja", "Directamente en los registros del ayuntamiento", "No lo encontraron; fue él quien regresó de repente"], "correct": 0},
+    {"q": "¿Qué comprendió Khalil tras escuchar las cintas?", "options": ["Que su madre nunca estuvo enojada con él, sino que lo amaba y esperaba su regreso", "Que su madre sí estaba enojada con él", "Que la casa realmente estaba embrujada", "Que las cintas eran para otra persona"], "correct": 0}
+  ],
+  "tale-05": [
+    {"q": "¿Por qué se detuvo el autobús en medio del desierto?", "options": ["Una avería en la bomba del motor", "Se quedó sin combustible por completo", "Un accidente en la carretera", "Un pasajero pidió detenerse"], "correct": 0},
+    {"q": "¿De quién sospechó Múmin al principio del viaje y por qué?", "options": ["Del Hach Salem por su caja cerrada, y de Ramez por su gran nerviosismo", "Del conductor por tardar en la reparación", "De la enfermera Dúa por estar callada", "De la mujer silenciosa por no hablar"], "correct": 0},
+    {"q": "¿Qué llevaba realmente Ramez en su bolso?", "options": ["La insulina de su padre enfermo, que debía mantenerse fría", "Dinero robado", "Un arma oculta", "Documentos secretos"], "correct": 0},
+    {"q": "¿Qué había dentro de la caja cerrada del Hach Salem?", "options": ["Un viejo instrumento musical que pertenecía a su padre", "Herramientas extrañas y desconocidas", "Una gran cantidad de dinero", "Armas antiguas"], "correct": 0},
+    {"q": "¿Cómo terminó aquella noche entre los pasajeros?", "options": ["Con música y canto juntos, tras disiparse el malentendido", "Con sospechas y disputas continuas entre ellos", "Con la llegada de la policía para investigar", "Con un pasajero marchándose furioso a pie"], "correct": 0}
+  ],
+  "tale-06": [
+    {"q": "¿Qué regla establecieron los abuelos respecto a las frases escritas en las tres puertas?", "options": ["Solo una de las tres frases es verdadera", "Las tres frases son verdaderas", "Las tres frases son falsas", "Dos de las tres frases son verdaderas"], "correct": 0},
+    {"q": "¿Quién llegó a resolver el enigma de las tres puertas?", "options": ["Rima, una niña de doce años", "El viejo jefe del pueblo", "Uno de los hombres que discutían", "La abuela de Rima"], "correct": 0},
+    {"q": "¿De qué manera llegó Rima a la solución correcta?", "options": ["Probando cada una de las tres posibilidades en orden y comparándolas con la regla", "Echando suertes al azar", "Solo por su propia intuición", "Preguntando a un anciano"], "correct": 0},
+    {"q": "¿Detrás de cuál de las tres puertas estaba realmente el agua?", "options": ["La segunda puerta", "La primera puerta", "La tercera puerta", "El agua no estaba detrás de ninguna puerta"], "correct": 0},
+    {"q": "¿Qué dijo Rima sobre la valentía al final de la historia?", "options": ["Quien prueba todas las posibilidades en orden no necesita valentía, sino paciencia", "La valentía es lo más importante en la vida", "La suerte sola basta para resolver cualquier problema", "Siempre hay que rendirse al miedo"], "correct": 0}
+  ],
+  "tale-07": [
+    {"q": "¿Con qué amenazaron al árbitro Karim antes de la final?", "options": ["Con la seguridad de su hija Lama si pitaba un penalti correcto", "Con quitarle la licencia de arbitraje", "Con exponer una vieja corrupción financiera suya", "Con un soborno directo únicamente"], "correct": 0},
+    {"q": "¿A quién llamó Karim para pedir ayuda?", "options": ["A su amiga Laila, oficial de delitos económicos", "Solo a su asistente Sami", "Directamente a la policía regular", "A su viejo entrenador de juventud"], "correct": 0},
+    {"q": "¿Qué hizo Laila para proteger a la hija de Karim?", "options": ["Envió una unidad para trasladarla con su maestra a un lugar seguro", "La envió fuera del país de inmediato", "La escondió en su propia casa", "No pudo hacer nada"], "correct": 0},
+    {"q": "¿Qué hizo Karim en el momento en que le exigieron ignorar la falta?", "options": ["Pitó el penalti correcto a pesar de la amenaza continua", "Ignoró la falta como le exigían", "Detuvo el partido por completo", "Solo expulsó al jugador infractor sin decisión"], "correct": 0},
+    {"q": "¿Quién era el hombre que vigilaba a Karim desde las gradas durante todo el partido?", "options": ["Un corredor de apuestas que quería que la final terminara sin ningún penalti", "Un periodista deportivo conocido", "Un funcionario oficial de la federación", "Un pariente lejano de Karim"], "correct": 0}
+  ],
+  "tale-08": [
+    {"q": "¿Quién reunió en secreto a los cinco amigos en la sala de escape?", "options": ["Ziad, su sexto viejo amigo que se fue hace años", "Su antiguo entrenador del equipo", "Un extraño de identidad completamente desconocida", "El padre de uno de los cinco amigos"], "correct": 0},
+    {"q": "¿Qué palabra abrió la primera caja en la sala?", "options": ["\"Muro\", el viejo apodo del portero Fadi", "El nombre oficial del equipo", "El nombre del barrio en que crecieron", "El nombre de su viejo entrenador"], "correct": 0},
+    {"q": "¿Qué secreto se reveló sobre Fadi dentro de la sala?", "options": ["Que vendió el anillo de su padre para pagar una deuda de la que nunca habló", "Que hizo trampa en un partido importante", "Que mintió al equipo sobre su lesión", "Que dejó el equipo de repente sin razón"], "correct": 0},
+    {"q": "¿Cómo se abrió la cerradura final de cinco dígitos?", "options": ["Con los números reales de las camisetas que llevaron en la final de la copa, del portero al delantero", "Con la fecha de nacimiento de uno de los amigos", "Con el nombre del barrio escrito en números", "Con intentos al azar repetidos"], "correct": 0},
+    {"q": "¿Por qué diseñó Ziad toda esta sala de escape?", "options": ["Porque viajaría a tratarse en el extranjero y quería reconciliarse con sus amigos antes de partir", "Para vengarse de ellos por una vieja disputa", "Solo para demostrarles su inteligencia", "Por simple entretenimiento y para pasar el rato"], "correct": 0}
+  ],
+  "tale-09": [
+    {"q": "¿Cuál fue la respuesta de Salem a la primera pregunta del ogro (camina sin piernas y llora sin ojos)?", "options": ["La nube", "El viento", "El tiempo", "El río"], "correct": 0},
+    {"q": "¿Cuál fue la respuesta de Salem a la segunda pregunta del ogro (cuanto más le quitas, más grande se vuelve)?", "options": ["El hoyo", "La deuda", "El fuego", "La sombra"], "correct": 0},
+    {"q": "¿Cuál fue la extraña condición del ogro en la tercera y última pregunta?", "options": ["Que Salem dijera una frase: si era verdadera lo liberaría, si era falsa se lo comería, y el propio ogro decidiría si era verdadera o falsa", "Que resolviera un acertijo matemático complejo", "Que luchara físicamente contra él", "Que le pagara un rescate en oro"], "correct": 0},
+    {"q": "¿Qué frase sumió al ogro en una contradicción que no pudo resolver?", "options": ["\"Me comerás\"", "\"Siempre digo la verdad\"", "\"Nunca te mentiré\"", "\"Eres el más fuerte de este desierto\""], "correct": 0},
+    {"q": "¿Cómo terminó el enfrentamiento entre Salem y el ogro?", "options": ["El ogro quedó confundido, incapaz de juzgar la frase, y dejó partir a Salem y su rebaño en paz", "El ogro se comió a Salem al final", "Salem huyó aterrorizado antes de responder", "Salem venció al ogro a la fuerza"], "correct": 0}
+  ],
+  "tale-10": [
+    {"q": "¿Cuál fue la pista sonora distintiva en el primer mensaje de voz?", "options": ["Sonido de horno, masa y un silbido de tren lejano", "Sonido de mar y olas", "Sonido de autos y tráfico", "Música a todo volumen"], "correct": 0},
+    {"q": "¿Qué dedujo la inspectora Huda de los sonidos de fondo en los tres mensajes?", "options": ["Que Yusuf estaba cerca de una vieja estación de tren, junto a una panadería y un taller de hierro", "Que estaba en el aeropuerto de la ciudad", "Que estaba dentro de su colegio", "Que estaba en casa de un amigo"], "correct": 0},
+    {"q": "¿Por qué huyó Yusuf a la vieja estación de tren?", "options": ["Para intentar \"salvar\" la locomotora de su difunto padre de la decisión de venderla", "Solo para jugar, sin ningún motivo", "Para escapar de la escuela, nada más", "Para encontrarse con un amigo allí"], "correct": 0},
+    {"q": "¿Dónde encontró exactamente la inspectora Huda al niño Yusuf?", "options": ["Dormido dentro de la cabina de mando de una vieja locomotora en el depósito", "Junto a la puerta de la panadería contigua", "Dentro de un vagón de tren en movimiento", "Junto al tanque de agua, por fuera"], "correct": 0},
+    {"q": "¿Qué pasó con la vieja estación al final de la historia?", "options": ["Se convirtió en un pequeño museo de la historia del ferrocarril", "Se vendió finalmente como estaba planeado", "Fue demolida por completo", "Se cerró para siempre sin ninguna decisión"], "correct": 0}
+  ],
+  "tale-11": [
+    {"q": "¿Qué descubrió la doctora Nur detrás del muro rocoso que devolvía un eco hueco?", "options": ["Una antigua cisterna de agua nabatea tallada en la roca", "Una tumba antigua", "Una cueva completamente vacía", "Solo grabados, sin ninguna cámara"], "correct": 0},
+    {"q": "¿Qué peligro sorprendió a Nur y Hamza mientras estaban dentro de la cisterna?", "options": ["Una inundación repentina por lluvias intensas caídas arriba", "Solo el derrumbe del techo, sin agua", "Un incendio dentro de la cámara", "El ataque de animales salvajes"], "correct": 0},
+    {"q": "¿Por qué no pudieron salir por la fisura por la que habían entrado?", "options": ["Una parte del muro se derrumbó por la humedad y selló la salida por completo", "La puerta se cerró desde afuera deliberadamente", "La fisura era demasiado estrecha desde el principio", "Alguien los retuvo dentro"], "correct": 0},
+    {"q": "¿Cómo se salvaron Nur y Hamza de ahogarse al final?", "options": ["Encontrando y abriendo el antiguo desagüe de seguridad nabateo diseñado para drenar el excedente", "Esperando a un equipo de rescate externo", "Destruyendo el muro por completo con el martillo", "Nadando durante horas hasta que se agotó el agua"], "correct": 0},
+    {"q": "¿Qué grabado encontraron tras el incidente, bajo el pozo?", "options": ["\"Quien comprende el agua, se salva de ella\"", "\"Aquí está enterrado el tesoro\"", "\"Prohibido entrar\"", "No había ningún grabado"], "correct": 0}
+  ],
+  "tale-12": [
+    {"q": "¿Cuántos jugadores solían tener los dos equipos en los partidos del barrio?", "options": ["Doce jugadores, seis contra seis", "Solo diez jugadores", "Catorce jugadores", "Solo ocho jugadores"], "correct": 0},
+    {"q": "¿Cuál fue la primera cosa extraña que notó Omar tras el incidente de la casa abandonada?", "options": ["Su número se redujo a once sin ninguna razón clara", "La desaparición del balón de cuero", "El cambio de color de las camisetas del equipo", "La desaparición de la propia casa abandonada"], "correct": 0},
+    {"q": "¿Quién era el duodécimo jugador olvidado en la memoria de todos?", "options": ["Bilal, un chico que marcaba con su pie izquierdo y llevaba una camiseta amarilla", "Ziad, el mayor de los amigos", "Rami, uno de los jugadores del equipo", "El propio padre de Omar"], "correct": 0},
+    {"q": "¿Por qué fue Bilal completamente olvidado por todos sus amigos?", "options": ["Porque se fue del barrio de repente sin que nadie se despidiera de él", "Porque murió en un accidente", "Porque nunca existió en realidad desde el principio", "Porque cambió su nombre después"], "correct": 0},
+    {"q": "¿Cómo logró Omar traer de vuelta a Bilal?", "options": ["Recordando su nombre completo y pronunciándolo en voz alta junto a la higuera", "Buscándolo en una ciudad lejana", "Preguntando directamente a la familia por él", "Solo rezando por él"], "correct": 0}
+  ]
+}

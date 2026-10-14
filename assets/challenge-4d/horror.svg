@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620">
+<defs>
+ <radialGradient id="bg" cx="50%" cy="45%" r="70%"><stop stop-color="#5b0712"/><stop offset=".38" stop-color="#21030a"/><stop offset="1" stop-color="#020205"/></radialGradient>
+ <radialGradient id="skull" cx="45%" cy="30%" r="70%"><stop stop-color="#fff6df"/><stop offset=".35" stop-color="#b9a99a"/><stop offset=".72" stop-color="#514a49"/><stop offset="1" stop-color="#171519"/></radialGradient>
+ <linearGradient id="bone" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff5df"/><stop offset=".55" stop-color="#9d8e84"/><stop offset="1" stop-color="#3b3436"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="18" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="redglow"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <linearGradient id="vignette" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#000" stop-opacity=".15"/><stop offset=".72" stop-color="#000" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".9"/></linearGradient>
+</defs>
+<rect width="900" height="620" fill="url(#bg)"/>
+<!-- dark corridor / blood-lit atmosphere -->
+<path d="M0 0H210L350 620H0ZM900 0H690L550 620H900Z" fill="#050308"/>
+<path d="M0 78H900M0 154H900M0 236H900" stroke="#7e0b19" stroke-width="2" opacity=".28"/>
+<path d="M90 0L390 620M810 0L510 620" stroke="#ff2038" stroke-width="3" opacity=".16"/>
+<g filter="url(#glow)" opacity=".65"><ellipse cx="450" cy="535" rx="210" ry="28" fill="#ff0e28"/></g>
+<!-- enormous skull -->
+<g transform="translate(0,-8)" filter="url(#redglow)">
+ <path d="M450 78C306 78 226 183 238 304C246 386 302 430 348 447L355 504Q356 535 382 541L518 541Q544 535 545 504L552 447C598 430 654 386 662 304C674 183 594 78 450 78Z" fill="url(#skull)" stroke="#f0dfcf" stroke-width="5"/>
+ <!-- cheek/jaw planes -->
+ <path d="M303 362Q330 425 380 449L372 500Q371 521 390 523H510Q529 521 528 500L520 449Q570 425 597 362Q570 391 534 400Q494 412 450 412Q406 412 366 400Q330 391 303 362Z" fill="url(#bone)" stroke="#675b58" stroke-width="4"/>
+ <!-- eye sockets -->
+ <path d="M282 275Q325 219 391 250Q406 266 388 307Q355 344 308 325Q277 312 282 275Z" fill="#07070a" stroke="#2b2325" stroke-width="7"/>
+ <path d="M618 275Q575 219 509 250Q494 266 512 307Q545 344 592 325Q623 312 618 275Z" fill="#07070a" stroke="#2b2325" stroke-width="7"/>
+ <ellipse cx="351" cy="286" rx="15" ry="11" fill="#ff1b31"/><ellipse cx="549" cy="286" rx="15" ry="11" fill="#ff1b31"/>
+ <path d="M440 255L414 354L450 373L486 354L460 255Z" fill="#171418" stroke="#564b4b" stroke-width="4"/>
+ <!-- nasal cavity --> <path d="M450 326L421 378L450 395L479 378Z" fill="#07070a"/>
+ <!-- teeth -->
+ <path d="M349 417Q450 451 551 417L539 480Q450 506 361 480Z" fill="#191619" stroke="#8c7e78" stroke-width="3"/>
+ <g fill="#d7c9b8" stroke="#665b58" stroke-width="2">
+  <path d="M365 423L386 429L383 475L365 469Z"/><path d="M389 430L411 435L409 482L390 478Z"/>
+  <path d="M414 436L436 439L435 487L414 486Z"/><path d="M439 440L461 440L461 489L439 489Z"/>
+  <path d="M464 439L486 436L486 487L465 489Z"/><path d="M489 435L511 430L510 482L491 486Z"/>
+  <path d="M514 429L535 423L535 469L517 475Z"/>
+ </g>
+</g>
+<!-- cracks and blood scratches -->
+<g stroke="#ff1e36" fill="none" stroke-linecap="round">
+ <path d="M125 395L185 380L205 412L250 402" stroke-width="4" opacity=".55"/>
+ <path d="M775 395L715 380L695 412L650 402" stroke-width="4" opacity=".55"/>
+ <path d="M170 475L235 455M730 475L665 455" stroke-width="3" opacity=".5"/>
+</g>
+<g fill="#ff2038" opacity=".72"><circle cx="116" cy="510" r="4"/><circle cx="790" cy="498" r="3"/><circle cx="145" cy="300" r="2"/><circle cx="756" cy="285" r="3"/></g>
+<rect width="900" height="620" fill="url(#vignette)"/>
+<rect x="13" y="13" width="874" height="594" rx="34" fill="none" stroke="#ff1e35" stroke-width="5" opacity=".8"/>
+</svg>

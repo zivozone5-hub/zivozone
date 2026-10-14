@@ -1,0 +1,10 @@
+{
+  "version": "1209",
+  "status": "integrated-ready",
+  "site_base": "ZIVOZONE_V1206_AUDIO_UX_PATCHED.zip",
+  "stories_catalog": 54,
+  "health_doors": 12,
+  "single_core": true,
+  "cinematic_entry": true,
+  "content_update_strategy": "replace data files without changing room engine"
+}

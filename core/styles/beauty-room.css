@@ -1,0 +1,45 @@
+/* V1230.18 — raised above the global .topbar (z-index:11000) for the same reason as puzzle-room.css;
+   see that file's comment. Confirmed by pattern, not re-tested live for this specific room this round. */
+.zbr-root{position:fixed;inset:0;z-index:2147483000;display:none;overflow:auto;background:#120c12;color:#f9f2f6;font-family:inherit}.zbr-root.active{display:block}.zbr-shell{min-height:100%;background:radial-gradient(circle at 78% 0,#4a2940 0,#1c111b 30%,#0b080c 75%)}.zbr-head{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px 5vw;background:rgba(15,8,14,.9);backdrop-filter:blur(18px);border-bottom:1px solid #6e4660}.zbr-kicker,.zbr-label{font-size:11px;letter-spacing:.18em;color:#e7a7c8}.zbr-head h1{margin:5px 0;font-size:32px}.zbr-head p{margin:0;color:#cbbac4}.zbr-return{border:1px solid #80506d;background:#261522;color:#fff;border-radius:12px;padding:12px 18px;cursor:pointer}.zbr-hero{max-width:1200px;margin:auto;padding:70px 5vw 45px;display:grid;grid-template-columns:1.35fr .65fr;gap:40px;align-items:center}.zbr-hero h2{font-size:clamp(38px,5vw,70px);line-height:1.05;margin:12px 0}.zbr-hero p{font-size:18px;line-height:1.9;color:#d1c1ca;max-width:760px}.zbr-orbit{height:300px;width:300px;border:1px solid #8f5d78;border-radius:50%;margin:auto;display:grid;place-items:center;position:relative;box-shadow:0 0 90px #e28bb91c}.zbr-orbit b{font-size:75px;color:#f1bad5}.zbr-orbit i{position:absolute;font-style:normal;font-size:10px;letter-spacing:.2em;color:#d7a8bd}.zbr-orbit i:nth-child(2){top:28px}.zbr-orbit i:nth-child(3){right:18px;bottom:70px}.zbr-orbit i:nth-child(4){left:18px;bottom:70px}.zbr-tabs{display:flex;gap:8px;max-width:1200px;margin:auto;padding:0 5vw 24px;overflow:auto}.zbr-tabs button{white-space:nowrap;border:1px solid #553447;background:#1b1018;color:#cdbac5;padding:12px 17px;border-radius:999px;cursor:pointer}.zbr-tabs button.active{background:#e2a0c1;color:#1a0c14;border-color:#e2a0c1;font-weight:900}.zbr-content{max-width:1200px;margin:auto;padding:20px 5vw 65px}.zbr-section-title{display:flex;gap:16px;align-items:center;margin-bottom:22px}.zbr-section-title>span{font:700 38px Georgia;color:#e7a7c8}.zbr-section-title small{color:#a9909e}.zbr-section-title h2{margin:4px 0;font-size:30px}.zbr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.zbr-card{padding:24px;border:1px solid #4b3040;background:linear-gradient(145deg,#21131d,#120b11);border-radius:20px;min-height:170px}.zbr-card>span{font-size:24px;color:#e5a0c2}.zbr-card h3{margin:12px 0 7px;font-size:20px}.zbr-card p{margin:0;color:#c9b8c2;line-height:1.85}.zbr-brand{max-width:1200px;margin:0 auto 55px;padding:34px 5vw;border-top:1px solid #523447;border-bottom:1px solid #523447;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}.zbr-brand h2{font:700 50px Georgia;letter-spacing:.12em;margin:8px 0}.zbr-brand p{color:#c6b4bf;line-height:1.8}.zbr-jewels{display:flex;gap:16px;font-size:38px;color:#edb0cf}.zbr-brand-note{border:1px solid #69445a;background:#1a0f17;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:10px}.zbr-brand-note strong{font-size:22px}.zbr-brand-note span{color:#c6b4bf;line-height:1.8}.zbr-note{max-width:1200px;margin:0 auto;padding:22px 5vw 70px;color:#bdaab6;display:flex;gap:12px;line-height:1.8}.zbr-note strong{color:#f0c3d9;white-space:nowrap}@media(max-width:800px){.zbr-head{padding:14px}.zbr-hero{grid-template-columns:1fr;padding-top:40px}.zbr-orbit{width:220px;height:220px}.zbr-grid,.zbr-brand{grid-template-columns:1fr}.zbr-hero h2{font-size:42px}.zbr-head p{display:none}.zbr-note{display:block}.zbr-note strong{display:block;margin-bottom:6px}}
+.zbg-cta{display:inline-block;margin-top:18px;padding:14px 26px;border-radius:999px;border:1px solid #e2a0c1;background:#e2a0c11a;color:#f8dcec;font-weight:700;font-size:15px;cursor:pointer}
+.zbg-cta:hover{background:#e2a0c12e}
+.zbg-cta.done{border-color:#63dfba77;background:#63dfba14;color:#9ff0d8;cursor:default}
+.zbg-wrap{max-width:720px;margin:0 auto;padding:40px 5vw 70px}
+.zbg-card{border:1px solid #4b3040;background:linear-gradient(145deg,#21131d,#120b11);border-radius:22px;padding:30px}
+.zbg-card p{color:#d1c1ca;line-height:1.9;font-size:17px}
+.zbg-card h2{margin:0 0 10px;font-size:26px;color:#f1bad5}
+.zbg-kicker{font-size:12px;letter-spacing:.14em;color:#e7a7c8;margin-bottom:18px}
+.zbg-start{display:block;width:100%;margin:18px 0 0;padding:15px;border-radius:14px;border:1px solid #e2a0c1;background:#e2a0c126;color:#fff;font-weight:700;font-size:16px;cursor:pointer}
+.zbg-start:hover{background:#e2a0c13c}
+.zbg-again{display:block;width:100%;margin:10px 0 0;padding:13px;border-radius:14px;border:1px solid #80506d;background:#261522;color:#e7cbdc;font-size:15px;cursor:pointer}
+.zbg-share{display:block;width:100%;margin:10px 0 0;padding:13px;border-radius:14px;border:1px solid #d88fb0;background:#3a1f30;color:#ffd7e8;font-size:15px;cursor:pointer}
+.zbg-options{display:grid;gap:12px}
+.zbg-opt{text-align:start;padding:16px 18px;border-radius:14px;border:1px solid #553447;background:#1b1018;color:#e8d4e0;font:inherit;font-size:16px;cursor:pointer;transition:.2s}
+.zbg-opt:hover:not(:disabled){border-color:#e2a0c1;background:#e2a0c11a}
+.zbg-opt:disabled{cursor:default}
+.zbg-opt.right{border-color:#63dfba;background:#63dfba1f;color:#bdf7e3}
+.zbg-opt.wrong{border-color:#ff7691;background:#ff76911a;color:#ffc4d1;animation:zbgshake .3s}
+@keyframes zbgshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.zbg-feedback{margin-top:16px;font-weight:700;font-size:14px}
+.zbg-feedback.right{color:#63dfba}
+.zbg-feedback.wrong{color:#ff7691}
+.zbg-reward-note{color:#bdaab6;font-size:14px;line-height:1.8}
+@media(prefers-reduced-motion:reduce){.zbg-opt{animation:none!important;transition:none!important}}
+
+/* V1230.92 — "Challenge a friend" (duel): outgoing button in the result screen, the win/lose/tie
+   line, and the intro banner shown on arrival via a duel link. Same visual language as the matching
+   rules in core.css/puzzle-room.css. */
+.zbg-duel{display:block;width:100%;margin:10px 0 0;padding:13px;border-radius:14px;border:0;background:linear-gradient(135deg,#ff8a3d,#ff4d6b);color:#fff;font-weight:700;font-size:15px;cursor:pointer}
+.zbg-duel-result{font-weight:900;font-size:15px;color:#ffd27a!important}
+.zbg-duel-intro{text-align:center}
+.zbg-duel-badge{font-size:56px;margin-bottom:6px;filter:drop-shadow(0 0 25px rgba(255,170,80,.35))}
+.zbg-duel-start{display:block;width:100%;margin:18px 0 0;padding:15px;border-radius:14px;border:0;background:linear-gradient(135deg,#ff8a3d,#ff4d6b);color:#fff;font-weight:900;font-size:16px;cursor:pointer}
+
+/* V1230.62 — quality pass; see beauty-room.js's matching comment at the renderGame() correct branch. */
+.zbg-card.zbg-pulse{animation:zbgpulse .4s ease}
+@keyframes zbgpulse{0%{box-shadow:0 0 0 0 rgba(99,230,190,0)}40%{box-shadow:0 0 0 8px rgba(99,230,190,.18)}100%{box-shadow:0 0 0 0 rgba(99,230,190,0)}}
+@media(prefers-reduced-motion:reduce){.zbg-card.zbg-pulse{animation:none!important}}
+
+/* V1230.63 — full-screen epic stage; see beauty-room.js's openEpicBeauty() comment. */
+.zbr-epic-wrap{width:100%;box-sizing:border-box;padding:40px 5vw 70px}
+.zbr-epic-wrap .zrg-shell{max-width:1100px;margin:0 auto}

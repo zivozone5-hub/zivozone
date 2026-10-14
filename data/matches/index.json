@@ -1,0 +1,14 @@
+{
+  "version": "1201",
+  "generatedAt": "2026-09-19T19:15:00+03:00",
+  "timezone": "Asia/Amman",
+  "totalMatches": 13,
+  "files": [
+    "2026-09-18.json",
+    "2026-09-19.json",
+    "2026-09-20.json"
+  ],
+  "provider": "ESPN + TheSportsDB + JFA fallback",
+  "note": "لا تُنشر لقطة فارغة؛ عند تعطل المصادر يتم الاحتفاظ بآخر لقطة صالحة.",
+  "runtimeVersion": "1201.0"
+}

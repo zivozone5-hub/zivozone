@@ -1,0 +1,86 @@
+{
+  "tale-01": [
+    {"q": "What was Salma's job at the stadium?", "options": ["Night watchwoman and maintenance worker", "A former player on the team", "A sports reporter", "A structural engineer"], "correct": 0},
+    {"q": "What was the strange murmur actually warning about?", "options": ["A possible collapse in the east stand", "An attack on the stadium", "The final being cancelled", "A lighting malfunction"], "correct": 0},
+    {"q": "Who did Salma call in to inspect the support beams?", "options": ["Engineer Yusuf, her old friend", "The stadium manager", "The city police", "The official maintenance crew"], "correct": 0},
+    {"q": "What did Yusuf find when he struck the iron in the third spot?", "options": ["A hollow sound showing rust had eaten the iron from inside", "A completely sound metallic sound", "Water leaking from inside", "Nothing out of the ordinary"], "correct": 0},
+    {"q": "What ultimately happened to the final match?", "options": ["It was moved to another stadium after the upper stand section was closed", "It was held exactly as planned with no changes", "It was cancelled entirely", "It was postponed an entire season"], "correct": 0}
+  ],
+  "tale-02": [
+    {"q": "What was the first clue that raised Inspector Nader's suspicion?", "options": ["An even layer of dust under the cup with no trace of it being lifted", "A clear break in the lock", "A disabled alarm camera", "A witness lying in their statement"], "correct": 0},
+    {"q": "How did Nader prove the cup in the case was a replica?", "options": ["By comparing a dent in an old photo that was missing from the current cup", "By a chemical test of the metal", "Through a direct confession from Hind", "By checking fingerprints on the glass"], "correct": 0},
+    {"q": "Who replaced the original cup with a replica, and when?", "options": ["Treasurer Fawzi, eleven years ago", "Security chief Abu Ramzi, last week", "Museum curator Hind, a month ago", "An unidentified former player"], "correct": 0},
+    {"q": "Why did Fawzi sell the original cup?", "options": ["To save the club's academy from closing and pay the coaches' salaries", "To settle a personal debt", "To buy a new car", "To invest in his own business"], "correct": 0},
+    {"q": "What ultimately happened to the copper cup (the replica)?", "options": ["It stayed in the case with a plaque explaining the whole truth", "It was returned to the collector Fawzi had sold it to", "It was destroyed in front of club members", "The original cup was put back in its place"], "correct": 0}
+  ],
+  "tale-03": [
+    {"q": "Where did the voice in the radio messages actually come from?", "options": ["Lina's own voice, sent from the future", "A colleague at the main center in the capital", "A neighboring weather station", "A hidden surveillance device"], "correct": 0},
+    {"q": "What danger did the voice warn about?", "options": ["A sudden flood in the valley caused by heavy rain falling far away", "A fire inside the station", "A complete breakdown of the radio set", "An attack by a wild animal"], "correct": 0},
+    {"q": "Why was the reading on gauge number four misleading?", "options": ["The gauge had frozen and stuck at zero despite real rainfall higher up", "The gauge was completely broken", "It was measuring the wrong area entirely", "There was no recorded reading at all"], "correct": 0},
+    {"q": "Who did Lina save by warning them over the radio?", "options": ["A group of hikers with their guide on the tourist trail", "The station's entire staff", "A village near the valley", "Only her grey cat"], "correct": 0},
+    {"q": "What truth did Lina realize in the end about the source of the message?", "options": ["She herself would send the message to her own past self, forming a time loop", "An old colleague had recorded a prank for her", "The device was just recording an echo of her own voice", "She had been dreaming the whole time"], "correct": 0}
+  ],
+  "tale-04": [
+    {"q": "What sound did Yazan hear coming from the wall?", "options": ["A lullaby or hum, as if a mother singing to her child", "A sharp, repeated knocking", "The sound of a trapped animal", "Just the sound of water pipes"], "correct": 0},
+    {"q": "What did they find inside the hidden cavity in the wall?", "options": ["An old tape recorder and tapes labeled \"For Khalil\"", "Precious jewelry", "The deed to the house", "Only family photographs"], "correct": 0},
+    {"q": "Who was the written note in the box addressed to?", "options": ["Her son Khalil, who had gone abroad for work", "Her late husband", "Her grandson Yazan", "An old neighbor of hers"], "correct": 0},
+    {"q": "How did the family eventually find Khalil?", "options": ["Through expatriate pages online and asking the neighbors", "An address written inside the box", "Direct municipal records", "They never found him; he returned on his own suddenly"], "correct": 0},
+    {"q": "What did Khalil come to understand after listening to the tapes?", "options": ["That his mother hadn't been angry with him, but loved him and waited for his return", "That his mother had indeed been angry with him", "That the house was truly haunted", "That the tapes belonged to someone else"], "correct": 0}
+  ],
+  "tale-05": [
+    {"q": "Why did the bus stop in the middle of the desert?", "options": ["A fault in the engine pump", "It ran completely out of fuel", "An accident on the road", "A passenger asked to stop"], "correct": 0},
+    {"q": "Who did Mu'min suspect at the start of the trip, and why?", "options": ["Hajj Salem, because of his locked box, and Ramez, because of his extreme nervousness", "The driver, because he took too long fixing the bus", "Nurse Dua, because she was silent", "The silent woman, because she never spoke"], "correct": 0},
+    {"q": "What was Ramez actually carrying in his bag?", "options": ["His sick father's insulin, which needed to stay cold", "Stolen money", "A hidden weapon", "Secret documents"], "correct": 0},
+    {"q": "What was inside Hajj Salem's locked box?", "options": ["An old oud belonging to his father", "Strange, unidentified tools", "A large sum of money", "Old weapons"], "correct": 0},
+    {"q": "How did that night among the passengers end?", "options": ["With music and singing together after the misunderstanding dissolved", "With continued suspicion and conflict between them", "With the police arriving to investigate", "With one passenger storming off angrily on foot"], "correct": 0}
+  ],
+  "tale-06": [
+    {"q": "What rule did the ancestors set about the sentences written on the three doors?", "options": ["Only one of the three sentences is true", "All three sentences are true", "All three sentences are false", "Two of the three sentences are true"], "correct": 0},
+    {"q": "Who figured out the solution to the riddle of the three doors?", "options": ["Rima, a twelve-year-old girl", "The village's old elder", "One of the arguing men", "Rima's grandmother"], "correct": 0},
+    {"q": "How did Rima arrive at the correct solution?", "options": ["By testing each of the three possibilities in order and matching it against the rule", "By a random drawing of lots", "By her own personal hunch alone", "By asking one of the elders"], "correct": 0},
+    {"q": "Behind which of the three doors was the water actually hidden?", "options": ["The second door", "The first door", "The third door", "The water wasn't behind any of the doors"], "correct": 0},
+    {"q": "What did Rima say about courage at the end of the story?", "options": ["Whoever tries every possibility in order doesn't need courage, just patience", "Courage is the most important thing in life", "Luck alone is enough to solve any problem", "One must always give in to fear"], "correct": 0}
+  ],
+  "tale-07": [
+    {"q": "What was referee Karim threatened with before the final?", "options": ["His daughter Lama's safety, if he awarded a legitimate penalty", "Having his refereeing license revoked", "Exposure of old financial corruption", "A direct cash bribe only"], "correct": 0},
+    {"q": "Who did Karim call for help?", "options": ["His friend Layla, an officer in economic crimes", "Only his assistant Sami", "The regular police directly", "His old coach from his youth"], "correct": 0},
+    {"q": "What did Layla do to protect Karim's daughter?", "options": ["She sent a unit to move her and her teacher to a safe place", "She sent her out of the country immediately", "She hid her in her own home", "She was unable to do anything"], "correct": 0},
+    {"q": "What did Karim do at the moment he was told to ignore the foul?", "options": ["He blew the whistle for the legitimate penalty despite the ongoing threat", "He ignored the foul exactly as instructed", "He stopped the match entirely", "He only sent off the offending player without a decision"], "correct": 0},
+    {"q": "Who was the man watching Karim from the stands throughout the match?", "options": ["A betting broker who wanted the final to end without a single penalty", "A well-known sports journalist", "An official from the football federation", "A distant relative of Karim's"], "correct": 0}
+  ],
+  "tale-08": [
+    {"q": "Who secretly gathered the five friends in the escape room?", "options": ["Zyad, their sixth old friend who had left years ago", "Their former team coach", "A completely unknown stranger", "One of the five friends' fathers"], "correct": 0},
+    {"q": "What was the word that opened the first box in the room?", "options": ["\"Wall,\" the old goalkeeper Fadi's nickname", "The team's official name", "The name of the neighborhood they grew up in", "Their old coach's name"], "correct": 0},
+    {"q": "What secret about Fadi was revealed inside the room?", "options": ["He sold his father's ring to pay off a debt he never told anyone about", "He cheated in an important match", "He lied to the team about his injury", "He suddenly left the team for no reason"], "correct": 0},
+    {"q": "How was the final five-digit combination lock opened?", "options": ["With the actual shirt numbers they wore in the cup final, from goalkeeper to striker", "With one friend's birth date", "With the neighborhood's name spelled in numbers", "By repeated random guessing"], "correct": 0},
+    {"q": "Why did Zyad design this whole escape room?", "options": ["Because he was traveling abroad for treatment and wanted to reconcile with his friends before leaving", "To take revenge on them over an old dispute", "Just to prove his intelligence to them", "Simply for fun and to pass the time"], "correct": 0}
+  ],
+  "tale-09": [
+    {"q": "What was Salem's answer to the ghoul's first question (walks without legs and weeps without eyes)?", "options": ["The clouds", "The wind", "Time", "The river"], "correct": 0},
+    {"q": "What was Salem's answer to the ghoul's second question (the more you take from it, the bigger it gets)?", "options": ["A hole", "Debt", "Fire", "A shadow"], "correct": 0},
+    {"q": "What was the ghoul's strange condition for the third and final question?", "options": ["Salem had to say one sentence: if true he'd be freed, if false he'd be eaten, and the ghoul himself would judge it", "He had to solve a complex math riddle", "He had to wrestle the ghoul physically", "He had to pay a ransom in gold"], "correct": 0},
+    {"q": "What sentence trapped the ghoul in a contradiction he couldn't resolve?", "options": ["\"You will eat me\"", "\"I always tell the truth\"", "\"I will never lie to you\"", "\"You are the strongest in this desert\""], "correct": 0},
+    {"q": "How did the confrontation between Salem and the ghoul end?", "options": ["The ghoul was baffled and couldn't judge the sentence, so he let Salem and his flock go in peace", "The ghoul ate Salem in the end", "Salem fled in fear before answering", "Salem struck the ghoul and defeated him by force"], "correct": 0}
+  ],
+  "tale-10": [
+    {"q": "What was the distinctive sound clue in the first voice message?", "options": ["The sound of an oven, dough, and a distant train whistle", "The sound of the sea and waves", "The sound of cars and traffic", "Loud music"], "correct": 0},
+    {"q": "What did Inspector Huda conclude from the background sounds in the three messages?", "options": ["That Yusuf was near an old train station, next to a bakery and an iron workshop", "That he was at the city airport", "That he was inside his school", "That he was at a friend's house"], "correct": 0},
+    {"q": "Why did Yusuf run away to the old train station in the first place?", "options": ["To try to \"save\" his late father's locomotive from a decision to sell it", "Just to play there, for no real reason", "Simply to skip school", "To meet a friend there"], "correct": 0},
+    {"q": "Where exactly did Inspector Huda find the boy Yusuf?", "options": ["Asleep inside the cab of an old locomotive in the warehouse", "At the door of the nearby bakery", "Inside a moving train car", "Beside the water tank, outside"], "correct": 0},
+    {"q": "What happened to the old station after the end of the story?", "options": ["It became a small museum of railway history", "It was indeed sold as originally planned", "It was completely demolished", "It was closed for good with no decision made"], "correct": 0}
+  ],
+  "tale-11": [
+    {"q": "What did Dr. Noor discover behind the rock wall that gave off a hollow echo?", "options": ["An old Nabataean water cistern carved into the rock", "An ancient tomb", "A completely empty cave", "Only carvings, with no chamber at all"], "correct": 0},
+    {"q": "What danger surprised Noor and Hamza while they were inside the cistern?", "options": ["A sudden flood caused by heavy rain falling above", "Only a ceiling collapse, with no water", "A fire inside the chamber", "An attack by wild animals"], "correct": 0},
+    {"q": "Why couldn't they get out through the crack they'd entered from?", "options": ["Part of the wall collapsed from the moisture and sealed the exit completely", "The door was deliberately locked from outside", "The crack was too narrow from the start", "Someone inside was holding them back"], "correct": 0},
+    {"q": "How did Noor and Hamza ultimately survive drowning?", "options": ["By finding and opening the old Nabataean safety drain designed to release the overflow", "By waiting for an outside rescue team", "By smashing through the wall entirely with a hammer", "By swimming for hours until the water ran out"], "correct": 0},
+    {"q": "What inscription did they find after the incident, beneath the basin?", "options": ["\"Whoever understands water survives it\"", "\"The treasure is buried here\"", "\"No entry\"", "There was no inscription at all"], "correct": 0}
+  ],
+  "tale-12": [
+    {"q": "How many players were usually on each side in the neighborhood matches?", "options": ["Twelve players total, six against six", "Only ten players", "Fourteen players", "Only eight players"], "correct": 0},
+    {"q": "What was the first strange thing Omar noticed after the incident at the abandoned house?", "options": ["Their number became only eleven, for no clear reason", "The leather ball disappeared", "The team shirts' color changed", "The abandoned house itself disappeared"], "correct": 0},
+    {"q": "Who was the twelfth player that everyone had forgotten?", "options": ["Bilal, a boy who scored with his left foot and wore a yellow shirt", "Zyad, the oldest of the friends", "Rami, one of the team's players", "Omar's own father"], "correct": 0},
+    {"q": "Why was Bilal completely forgotten by all his friends?", "options": ["Because he moved away from the neighborhood suddenly without saying goodbye to anyone", "Because he died in an accident", "Because he never actually existed from the start", "Because he later changed his name"], "correct": 0},
+    {"q": "How was Omar able to bring Bilal back?", "options": ["By remembering his full name and saying it aloud by the fig tree", "By searching for him in a faraway city", "By asking his family directly", "By only praying for him"], "correct": 0}
+  ]
+}

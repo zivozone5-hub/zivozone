@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<script>try{localStorage.setItem('zivozone_language_v1','fa')}catch(_){}</script>
+<!-- V1230.91 — firebase.json rewrites /challenges/**, /stories and /health(/**) straight to THIS
+     file (SPA fallback, no per-route prerendered copy), so the browser's address bar still shows the
+     deeper path (e.g. /challenges/football) while this exact HTML is served. Every local asset below
+     is a RELATIVE path (dist/app.bundle.js, not /dist/app.bundle.js), so without a <base>, the browser
+     resolves them against that deeper path instead of the site root — e.g. /challenges/dist/
+     app.bundle.js, which 404s, which breaks the whole app before it can even boot. The per-language
+     homepages and prerendered story/room pages already learned this the hard way and each carry their
+     own <base href="/">; this file is the one actual destination of those SPA-fallback rewrites and
+     was the one page still missing it, silently breaking every "share your score"-style deep link
+     (V1230.16) and the new "challenge a friend" duel links (V1230.91) for anyone who didn't already
+     have the site loaded. Harmless at the real root "/" itself — same resolution either way there. -->
+<base href="/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="ZIVOZONE — دنیایی دیجیتال از بازی‌ها، چالش‌ها، ورزش و هوش، همراه با اقتصاد ZIVO و پیشرفت بازیکن.">
+<meta name="theme-color" content="#05060b">
+<title>ZIVOZONE | دنیای تو از همین‌جا شروع می‌شود</title>
+<link rel="canonical" href="https://zivozone.com/fa/">
+<link rel="alternate" hreflang="ar" href="https://zivozone.com/">
+<link rel="alternate" hreflang="en" href="https://zivozone.com/en/">
+<link rel="alternate" hreflang="zh" href="https://zivozone.com/zh/">
+<link rel="alternate" hreflang="hi" href="https://zivozone.com/hi/">
+<link rel="alternate" hreflang="es" href="https://zivozone.com/es/">
+<link rel="alternate" hreflang="fr" href="https://zivozone.com/fr/">
+<link rel="alternate" hreflang="fa" href="https://zivozone.com/fa/">
+<link rel="alternate" hreflang="x-default" href="https://zivozone.com/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://zivozone.com/fa/">
+<meta property="og:title" content="ZIVOZONE | بازی‌ها، چالش‌ها، ورزش و اقتصاد ZIVO">
+<meta property="og:description" content="ZIVOZONE — بازی‌ها، چالش‌ها، ورزش و تجربه‌های دیجیتال همراه با XP و ZIVO در یک پلتفرم.">
+<meta property="og:site_name" content="ZIVOZONE">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="https://zivozone.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ZIVOZONE">
+<meta property="og:locale" content="fa_IR">
+<meta name="twitter:image" content="https://zivozone.com/assets/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ZIVOZONE","url":"https://zivozone.com/","inLanguage":["ar","en","zh","hi","es","fr","fa"],"description":"ZIVOZONE — games, challenges, sport and rooms in one place."}</script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/zivo-192.png" type="image/png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="assets/icons/zivo-192.png">
+<!-- V1230.64 — manifest.webmanifest already says display:"standalone" (full screen once installed),
+     but that property is an Android/Chrome thing; iOS Safari ignores the Web App Manifest entirely
+     for "Add to Home Screen" and needs its own proprietary tags instead, which this site never had.
+     Without apple-mobile-web-app-capable, an iPhone opens every page — even one launched from the
+     home-screen icon — inside ordinary Safari chrome (address bar, tab bar), never full screen. -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ZIVOZONE">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- V1230.86 — dropped weight 500 from all three families: grepped every .css file in core/styles/
+     for font-weight usage and none use 500 (only 400 implicit, plus 600/700/800/900). Requesting a
+     weight no CSS rule ever selects doesn't cost bytes by itself (browsers only fetch a weight's
+     actual font file when some rendered text needs it), but it trims this stylesheet request and
+     keeps the family list honest about what's really used. -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.97">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.97">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.97">
+<!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
+     football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
+     even for visitors who never open a single room. Each one is now injected on demand by
+     core/modules/runtime/room-loader.js (and challenges.js's loadForensicCore() for the forensic
+     case specifically) at the exact moment its room's JS is lazy-loaded — same trigger, same click,
+     just CSS alongside it instead of upfront. See room-loader.js's header for the full design. --></head>
+<body>
+<noscript><div style="padding:24px;text-align:center;color:#fff;background:#05060b">ZIVOZONE يحتاج إلى تفعيل JavaScript. / ZIVOZONE requires JavaScript.</div></noscript>
+<div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">در حال آماده‌سازی دنیای شما...</span></div>
+<header class="topbar">
+  <a class="brand" href="/" aria-label="ZIVOZONE"><span class="brand-mark">Z</span><span class="brand-name">ZIVOZONE</span></a>
+  <button id="zivo-nav-toggle" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav class="main-nav" aria-label="main navigation">
+    <a href="/" data-i18n="home">خانه</a><a href="#challenges" data-i18n="challenges">چالش‌ها</a>
+    <a href="#ai" data-i18n="ai">هوش مصنوعی ZIVO</a>
+    <a href="#identity" data-i18n="identity">من کی هستم؟</a>
+    <a href="#sports" data-i18n="sports">ورزش</a>
+    <a href="#player-home" data-player-home data-i18n="playerJourney">سفر بازیکن</a>
+    <label class="sr-only" for="language-select-nav">Language</label>
+    <select id="language-select-nav" class="nav-language-select" aria-label="Language">
+      <option value="ar">العربية</option>
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+      <option value="hi">हिन्दी</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="fa">فارسی</option>
+    </select>
+  </nav>
+  <div class="top-actions"><button id="audio-toggle" class="icon-btn" type="button" aria-label="Sound">🔊</button><span id="firebase-status" class="firebase-status" title="Firebase">●</span>
+    <label class="sr-only" for="language-select">Language</label>
+    <select id="language-select" aria-label="Language">
+      <option value="ar">العربية</option>
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+      <option value="hi">हिन्दी</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="fa">فارسی</option>
+    </select>
+    <button id="pwa-install-btn" class="btn btn-ghost" type="button" data-i18n="installApp" data-i18n-aria-label="نصب برنامه ZIVOZONE روی دستگاه شما" hidden>⬇️ نصب برنامه</button>
+    <button id="login-btn" class="btn btn-primary" data-i18n="login">🔐 ساخت حساب / ورود</button>
+  </div>
+</header>
+<main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section id="home" class="hero section">
+  <div class="hero-copy">
+    <span class="eyebrow" data-i18n="heroEyebrow">دنیای دیجیتال • ZIVOZONE</span>
+    <h1><span class="hero-brand">ZIVOZONE</span><br><span data-i18n="heroTitle">دنیای تو از اینجا شروع می‌شود</span></h1>
+    <p data-i18n="heroText">بازی، چالش، هوش، وحشت، علم، ورزش و کشف شخصیت، همه در یک دنیای دیجیتال.</p>
+    <div class="hero-actions"><button class="btn btn-primary btn-lg" data-action="scroll-challenges" data-i18n="play">🚀 شروع بازی</button><button class="btn btn-ghost btn-lg" data-action="open-identity" data-i18n="discover">🧠 خودت را کشف کن</button></div>
+    <div class="hero-stats"><div><b>7</b><span data-i18n="languages">زبان‌ها</span></div><div><b>10+</b><span data-i18n="modes">حالت‌های بازی</span></div><div><b>100+</b><span data-i18n="challengesCount">چالش‌ها</span></div></div>
+  </div>
+  <div class="hero-orb-wrap"><div class="hero-orb"><span>Z</span></div><span class="float-tag t1">IQ</span><span class="float-tag t2">AI</span><span class="float-tag t3">HORROR</span><span class="float-tag t4">SPORT</span></div>
+</section>
+
+
+
+<section class="zivo-newsbar" aria-label="أخبار ZIVOZONE" data-news-core="1229">
+  <div class="zivo-newsbar-head"><span class="zivo-newsbar-live">عاجل</span><span class="zivo-newsbar-brand">ZIVOZONE</span></div>
+  <div class="zivo-newsbar-window"><div class="zivo-newsbar-track" id="zivoNewsTicker"><span class="zivo-ticker-item"><span class="zivo-ticker-tag general">ZIVOZONE</span><span class="zivo-ticker-headline">جاري تحميل الأخبار...</span></span></div></div>
+</section>
+
+<section class="zivo-signature-zone" id="zivo-rooms-hub" aria-label="تجربه‌های شاخص ZIVOZONE" data-i18n-aria-label="sigTitle">
+  <div class="zivo-signature-head"><div><span class="eyebrow">ZIVOZONE SIGNATURE</span><h2 data-i18n="sigTitle">تجربه‌های شاخص ZIVOZONE</h2><p data-i18n="sigDesc">یک بخش، همهٔ اتاق‌های شاخص ZIVOZONE — هرکدام با شخصیت خودش.</p></div><span class="zivo-signature-live">● <span data-i18n="sigLive">ورود زنده</span></span></div>
+  <div class="zivo-signature-grid">
+    <article class="zivo-signature-card dark" data-horror-room tabindex="0" role="button" aria-label="ورود به اتاق تاریک" data-i18n-aria-label="sigDarkAria">
+      <div class="zivo-signature-media"><img src="assets/challenge-posters/horror.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">FULL SCREEN</span></div>
+      <div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 <span data-i18n="sigDarkTitle">اتاق تاریک</span></h3><p data-i18n="sigDarkDesc">یک تجربه سینمایی تمام‌صفحه. برای ورود فوری هر جا را لمس کن.</p><b><span data-i18n="sigDarkCta">ورود به اتاق</span> ↗</b><a href="/rooms/dark-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">جزئیات اتاق</a></div>
+    </article>
+    <article class="zivo-signature-card puzzle-room" data-puzzle-room tabindex="0" role="button" aria-label="ورود به اتاق پازل" data-i18n-aria-label="sigPuzzleAria">
+      <div class="zivo-signature-media"><div style="height:100%;display:grid;place-items:center;background:radial-gradient(circle,#19334a,#070b12);font-size:80px">🧩</div><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigPuzzleStatus">۱۰ مرحله</span></div>
+      <div class="zivo-signature-copy"><span>02 // PUZZLE EXPERIENCE</span><h3>🧩 <span data-i18n="sigPuzzleTitle">اتاق پازل</span></h3><p data-i18n="sigPuzzleDesc">اتاقی مرحله‌به‌مرحله که حافظه، منطق، هزارتو، رمز، سرنخ‌ها و گاوصندوق نهایی را در هم می‌آمیزد.</p><b><span data-i18n="sigPuzzleCta">ورود به اتاق پازل</span> ↗</b><a href="/rooms/puzzle-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">جزئیات اتاق</a></div>
+    </article>
+    <article class="zivo-signature-card room-card-story" data-zivo-story-room tabindex="0" role="button" aria-label="ورود به اتاق داستان" data-i18n-aria-label="sigStoryAria"><div class="zivo-signature-media" style="background:radial-gradient(circle,#4b1f5d,#07040d);display:grid;place-items:center;font-size:78px">📖</div><div class="zivo-signature-copy"><span>03 // CINEMATIC STORIES</span><h3>📖 <span data-i18n="sigStoryTitle">اتاق داستان</span></h3><p data-i18n="sigStoryDesc">داستان‌های اصیل و متنوع: وحشت، معمایی، جنایی، علمی‌تخیلی و پازل. یک داستان را انتخاب کن و وارد دنیایش شو.</p><b><span data-i18n="sigStoryCta">ورود به اتاق داستان</span> ↗</b><a href="/stories" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">جزئیات اتاق</a></div></article>
+    <article class="zivo-signature-card room-card-health" data-zivo-health-room tabindex="0" role="button" aria-label="ورود به اتاق سلامت" data-i18n-aria-label="sigHealthAria"><div class="zivo-signature-media" style="background:radial-gradient(circle,#0d5948,#06100e);display:grid;place-items:center;font-size:78px">❤</div><div class="zivo-signature-copy"><span>04 // HEALTH EXPERIENCE</span><h3>❤ <span data-i18n="sigHealthTitle">تمام سلامتی تو</span></h3><p data-i18n="sigHealthDesc">درهای مستقل برای سلامت، ورزش، غذا، خواب، وزن، سلامت روان و موارد دیگر.</p><b><span data-i18n="sigHealthCta">ورود به اتاق سلامت</span> ↗</b><a href="/rooms/health-world" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">جزئیات اتاق</a></div></article>
+    <article class="zivo-signature-card beauty" data-beauty-room tabindex="0" role="button" aria-label="ورود به اتاق زیبایی" data-i18n-aria-label="sigBeautyAria">
+      <div class="zivo-signature-media beauty-cinematic-poster"><div class="beauty-poster-symbol">✦</div><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">BEAUTY & CARE</span></div>
+      <div class="zivo-signature-copy"><span>05 // BEAUTY EXPERIENCE</span><h3>✦ <span data-i18n="sigBeautyTitle">اتاق زیبایی</span></h3><p data-i18n="sigBeautyDesc">مراقبت ظریف از پوست، بدن و مو، دستورهای ساده، عادت‌های روزانه و استایل اکسسوری.</p><b><span data-i18n="sigBeautyCta">ورود به اتاق زیبایی</span> ↗</b><a href="/rooms/beauty-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">جزئیات اتاق</a></div>
+    </article>
+    <article class="zivo-signature-card forensic" data-challenge="forensic" tabindex="0" role="button" aria-label="ورود به آزمایشگاه جنایی" data-i18n-aria-label="sigForensicAria">
+      <div class="zivo-signature-media forensic-cinematic-poster"><img src="assets/forensic-cinema/entry.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigForensicStatus">صحنه پرونده</span></div>
+      <div class="zivo-signature-copy"><span data-i18n="sigForensicKicker">06 // تجربه بازجویی</span><h3>🕵️ <span data-i18n="sigForensicTitle">آزمایشگاه جنایی</span></h3><p data-i18n="sigForensicDesc">وارد صحنه پرونده شو، مدارک را بررسی کن، خط زمانی و واقعیت‌ها را به هم وصل کن و خودت نتیجه‌گیری کن.</p><b><span data-i18n="sigForensicCta">شروع بازجویی</span> ↗</b><a href="/rooms/forensic-lab" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">جزئیات اتاق</a></div>
+    </article>
+    <article class="zivo-signature-card football" data-football-room tabindex="0" role="button" aria-label="ورود به زمین تصمیم" data-i18n-aria-label="sigFootballAria">
+      <div class="zivo-signature-media" style="background:radial-gradient(circle,#0e3b22,#06130c);display:grid;place-items:center;font-size:78px">⚽</div>
+      <div class="zivo-signature-copy"><span data-i18n="sigFootballKicker">۰۷ // تجربهٔ تاکتیکی</span><h3>⚽ <span data-i18n="sigFootballTitle">زمین تصمیم</span></h3><p data-i18n="sigFootballDesc">زمین را مثل یک مربی واقعی بخوان: یک بازیکن باز، مدافعی که خط را می‌بندد، و تغییر جناح حمله — ۵۰ مرحله با دشواری رو به افزایش.</p><b><span data-i18n="sigFootballCta">ورود به زمین تصمیم</span> ↗</b><a href="/rooms/football-pitch" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">جزئیات اتاق</a></div>
+    </article>
+  </div>
+</section>
+
+<section id="challenges" class="section alt challenge-center-section">
+  <div class="section-heading challenge-center-heading">
+    <div><span class="eyebrow" data-i18n="challengeEyebrow">مرکز چالش‌ها</span><h2 data-i18n="challengeTitle">مرکز چالش‌ها</h2><p class="muted" data-i18n="challengeText">هر چالش با آسانی شروع می‌شود، سپس فشار تا آخرین سؤال‌ها بالا می‌رود.</p></div>
+    <div class="challenge-center-meta"><span id="player-level-chip" class="level-chip">Level 1</span><span class="challenge-live-chip">● LIVE CHALLENGE ENGINE</span></div>
+  </div>
+  <div class="ad-slot ad-top" data-ad-slot="top"><span class="ad-badge" data-i18n="ad">تبلیغ</span><strong data-i18n="adTitle">فضای تبلیغاتی شما</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
+  <div class="challenge-layout premium-challenge-layout">
+    <aside class="ad-column ad-left" aria-label="Future advertising area">
+      <div class="ad-slot" data-ad-slot="left-1"><span class="ad-badge" data-i18n="ad">تبلیغ</span><strong>Premium</strong></div>
+      <div class="ad-slot" data-ad-slot="left-2"><span class="ad-badge" data-i18n="ad">تبلیغ</span><strong>ZIVO Partner</strong></div>
+    </aside>
+    <div class="challenge-main">
+      <div class="challenge-toolbar"><span class="muted" data-i18n="challengeToolbar">تحديات متنوعة: منطق، ذاكرة، رياضيات، علوم، كرة قدم، سرعة، واستراتيجية. • 20 ثانية لكل سؤال.</span></div>
+      <div id="challenge-list" class="challenge-list"></div>
+    </div>
+    <aside class="ad-column ad-right" aria-label="Future advertising area">
+      <div class="ad-slot" data-ad-slot="right-1"><span class="ad-badge" data-i18n="ad">تبلیغ</span><strong>Premium</strong></div>
+      <div class="ad-slot" data-ad-slot="right-2"><span class="ad-badge" data-i18n="ad">تبلیغ</span><strong>ZIVO Partner</strong></div>
+    </aside>
+  </div>
+  <div class="ad-slot ad-bottom" data-ad-slot="bottom"><span class="ad-badge" data-i18n="ad">تبلیغ</span><strong data-i18n="adTitle">فضای تبلیغاتی شما</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
+</section>
+<section id="identity" class="section"><div class="identity-panel"><div><span class="eyebrow" data-i18n="identityEyebrow">من کیستم؟</span><h2 data-i18n="identityTitle">پروفایل ZIVOZONE خود را کشف کن</h2><p data-i18n="identityText">یک آزمون سرگرم‌کننده بر اساس ترجیحات شما، نه یک تشخیص روان‌شناسی.</p></div><button class="btn btn-primary btn-lg" data-action="open-identity" data-i18n="identityStart">شروع آزمون</button></div></section>
+<section id="ai" class="section alt"><div class="section-heading"><div><span class="eyebrow" data-i18n="aiEyebrow">هوش مصنوعی ZIVO</span><h2 data-i18n="aiTitle">دستیار هوشمند ZIVO</h2></div></div><div class="ai-panel"><div id="ai-messages" class="ai-messages"><div class="ai-message bot" data-i18n="aiWelcome">خوش آمدید 🤖 درباره سطح، بازی‌ها، چالش‌ها یا ورزش از من بپرسید.</div></div><form id="ai-form" class="ai-form"><input id="ai-input" maxlength="1000" required data-i18n-placeholder="سؤال خود را بنویسید..." placeholder="اكتب سؤالك..."><button class="btn btn-primary" type="submit" data-i18n="send">ارسال</button></form><small class="muted" data-i18n="aiNote">هوش مصنوعی ZIVO در حال حاضر به‌صورت محلی کار می‌کند و می‌تواند به یک سرویس هوش مصنوعی امن متصل شود.</small></div></section>
+<section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">اخبار و داده‌های ورزشی</span><h2 data-i18n="sportsTitle">ورزش جهانی</h2><p class="muted" data-i18n="sportsIntro">نتایج، بازی‌ها و لینک‌های مستقیم به منابع اخبار ورزشی.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 به‌روزرسانی</button></div><div class="subheading"><h3 data-i18n="newsSources">منابع خبری</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 فوتبال اردن</h3><span class="live-badge" data-i18n="officialLive">منابع رسمی + زنده</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading mc-heading"><div><h3 data-i18n="fixtureCenter">⚽ مرکز مسابقات</h3><p>النتائج والمواعيد والمباريات المباشرة والبطولات في مكان واحد.</p></div><span class="live-badge">مباشر · مركز المباريات</span></div><div id="fixture-list" class="match-center-host"></div></section>
+
+</main>
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a href="#home" data-mobile-nav="home">⌂<span data-i18n="home">خانه</span></a>
+  <a href="#challenges" data-mobile-nav="challenges">⚡<span data-i18n="challenges">چالش‌ها</span></a>
+  <a href="#ai" data-mobile-nav="ai">🤖<span>ZIVO AI</span></a>
+  <a href="#sports" data-mobile-nav="sports">⚽<span data-i18n="sports">ورزش</span></a>
+  <a href="#player-home" data-mobile-nav="player-home" data-player-home>👤<span data-i18n="playerJourney">سفر بازیکن</span></a>
+</nav>
+</div>
+<footer class="footer"><strong>ZIVOZONE</strong><span id="footer-tagline" data-i18n="footerTagline">طراحی‌شده برای نسل بعدی.</span><a class="zivo-footer-link" href="/#zivo-rooms-hub" data-i18n="footerRoomsLinks">همه اتاق‌ها و چالش‌ها را ببین</a><a class="zivo-footer-link" href="/rooms/daily-challenge" data-i18n="footerDailyChallenge">چالش امروز</a><a class="zivo-footer-link" href="/terms/" data-i18n="footerTerms">شرایط استفاده</a><a class="zivo-footer-link" href="/privacy/" data-i18n="footerPrivacy">سیاست حریم خصوصی</a><button id="zivo-consent-footer" class="zivo-footer-link" type="button" data-i18n="footerConsent">تنظیمات حریم خصوصی</button><small class="zivo-footer-rights" data-i18n="footerRights">© 2026 ZIVOZONE. تمامی حقوق محفوظ است. کپی یا بازنشر محتوا یا کد این سایت بدون اجازه کتبی ممنوع است.</small></footer>
+<div id="modal-root" class="modal-root" aria-hidden="true"></div><div id="toast-container" class="toast-container" aria-live="polite"></div>
+<script>
+window.ZIVOZONE_FIREBASE_CONFIG={apiKey:'AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s',authDomain:'zivozone-fc6ed.firebaseapp.com',projectId:'zivozone-fc6ed',storageBucket:'zivozone-fc6ed.firebasestorage.app',messagingSenderId:'169366383094',appId:'1:169366383094:web:5875e8d24b1c543e4a7fd7',measurementId:'G-ZXW8LP39JY'};
+/* Optional secure backends. Leave blank until a server endpoint is deployed. */
+window.ZIVOZONE_API={aiEndpoint:'',sportsNewsEndpoint:'',aiCallable:'zivoAI',sportsCallable:'getSportsBroadcast'};
+window.ZIVOZONE_GAME_RULES={questionSeconds:30,version:'V62-clean-engine'};
+// IMPORTANT: raw reCAPTCHA Enterprise SITE KEY only (no <script> tag).
+window.ZIVOZONE_SECURITY={appCheckSiteKey:'6LcDYbctAAAAAHJP_2BRgSXi3cnq1iKxCNTH1zBW'};
+window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
+</script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script type="module" src="zivo-ai.js?v=1230.97"></script>
+
+
+
+
+<script>
+/* ZIVOZONE V47 — runtime guard */
+(function(){
+  function release(){
+    var el=document.getElementById('app-loader');
+    if(el) el.classList.add('hidden');
+  }
+  window.addEventListener('error',function(e){
+    console.error('ZIVOZONE runtime error:',e.error||e.message);
+    release();
+  });
+  window.addEventListener('unhandledrejection',function(e){
+    console.error('ZIVOZONE promise error:',e.reason);
+    release();
+  });
+  setTimeout(release,1800);
+})();
+</script>
+<script src="dist/app.bundle.js?v=1230.97"></script>
+
+
+
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js",{scope:"/"}).catch(e=>console.warn("ZIVOZONE SW:",e)));}</script>
+
+
+
+
+
+</body>
+</html>

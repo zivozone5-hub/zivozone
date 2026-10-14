@@ -1,0 +1,16 @@
+{
+  "name": "zivozone-functions",
+  "description": "ZIVOZONE Cloud Functions — written and ready, NOT deployed (project stays on Firebase's free Spark plan for now; see index.js's header comment and V1229_PHASE1_NOTES.md ## 1230.68).",
+  "private": true,
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/grading.test.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.1.0",
+    "firebase-functions": "^5.0.0"
+  }
+}

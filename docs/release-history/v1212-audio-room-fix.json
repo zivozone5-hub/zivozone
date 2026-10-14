@@ -1,0 +1,7 @@
+{
+  "version": "1212",
+  "base": "V1211_HOME_ROOMS_FIXED",
+  "audio": "rebuilt-runtime-visible-control-autoplay-unlock-crossfade-sfx-fallback",
+  "room_entry": "cinematic+ambient+menu_sfx",
+  "assets_present": 12
+}

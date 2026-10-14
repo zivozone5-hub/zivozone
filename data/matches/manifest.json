@@ -1,0 +1,18 @@
+{
+  "version": "1201",
+  "generatedAt": "2026-09-19T19:15:00+03:00",
+  "timezone": "Asia/Amman",
+  "days": [
+    "2026-09-18.json",
+    "2026-09-19.json",
+    "2026-09-20.json"
+  ],
+  "totalMatches": 13,
+  "providers": [
+    "ESPN",
+    "TheSportsDB",
+    "JFA verified fallback"
+  ],
+  "coverage": "لقطة أولية حقيقية للأمس/اليوم/الغد، مع التحديث المباشر عبر ESPN ومصادر JFA عند توفرها.",
+  "runtimeVersion": "1201.0"
+}

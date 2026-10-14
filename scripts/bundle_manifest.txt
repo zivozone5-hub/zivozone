@@ -1,0 +1,60 @@
+# V1230.67 — core/modules/forensic-case-core.js (1.3MB, ~42% of the old bundle) was deliberately
+# removed from this list. It is loaded on demand instead, via a dynamic <script> tag injected by
+# challenges.js the first time someone actually opens Forensic Lab (see loadForensicCore() there).
+# It stays a real file on disk at its usual path; only its presence in the eager bundle changed.
+# V1230.71 — core/modules/horror-room.js, puzzle-room.js, beauty-room.js, rooms.js and
+# football-room.js (150KB+ combined) are the same story, generalized: removed from this list, now
+# fetched on demand by core/modules/runtime/room-loader.js the first time a visitor actually opens
+# that specific room. See that file's header for the full design.
+core/config.js
+core/modules/util-esc.js
+core/events.js
+core/state.js
+core/modules/question-bank.js
+core/modules/question-bank-expansion.js
+core/modules/content-integrity.js
+core/modules/audio.js
+core/modules/runtime/i18n.js
+core/modules/runtime/error-tracker.js
+core/modules/runtime/server-verify.js
+core/modules/runtime/ads.js
+core/modules/runtime/pwa-install.js
+core/modules/auth.js
+core/modules/runtime/router.js
+core/modules/runtime/seo.js
+core/modules/runtime/share.js
+core/modules/runtime/app-shell.js
+core/modules/runtime/dedupe.js
+core/modules/runtime/question-history.js
+core/modules/runtime/server-adapter.js
+core/modules/runtime/exit-guard.js
+core/modules/runtime/room-loader.js
+core/modules/runtime/game-registry.js
+core/modules/runtime/game-session.js
+core/modules/runtime/game-validator.js
+core/modules/runtime/game-telemetry.js
+core/modules/runtime/game-adapters.js
+core/modules/runtime/game-loader.js
+core/modules/runtime/game-bridge.js
+core/modules/runtime/game-platform.js
+core/modules/runtime/engagement.js
+core/modules/runtime/live-hud.js
+core/modules/match-center.js
+core/modules/player.js
+core/modules/economy.js
+core/modules/epic50.js
+core/modules/minigame-content.js
+core/modules/challenges.js
+core/modules/cloud.js
+core/modules/achievements.js
+core/modules/leaderboard.js
+core/modules/daily.js
+core/modules/competition.js
+core/modules/missions.js
+core/modules/player-hub.js
+core/modules/news.js
+core/modules/admin.js
+core/modules/chat.js
+core/modules/ui.js
+core/app.js
+core/boot.js

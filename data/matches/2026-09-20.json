@@ -1,0 +1,36 @@
+{
+  "version": "1197",
+  "date": "2026-09-20",
+  "timezone": "Asia/Amman",
+  "matches": [
+    {
+      "id": "jfa-jor1-20260920-baqaa-faisaly",
+      "date": "2026-09-20T19:00:00+03:00",
+      "dateKey": "2026-09-20",
+      "leagueId": "jor.1",
+      "leagueName": "الدوري الأردني للمحترفين",
+      "leagueKey": "jor.1",
+      "league": {
+        "id": "jor.1",
+        "key": "jor.1",
+        "ar": "الدوري الأردني للمحترفين",
+        "icon": "🇯🇴"
+      },
+      "home": "البقعة",
+      "away": "الفيصلي",
+      "homeShort": "البقعة",
+      "awayShort": "الفيصلي",
+      "homeLogo": "",
+      "awayLogo": "",
+      "homeScore": null,
+      "awayScore": null,
+      "status": "UPCOMING",
+      "statusText": "قادمة",
+      "venue": "ستاد عمان الدولي",
+      "city": "عمّان",
+      "broadcast": [],
+      "source": "JFA",
+      "sourceUrl": "https://www.jfa.jo/match_schedule_tourn.php?id=1&title=جدول المباريات"
+    }
+  ]
+}

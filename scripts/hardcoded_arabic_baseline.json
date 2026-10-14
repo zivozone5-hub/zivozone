@@ -1,0 +1,18 @@
+{
+ "core/modules/achievements.js": 2,
+ "core/modules/challenges.js": 7506,
+ "core/modules/chat.js": 42,
+ "core/modules/competition.js": 38,
+ "core/modules/content-integrity.js": 1,
+ "core/modules/daily.js": 46,
+ "core/modules/match-center.js": 453,
+ "core/modules/missions.js": 25,
+ "core/modules/news.js": 56,
+ "core/modules/player.js": 10,
+ "core/modules/runtime/app-shell.js": 975,
+ "core/modules/runtime/exit-guard.js": 38,
+ "core/modules/runtime/router.js": 8,
+ "core/modules/runtime/seo.js": 21,
+ "core/modules/runtime/share.js": 20,
+ "core/modules/ui.js": 14
+}

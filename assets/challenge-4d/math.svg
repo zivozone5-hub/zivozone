@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620">
+<defs>
+ <radialGradient id="bg"><stop stop-color="#22d3ee" stop-opacity=".28"/><stop offset=".52" stop-color="#071c24"/><stop offset="1" stop-color="#03060c"/></radialGradient>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#22d3ee"/><stop offset=".5" stop-color="#fff" stop-opacity=".65"/><stop offset="1" stop-color="#22d3ee" stop-opacity=".15"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="18" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#000" flood-opacity=".65"/></filter>
+</defs>
+<rect width="900" height="620" fill="url(#bg)"/>
+<g opacity=".18" stroke="#22d3ee" fill="none">
+ <path d="M0 500 Q220 300 450 500 T900 420"/><path d="M0 120 Q300 280 520 80 T900 150"/>
+ <circle cx="150" cy="150" r="105"/><circle cx="750" cy="470" r="150"/>
+</g>
+<g filter="url(#glow)">
+ <circle cx="450" cy="290" r="150" fill="#22d3ee" opacity=".10"/>
+ <circle cx="450" cy="290" r="104" fill="none" stroke="url(#g)" stroke-width="5"/>
+ <circle cx="450" cy="290" r="78" fill="#050812" stroke="#22d3ee" stroke-opacity=".35" stroke-width="2"/>
+</g>
+<g fill="none" stroke="#22d3ee" stroke-width="3" opacity=".75">
+ <ellipse cx="450" cy="290" rx="190" ry="72" transform="rotate(-18 450 290)"/>
+ <ellipse cx="450" cy="290" rx="190" ry="72" transform="rotate(28 450 290)"/>
+</g>
+<g filter="url(#shadow)" text-anchor="middle">
+ <text x="450" y="330" font-size="150" font-family="Arial, sans-serif" font-weight="900" fill="url(#g)">∑</text>
+</g>
+<text x="450" y="510" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#22d3ee" opacity=".9">×</text>
+<rect x="18" y="18" width="864" height="584" rx="36" fill="none" stroke="#22d3ee" stroke-opacity=".55" stroke-width="3"/>
+</svg>

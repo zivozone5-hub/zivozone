@@ -1,0 +1,8 @@
+{
+  "version": "1213",
+  "fix": "real independent room router",
+  "entry": "capture-phase data-zivo-room",
+  "overlay": "self-contained",
+  "home": "patched to data-zivo-room",
+  "audio_hooks": "unlock+menu_toggle+ambient"
+}

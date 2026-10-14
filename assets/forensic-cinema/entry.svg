@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720">
+<defs>
+ <radialGradient id="bg" cx="50%" cy="42%"><stop offset="0" stop-color="#16384a"/><stop offset=".45" stop-color="#08151f"/><stop offset="1" stop-color="#020509"/></radialGradient>
+ <linearGradient id="cyan" x1="0" x2="1"><stop stop-color="#54e6ff"/><stop offset="1" stop-color="#7d7aff"/></linearGradient>
+ <linearGradient id="red" x1="0" x2="1"><stop stop-color="#ff3858"/><stop offset="1" stop-color="#8b1029"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#55dcff" stroke-opacity=".08"/></pattern>
+</defs>
+<rect width="1200" height="720" fill="url(#bg)"/>
+<rect width="1200" height="720" fill="url(#grid)" opacity=".8"/>
+<path d="M0 590L330 430L520 520L1200 250" fill="none" stroke="#5adfff" stroke-opacity=".12" stroke-width="3"/>
+<path d="M0 650L390 490L600 555L1200 330" fill="none" stroke="#ff3f5f" stroke-opacity=".1" stroke-width="2"/>
+<!-- investigation room -->
+<g transform="translate(120 120)">
+ <rect x="120" y="80" width="650" height="360" rx="10" fill="#050b10" stroke="#2a667c" stroke-width="3"/>
+ <rect x="155" y="115" width="580" height="290" fill="#07141d" stroke="#183443"/>
+ <path d="M170 390L330 230L470 330L720 150" fill="none" stroke="#1b596e" stroke-width="2"/>
+ <circle cx="515" cy="225" r="62" fill="#07151e" stroke="#58dcff" stroke-width="3" filter="url(#glow)"/>
+ <circle cx="515" cy="225" r="38" fill="none" stroke="#58dcff" stroke-opacity=".35" stroke-dasharray="5 8"/>
+ <path d="M515 225L540 205M515 225L497 244" stroke="#58dcff" stroke-width="4"/>
+ <!-- desk --> <path d="M250 350L610 350L650 395L215 395Z" fill="#0a202b" stroke="#2e7387"/>
+ <rect x="330" y="300" width="170" height="55" rx="5" fill="#02070b" stroke="#48cfea"/>
+ <text x="415" y="333" text-anchor="middle" fill="#69e4ff" font-family="Arial" font-size="18" font-weight="700">CASE FILE 07</text>
+ <!-- red evidence light --> <circle cx="680" cy="135" r="13" fill="#ff3e5d" filter="url(#glow)"/>
+ <path d="M678 150V220" stroke="#ff3e5d" stroke-opacity=".28" stroke-width="3"/>
+ <!-- evidence pins -->
+ <g fill="url(#red)"><circle cx="250" cy="175" r="8"/><circle cx="350" cy="145" r="8"/><circle cx="635" cy="290" r="8"/></g>
+ <path d="M250 175L350 145L515 225L635 290" fill="none" stroke="#ff4865" stroke-opacity=".45" stroke-width="2" stroke-dasharray="7 9"/>
+</g>
+<g fill="url(#cyan)" font-family="Arial" text-anchor="end">
+ <text x="1080" y="80" font-size="22" font-weight="700" letter-spacing="5">ZIVOZONE // FORENSIC</text>
+ <text x="1080" y="125" fill="#eefaff" font-size="52" font-weight="900">المختبر الجنائي</text>
+ <text x="1080" y="165" fill="#9ebbc8" font-size="20">كل قضية لها قصة. كل دليل يغيّر ما تعرفه.</text>
+</g>
+<g transform="translate(855 255)">
+ <rect width="250" height="175" rx="18" fill="#061019" stroke="#2a7c91"/>
+ <text x="20" y="35" fill="#65e0ff" font-family="Arial" font-size="13" font-weight="700">ملف التحقيق</text>
+ <text x="20" y="68" fill="#fff" font-family="Arial" font-size="25" font-weight="900">10 أسئلة</text>
+ <text x="20" y="100" fill="#fff" font-family="Arial" font-size="25" font-weight="900">10 حقائق</text>
+ <text x="20" y="132" fill="#ff6c80" font-family="Arial" font-size="18" font-weight="700">5 مراحل درامية</text>
+ <text x="20" y="158" fill="#829eaa" font-family="Arial" font-size="12">افحص • اربط • استنتج</text>
+</g>
+<rect x="0" y="650" width="1200" height="70" fill="#010407" fill-opacity=".8"/>
+<text x="60" y="694" fill="#75ddff" font-family="Arial" font-size="19" font-weight="700">مسرح القضية جاهز — لا تثق بالرواية الأولى</text>
+</svg>

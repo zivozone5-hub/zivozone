@@ -1,0 +1,53 @@
+name: ZIVOZONE — تحديث مركز المباريات
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'data/matches/**'
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: zivozone-match-sync
+  cancel-in-progress: false
+
+jobs:
+  matches:
+    name: مزامنة المباريات
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: جلب المستودع
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: إعداد Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: مزامنة بيانات المباريات
+        run: python3 scripts/fetch_matches.py
+        env:
+          PYTHONUNBUFFERED: '1'
+
+      - name: فحص ملفات البيانات
+        run: python3 scripts/validate_match_data.py
+
+      - name: حفظ بيانات المباريات
+        run: |
+          git config user.name 'zivozone-match-bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/matches
+          if git diff --cached --quiet; then
+            echo 'لا يوجد تغيير في بيانات المباريات.'
+            exit 0
+          fi
+          git commit -m 'chore: refresh ZIVOZONE match center'
+          git push

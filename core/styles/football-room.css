@@ -1,0 +1,25 @@
+.zfr-root{position:fixed;inset:0;z-index:2147483000;display:none;overflow:auto;background:#06130c;color:#eef6f1;font-family:inherit}
+.zfr-root.active{display:block}
+.zfr-shell{position:relative;min-height:100%}
+.zfr-exit{position:fixed;left:18px;top:18px;width:46px;height:46px;border-radius:50%;background:#ffffff0c;border:1px solid #ffffff22;color:#fff;font-size:24px;z-index:20;cursor:pointer}
+.zfr-intro{min-height:100%;display:grid;place-items:center;position:relative;overflow:hidden;text-align:center;background:radial-gradient(circle at 50% 35%,#134a2b 0,#0a2316 38%,#06130c 72%)}
+.zfr-glow{position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent,#5de0a01a,transparent 30%);animation:zfrspin 16s linear infinite}
+@keyframes zfrspin{to{transform:rotate(360deg)}}
+.zfr-intro-content{position:relative;max-width:760px;padding:30px;animation:zfrup 1s ease}
+@keyframes zfrup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.zfr-kicker{font-size:11px;letter-spacing:4px;color:#8af0bc}
+.zfr-intro-content h1{font-size:clamp(30px,5vw,46px);margin:14px 0}
+.zfr-intro-content p{color:#cfe8d9;line-height:1.85;font-size:17px}
+.zfr-controls-hint{font-size:14px;color:#9fcbb0}
+.zfr-start{padding:16px 34px;border-radius:999px;border:1px solid #5de0a03e;background:#5de0a017;color:#fff;font-weight:700;font-size:16px;cursor:pointer;margin-top:10px}
+.zfr-start:hover{background:#5de0a026}
+.zfr-again{display:block;margin:14px auto 0;padding:13px 24px;border-radius:999px;border:1px solid #ffffff25;background:#ffffff0c;color:#e8f3ec;font-size:15px;cursor:pointer}
+.zfr-reward-note{color:#9aa4b8;font-size:14px}
+.zfr-epic-wrap{width:100%;box-sizing:border-box;padding:40px 5vw 70px}
+.zfr-epic-wrap .zrg-shell{max-width:1100px;margin:0 auto}
+@media(max-width:700px){
+  .zfr-intro-content{padding:20px}
+  .zfr-intro-content h1{font-size:28px}
+  .zfr-intro-content p{font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){.zfr-glow{animation:none!important}.zfr-intro-content{animation:none!important}}

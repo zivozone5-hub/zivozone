@@ -1,0 +1,10 @@
+{
+  "version": "1210",
+  "base": "ZIVOZONE_V1209_COMPLETE_READY",
+  "storySource": "ZIVOZONE_Story_Engine_56_Stories(1).docx",
+  "healthSource": "تم لصق markdown(2).md",
+  "stories": 55,
+  "healthDoors": 12,
+  "cinematicIndependentRooms": true,
+  "architecture": "single core runtime module + external content data"
+}
