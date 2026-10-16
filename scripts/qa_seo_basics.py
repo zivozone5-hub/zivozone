@@ -23,6 +23,13 @@ LANGS = ["en", "zh", "hi", "es", "fr", "fa"]
 pages = [ROOT / "index.html", ROOT / "privacy" / "index.html", ROOT / "terms" / "index.html"]
 pages += sorted((ROOT / "stories").glob("tale-*/index.html"))
 pages += sorted((ROOT / "rooms").glob("*/index.html"))
+# V1230.102 — the new Academy (coaching-article) section: its Arabic listing/article pages, generated
+# by scripts/prerender-academy.mjs, deserve the same title/description/canonical basics as everything
+# else. Per-language academy pages are covered by the ShortStory-style check further below instead of
+# here, for the same reason the per-language story/room pages aren't in this flat list: one title per
+# language is expected (and checked for duplicates globally), not one per canonical slug.
+pages += [ROOT / "academy" / "index.html"]
+pages += sorted((ROOT / "academy").glob("*/index.html"))
 # V1230.57 — the 6 per-language homepage clones (scripts/prerender-lang-home.mjs) are real,
 # separately-crawlable pages and deserve the same title/description/canonical basics as everything
 # else; they were never added to this gate, so a broken regeneration (missing title, empty
@@ -88,6 +95,23 @@ for p in sorted((ROOT / "rooms").glob("*/index.html")):
     check(f"{rel}: has a real CTA that launches the actual room (not a dead link)",
           bool(re.search(r'<a[^>]+' + cta_attr + r'[^>]*class="[^"]*zivo-seo-cta', h))
           or bool(re.search(r'<a class="[^"]*zivo-seo-cta"[^>]+' + cta_attr, h)))
+
+# Academy article pages specifically: real, page-specific structured data (not a copy-pasted
+# site-wide block) — same check shape as the ShortStory/Game ones above.
+for p in sorted((ROOT / "academy").glob("*/index.html")):
+    rel = str(p.relative_to(ROOT))
+    h = p.read_text(encoding="utf-8")
+    m = re.search(r'<script type="application/ld\+json">(\{"@context":"https://schema\.org","@type":"Article".*?)</script>', h, re.S)
+    if not m:
+        continue  # the ar-language academy *listing* page (CollectionPage) legitimately has none
+    try:
+        d = json.loads(m.group(1))
+    except Exception as e:
+        check(f"{rel}: structured data is valid JSON", False, str(e))
+        continue
+    check(f"{rel}: structured data describes this article, not the generic site (@type=Article)",
+          d.get("@type") == "Article")
+    check(f"{rel}: structured data url matches this page's own canonical", d.get("url", "").endswith(p.parent.name))
 
 # Sitemap: every URL has a lastmod, and no lastmod is absurdly old/new (sanity, not strict freshness).
 sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")

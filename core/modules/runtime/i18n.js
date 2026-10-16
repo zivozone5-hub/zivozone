@@ -284,6 +284,14 @@ T.fr=T.fr||Object.assign({},T.en); T.fa=T.fa||Object.assign({},T.ar);
   Object.assign(T.es,{footerDailyChallenge:"Reto del día"});
   Object.assign(T.fr,{footerDailyChallenge:"Défi du jour"});
   Object.assign(T.fa,{footerDailyChallenge:"چالش امروز"});
+  // V1230.102 — footer entry point to the new Academy (coaching-articles) section.
+  Object.assign(T.ar,{footerAcademy:"أكاديمية ZIVOZONE"});
+  Object.assign(T.en,{footerAcademy:"ZIVOZONE Academy"});
+  Object.assign(T.zh,{footerAcademy:"ZIVOZONE 学院"});
+  Object.assign(T.hi,{footerAcademy:"ZIVOZONE अकादमी"});
+  Object.assign(T.es,{footerAcademy:"Academia ZIVOZONE"});
+  Object.assign(T.fr,{footerAcademy:"Académie ZIVOZONE"});
+  Object.assign(T.fa,{footerAcademy:"آکادمی ZIVOZONE"});
   /* V1230.25 — Phase 2: the "browse free, register to play" gate shown the moment a guest tries to
      start an actual game/challenge (not on page load, not while browsing stories/sports/health/AI chat).
      Persuasive, prestige-toned copy per the user's brief: free registration framed as becoming an early
