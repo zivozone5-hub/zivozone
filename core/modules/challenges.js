@@ -1162,7 +1162,6 @@ const runner={mount:null,run:null,index:0,correct:0,score:0,streak:0,best:0,time
     if(gameId===dailyPick){
       try{
         await window.ZIVOZONE?.Daily?.recordResult?.({challengeId:gameId,score:this.correct,correct:this.correct,total,duration,completed,timedOut:this.timed>0});
-        if(completed)window.ZIVOZONE?.Competition?.complete?.();
       }catch(e){console.warn('Daily persistence:',e)}
     }
 
@@ -1187,6 +1186,13 @@ const runner={mount:null,run:null,index:0,correct:0,score:0,streak:0,best:0,time
     }catch(_){}
 
     window.dispatchEvent(new CustomEvent('zivozone-result',{detail:{...(validated||{}),challenge:gameId,gameId,score:this.correct,total,correct:this.correct,perfect:Boolean(validated?.perfect??perfect),timedOut:this.timed,xp:0,coins:reward,zivoReward:reward,eventId:rewardEventId,sessionId:this.sessionId||validated?.sessionId,validated:Boolean(validated),pendingSync:!validated}}));
+    // V1230.101 — moved here, AFTER the 'zivozone-result' dispatch above (not before it, as it used
+    // to be, right after Daily.recordResult()). dispatchEvent() runs its listeners synchronously
+    // before returning, and player.js listens for exactly this event to bump today's real streak
+    // (addProgress()) — competition.js's complete() now reads that same real streak directly (see
+    // its matching V1230.101 note) instead of keeping its own separate counter, so it needs that
+    // listener to have already run, or it would read yesterday's still-stale number.
+    if(gameId===dailyPick&&completed)window.ZIVOZONE?.Competition?.complete?.();
     try {
       window.ZIVOZONE?.Events?.emit('CHALLENGE_COMPLETED', {
         challengeId: gameId,

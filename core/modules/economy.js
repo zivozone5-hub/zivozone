@@ -116,6 +116,15 @@
     if (chip) {
       const balance = chip.querySelector('[data-header-balance]');
       if (balance) balance.textContent = formatBalance(state.zivo);
+      const streakBadge = chip.querySelector('[data-header-streak]');
+      if (streakBadge) {
+        const streak = Number(window.ZIVOZONE?.Player?.get?.()?.streak) || 0;
+        streakBadge.hidden = streak <= 0;
+        if (streak > 0) {
+          streakBadge.querySelector('[data-header-streak-n]').textContent = streak;
+          streakBadge.title = `${t('streakLabel')}: ${streak} ${t('dayUnit')}`;
+        }
+      }
     }
     const mineBtn = document.getElementById('zivo-header-mining');
     if (mineBtn) {
@@ -255,7 +264,15 @@
       chip.id = 'zivo-header-economy'; chip.type='button'; chip.className='zivo-header-economy';
       chip.setAttribute('aria-label',t('openWalletAria'));
       chip.setAttribute('data-i18n-aria-label','openWalletAria');
-      chip.innerHTML = `<span class="zivo-header-coin">Z</span><span class="zivo-header-balance"><small>ZIVO</small><b data-header-balance>0</b></span>`;
+      // V1230.101 — the daily play-streak (player.js's real, already cloud-synced s.streak) used to
+      // be visible only inside the Player Hub panel someone has to open on purpose. A number that
+      // only shows up if you go looking for it does nothing for the habit it's meant to build.
+      // Surfacing it here, next to the balance every page already shows in the header, costs zero
+      // extra Firestore reads (it's the same local player data already read for everything else)
+      // and reuses streakLabel/dayUnit — already translated in all 7 languages via player-hub.js —
+      // for the aria-label, so no new i18n keys needed. Hidden by [hidden] until there's a streak
+      // worth showing (day 0 showing "🔥 0" would read as a nag, not a reward).
+      chip.innerHTML = `<span class="zivo-header-coin">Z</span><span class="zivo-header-balance"><small>ZIVO</small><b data-header-balance>0</b></span><span class="zivo-header-streak" data-header-streak hidden><i>🔥</i><b data-header-streak-n>0</b></span>`;
       chip.onclick = open;
       const login = document.getElementById('login-btn'); actions.insertBefore(chip, login || null);
     }
@@ -289,6 +306,10 @@
     refresh();
     setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 30000);
     setInterval(updateMiningUI, 1000);
+    // V1230.101 — refresh the header streak badge the moment player.js announces new progress
+    // (same PLAYER_UPDATED event player-hub.js already listens to), instead of waiting up to 30s
+    // for the next poll — no extra reads, this event already fires from local data.
+    window.ZIVOZONE?.Events?.on?.('PLAYER_UPDATED', updateHeaderEconomy);
   }
 
   const processed = new Set();

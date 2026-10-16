@@ -5,8 +5,8 @@
   window.ZIVOZONE_CONFIG = Object.freeze({
     ...existing,
     APP_NAME: 'ZIVOZONE',
-    APP_VERSION: '1230.100',
-    CORE_VERSION: '1230.100-clean-core',
+    APP_VERSION: '1230.101',
+    CORE_VERSION: '1230.101-clean-core',
     ADMIN_EMAIL: 'raefalbtish@gmail.com',
     ADMIN_EMAIL_NORMALIZED: 'raefalbtish@gmail.com',
     FREE_FIRST: true,
