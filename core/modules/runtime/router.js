@@ -10,6 +10,10 @@
   if (window.ZIVOZONE_ROUTER?.__canonical) return;
 
   const MANIFEST_URL = "/games/manifest.json";
+  // V1230.111 — blockUnavailable()'s toast was the one hardcoded Arabic literal in this file, shown
+  // to any visitor who clicks a room/game that isn't enabled yet. Found continuing the "no
+  // disconnected layers" audit (V1230.106/.108/.109/.110). See i18n.js's "routerFeaturePreparing" key.
+  const t = k => { try { return window.zivoT ? window.zivoT(k) : (window.ZIVOZONE_I18N?.tr?.(k) || k); } catch (_) { return k; } };
   const normalize = (path = location.pathname) => {
     let p = String(path || "/").replace(/\/{2,}/g, "/");
     if (!p.startsWith("/")) p = "/" + p;
@@ -233,7 +237,7 @@
 
   function blockUnavailable(id, source = "interaction") {
     if (isAvailable(id)) return false;
-    toast("هذه الغرفة يتم تجهيزها سينمائياً حالياً، انتظرنا قريباً!", "info");
+    toast(t("routerFeaturePreparing"), "info");
     window.dispatchEvent(new CustomEvent("zivozone:feature-blocked", {
       detail: { id: String(id || ""), source }
     }));

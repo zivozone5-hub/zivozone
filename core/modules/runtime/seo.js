@@ -5,12 +5,25 @@
 
   const SITE = "https://zivozone.com";
   const DEFAULT_IMAGE = `${SITE}/assets/og-image.png`;
-  const DEFAULTS = {
-    title: "ZIVOZONE | عالمك يبدأ من هنا",
-    description: "ZIVOZONE — ألعاب وتحديات ورياضة وقصص وتجارب رقمية تفاعلية.",
+  const t = k => { try { return window.zivoT ? window.zivoT(k) : (window.ZIVOZONE_I18N?.tr?.(k) || k); } catch (_) { return k; } };
+  const lang = () => window.ZIVOZONE_I18N?.get?.() || "ar";
+  // V1230.111 — DEFAULTS used to be a frozen object with a hardcoded Arabic title/description, and
+  // home() (called on every SPA 'zivozone:route' home navigation — i.e. on EVERY language, not just
+  // Arabic) spread it straight into document.title/meta description. So clicking a nav link back to
+  // #home on the English (or any other non-Arabic) page flipped the tab title and meta description
+  // to Arabic, mid-session, on a page whose own static <title> was already correctly translated.
+  // Now computed fresh via t() on every call, so it reflects whatever language is actually active —
+  // matching the exact per-language title/description already baked into each homepage clone (see
+  // en/index.html's static <title>, say) rather than a second, stale, Arabic-only copy of them.
+  // og:locale is a real OG property search engines/social previews read, and was hardcoded to
+  // "ar_AR" unconditionally; OG_LOCALE below fixes that the same way.
+  const OG_LOCALE = { ar: "ar_AR", en: "en_US", zh: "zh_CN", hi: "hi_IN", es: "es_ES", fr: "fr_FR", fa: "fa_IR" };
+  const defaults = () => ({
+    title: t("seoDefaultTitle"),
+    description: t("seoDefaultDescription"),
     image: DEFAULT_IMAGE,
     type: "website"
-  };
+  });
 
   const clean = value => String(value ?? "").replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
   const absolute = value => {
@@ -50,9 +63,10 @@
   }
 
   function updateMetaTags(pageData = {}) {
-    const d = { ...DEFAULTS, ...pageData };
-    const title = clean(d.title) || DEFAULTS.title;
-    const description = clean(d.description).slice(0, 160) || DEFAULTS.description;
+    const base = defaults();
+    const d = { ...base, ...pageData };
+    const title = clean(d.title) || base.title;
+    const description = clean(d.description).slice(0, 160) || base.description;
     const image = absolute(d.image);
     const url = d.url ? absolute(d.url) : `${SITE}${location.pathname}`;
 
@@ -65,7 +79,7 @@
     setMeta("property", "og:url", url);
     setMeta("property", "og:image", image);
     setMeta("property", "og:site_name", "ZIVOZONE");
-    setMeta("property", "og:locale", "ar_AR");
+    setMeta("property", "og:locale", OG_LOCALE[lang()] || "en_US");
     setMeta("name", "twitter:card", "summary_large_image");
     setMeta("name", "twitter:title", title);
     setMeta("name", "twitter:description", description);
@@ -83,13 +97,13 @@
 
   function story(s = {}) {
     const id = clean(s.id);
-    const title = clean(s.seoTitle || s.title || "قصة ZIVOZONE");
-    const description = clean(s.description || s.blurb || s.excerpt || s.content || "قصة سينمائية تفاعلية من ZIVOZONE.").slice(0, 160);
+    const title = clean(s.seoTitle || s.title) || t("seoStoryFallbackTitle");
+    const description = clean(s.description || s.blurb || s.excerpt || s.content) || t("seoStoryFallbackDescription");
     const url = `${SITE}/stories/${encodeURIComponent(id)}`;
     const image = absolute(s.image);
     return updateMetaTags({
       title: `${title} | ZIVOZONE`,
-      description,
+      description: description.slice(0, 160),
       image,
       url,
       type: "article",
@@ -102,24 +116,24 @@
         image: [image],
         author: { "@type": "Organization", name: "ZIVOZONE" },
         publisher: { "@type": "Organization", name: "ZIVOZONE" },
-        inLanguage: s.language || "ar"
+        inLanguage: s.language || lang()
       }
     });
   }
 
   function game(g = {}) {
     const id = clean(g.id);
-    const title = clean(g.seoTitle || g.title || g.name || "لعبة ZIVOZONE");
-    const description = clean(g.description || g.excerpt || "اختبر ذكاءك ومهاراتك في ZIVOZONE.").slice(0, 160);
+    const title = clean(g.seoTitle || g.title || g.name) || t("seoGameFallbackTitle");
+    const description = clean(g.description || g.excerpt) || t("seoGameFallbackDescription");
     const url = id ? `${SITE}/challenges/${encodeURIComponent(id)}` : `${SITE}/challenges`;
     const image = absolute(g.image);
     return updateMetaTags({
-      title: `${title} | ZIVOZONE`, description, image, url, type: "website",
-      jsonLd: { "@context": "https://schema.org", "@type": "Game", name: title, description, url, image, inLanguage: g.language || "ar" }
+      title: `${title} | ZIVOZONE`, description: description.slice(0, 160), image, url, type: "website",
+      jsonLd: { "@context": "https://schema.org", "@type": "Game", name: title, description, url, image, inLanguage: g.language || lang() }
     });
   }
 
-  function home() { return updateMetaTags({ ...DEFAULTS, url: `${SITE}/` }); }
+  function home() { return updateMetaTags({ ...defaults(), url: `${SITE}/` }); }
 
   window.addEventListener("zivozone:route", event => {
     if (event.detail?.type === "home") home();
