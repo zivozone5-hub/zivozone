@@ -7,7 +7,6 @@
  "core/modules/news.js": 56,
  "core/modules/player.js": 10,
  "core/modules/runtime/app-shell.js": 975,
- "core/modules/runtime/exit-guard.js": 38,
  "core/modules/runtime/router.js": 8,
  "core/modules/runtime/seo.js": 21,
  "core/modules/runtime/share.js": 20,

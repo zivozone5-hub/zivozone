@@ -5,7 +5,16 @@
 const ID='zivo-exit-guard';
 const esc=window.ZIVOZONE_ESC;
 const t=k=>{try{return window.zivoT?window.zivoT(k):(window.ZIVOZONE_I18N?.tr?.(k)||k)}catch(_){return k}};
-const DEFAULT='هل أنت متأكد من مغادرة الموقع؟ سيتم إنهاء التجربة الحالية والعودة إلى الموقع.';
+// V1230.109 — this file already had a t() helper (line above) since V1200, but never actually
+// called it anywhere: every string in the exit-confirmation dialog — the portal label, the title,
+// the quote, both buttons, and this DEFAULT message itself — was a hardcoded Arabic literal, so the
+// dialog showed Arabic regardless of the site's selected language, on every page, for the one
+// confirm dialog that can appear from almost any "leave this room"/"leave the site" action. Found
+// continuing the "no disconnected layers" audit right after the ZIVO Plaza chat widget (V1230.108).
+// DEFAULT itself is now just a function call, not a stored literal, so it always reflects whatever
+// language is active at the moment request() is actually invoked (not whatever it was when this
+// file first loaded).
+const DEFAULT=()=>t('exitGuardDefaultMsg');
 const EXIT_URL='https://www.google.com/';
 function cleanupUI(){
  // V1230.98 — zivo-football-active (football-room.js) and zivo-horror-active (horror-room.js's
@@ -26,16 +35,17 @@ function cleanupUI(){
  try{window.ZIVOZONE?.Challenges?.close?.()}catch(_){}
  try{window.ZIVOZONE?.ExitGuard?.ensure?.()}catch(_){}
 }
-function request(onConfirm,message=DEFAULT){
+function request(onConfirm,message){
  const old=document.getElementById(ID);if(old)return;
- const m=document.createElement('div');m.id=ID;m.className='zivo-exit-guard';m.dir='rtl';
+ const text=message||DEFAULT();
+ const m=document.createElement('div');m.id=ID;m.className='zivo-exit-guard';m.dir=document.documentElement.dir||'rtl';
  m.innerHTML=`<div class="zivo-exit-card zivo-exit-cinematic" role="dialog" aria-modal="true" aria-labelledby="zivo-exit-title">
- <div class="zivo-exit-portal"><span>◈</span><i></i><b>بوابة المغادرة</b></div>
+ <div class="zivo-exit-portal"><span>◈</span><i></i><b>${esc(t('exitGuardPortalLabel'))}</b></div>
  <span class="zivo-exit-kicker">ZIVOZONE // EXIT GUARD</span>
- <h2 id="zivo-exit-title">هل أنت متأكد من مغادرة الموقع؟</h2>
- <p>${esc(message)}</p>
- <div class="zivo-exit-quote">«إذا غادرت الآن، ستنتهي التجربة الحالية.»</div>
- <div class="zivo-exit-actions"><button type="button" class="zivo-exit-stay">البقاء</button><button type="button" class="zivo-exit-yes">نعم، متابعة الخروج</button></div></div>`;
+ <h2 id="zivo-exit-title">${esc(t('exitGuardTitle'))}</h2>
+ <p>${esc(text)}</p>
+ <div class="zivo-exit-quote">${esc(t('exitGuardQuote'))}</div>
+ <div class="zivo-exit-actions"><button type="button" class="zivo-exit-stay">${esc(t('exitGuardStayBtn'))}</button><button type="button" class="zivo-exit-yes">${esc(t('exitGuardConfirmBtn'))}</button></div></div>`;
  document.body.appendChild(m);
  const close=()=>{m.remove();document.removeEventListener('keydown',escKey)};
  const escKey=e=>{if(e.key==='Escape')close()};
@@ -53,7 +63,7 @@ function goHome(){
  else location.hash='#home';
  setTimeout(()=>{window.dispatchEvent(new CustomEvent('zivozone-home-reset'));window.scrollTo?.({top:0,behavior:'instant'});},0);
 }
-function fullExit(){request(()=>{try{location.href=EXIT_URL}catch(_){window.open?.(EXIT_URL,'_self')}},'سيتم إنهاء التجربة الحالية ومغادرة موقع ZIVOZONE نهائياً.')}
+function fullExit(){request(()=>{try{location.href=EXIT_URL}catch(_){window.open?.(EXIT_URL,'_self')}},t('exitGuardFullExitMsg'))}
 // V1230.98 — every room that opens as a full-screen overlay (rather than through router.js's own
 // pushState-backed /stories, /health, /challenges routes) marks itself with one of these body
 // classes and nothing else. Shared by immersive() below and the back-button fix further down, so
@@ -103,7 +113,7 @@ function bind(){
   e.preventDefault();e.stopPropagation();
   if(b.classList.contains('zivo-full-exit')){fullExit();return}
   const href=b.getAttribute('href'),action=b.dataset.confirmExit||b.dataset.zivoExit;
-  request(()=>{if(action==='close')return;if(href)location.href=href;else goHome()},b.dataset.exitMessage||DEFAULT);
+  request(()=>{if(action==='close')return;if(href)location.href=href;else goHome()},b.dataset.exitMessage||DEFAULT());
  },true);
  ['hashchange','pageshow','popstate'].forEach(ev=>window.addEventListener(ev,()=>setTimeout(ensure,0)));
  new MutationObserver(()=>ensure()).observe(document.body,{childList:true,subtree:true});
