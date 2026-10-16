@@ -654,6 +654,16 @@ T.fr=T.fr||Object.assign({},T.en); T.fa=T.fa||Object.assign({},T.ar);
      <meta description>. Found continuing the "no disconnected layers" audit (V1230.106/.108/.109/
      .110). seoDefaultTitle/seoDefaultDescription intentionally match the wording already baked into
      en/es/fr/zh/hi/fa/index.html's own <title>/<meta name=description> tags. */
+  // V1230.114 — shown when a /d/<code> short link (duel/invite, see share.js + router.js) can't be
+  // resolved: never existed, already malformed, or Firestore unreachable. Router falls back to the
+  // homepage right after showing this.
+  Object.assign(T.ar,{shortLinkUnavailable:"هذا الرابط لم يعد صالحاً، لكن نقدر نوصلك لصفحتنا الرئيسية."});
+  Object.assign(T.en,{shortLinkUnavailable:"This link is no longer valid, but we can take you to our homepage."});
+  Object.assign(T.zh,{shortLinkUnavailable:"此链接已失效，我们带你前往主页。"});
+  Object.assign(T.hi,{shortLinkUnavailable:"यह लिंक अब मान्य नहीं है, हम आपको होमपेज पर ले जा सकते हैं।"});
+  Object.assign(T.es,{shortLinkUnavailable:"Este enlace ya no es válido, pero podemos llevarte a nuestra página de inicio."});
+  Object.assign(T.fr,{shortLinkUnavailable:"Ce lien n'est plus valide, mais nous pouvons t'emmener sur notre page d'accueil."});
+  Object.assign(T.fa,{shortLinkUnavailable:"این لینک دیگر معتبر نیست، اما می‌توانیم تو را به صفحه اصلی ببریم."});
   Object.assign(T.ar,{routerFeaturePreparing:"هذه الغرفة يتم تجهيزها سينمائياً حالياً، انتظرنا قريباً!",seoDefaultTitle:"ZIVOZONE | عالمك يبدأ من هنا",seoDefaultDescription:"ZIVOZONE — عالم رقمي للألعاب والتحديات والرياضة والذكاء مع اقتصاد ZIVO وتقدم اللاعب.",seoStoryFallbackTitle:"قصة ZIVOZONE",seoStoryFallbackDescription:"قصة سينمائية تفاعلية من ZIVOZONE.",seoGameFallbackTitle:"لعبة ZIVOZONE",seoGameFallbackDescription:"اختبر ذكاءك ومهاراتك في ZIVOZONE."});
   Object.assign(T.en,{routerFeaturePreparing:"This room is still being prepared — check back soon!",seoDefaultTitle:"ZIVOZONE | Your World Starts Here",seoDefaultDescription:"ZIVOZONE — a digital world of games, challenges, sport and intelligence, with the ZIVO economy and player progress.",seoStoryFallbackTitle:"ZIVOZONE Story",seoStoryFallbackDescription:"An interactive cinematic story from ZIVOZONE.",seoGameFallbackTitle:"ZIVOZONE Game",seoGameFallbackDescription:"Test your intelligence and skills on ZIVOZONE."});
   Object.assign(T.zh,{routerFeaturePreparing:"这个房间还在准备中，敬请期待！",seoDefaultTitle:"ZIVOZONE | 你的世界从这里开始",seoDefaultDescription:"ZIVOZONE —— 一个集游戏、挑战、运动与智力于一体的数字世界，拥有 ZIVO 经济体系与玩家成长系统。",seoStoryFallbackTitle:"ZIVOZONE 故事",seoStoryFallbackDescription:"来自 ZIVOZONE 的互动式电影故事。",seoGameFallbackTitle:"ZIVOZONE 游戏",seoGameFallbackDescription:"在 ZIVOZONE 上测试你的智力和技能。"});

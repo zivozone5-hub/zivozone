@@ -177,6 +177,10 @@
       {
         "source": "/challenges/**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/d/**",
+        "destination": "/index.html"
       }
     ]
   },

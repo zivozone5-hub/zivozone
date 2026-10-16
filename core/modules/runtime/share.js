@@ -83,22 +83,108 @@
     }
   }
 
-  function buildDuelMessage(gameId, score, challengerName, challengeName) {
+  // V1230.114 — short-link layer for duel/invite links. A duel link used to be the full long URL
+  // from buildDuelUrl() above (/challenges/<id>?challenger=...&cscore=...&utm_source=...&utm_medium=
+  // ...&utm_campaign=...) — a wall of unfamiliar parameters that reads as suspicious, not trustworthy,
+  // to a recipient who just wants a clean "tap this to play" link on the zivozone.com domain they
+  // already trust. This mints a short, unambiguous code (no 0/O/1/l/I — meant to be readable if
+  // someone retypes it by hand), stores the real target once in Firestore's shortLinks/{code} (see
+  // firestore.rules' matching V1230.114 note), and returns a plain https://zivozone.com/d/<code>.
+  // router.js resolves the code back into the exact same long-form URL this always produced, so
+  // nothing downstream (consumeDuelParams(), the finish-screen duel banner, etc.) needed to change.
+  // Deliberately reuses the DEFAULT Firebase app (same one auth.js's initFirebase() uses) rather than
+  // chat.js's separate named app — this is a tiny, infrequent, unauthenticated write, not a reason to
+  // spin up a second app instance.
+  const SHORT_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+  function randomCode(len = 7) {
+    let out = "";
+    try {
+      const bytes = new Uint32Array(len);
+      (window.crypto || window.msCrypto).getRandomValues(bytes);
+      for (let i = 0; i < len; i++) out += SHORT_CODE_CHARS[bytes[i] % SHORT_CODE_CHARS.length];
+      return out;
+    } catch (_) {
+      for (let i = 0; i < len; i++) out += SHORT_CODE_CHARS[Math.floor(Math.random() * SHORT_CODE_CHARS.length)];
+      return out;
+    }
+  }
+  let _shortDb;
+  function shortDb() {
+    if (_shortDb !== undefined) return _shortDb;
+    try {
+      const CFG = window.ZIVOZONE_FIREBASE_CONFIG;
+      if (!CFG || !window.firebase?.initializeApp) { _shortDb = null; return _shortDb; }
+      if (!firebase.apps.some(a => a.name === "[DEFAULT]")) firebase.initializeApp(CFG);
+      _shortDb = firebase.firestore();
+    } catch (_) {
+      _shortDb = null;
+    }
+    return _shortDb;
+  }
+  // Up to 3 attempts to dodge the (astronomically unlikely, 62^7 code space) chance of a code
+  // collision; a real failure (offline, blocked by an ad/privacy blocker, Firestore down) resolves
+  // after the first attempt's own try/catch, so this never turns a flaky network into a long stall.
+  async function createShortLink(type, fields) {
+    const db = shortDb();
+    if (!db) return null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const code = randomCode(7);
+      try {
+        const ref = db.collection("shortLinks").doc(code);
+        const existing = await ref.get();
+        if (existing.exists) continue;
+        await ref.set({ type, ...fields, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+        return code;
+      } catch (e) {
+        console.warn("Short link create:", e);
+        return null;
+      }
+    }
+    return null;
+  }
+  // Reads shortLinks/{code} back and reconstructs the exact long-form URL buildDuelUrl()/
+  // buildInviteUrl() would have produced, so router.js can navigate() straight to it and every
+  // existing downstream consumer (consumeDuelParams(), auth.js's captureReferralFromUrl()) keeps
+  // working completely unchanged.
+  async function resolveShortLink(code) {
+    const db = shortDb();
+    if (!db || !code) return null;
+    try {
+      const snap = await db.collection("shortLinks").doc(String(code)).get();
+      if (!snap.exists) return null;
+      const d = snap.data();
+      if (d.type === "duel") return buildDuelUrl(d.gameId, d.challenger, d.score);
+      if (d.type === "invite") return buildInviteUrl(d.uid);
+      return null;
+    } catch (e) {
+      console.warn("Short link resolve:", e);
+      return null;
+    }
+  }
+
+  async function buildDuelMessage(gameId, score, challengerName, challengeName) {
     const name = clean(challengerName) || t("duelDefaultChallengerName");
     const chName = clean(challengeName) || "ZIVOZONE";
-    const duelUrl = buildDuelUrl(gameId, name, score);
+    const id = clean(gameId);
+    const hasScore = score !== null && score !== undefined && clean(score) !== "";
+    const code = await createShortLink("duel", {
+      gameId: id,
+      challenger: name.slice(0, 24),
+      ...(hasScore ? { score: Number(score) || 0 } : {})
+    });
+    const duelUrl = code ? `${SITE_ORIGIN}/d/${code}` : buildDuelUrl(id, name, score);
     const body = fmt("duelShareMessage", { score: clean(score), challenge: chName });
     const message = `${body}\n${duelUrl}`;
     return {
       title: fmt("duelShareTitle", { challenge: chName }),
       text: message,
       url: duelUrl,
-      canonicalUrl: buildGameUrl(gameId),
-      params: { gameId, score, challengerName: name, challengeName: chName, duel: true }
+      canonicalUrl: buildGameUrl(id),
+      params: { gameId: id, score, challengerName: name, challengeName: chName, duel: true }
     };
   }
 
-  function buildDuel(options = {}) {
+  async function buildDuel(options = {}) {
     return buildDuelMessage(
       options.gameId ?? options.game,
       options.score,
@@ -125,9 +211,15 @@
     }
   }
 
-  function buildInviteMessage(name, uid) {
+  // V1230.114 — same short-link treatment as the duel link above: an invite link naturally carries
+  // someone's uid in plain sight (?ref=<64-char-uid>&utm_source=invite&...), which is both long and,
+  // to a recipient unfamiliar with referral links, not an obviously trustworthy-looking URL. Shortened
+  // the same way, same graceful fallback to the original long form if the write fails.
+  async function buildInviteMessage(name, uid) {
     const inviterName = clean(name) || t("duelDefaultChallengerName");
-    const inviteUrl = buildInviteUrl(uid);
+    const cleanUid = clean(uid).slice(0, 64);
+    const code = await createShortLink("invite", { uid: cleanUid });
+    const inviteUrl = code ? `${SITE_ORIGIN}/d/${code}` : buildInviteUrl(cleanUid);
     const body = fmt("inviteShareMessage", { name: inviterName });
     const message = `${body}\n${inviteUrl}`;
     return {
@@ -135,16 +227,16 @@
       text: message,
       url: inviteUrl,
       canonicalUrl: `${SITE_ORIGIN}/`,
-      params: { uid, name: inviterName, invite: true }
+      params: { uid: cleanUid, name: inviterName, invite: true }
     };
   }
 
-  function buildInvite(options = {}) {
+  async function buildInvite(options = {}) {
     return buildInviteMessage(options.name, options.uid);
   }
 
   async function invite(options = {}) {
-    const built = buildInvite(options);
+    const built = await buildInvite(options);
     return dispatch(() => built, { uid: built.params.uid, invite: true });
   }
 
@@ -257,7 +349,7 @@
   // buildDuelMessage() doesn't vary by utmSource (the link is always tagged "duel"), so the builder
   // just ignores the argument dispatch() passes it.
   async function duel(options = {}) {
-    const built = buildDuel(options);
+    const built = await buildDuel(options);
     return dispatch(() => built, {
       gameId: built.params.gameId, score: built.params.score,
       challengeName: built.params.challengeName, duel: true
@@ -301,6 +393,7 @@
     buildInviteMessage,
     buildInvite,
     invite,
+    resolveShortLink,
     copyToClipboard,
     nativeShare,
     whatsapp: data => {

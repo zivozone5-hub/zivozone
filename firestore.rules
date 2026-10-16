@@ -374,6 +374,36 @@ service cloud.firestore {
     }
         match /public/{document=**} { allow read: if true; allow write: if false; }
 
+    // V1230.114 — short links for "challenge a friend" (duel) and "invite friends" (referral).
+    // Problem: those links used to carry the full target inline as query params
+    // (?challenger=&cscore=&utm_source=...&utm_medium=...&utm_campaign=...), which made a shared
+    // link long, and to a non-technical recipient (this is a Jordanian/MENA audience, per
+    // share.js's whatsapp-first fallback) a URL trailing a wall of unfamiliar parameters reads as
+    // suspicious rather than trustworthy — exactly the opposite of what a "first visit" link should
+    // feel like. Fix: share.js now mints a short random code, writes the real target here once, and
+    // shares plain https://zivozone.com/d/<code> instead; router.js resolves the code back to the
+    // full target on load (see that file's "shortlink" route type) and only ever constructs the SAME
+    // query-param shape that already worked before — no new client-side trust surface, just a shorter
+    // door into the existing flow. Same zero-auth-required shape as errorLogs above (a guest who just
+    // finished a challenge, signed in or not, must be able to mint one): anyone may create a doc, but
+    // only with this exact narrow, size-capped, enum-typed shape, and it can never be edited or
+    // deleted once written — a share link is meant to be read-only and short-lived in spirit, even
+    // though nothing here actively expires it yet.
+    match /shortLinks/{code} {
+      allow read: if true;
+      allow create: if code.size() >= 5 && code.size() <= 12
+        && request.resource.data.keys().hasOnly(['type','gameId','challenger','score','uid','createdAt'])
+        && request.resource.data.type in ['duel','invite']
+        && request.resource.data.createdAt == request.time
+        && (request.resource.data.type != 'duel' ||
+          (request.resource.data.gameId is string && request.resource.data.gameId.size() > 0 && request.resource.data.gameId.size() <= 80
+            && request.resource.data.challenger is string && request.resource.data.challenger.size() <= 24
+            && (!('score' in request.resource.data) || request.resource.data.score is number)))
+        && (request.resource.data.type != 'invite' ||
+          (request.resource.data.uid is string && request.resource.data.uid.size() <= 64));
+      allow update, delete: if false;
+    }
+
     /* V1230.68 — FUTURE TIGHTENING, INERT, NOT ACTIVE. ===============================================
        Written alongside functions/index.js (real server-side game-result verification; see that
        file's header for full context and deploy steps) for the day the user upgrades off the free

@@ -34,6 +34,11 @@
     if (m) return { type: "health-door", id: decode(m[1]), path: p };
     m = p.match(/^\/challenges\/([^/]+)$/i);
     if (m) return { type: "challenge", id: decode(m[1]), path: p };
+    // V1230.114 — short links minted by share.js's duel()/invite() (see that file's matching note):
+    // https://zivozone.com/d/<code> instead of the old long /challenges/<id>?challenger=...&cscore=
+    // =...&utm_source=...&utm_medium=...&utm_campaign=... Resolved below, right after boot()/emit().
+    m = p.match(/^\/d\/([^/]+)$/i);
+    if (m) return { type: "shortlink", code: decode(m[1]), path: p };
     return { type: "unknown", path: p };
   }
 
@@ -285,6 +290,36 @@
     window.addEventListener("zivozone:challenges-rendered", () => reconcile(document));
     window.addEventListener("zivozone:ui-ready", () => reconcile(document));
   }
+
+  // V1230.114 — resolves a /d/<code> short link (see parse() above and share.js's matching note)
+  // back into the real long-form URL it stands for, then replaces the visible URL with it via
+  // navigate(replace:true) — which re-emits 'zivozone:route' as a normal 'challenge'/'home' route,
+  // so challenges.js's tryAutoStart (and everything downstream of it: consumeDuelParams(), the
+  // finish-screen duel banner, auth.js's referral capture) runs completely unchanged, exactly as if
+  // the visitor had opened the long link directly. A code that fails to resolve (never existed,
+  // already malformed, or Firestore unreachable) falls back to the homepage with a toast rather than
+  // leaving the visitor stuck on a dead /d/<code> URL.
+  let resolvingShortLink = false;
+  async function resolveShortLinkRoute(code) {
+    if (resolvingShortLink) return;
+    resolvingShortLink = true;
+    try {
+      const target = await window.ZIVOZONE?.Share?.resolveShortLink?.(code);
+      if (target) navigate(target, { replace: true });
+      else {
+        toast(t("shortLinkUnavailable"), "info");
+        navigate("/", { replace: true });
+      }
+    } catch (error) {
+      console.warn("ZIVOZONE Router short-link resolve:", error);
+      navigate("/", { replace: true });
+    } finally {
+      resolvingShortLink = false;
+    }
+  }
+  window.addEventListener("zivozone:route", e => {
+    if (e.detail?.type === "shortlink" && e.detail.code) resolveShortLinkRoute(e.detail.code);
+  });
 
   addEventListener("popstate", () => emit("popstate"));
   document.addEventListener("click", clickHandler, true);
