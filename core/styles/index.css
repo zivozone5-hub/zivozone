@@ -303,7 +303,17 @@ body.zivo-dark-active{overflow:hidden}
 ============================================================ */
 .zivo-v21-hud{position:fixed;left:16px;bottom:16px;z-index:9000;display:flex;gap:7px;padding:8px;border:1px solid rgba(255,255,255,.09);border-radius:15px;background:rgba(5,6,11,.72);backdrop-filter:blur(14px);box-shadow:0 10px 40px rgba(0,0,0,.3)}
 .zivo-v21-hud div{min-width:56px;text-align:center}.zivo-v21-hud span{display:block;font-size:8px;letter-spacing:1.5px;color:#777f9a}.zivo-v21-hud b{display:block;margin-top:2px;color:#fff;font-size:13px}
-@media(max-width:600px){.zivo-v21-hud{left:8px;bottom:8px;transform:scale(.92);transform-origin:left bottom}}
+/* V1230.112 — this HUD and .zivo-public-chat (ZIVO Plaza) both pinned themselves to bottom:8px on
+   mobile, exactly where .mobile-nav (the site's primary bottom navigation, position:fixed;left:8px;
+   right:8px;bottom:8px in this same file) also lives — together they fully tiled its width and sat
+   above it in z-index (9000 vs .mobile-nav's 120), completely hiding all 5 nav tabs behind them on
+   every phone-width page, permanently (confirmed via Playwright screenshot). The consent banner and
+   the audio mute button already solve this exact problem correctly, using --zivo-nav-clearance (the
+   nav's real measured height, computed by app-shell.js's syncConsentNavClearance() and kept current
+   on resize/orientation change) instead of a guessed fixed offset — this HUD and the chat widget
+   below were simply never wired into that same, already-correct mechanism. Found continuing the
+   "no disconnected layers" audit. */
+@media(max-width:600px){.zivo-v21-hud{left:8px;bottom:calc(var(--zivo-nav-clearance,84px) + env(safe-area-inset-bottom,0px));transform:scale(.92);transform-origin:left bottom}}
 
 /* ============================================================
    V24 — ZIVO VISUAL IDENTITY
@@ -986,7 +996,9 @@ body.zivo-nav-open #zivo-nav-toggle span:nth-child(3){transform:translateY(-4px)
 .zivo-epic-cta.done{opacity:.75;border-color:rgba(79,211,255,.4);color:#bfe9ff}
 /* V1191 — distinctive public chat */
 .zivo-public-chat{position:fixed;inset-inline-end:16px;bottom:16px;z-index:9000;font-family:Cairo,Tahoma,sans-serif}.zpc-toggle{display:flex;align-items:center;gap:8px;border:1px solid rgba(112,224,255,.22);border-radius:18px;padding:11px 14px;background:linear-gradient(145deg,#0c1b2c,#07101b);color:#fff;box-shadow:0 15px 45px rgba(0,0,0,.35);cursor:pointer;font-weight:900}.zpc-toggle .zpc-online{font-style:normal;font-size:7px;color:#6ff0a6}.zpc-panel{width:min(360px,calc(100vw - 24px));height:min(560px,calc(100vh - 100px));margin-top:8px;border:1px solid rgba(112,224,255,.2);border-radius:22px;overflow:hidden;background:rgba(5,10,17,.98);box-shadow:0 30px 90px rgba(0,0,0,.5);backdrop-filter:blur(16px);display:flex;flex-direction:column}.zpc-panel header{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;border-bottom:1px solid rgba(255,255,255,.07)}.zpc-panel header b{display:block;font-size:13px}.zpc-panel header small{display:block;color:#72849a;font-size:8px;margin-top:2px}.zpc-panel[hidden]{display:none}.zpc-close{border:0;background:transparent;color:#aab5c5;font-size:24px;cursor:pointer}.zpc-presence{display:flex;justify-content:space-between;padding:7px 12px;background:rgba(91,220,255,.035);color:#7e93aa;font-size:8px}.zpc-presence b{color:#6ff0a6}.zpc-messages{flex:1;overflow:auto;padding:12px}.zpc-messages article{padding:8px 10px;margin-bottom:7px;border:1px solid rgba(255,255,255,.06);border-radius:13px;background:rgba(255,255,255,.025)}.zpc-messages article>div{display:flex;justify-content:space-between;gap:8px}.zpc-messages article b{font-size:9px;color:#73dfff}.zpc-messages time{font-size:7px;color:#596b80}.zpc-messages p{margin:5px 0 0;color:#d4dce6;font-size:10px;line-height:1.7;word-break:break-word}.zpc-form{display:flex;gap:6px;padding:9px;border-top:1px solid rgba(255,255,255,.07)}.zpc-form input{flex:1;min-width:0;border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:10px;background:#0b1420;color:#fff;outline:none;font:10px Cairo,Tahoma,sans-serif}.zpc-form button{border:0;border-radius:11px;padding:0 13px;background:#4f8cff;color:#fff;font-weight:900;cursor:pointer}.zpc-note{padding:0 11px 10px;color:#58697d;font-size:7px}.zpc-empty{text-align:center;color:#687a90;font-size:10px;padding:50px 10px}
-@media(max-width:600px){.zivo-public-chat{inset-inline-end:8px;bottom:8px}.zpc-panel{height:min(70vh,520px)}.zivo-exit-card h2{font-size:23px}.zivo-exit-card{padding:25px 18px}}
+/* V1230.112 — see the .zivo-v21-hud note above: same mobile-nav-overlap bug, same fix
+   (--zivo-nav-clearance instead of a fixed bottom:8px guess). */
+@media(max-width:600px){.zivo-public-chat{inset-inline-end:8px;bottom:calc(var(--zivo-nav-clearance,84px) + env(safe-area-inset-bottom,0px))}.zpc-panel{height:min(70vh,520px)}.zivo-exit-card h2{font-size:23px}.zivo-exit-card{padding:25px 18px}}
 /* V1230.15 — SEO: internal "room details" links on signature/challenge cards + prerendered room-landing article shell */
 .zivo-seo-link{display:inline-block;margin-top:8px;font-size:10px;color:#9fe8ff;opacity:.8;text-decoration:underline;text-underline-offset:2px}.zivo-seo-link:hover{opacity:1}
 .zivo-seo-story{color:var(--text)}.zivo-seo-story .eyebrow{font-size:10px;letter-spacing:.08em;color:#9fe8ff;font-weight:800}.zivo-seo-story h1{font-size:clamp(26px,4vw,40px);margin:10px 0}.zivo-seo-story .muted{color:var(--muted)}.zivo-seo-story h2{font-size:20px;margin:26px 0 8px}.zivo-seo-story p{line-height:1.9}.zivo-seo-story .btn{display:inline-block;border-radius:12px;padding:12px 22px;font-weight:800;border:1px solid rgba(255,255,255,.14);color:var(--text)}.zivo-seo-story .btn-primary{background:linear-gradient(145deg,#7c3cff,#2ddcff);border:0;color:#06070d}
