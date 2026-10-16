@@ -162,6 +162,17 @@
     const wasOpen = isOpen();
     if (!wasOpen) {
       lastFocus = document.activeElement;
+      // V1230.99 — found while verifying the back-button fix shipped alongside this: openStories()
+      // already calls R().navigate('/stories', {state:{zivoRoom:1}}) before rendering, so close()'s
+      // own `history.state?.zivoRoom` check below correctly pops one history entry on the way out.
+      // openHealth()/healthDoor() never did this — they only ever call frame() directly — so the
+      // Health World sub-flow had the exact same "phone Back button exits zivozone.com entirely"
+      // bug this version fixes for football/beauty/horror/puzzle, just inside this file's own,
+      // otherwise-correct history mechanism instead of exit-guard.js's generic one. Push the same
+      // marker here, once, the moment the dialog actually opens (not on every frame() redraw while
+      // browsing doors) — guarded so this never double-pushes for Stories, whose navigate() call
+      // already set it by the time frame() first runs for that flow.
+      if (!history.state?.zivoRoom) { try { history.pushState({ ...(history.state || {}), zivoRoom: 1 }, "", location.href); } catch (_) {} }
     }
     e.className = "show " + (cls || "");
     e.setAttribute("role", "dialog");
