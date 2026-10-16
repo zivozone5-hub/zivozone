@@ -1,6 +1,12 @@
-/* ZIVOZONE V1226 — persistent Daily Challenge + offline sync */
+/* ZIVOZONE V1226 — persistent Daily Challenge + offline sync
+   V1230.106 — this modal's entire UI was hardcoded Arabic literals, so it showed Arabic regardless of
+   the site's selected language (unlike the rest of the Player Journey hub it's opened from). Routed
+   through the same t() helper every other module uses; see i18n.js's "daily*" keys for the 7-language
+   text. applyStatic() exists so a mid-session language switch (no page reload) can refresh the parts
+   of the markup that are otherwise only ever written once, at modal-creation time. */
 (() => {
   "use strict";
+  const t = k => { try { return window.zivoT ? window.zivoT(k) : (window.ZIVOZONE_I18N?.tr?.(k) || k); } catch (_) { return k; } };
   const KEY = "zivozone_daily_state_v1226";
   const QUEUE = "zivozone_daily_sync_queue_v1226";
   const today = () => new Date().toISOString().slice(0, 10);
@@ -92,26 +98,47 @@
     return item;
   }
   async function recordResult(result = {}) { const item = persistResult(result); await sync(); return item; }
+  function applyStatic(o) {
+    o.querySelector("h2").textContent = t("dailyChallengeLabel");
+    o.querySelector(".v32-hero>b").textContent = t("dailyModalIntro");
+    o.querySelector(".v32-hero>p").textContent = t("dailyModalDesc");
+    o.querySelector("#zivo-daily-play").textContent = t("dailyPlayBtn");
+    const rules = o.querySelectorAll(".v32-rules span");
+    if (rules[0]) rules[0].textContent = t("dailyRuleTimer");
+    if (rules[1]) rules[1].textContent = t("dailyRuleBest");
+    if (rules[2]) rules[2].textContent = t("dailyRuleStreak");
+  }
+  function applyState(o, s, ch) {
+    o.querySelector("#zivo-daily-state").textContent = s.synced ? t("dailyStateSynced") : s.played ? (s.result ? t("dailyStatePendingSync") : t("dailyStatePlayed")) : t("dailyStateNotPlayed");
+  }
+  // V1230.106 — this is the one piece of this modal's text that's genuinely async (it fetches the
+  // story/news title that today's challenge is themed around), so on a language switch it isn't
+  // enough to just re-run t() on already-known strings like applyStatic()/applyState() do: the
+  // fetched label itself has to be re-resolved too, in the new language, from scratch.
+  function refreshChallengeTitle(o, ch) {
+    o.querySelector("#zivo-daily-ch").textContent = t("dailyLoadingChallenge");
+    currentContentTitle(ch).then(meta => {
+      if (!o.isConnected) return;
+      const label = meta.challengeTitle || meta.storyTitle || meta.newsHeadline || ch;
+      o.querySelector("#zivo-daily-ch").textContent = t("dailyChallengePrefix") + label;
+      o.dataset.contentTitle = meta.storyTitle || meta.newsHeadline || "";
+    }).catch(() => {
+      if (o.isConnected) o.querySelector("#zivo-daily-ch").textContent = t("dailyChallengePrefix") + challengeTitle(ch);
+    });
+  }
   function open() {
     let o = document.getElementById("zivo-daily");
     if (!o) {
       o = document.createElement("div"); o.id = "zivo-daily"; o.className = "v32-overlay";
-      o.innerHTML = '<div class="v32-card"><button class="v32-close">×</button><div class="v32-head"><div class="v32-mark">Z</div><div><small>DAILY COMPETITION</small><h2>تحدي اليوم</h2><span id="zivo-daily-date"></span></div></div><div class="v32-hero"><b>تحدٍ جديد كل يوم</b><p>يُحفظ إنجازك محلياً فوراً، ثم تتم مزامنته مع الحساب عند عودة الاتصال.</p><div class="v32-meta"><span id="zivo-daily-ch"></span><span id="zivo-daily-state"></span></div></div><button id="zivo-daily-play">ابدأ تحدي اليوم</button><div class="v32-rules"><span>⏱ 30 ثانية لكل سؤال</span><span>🏆 سجّل أفضل نتيجة</span><span>🔥 ابنِ سلسلة لعب</span></div></div>';
-      document.body.appendChild(o); o.querySelector(".v32-close").onclick = () => o.classList.remove("open");
+      o.innerHTML = '<div class="v32-card"><button class="v32-close">×</button><div class="v32-head"><div class="v32-mark">Z</div><div><small>DAILY COMPETITION</small><h2></h2><span id="zivo-daily-date"></span></div></div><div class="v32-hero"><b></b><p></p><div class="v32-meta"><span id="zivo-daily-ch"></span><span id="zivo-daily-state"></span></div></div><button id="zivo-daily-play"></button><div class="v32-rules"><span></span><span></span><span></span></div></div>';
+      document.body.appendChild(o); applyStatic(o);
+      o.querySelector(".v32-close").onclick = () => o.classList.remove("open");
       o.querySelector("#zivo-daily-play").onclick = () => { const ch = pick(); saveState({ played: true, challenge: ch, synced: false }); o.classList.remove("open"); if (typeof window.startChallenge === "function") window.startChallenge(ch); else window.ZIVOZONE?.Challenges?.start?.(ch); };
     }
     const s = state(), ch = s.challenge || pick();
     o.querySelector("#zivo-daily-date").textContent = today();
-    o.querySelector("#zivo-daily-ch").textContent = "جاري قراءة بيانات التحدي...";
-    currentContentTitle(ch).then(meta => {
-      if (!o.isConnected) return;
-      const label = meta.challengeTitle || meta.storyTitle || meta.newsHeadline || ch;
-      o.querySelector("#zivo-daily-ch").textContent = "التحدي: " + label;
-      o.dataset.contentTitle = meta.storyTitle || meta.newsHeadline || "";
-    }).catch(() => {
-      if (o.isConnected) o.querySelector("#zivo-daily-ch").textContent = "التحدي: " + challengeTitle(ch);
-    });
-    o.querySelector("#zivo-daily-state").textContent = s.synced ? "مزامن ✓" : s.played ? (s.result ? "نتيجتك محفوظة بانتظار المزامنة" : "لعبته اليوم ✓") : "لم تلعبه بعد";
+    refreshChallengeTitle(o, ch);
+    applyState(o, s, ch);
     try {
       window.ZIVOZONE?.Events?.emit('DAILY_CHALLENGE_OPEN', {
         challengeId: ch,
@@ -126,4 +153,15 @@
   addEventListener("zivozone-auth", sync);
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") sync(); });
   setTimeout(sync, 1500);
+  // V1230.106 — same live-refresh pattern achievements.js/leaderboard.js/economy.js already use: if
+  // the player switches language while this modal happens to be open (no page reload on a language
+  // switch), the static markup above would otherwise never update again.
+  window.addEventListener("zivozone-language", () => {
+    const o = document.getElementById("zivo-daily");
+    if (!o) return;
+    applyStatic(o);
+    const s = state();
+    applyState(o, s);
+    refreshChallengeTitle(o, s.challenge || pick());
+  });
 })();

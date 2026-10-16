@@ -12,6 +12,13 @@
   // key+vars template formatter used by the new room-progress strings ("{level}/{max}" etc.),
   // matching the same pattern already used in football-room.js/horror-room.js.
   const tfmt = (k, vars) => Object.entries(vars || {}).reduce((s, [key, val]) => s.replace(`{${key}}`, val), t(k));
+  // V1230.106 — match-center.js's LEAGUE_NAMES catalog stores each league's name as a per-language
+  // {ar,en,zh,hi,es,fr,fa} object (same convention as its own text() helper resolves), not a plain
+  // string — but this hub's "next match" line took it straight into esc() with no resolution step at
+  // all, printing the literal "[object Object]" for the league name on every upcoming match, in every
+  // language. Found while auditing this hub's Sports card after fixing the untranslated team names it
+  // displays right next to it (see match-center.js's own V1230.106 note for that half of the fix).
+  const localizeObj = v => { if (typeof v === "string") return v; if (v && typeof v === "object") { const lang = window.ZIVOZONE_I18N?.get?.() || "ar"; return v[lang] || v.ar || v.en || Object.values(v)[0] || ""; } return String(v ?? ""); };
   const user = () => { try { return window.firebase?.auth?.()?.currentUser || null; } catch (_) { return null; } };
 
   function playerData() {
@@ -235,7 +242,7 @@
 ${next?`<div class="zph-next"><div class="zph-next-icon">🎯</div><div><b>${esc(next.id)}</b><small>${next.value}/${next.goal} ${esc(t("completedSuffix"))}</small><div><i style="width:${Math.min(100,next.value/Math.max(1,next.goal)*100)}%"></i></div></div><button data-zph="missions">${esc(t("startBtn"))}</button></div>`:`<div class="zph-empty-mini">${esc(t("noMissionNow"))}</div>`}</div>
 <div class="zph-panel zph-live"><header><div><span class="zph-label">SPORTS</span><h3>${esc(t("worldPulseTitle"))}</h3></div><button data-zph="sports">${esc(t("allMatchesBtn"))}</button></header>
 <div class="zph-live-row"><strong>${ls.live.length}</strong><span>${esc(t("liveNowLabel"))}</span>${ls.live.length?"<b>🔴 LIVE</b>":`<em>${esc(t("noLiveNow"))}</em>`}</div>
-${ls.next?`<div class="zph-next-match"><span>${esc(ls.next.leagueName||t("upcomingMatchFallback"))}</span><b>${esc(ls.next.home?.name||"—")} × ${esc(ls.next.away?.name||"—")}</b></div>`:""}</div></section>
+${ls.next?`<div class="zph-next-match"><span>${esc(localizeObj(ls.next.leagueName)||t("upcomingMatchFallback"))}</span><b>${esc(localizeObj(ls.next.home?.name)||"—")} × ${esc(localizeObj(ls.next.away?.name)||"—")}</b></div>`:""}</div></section>
 <section class="zph-destinations"><header><div><span class="zph-label">YOUR ZIVOZONE</span><h3>${esc(t("yourWorldTitle"))}</h3></div><small>${esc(t("journeyDestinationsNote"))}</small></header>
 <div class="zph-dest-grid"><button data-zph="challenges"><span>🎯</span><b>${esc(t("challengesLabel"))}</b><small>${esc(t("raiseXpNote"))}</small></button><button data-zph="daily"><span>📅</span><b>${esc(t("dailyChallengeLabel"))}</b><small>${esc(t("dailyRealDataNote"))}</small></button><button data-zph="missions"><span>📋</span><b>${esc(t("myMissionsLabel"))}</b><small>${m.done}/${m.total} ${esc(t("todayWord"))}</small></button><button data-zph="competition"><span>🏆</span><b>${esc(t("competitionLabel"))}</b><small>${streak} ${esc(t("consecutiveDaysWord"))}</small></button><button data-zph="achievements"><span>🏅</span><b>${esc(t("myAchievementsLabel"))}</b><small>${earned} ${esc(t("achievementUnit"))}</small></button><button data-zph="leaderboard"><span>🥇</span><b>${esc(t("topPlayersLabel"))}</b><small>${esc(t("topPlayersNote"))}</small></button><button data-zph="wallet"><span>🪙</span><b>${esc(t("myWalletLabel"))}</b><small>${fmt(z)} ZIVO</small></button><button data-zph="mining"><span>⛏️</span><b>${esc(t("miningLabel"))}</b><small>${esc(t("buildBalanceNote"))}</small></button><button data-zph="identity"><span>🧠</span><b>${esc(t("whoAmITitle"))}</b><small>${esc(t("identityTestNote"))}</small></button><button data-zph="sports"><span>⚽</span><b>${esc(t("sportsLabel"))}</b><small>${esc(t("matchesNewsNote"))}</small></button><button data-zph="ai"><span>🤖</span><b>ZIVO AI</b><small>${esc(t("aiAssistantNote"))}</small></button>${u ? `<button data-zph="invite"><span>📨</span><b>${esc(t("inviteCta"))}</b><small>${esc(t("inviteDesc"))}</small></button>` : ""}</div></section>
 <section class="zph-bottom"><div class="zph-panel"><header><div><span class="zph-label">ACTIVITY</span><h3>${esc(t("recentActivityTitle"))}</h3></div></header>
