@@ -100,6 +100,27 @@
     try { localStorage.removeItem(storageKey(key)); } catch (_) {}
   }
 
+  // V1230.107 — see the long comment inside set() below: this shallow-equality check is what lets
+  // set() skip notifying subscribers/Events when a call changes nothing, which is what makes any
+  // "read that also republishes its result" helper (player.js's Player.get(), at the time this was
+  // written) safe to call from inside a subscriber of its own slice without that forming a
+  // synchronous infinite loop.
+  function shallowEqualSlice(a, b) {
+    if (a === b) return true;
+    const ak = Object.keys(a || {});
+    const bk = Object.keys(b || {});
+    if (ak.length !== bk.length) return false;
+    for (const k of ak) {
+      const av = a[k], bv = b[k];
+      if (av === bv) continue;
+      if (av && bv && typeof av === "object" && typeof bv === "object") {
+        try { if (JSON.stringify(av) === JSON.stringify(bv)) continue; } catch (_) {}
+      }
+      return false;
+    }
+    return true;
+  }
+
   function get(slice) {
     if (!slice) {
       return Object.fromEntries(SLICES.map(k => [k, { ...store[k] }]));
@@ -113,7 +134,29 @@
       return {};
     }
 
-    const next = { ...store[slice], ...patch };
+    const prev = store[slice];
+    const next = { ...prev, ...patch };
+
+    // V1230.107 — found via a genuine infinite-recursion bug (switching language with the Player
+    // Hub open): player.js's Player.get() always calls State.set('playerData', ...) with its freshly
+    // computed snapshot, even when nothing about the player actually changed — it's a "read that also
+    // republishes" helper, by design (see its own V1230.51 comment). That was harmless on its own,
+    // but player-hub.js's render() also reads achievements.js's state(), which ALSO unconditionally
+    // calls Player.get() as a read — so the moment anything notifies player-hub's render() while it's
+    // open, render() calls Player.get() again, which used to call set() again unconditionally, which
+    // notified player-hub again, which rendered again, forever, with no actual change anywhere in the
+    // cycle to ever stop it. Skipping the notify (and the localStorage write) when this call is a
+    // true no-op is the correct general fix, not just a patch for this one pair of modules: it's what
+    // a change-notification system should do, and it means any future "compute + publish on read"
+    // helper elsewhere in the app can't accidentally wire itself into a loop like this one did.
+    // `options.force` is an escape hatch for a caller that deliberately wants to re-notify on an
+    // unchanged value (no current caller needs it, but skipping a real use case silently would be
+    // worse than leaving the door open).
+    if (options.force !== true && shallowEqualSlice(prev, next)) {
+      store[slice] = next;
+      return { ...next };
+    }
+
     store[slice] = next;
 
     if (options.persist !== false) {
