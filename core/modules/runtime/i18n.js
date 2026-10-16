@@ -631,6 +631,20 @@ T.fr=T.fr||Object.assign({},T.en); T.fa=T.fa||Object.assign({},T.ar);
   Object.assign(T.fr,{duelChallengeCta:"Défier un ami",duelDefaultChallengerName:"Joueur",duelShareTitle:"Défi {challenge} | ZIVOZONE",duelShareMessage:"⚔️ Je te défie ! J'ai obtenu {score}% à {challenge} sur ZIVOZONE.\n🔥 Prêt à me dépasser ?\n🎮 Joue maintenant :",duelInviteBannerTitle:"Un défi de {name} !",duelInviteBannerBody:"{name} a obtenu {score}% à {challenge}. Prêt à faire mieux ?",duelInviteStartCta:"Commencer le défi",duelResultWin:"🎉 Tu as battu {name} ! ({score}% contre {oscore}%)",duelResultLose:"😅 {name} t'a battu cette fois ({oscore}% contre {score}%) — réessaie !",duelResultTie:"🤝 Tu as fait match nul avec {name} ! Exactement le même score."});
   Object.assign(T.fa,{duelChallengeCta:"به‌چالش‌کشیدن یک دوست",duelDefaultChallengerName:"بازیکن",duelShareTitle:"چالش {challenge} | ZIVOZONE",duelShareMessage:"⚔️ تو را به چالش می‌کشم! در {challenge} در ZIVOZONE امتیاز {score}% گرفتم.\n🔥 آماده‌ای از من جلو بزنی؟\n🎮 همین حالا بازی کن:",duelInviteBannerTitle:"یک چالش از طرف {name}!",duelInviteBannerBody:"{name} در {challenge} امتیاز {score}% گرفت. آماده‌ای از او جلو بزنی؟",duelInviteStartCta:"شروع چالش",duelResultWin:"🎉 تو {name} را شکست دادی! ({score}% در برابر {oscore}%)",duelResultLose:"😅 این‌بار {name} از تو جلو زد ({oscore}% در برابر {score}%) — دوباره امتحان کن!",duelResultTie:"🤝 تو با {name} مساوی شدی! دقیقاً همان امتیاز."});
 
+  /* V1230.110 — share.js's buildMessage() (the plain "share your score" action used by beauty-room.js/
+     horror-room.js/puzzle-room.js/epic50.js, distinct from the newer i18n-aware duel flow right above
+     these keys) built its whole shared message/title as hardcoded Arabic literals with zero t()/fmt()
+     calls, so a score shared to WhatsApp/social media showed Arabic regardless of the site's selected
+     language. These keys are what buildMessage() now routes through; shareScorePart is interpolated
+     into shareResultMessage's {scorePart} token only when a numeric score is actually available. */
+  Object.assign(T.ar,{shareResultTitle:"نتيجتي في {challenge} | ZIVOZONE",shareResultMessage:"🧠 لقد حققت قمة الذكاء{scorePart} في تحدي {challenge} على ZIVOZONE!\n🔥 هل يمكنك أن تتفوق على تحديي؟\n🎮 العب الآن مباشرة:",shareScorePart:" بنسبة {score}%",shareDefaultChallengeName:"التحدي"});
+  Object.assign(T.en,{shareResultTitle:"My {challenge} Result | ZIVOZONE",shareResultMessage:"🧠 I just aced{scorePart} the {challenge} challenge on ZIVOZONE!\n🔥 Can you beat my score?\n🎮 Play now:",shareScorePart:" with {score}%",shareDefaultChallengeName:"the challenge"});
+  Object.assign(T.zh,{shareResultTitle:"我的{challenge}成绩 | ZIVOZONE",shareResultMessage:"🧠 我在 ZIVOZONE 的「{challenge}」挑战中拿到了{scorePart}！\n🔥 你能超过我吗？\n🎮 现在就玩：",shareScorePart:"{score}% 的成绩",shareDefaultChallengeName:"挑战"});
+  Object.assign(T.hi,{shareResultTitle:"मेरा {challenge} नतीजा | ZIVOZONE",shareResultMessage:"🧠 मैंने ZIVOZONE पर {challenge} चैलेंज में{scorePart} कमाल कर दिया!\n🔥 क्या तुम मुझे हरा सकते हो?\n🎮 अभी खेलें:",shareScorePart:" {score}% के साथ",shareDefaultChallengeName:"चैलेंज"});
+  Object.assign(T.es,{shareResultTitle:"Mi resultado en {challenge} | ZIVOZONE",shareResultMessage:"🧠 ¡Acabo de arrasar{scorePart} en el reto {challenge} en ZIVOZONE!\n🔥 ¿Puedes superar mi puntuación?\n🎮 Juega ahora:",shareScorePart:" con un {score}%",shareDefaultChallengeName:"el reto"});
+  Object.assign(T.fr,{shareResultTitle:"Mon résultat à {challenge} | ZIVOZONE",shareResultMessage:"🧠 Je viens de cartonner{scorePart} au défi {challenge} sur ZIVOZONE !\n🔥 Peux-tu battre mon score ?\n🎮 Joue maintenant :",shareScorePart:" avec {score}%",shareDefaultChallengeName:"le défi"});
+  Object.assign(T.fa,{shareResultTitle:"نتیجه من در {challenge} | ZIVOZONE",shareResultMessage:"🧠 در چالش {challenge} در ZIVOZONE{scorePart} عالی ظاهر شدم!\n🔥 می‌تونی از من جلو بزنی؟\n🎮 همین حالا بازی کن:",shareScorePart:" با {score}%",shareDefaultChallengeName:"چالش"});
+
   function tr(key,lang=get()){return (T[lang]&&T[lang][key])||T.en[key]||T.ar[key]||key}
   window.ZIVOZONE_I18N={LANGS,T,get,set,tr,dir:DIR};
   window.zivoT=tr;

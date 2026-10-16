@@ -34,16 +34,22 @@
     }
   }
 
+  // V1230.110 — this plain "share your score" message (used by beauty-room.js/horror-room.js/
+  // puzzle-room.js/epic50.js's own share buttons — the OLDER, simpler share action, distinct from
+  // the newer i18n-aware "challenge a friend" duel flow right below it in this same file) was never
+  // routed through t()/fmt() at all: every word of the message AND title was a hardcoded Arabic
+  // literal, so a share posted to WhatsApp/social media showed Arabic text regardless of the site's
+  // selected language — found continuing the "no disconnected layers" audit right after exit-guard.js
+  // (V1230.109). See i18n.js's "shareResult*"/"shareScorePart" keys for the 7-language text.
   function buildMessage(gameId, score, challengeName, utmSource = "share") {
-    const name = clean(challengeName) || "التحدي";
+    const name = clean(challengeName) || t("shareDefaultChallengeName");
     const canonicalUrl = buildGameUrl(gameId);
     const gameUrl = withUtm(canonicalUrl, { source: utmSource });
     const hasScore = score !== null && score !== undefined && clean(score) !== "";
-    let message = `🧠 لقد حققت قمة الذكاء${hasScore ? ` بنسبة ${clean(score)}%` : ""} في تحدي ${name} على ZIVOZONE!`;
-    message += `\n🔥 هل يمكنك أن تتفوق على تحديي؟`;
-    message += `\n🎮 العب الآن مباشرة:\n${gameUrl}`;
+    const scorePart = hasScore ? fmt("shareScorePart", { score: clean(score) }) : "";
+    const message = `${fmt("shareResultMessage", { scorePart, challenge: name })}\n${gameUrl}`;
     return {
-      title: `نتيجتي في ${name} | ZIVOZONE`,
+      title: fmt("shareResultTitle", { challenge: name }),
       text: message,
       url: gameUrl,
       canonicalUrl,
