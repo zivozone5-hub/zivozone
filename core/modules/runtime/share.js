@@ -101,6 +101,47 @@
     );
   }
 
+  // V1230.103 — "Invite friends" (referral): same shape as the duel link above, but points at the
+  // homepage with ?ref=<uid> instead of a specific game, and carries no score. auth.js reads this
+  // param (via core/modules/auth.js's own capture-on-load logic, persisted to localStorage so it
+  // survives the click->browse->sign-up funnel) and attaches it as the new account's `referredBy`
+  // field at account-creation time only — a self-written fact on the new user's own doc, nothing
+  // else. No reward is attached to this yet (see the matching note in auth.js): that part needs a
+  // live Firebase/emulator to verify safely and is deliberately deferred to a later version.
+  function buildInviteUrl(uid) {
+    const base = withUtm(`${SITE_ORIGIN}/`, { source: "invite", medium: "referral", campaign: "friend_invite" });
+    try {
+      const u = new URL(base);
+      u.searchParams.set("ref", clean(uid).slice(0, 64));
+      return u.href;
+    } catch (_) {
+      return base;
+    }
+  }
+
+  function buildInviteMessage(name, uid) {
+    const inviterName = clean(name) || t("duelDefaultChallengerName");
+    const inviteUrl = buildInviteUrl(uid);
+    const body = fmt("inviteShareMessage", { name: inviterName });
+    const message = `${body}\n${inviteUrl}`;
+    return {
+      title: t("inviteShareTitle"),
+      text: message,
+      url: inviteUrl,
+      canonicalUrl: `${SITE_ORIGIN}/`,
+      params: { uid, name: inviterName, invite: true }
+    };
+  }
+
+  function buildInvite(options = {}) {
+    return buildInviteMessage(options.name, options.uid);
+  }
+
+  async function invite(options = {}) {
+    const built = buildInvite(options);
+    return dispatch(() => built, { uid: built.params.uid, invite: true });
+  }
+
   // Reads ?challenger=&cscore= from the current URL without side effects (safe to call anytime).
   function getDuelParams() {
     try {
@@ -250,6 +291,10 @@
     duel,
     getDuelParams,
     consumeDuelParams,
+    buildInviteUrl,
+    buildInviteMessage,
+    buildInvite,
+    invite,
     copyToClipboard,
     nativeShare,
     whatsapp: data => {

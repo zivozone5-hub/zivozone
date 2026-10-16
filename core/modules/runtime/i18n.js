@@ -285,6 +285,15 @@ T.fr=T.fr||Object.assign({},T.en); T.fa=T.fa||Object.assign({},T.ar);
   Object.assign(T.fr,{footerDailyChallenge:"Défi du jour"});
   Object.assign(T.fa,{footerDailyChallenge:"چالش امروز"});
   // V1230.102 — footer entry point to the new Academy (coaching-articles) section.
+  // V1230.103 — "Invite friends" referral share message/title (see share.js's buildInviteMessage())
+  // and the profile-panel invite button's label/description (player-hub.js).
+  Object.assign(T.ar,{inviteShareTitle:"دعوة من {name} إلى ZIVOZONE",inviteShareMessage:"🎮 يدعوك {name} للعب على ZIVOZONE! تحديات، ألعاب، وقصص ممتعة بانتظارك.",inviteCta:"دعوة الأصدقاء",inviteDesc:"شارك رابطك الخاص مع أصدقائك وادعهم للانضمام إلى ZIVOZONE."});
+  Object.assign(T.en,{inviteShareTitle:"{name} invited you to ZIVOZONE",inviteShareMessage:"🎮 {name} is inviting you to play ZIVOZONE! Challenges, games, and fun stories await.",inviteCta:"Invite friends",inviteDesc:"Share your personal link with friends and invite them to join ZIVOZONE."});
+  Object.assign(T.zh,{inviteShareTitle:"{name} 邀请你加入 ZIVOZONE",inviteShareMessage:"🎮 {name} 邀请你一起玩 ZIVOZONE！挑战、游戏和精彩故事等着你。",inviteCta:"邀请好友",inviteDesc:"把你的专属链接分享给朋友，邀请他们加入 ZIVOZONE。"});
+  Object.assign(T.hi,{inviteShareTitle:"{name} ने आपको ZIVOZONE पर आमंत्रित किया",inviteShareMessage:"🎮 {name} आपको ZIVOZONE खेलने के लिए आमंत्रित कर रहे हैं! चैलेंज, गेम्स और मज़ेदार कहानियाँ आपका इंतज़ार कर रही हैं।",inviteCta:"दोस्तों को आमंत्रित करें",inviteDesc:"अपना निजी लिंक दोस्तों के साथ शेयर करें और उन्हें ZIVOZONE से जुड़ने के लिए आमंत्रित करें।"});
+  Object.assign(T.es,{inviteShareTitle:"{name} te invitó a ZIVOZONE",inviteShareMessage:"🎮 ¡{name} te invita a jugar en ZIVOZONE! Retos, juegos e historias divertidas te esperan.",inviteCta:"Invitar amigos",inviteDesc:"Comparte tu enlace personal con amigos e invítalos a unirse a ZIVOZONE."});
+  Object.assign(T.fr,{inviteShareTitle:"{name} vous a invité sur ZIVOZONE",inviteShareMessage:"🎮 {name} t'invite à jouer sur ZIVOZONE ! Défis, jeux et histoires amusantes t'attendent.",inviteCta:"Inviter des amis",inviteDesc:"Partage ton lien personnel avec tes amis et invite-les à rejoindre ZIVOZONE."});
+  Object.assign(T.fa,{inviteShareTitle:"{name} شما را به ZIVOZONE دعوت کرد",inviteShareMessage:"🎮 {name} شما را به بازی در ZIVOZONE دعوت می‌کند! چالش‌ها، بازی‌ها و داستان‌های سرگرم‌کننده در انتظار شماست.",inviteCta:"دعوت از دوستان",inviteDesc:"لینک شخصی خود را با دوستانتان به اشتراک بگذارید و آن‌ها را به ZIVOZONE دعوت کنید."});
   Object.assign(T.ar,{footerAcademy:"أكاديمية ZIVOZONE"});
   Object.assign(T.en,{footerAcademy:"ZIVOZONE Academy"});
   Object.assign(T.zh,{footerAcademy:"ZIVOZONE 学院"});

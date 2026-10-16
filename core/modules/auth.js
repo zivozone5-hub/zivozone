@@ -14,6 +14,33 @@
   function loadLocal(){try{const x=JSON.parse(localStorage.getItem(KEY)||'null');if(x?.user){user=x.user;player=x.player||defaultPlayer(user)}}catch(e){}}
   const VISITOR_KEY='zivozone_visitor_id_v1';
   const visitorId=()=>{let id=localStorage.getItem(VISITOR_KEY);if(!id){id='guest_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,9);localStorage.setItem(VISITOR_KEY,id)}return id};
+  // V1230.103 — referral capture ("Invite friends" — see share.js's buildInviteUrl()/invite()).
+  // First-touch only (an existing stored code is never overwritten by a later visit), so the person
+  // who actually sent the invite keeps credit even if the visitor clicks around before signing up.
+  // Deliberately NOT cleared here on read — register() AND onAuthStateChanged's new-account branch
+  // both need to read the identical value (whichever of the two actually creates the players/{uid}
+  // doc first wins the Firestore "create" op; the other's later merge carries the same value, which
+  // Firestore treats as a no-op diff, so neither path can accidentally violate the update rules —
+  // see firestore.rules' players/{uid} update rule, which has no path for a `referredBy` key). It is
+  // cleared once, a few seconds after a successful registration, by clearReferralSoon() below.
+  const REFERRAL_KEY='zivozone_referral_v1';
+  function captureReferralFromUrl(){
+    try{
+      const ref=new URL(location.href).searchParams.get('ref');
+      if(ref&&!localStorage.getItem(REFERRAL_KEY))localStorage.setItem(REFERRAL_KEY,String(ref).slice(0,64));
+    }catch(e){}
+  }
+  captureReferralFromUrl();
+  function pendingReferral(newUid){
+    try{
+      const ref=localStorage.getItem(REFERRAL_KEY);
+      // A referral code is only ever another account's uid; never attribute someone to themselves
+      // (the only way that could happen is a stale code from an earlier device/account on this
+      // same browser matching the uid Firebase Auth just assigned the new account).
+      return ref&&ref!==newUid?ref:null;
+    }catch(e){return null}
+  }
+  function clearReferralSoon(){setTimeout(()=>{try{localStorage.removeItem(REFERRAL_KEY)}catch(e){}},5000)}
   async function trackGuest(){
     /* V1229: visitor statistics need consent; guests cannot read siteStats, so write-only with bounded fields. */
     if(!cloud||!db||!analyticsConsent())return false;
@@ -65,7 +92,13 @@
         try{
           const snap=await db.collection('players').doc(u.uid).get();
           player=snap.exists?{uid:u.uid,...snap.data()}:defaultPlayer(user);
-          if(!snap.exists)await db.collection('players').doc(u.uid).set({...player,createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+          if(!snap.exists){
+            // V1230.103 — covers the brand-new-Google-account case (loginWithGoogle() never calls
+            // register(), so this is the ONLY place that ever creates its players/{uid} doc).
+            const ref=pendingReferral(u.uid);
+            await db.collection('players').doc(u.uid).set({...player,...(ref?{referredBy:ref}:{}),createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+            if(ref)clearReferralSoon();
+          }
           await db.collection('users').doc(u.uid).set({uid:u.uid,email:user.email,name:user.name,role:'player',termsAcceptedAt:firebase.firestore.FieldValue.serverTimestamp(),termsVersion:TERMS_VERSION,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
         }catch(e){player=player||defaultPlayer(user);console.warn('Firestore player load:',e)}
         saveLocal();emit();
@@ -98,7 +131,12 @@
         await u.updateProfile({displayName:name});
         user={uid:u.uid,email,name,age};
         player={...defaultPlayer(user),xp:Number(old.xp)||0,coins:0,wins:Number(old.wins)||0,gamesPlayed:Number(old.gamesPlayed)||0,level:Number(old.level)||1,language:window.ZIVOZONE_I18N?.get?.()||'ar',termsAcceptedAt:firebase.firestore.FieldValue.serverTimestamp(),termsVersion:TERMS_VERSION};
+        // V1230.103 — referral attribution (see pendingReferral()'s note above for why this safely
+        // tolerates the pre-existing race with onAuthStateChanged's own players/{uid} creation).
+        const ref=pendingReferral(u.uid);
+        if(ref)player.referredBy=ref;
         await db.collection('players').doc(u.uid).set({...player,termsAcceptedAt:firebase.firestore.FieldValue.serverTimestamp(),termsVersion:TERMS_VERSION,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+        if(ref)clearReferralSoon();
         saveLocal();await track('account_created',{source:'website'});emit();return player;
       }catch(e){throw Error(firebaseMessage(e.code))}
     }
