@@ -23,6 +23,7 @@ core/modules/auth.js
 core/modules/runtime/router.js
 core/modules/runtime/seo.js
 core/modules/runtime/share.js
+core/modules/runtime/search.js
 core/modules/runtime/app-shell.js
 core/modules/runtime/dedupe.js
 core/modules/runtime/question-history.js

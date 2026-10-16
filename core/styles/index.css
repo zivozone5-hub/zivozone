@@ -977,3 +977,24 @@ body.zivo-nav-open #zivo-nav-toggle span:nth-child(3){transform:translateY(-4px)
 /* V1230.15 — SEO: internal "room details" links on signature/challenge cards + prerendered room-landing article shell */
 .zivo-seo-link{display:inline-block;margin-top:8px;font-size:10px;color:#9fe8ff;opacity:.8;text-decoration:underline;text-underline-offset:2px}.zivo-seo-link:hover{opacity:1}
 .zivo-seo-story{color:var(--text)}.zivo-seo-story .eyebrow{font-size:10px;letter-spacing:.08em;color:#9fe8ff;font-weight:800}.zivo-seo-story h1{font-size:clamp(26px,4vw,40px);margin:10px 0}.zivo-seo-story .muted{color:var(--muted)}.zivo-seo-story h2{font-size:20px;margin:26px 0 8px}.zivo-seo-story p{line-height:1.9}.zivo-seo-story .btn{display:inline-block;border-radius:12px;padding:12px 22px;font-weight:800;border:1px solid rgba(255,255,255,.14);color:var(--text)}.zivo-seo-story .btn-primary{background:linear-gradient(145deg,#7c3cff,#2ddcff);border:0;color:#06070d}
+/* V1230.104 — site-wide search overlay (core/modules/runtime/search.js). Same dark modal language
+   as .modal-backdrop/.modal-card (#0d1020/#303653) but its own namespace since it's a self-mounted
+   module, not app-shell.js's shared #modal-root. */
+.zsearch-overlay{position:fixed;inset:0;z-index:2147483620;display:none}
+.zsearch-overlay.open{display:block}
+.zsearch-backdrop{position:fixed;inset:0;background:rgba(2,3,8,.82);backdrop-filter:blur(10px);display:flex;align-items:flex-start;justify-content:center;padding:12vh 16px 16px}
+.zsearch-card{width:min(640px,100%);max-height:72vh;display:flex;flex-direction:column;background:#0d1020;border:1px solid #303653;border-radius:20px;box-shadow:0 30px 100px #000;overflow:hidden}
+.zsearch-bar{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #202640}
+.zsearch-icon{font-size:16px;opacity:.7}
+.zsearch-bar input{flex:1;min-width:0;border:0;background:transparent;color:#fff;font-size:15px;outline:none}
+.zsearch-count{font-size:11px;color:#8b93a7;white-space:nowrap}
+.zsearch-close{border:0;background:#181c2d;color:#fff;width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:18px;flex:0 0 auto}
+.zsearch-results{overflow:auto;padding:8px}
+.zsearch-hint,.zsearch-empty{padding:24px 16px;color:#8b93a7;font-size:13px;text-align:center}
+.zsearch-item{display:flex;align-items:flex-start;gap:10px;padding:11px 10px;border-radius:12px;text-decoration:none;color:inherit}
+.zsearch-item:hover{background:rgba(124,60,255,.1)}
+.zsearch-item-tag{flex:0 0 auto;margin-top:2px;font-size:9px;font-weight:800;color:#9fe8ff;background:rgba(159,232,255,.1);border-radius:7px;padding:3px 7px;white-space:nowrap}
+.zsearch-item-body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.zsearch-item-body b{font-size:13px;color:#fff}
+.zsearch-item-body small{font-size:11px;color:#8b93a7;line-height:1.5}
+@media(max-width:600px){.zsearch-backdrop{padding:8vh 10px 10px}.zsearch-card{max-height:80vh}}

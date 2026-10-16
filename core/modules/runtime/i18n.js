@@ -285,6 +285,17 @@ T.fr=T.fr||Object.assign({},T.en); T.fa=T.fa||Object.assign({},T.ar);
   Object.assign(T.fr,{footerDailyChallenge:"Défi du jour"});
   Object.assign(T.fa,{footerDailyChallenge:"چالش امروز"});
   // V1230.102 — footer entry point to the new Academy (coaching-articles) section.
+  // V1230.104 — site-wide search (core/modules/runtime/search.js): searches Stories + Academy
+  // titles/blurbs in whichever language is currently active (each fetches that language's own
+  // localized data/*/index.json, same as the content itself), so the search box always matches
+  // what's actually on screen rather than searching Arabic regardless of the chosen language.
+  Object.assign(T.ar,{searchAria:"بحث في الموقع",searchPlaceholder:"ابحث عن قصة أو مقال...",searchNoResults:"لا توجد نتائج لـ \"{query}\"",searchResultsCount:"{count} نتيجة",searchResultsCountOne:"نتيجة واحدة",searchStoryTag:"قصة",searchAcademyTag:"أكاديمية",searchHint:"اكتب للبحث في القصص والأكاديمية بجميع اللغات المتاحة بلغتك الحالية."});
+  Object.assign(T.en,{searchAria:"Search the site",searchPlaceholder:"Search for a story or article...",searchNoResults:"No results for \"{query}\"",searchResultsCount:"{count} results",searchResultsCountOne:"1 result",searchStoryTag:"Story",searchAcademyTag:"Academy",searchHint:"Type to search Stories and the Academy in your current language."});
+  Object.assign(T.zh,{searchAria:"搜索网站",searchPlaceholder:"搜索故事或文章...",searchNoResults:"没有找到「{query}」的结果",searchResultsCount:"{count} 条结果",searchResultsCountOne:"1 条结果",searchStoryTag:"故事",searchAcademyTag:"学院",searchHint:"输入内容以当前语言搜索故事和学院内容。"});
+  Object.assign(T.hi,{searchAria:"साइट पर खोजें",searchPlaceholder:"कहानी या लेख खोजें...",searchNoResults:"\"{query}\" के लिए कोई परिणाम नहीं",searchResultsCount:"{count} परिणाम",searchResultsCountOne:"1 परिणाम",searchStoryTag:"कहानी",searchAcademyTag:"अकादमी",searchHint:"अपनी वर्तमान भाषा में कहानियाँ और अकादमी खोजने के लिए टाइप करें।"});
+  Object.assign(T.es,{searchAria:"Buscar en el sitio",searchPlaceholder:"Busca una historia o artículo...",searchNoResults:"Sin resultados para \"{query}\"",searchResultsCount:"{count} resultados",searchResultsCountOne:"1 resultado",searchStoryTag:"Historia",searchAcademyTag:"Academia",searchHint:"Escribe para buscar en Historias y la Academia en tu idioma actual."});
+  Object.assign(T.fr,{searchAria:"Rechercher sur le site",searchPlaceholder:"Cherche une histoire ou un article...",searchNoResults:"Aucun résultat pour « {query} »",searchResultsCount:"{count} résultats",searchResultsCountOne:"1 résultat",searchStoryTag:"Histoire",searchAcademyTag:"Académie",searchHint:"Tape pour chercher dans les Histoires et l'Académie dans ta langue actuelle."});
+  Object.assign(T.fa,{searchAria:"جست‌وجو در سایت",searchPlaceholder:"جست‌وجوی داستان یا مقاله...",searchNoResults:"نتیجه‌ای برای \"{query}\" یافت نشد",searchResultsCount:"{count} نتیجه",searchResultsCountOne:"۱ نتیجه",searchStoryTag:"داستان",searchAcademyTag:"آکادمی",searchHint:"برای جست‌وجو در داستان‌ها و آکادمی به زبان فعلی خود تایپ کنید."});
   // V1230.103 — "Invite friends" referral share message/title (see share.js's buildInviteMessage())
   // and the profile-panel invite button's label/description (player-hub.js).
   Object.assign(T.ar,{inviteShareTitle:"دعوة من {name} إلى ZIVOZONE",inviteShareMessage:"🎮 يدعوك {name} للعب على ZIVOZONE! تحديات، ألعاب، وقصص ممتعة بانتظارك.",inviteCta:"دعوة الأصدقاء",inviteDesc:"شارك رابطك الخاص مع أصدقائك وادعهم للانضمام إلى ZIVOZONE."});
