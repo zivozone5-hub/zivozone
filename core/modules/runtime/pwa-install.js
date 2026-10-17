@@ -12,6 +12,17 @@
   'use strict';
   const btn = () => document.getElementById('pwa-install-btn');
   let deferredEvent = null;
+  let autoHideTimer = null;
+
+  // V1230.122 — the user asked for this to behave like a one-time soft nudge (appear on the
+  // visitor's first time opening the site, then go away on its own) instead of sitting in the top
+  // bar permanently until installed or manually dismissed. SEEN_KEY makes the auto-show part
+  // one-time-ever per browser; the auto-hide timer (AUTO_HIDE_MS) is what makes it "then disappear"
+  // even on that first visit, so it never lingers as permanent chrome.
+  const SEEN_KEY = 'zivozone_pwa_install_seen_v1';
+  const AUTO_HIDE_MS = 9000;
+  const hasSeenBefore = () => { try { return !!localStorage.getItem(SEEN_KEY); } catch (_) { return false; } };
+  const markSeen = () => { try { localStorage.setItem(SEEN_KEY, '1'); } catch (_) {} };
 
   const isStandalone = () =>
     (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
@@ -19,11 +30,26 @@
 
   function show() {
     const b = btn();
-    if (b && !isStandalone()) b.hidden = false;
+    if (!b || isStandalone()) return;
+    // Not the visitor's first time: keep the button out of the permanent top-bar chrome. The
+    // install option is still reachable from the browser's own menu, same as before this version.
+    if (hasSeenBefore()) return;
+    b.hidden = false;
+    b.classList.remove('pwa-install-fading');
+    markSeen();
+    clearTimeout(autoHideTimer);
+    autoHideTimer = setTimeout(fadeOut, AUTO_HIDE_MS);
+  }
+  function fadeOut() {
+    const b = btn();
+    if (!b || b.hidden) return;
+    b.classList.add('pwa-install-fading');
+    setTimeout(hide, 320);
   }
   function hide() {
     const b = btn();
-    if (b) b.hidden = true;
+    if (b) { b.hidden = true; b.classList.remove('pwa-install-fading'); }
+    clearTimeout(autoHideTimer);
   }
 
   window.addEventListener('beforeinstallprompt', (e) => {

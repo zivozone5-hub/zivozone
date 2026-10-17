@@ -1018,18 +1018,24 @@ body.zivo-nav-open #zivo-nav-toggle span:nth-child(3){transform:translateY(-4px)
    on purpose so it doesn't get caught by any of the stacked #login-btn !important rules earlier in
    this file (V103/V104/V105 layers) — it's a different element, but keeping it after them keeps the
    intent obvious to the next person reading this file top to bottom. */
+/* V1230.122 — pwa-install.js now auto-shows this once on a visitor's first-ever visit and fades it
+   out on its own after AUTO_HIDE_MS instead of leaving it in the top bar permanently; this is that
+   fade transition (the fading class is added ~320ms before the button is set hidden). */
+#pwa-install-btn{transition:opacity .3s ease,transform .3s ease}
+#pwa-install-btn.pwa-install-fading{opacity:0;transform:translateY(-4px)}
+@media(prefers-reduced-motion:reduce){#pwa-install-btn{transition:none}}
 .zivo-profile-chip{display:flex;align-items:center;gap:8px;border:1px solid rgba(112,224,255,.24);border-radius:14px;padding:5px 12px 5px 5px;background:linear-gradient(145deg,#0c1b2c,#07101b);cursor:pointer;font-family:inherit;min-width:0}
 .zivo-profile-chip[hidden]{display:none!important}
-.zivo-profile-chip .zprof-avatar{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;font-weight:1000;font-size:14px;color:#061018;background:radial-gradient(circle at 32% 25%,#9af0ff,#3fd0ff 45%,#6a5bff 100%);box-shadow:0 0 14px rgba(63,208,255,.35)}
+.zivo-profile-chip .zprof-avatar{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:grid;place-items:center;font-weight:1000;font-size:16px;color:#061018;background:radial-gradient(circle at 32% 25%,#9af0ff,#3fd0ff 45%,#6a5bff 100%);box-shadow:0 0 14px rgba(63,208,255,.35)}
 .zivo-profile-chip .zprof-text{display:flex;align-items:baseline;gap:4px;min-width:0}
 .zivo-profile-chip .zprof-greet{font-size:9px;font-weight:700;color:#7fe9c9;white-space:nowrap;flex:0 0 auto}
-.zivo-profile-chip .zprof-name{font-size:12px;font-weight:900;color:#fff;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
-@media(max-width:700px){.zivo-profile-chip{padding:4px 10px 4px 4px;gap:6px;border-radius:12px}.zivo-profile-chip .zprof-avatar{width:26px;height:26px;flex-basis:26px;font-size:12px}.zivo-profile-chip .zprof-name{max-width:96px;font-size:11px}.zivo-profile-chip .zprof-greet{font-size:8px}}
+.zivo-profile-chip .zprof-name{font-size:15px;font-weight:900;color:#fff;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+@media(max-width:700px){.zivo-profile-chip{padding:4px 10px 4px 4px;gap:6px;border-radius:12px}.zivo-profile-chip .zprof-avatar{width:30px;height:30px;flex-basis:30px;font-size:14px}.zivo-profile-chip .zprof-name{max-width:100px;font-size:14px}.zivo-profile-chip .zprof-greet{font-size:8px}}
 /* V1230.116 — under 480px the header is already carrying the mining chip, the ZIVO balance chip and
    the install button (see .zivo-header-economy/.zivo-header-mining-btn above); dropping the greeting
    word here (keeping just avatar + name) buys the name itself more of the little room left, instead
    of both getting squeezed and the name ending up the one that's cut. */
-@media(max-width:480px){.zivo-profile-chip .zprof-greet{display:none}.zivo-profile-chip .zprof-name{max-width:88px;font-size:10px}.zivo-profile-chip{padding:4px 8px 4px 4px;gap:5px}}
+@media(max-width:480px){.zivo-profile-chip .zprof-greet{display:none}.zivo-profile-chip .zprof-name{max-width:92px;font-size:13px}.zivo-profile-chip{padding:4px 8px 4px 4px;gap:5px}}
 
 /* V1230.118 — player-selectable round difficulty (see challenges.js's chooseQuestions()/DIFF_PRESET
    comment). The chip reuses .level-chip's existing look (just adds pointer+hover) so it reads as part

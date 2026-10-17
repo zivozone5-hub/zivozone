@@ -329,7 +329,15 @@
      the existing --zivo-nav-clearance variable (already computed by app-shell.js and already
      used by .zivo-consent for the identical "stay clear of the bottom nav" purpose) so the two
      stay in sync if the nav's height ever changes. */
-  css.textContent = "#zivo-audio-control{position:fixed;right:14px;bottom:14px;z-index:100001;width:48px;height:48px;border-radius:50%;border:1px solid #ffffff30;background:#0b1020;color:#fff;box-shadow:0 8px 30px #0008;cursor:pointer;font-size:20px}#zivo-audio-control.muted{opacity:.55}#zivo-audio-control[hidden]{display:none}@media(max-width:760px){#zivo-audio-control{bottom:calc(var(--zivo-nav-clearance,84px) + env(safe-area-inset-bottom,0px))}}";
+  // V1230.122 — this floating control (shown only on the narrow widths where the top-bar
+  // #audio-toggle hides itself, see sync() below) sat at the exact same right:14px/bottom:14px spot
+  // as .zivo-public-chat's FAB on mobile (index.css, right:8px + nav-clearance) — two separate
+  // floating buttons stacked on top of each other, flagged by the user as unprofessional. The
+  // player HUD (.zivo-v21-hud) already owns the opposite bottom-left corner, so instead of trading
+  // one collision for another, this stacks the audio control directly above the chat FAB on the
+  // same right edge: chat's own height (~54px) + a clear gap, on top of the same nav-clearance both
+  // already respect.
+  css.textContent = "#zivo-audio-control{position:fixed;right:14px;bottom:14px;z-index:100001;width:48px;height:48px;border-radius:50%;border:1px solid #ffffff30;background:#0b1020;color:#fff;box-shadow:0 8px 30px #0008;cursor:pointer;font-size:20px}#zivo-audio-control.muted{opacity:.55}#zivo-audio-control[hidden]{display:none}@media(max-width:760px){#zivo-audio-control{right:8px;bottom:calc(var(--zivo-nav-clearance,84px) + env(safe-area-inset-bottom,0px) + 68px)}}";
   document.head.appendChild(css);
 
   function setupControl() {
