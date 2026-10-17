@@ -56,7 +56,22 @@
        "Account" label there instead. Logged-in and admin labels are unaffected (a user's own name is
        the only thing that should ever legitimately ellipsize). */
     const narrow=window.matchMedia&&window.matchMedia('(max-width:480px)').matches;
-    const login=$('#login-btn'); if(login) login.textContent=admin?'👑 ADMIN':A.isLoggedIn()?`👤 ${p?.name||t('profile')}`:t(narrow?'loginShort':'login');
+    const login=$('#login-btn');
+    const loggedInNonAdmin=A.isLoggedIn()&&!admin;
+    /* V1230.116 — when a real player is signed in (not the admin, who keeps the existing gold
+       "👑 ADMIN" #login-btn untouched), show the new top-bar profile chip instead of squeezing the
+       name into #login-btn's narrow button; guests keep seeing #login-btn exactly as before. */
+    if(login) login.hidden=loggedInNonAdmin; if(login) login.textContent=admin?'👑 ADMIN':A.isLoggedIn()?`👤 ${p?.name||t('profile')}`:t(narrow?'loginShort':'login');
+    const profChip=$('#zivo-profile-chip');
+    if(profChip){
+      profChip.hidden=!loggedInNonAdmin;
+      if(loggedInNonAdmin){
+        const name=p?.name||t('profile');
+        const av=$('#zivo-profile-avatar'); if(av) av.textContent=String(name).trim().charAt(0).toUpperCase()||'Z';
+        const greet=$('#zivo-profile-greet'); if(greet) greet.textContent=t('profileGreeting');
+        const nm=$('#zivo-profile-name'); if(nm) nm.textContent=`${name} ✨`;
+      }
+    }
   }
   /* Re-label if the viewport crosses the breakpoint (device rotation, split-screen, desktop resize). */
   try{window.matchMedia('(max-width:480px)').addEventListener('change',()=>profile())}catch(e){}

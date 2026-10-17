@@ -72,7 +72,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.115">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.116">
 
 
 
@@ -96,8 +96,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.115">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.115">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.116">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.116">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -139,6 +139,16 @@
       <option value="fa">فارسی</option>
     </select>
     <button id="pwa-install-btn" class="btn btn-ghost" type="button" data-i18n="installApp" data-i18n-aria-label="将 ZIVOZONE 应用安装到您的设备" hidden>⬇️ 安装应用</button>
+    <!-- V1230.116 — professional top-bar identity for a logged-in player: avatar + "Hi, {name} ✨"
+         greeting, replacing the old plan of squeezing "👤 Name" into #login-btn's 100-125px-wide
+         button (see index.css's #login-btn media-query history). #login-btn itself is untouched and
+         still used as-is for guests and for the admin account; this chip is shown only in between
+         (populated/toggled by app-shell.js's profile(), reusing the same live player name it already
+         read for #login-btn). data-action="login" reuses the existing account-route click wiring. -->
+    <button id="zivo-profile-chip" class="zivo-profile-chip" type="button" data-action="login" hidden>
+      <span class="zprof-avatar" id="zivo-profile-avatar">Z</span>
+      <span class="zprof-text"><small class="zprof-greet" id="zivo-profile-greet">أهلاً،</small><b class="zprof-name" id="zivo-profile-name">ZIVO Player</b></span>
+    </button>
     <button id="login-btn" class="btn btn-primary" data-i18n="login">🔐 创建账户 / 登录</button>
   </div>
 </header>
@@ -268,7 +278,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1230.115"></script>
+<script type="module" src="zivo-ai.js?v=1230.116"></script>
 
 
 
@@ -291,7 +301,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.115"></script>
+<script src="dist/app.bundle.js?v=1230.116"></script>
 
 
 
