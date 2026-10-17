@@ -87,3 +87,21 @@
 .zr-epic-wrap .zr-epic-back{display:block;margin:22px auto 0;padding:12px 26px;border-radius:999px;
   border:1px solid #ffffff2e;background:#ffffff0e;color:#fff;cursor:pointer}
 @media(max-width:650px){.zr-epic-wrap{padding:60px 14px 40px}}
+
+/* V1230.119 — "ما وراء الزمن" (Beyond Time) room: cinematic deep-blue/gold theme, reusing the
+   existing room shell (.zr-entry/.zr-room/.zr-card/.zr-md/.zr-quiz-*) the same way .health does,
+   plus a small "truth or illusion" interactive widget (claim → fact/illusion → revealed explanation)
+   appended under an epoch's markdown body in timeEpoch(). */
+.zr-entry.time{background:radial-gradient(circle at 50% 45%,#1b2f5c 0,#0a1430 30%,#020309 72%)}
+.time .zr-kicker{color:#e8c467}
+.zr-entry.time h1{background:linear-gradient(90deg,#fff,#e8c467,#fff);background-clip:text}
+.zr-entry.time .zr-entry-content{animation:zrup 1.3s ease}
+.time-card{background:linear-gradient(145deg,#111c3a,#070b18)}
+.time-card span,.time-card b{color:#e8c467}
+.time .zr-md h3{color:#f3d98c}
+.time .zr-md blockquote{border-inline-start-color:#e8c467;background:#e8c46712;color:#f3e6c4}
+.zr-truth{margin:30px 0 0;padding:22px;border-radius:18px;border:1px solid #e8c46733;background:#0c1430}
+.zr-truth-kicker{font-size:12px;letter-spacing:2px;color:#e8c467;margin-bottom:10px}
+.zr-truth-claim{font-size:19px;color:#fff;line-height:1.7;margin:0 0 18px}
+.zr-truth-options{grid-template-columns:1fr 1fr}
+@media(max-width:480px){.zr-truth-options{grid-template-columns:1fr}}

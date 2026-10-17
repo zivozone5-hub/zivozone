@@ -13,6 +13,7 @@
   const STORY_BODY = id => `/data/stories/content/${encodeURIComponent(id)}.json`;
   const STORY_QUIZZES = "/data/stories/quizzes.json";
   const HEALTH_DOORS = "/data/health/health-doors.json";
+  const TIME_DOORS = "/data/time/epochs.json";
   const HG_ROUND_MS = 35000;
   const HG_SPAWN_MS = 650;
   const HG_LIVE_MS = 1150;
@@ -35,9 +36,11 @@
   // being hardcoded Arabic; COPY is rebuilt as a getter so language switches pick it up live.
   const COPY = {
     get stories() { return { title: t("roomsStoriesTitle"), line: t("roomsStoriesLine"), ambient: "horror" }; },
-    get health() { return { title: t("roomsHealthTitle"), line: t("roomsHealthLine"), ambient: "science" }; }
+    get health() { return { title: t("roomsHealthTitle"), line: t("roomsHealthLine"), ambient: "science" }; },
+    get time() { return { title: t("roomsTimeTitle"), line: t("roomsTimeLine"), ambient: "science" }; }
   };
   const HEALTH_NOTE = () => t("roomsHealthNote");
+  const TIME_NOTE = () => t("roomsTimeNote");
 
   const A = () => window.ZIVOZONE_AUDIO;
   const R = () => window.ZIVOZONE_ROUTER;
@@ -233,7 +236,7 @@
   async function enter(kind) {
     const c = COPY[kind] || COPY.health;
     const e = frame(`<div class="zr-entry ${esc(kind)}"><div class="zr-entry-glow"></div><div class="zr-entry-content"><div class="zr-kicker">ZIVO AI • PRIVATE ARCHIVE</div><h1>${esc(c.title)}</h1><p>${esc(c.line)}</p><button id="zr-enter-btn" type="button">${esc(t("roomsOpenDoor"))}</button><button id="zr-exit-btn" class="secondary" type="button">${esc(t("roomsExitToSite"))}</button></div></div>`, "", c.title);
-    e.querySelector("#zr-enter-btn").onclick = () => (kind === "stories" ? openStories() : openHealth());
+    e.querySelector("#zr-enter-btn").onclick = () => (kind === "stories" ? openStories() : kind === "time" ? openTime() : openHealth());
     e.querySelector("#zr-exit-btn").onclick = () => close();
     try { await A()?.unlock?.(); await A()?.playSfx?.("menu_toggle"); await A()?.transitionAmbient?.(c.ambient); } catch (_) {}
   }
@@ -759,6 +762,76 @@
     try { A()?.playSfx?.("click_light"); } catch (_) {}
   }
 
+  // ---- time (ما وراء الزمن) -----------------------------------------------------
+  async function openTime() {
+    let doors;
+    try {
+      doors = await loadLocalized(TIME_DOORS);
+      if (!Array.isArray(doors) || !doors.length) throw new Error("Time epochs are empty");
+    } catch (_) { return failure(openTime, t("roomsTimeIndexFailure")); }
+    const done = progress();
+    const e = frame(`<div class="zr-room time"><button class="zr-x" id="zr-close" aria-label="${esc(t("close"))}">×</button>
+      <header><div class="zr-kicker">ZIVO TIME ARCHIVE • ${esc(t("roomsTimeTitle"))}</div><h1>${esc(t("roomsTimeTitle"))}</h1><p>${esc(t("roomsTimePick"))}</p></header>
+      <div class="zr-grid">${doors.map(d => `<button type="button" class="zr-card time-card${done["tm:" + d.id] ? " done" : ""}" data-epoch="${esc(d.id)}"><span>${esc(fmt("roomsDoorLabel", { id: d.id }))} • ${esc(d.era || "")}${done["tm:" + d.id] ? " • ✓" : ""}</span><strong>${esc(d.title)}</strong><em>${esc(d.era || "")}</em><b>${esc(t("roomsOpenDoorCard"))}</b></button>`).join("")}</div>
+      <p class="zr-note">${esc(TIME_NOTE())}</p></div>`, "time", t("roomsTimeTitle"));
+    e.querySelector("#zr-close").onclick = () => close();
+    e.querySelectorAll("[data-epoch]").forEach(b => b.onclick = () => timeEpoch(b.dataset.epoch));
+  }
+
+  function renderTruthWidget(tr, container) {
+    if (!tr || !tr.claim) return "";
+    return `<div class="zr-truth" id="zr-truth-widget">
+      <div class="zr-truth-kicker">${esc(t("timeTruthKicker"))}</div>
+      <p class="zr-truth-claim">${esc(tr.claim)}</p>
+      <div class="zr-quiz-options zr-truth-options">
+        <button type="button" class="zr-quiz-opt" data-truth="fact">${esc(t("timeTruthAnswerFact"))}</button>
+        <button type="button" class="zr-quiz-opt" data-truth="illusion">${esc(t("timeTruthAnswerIllusion"))}</button>
+      </div>
+      <div class="zr-quiz-feedback" id="zr-truth-feedback" hidden></div>
+    </div>`;
+  }
+  function bindTruthWidget(e, tr) {
+    const wrap = e.querySelector("#zr-truth-widget");
+    if (!wrap || !tr) return;
+    const opts = [...wrap.querySelectorAll("[data-truth]")];
+    opts.forEach(b => b.onclick = () => {
+      opts.forEach(x => x.disabled = true);
+      const picked = b.dataset.truth;
+      const right = picked === tr.answer;
+      opts.forEach(x => x.classList.toggle("right", x.dataset.truth === tr.answer));
+      if (!right) b.classList.add("wrong");
+      const fb = wrap.querySelector("#zr-truth-feedback");
+      fb.hidden = false;
+      fb.textContent = (right ? t("timeTruthCorrectLabel") : t("timeTruthWrongLabel")) + " " + tr.explanation;
+      fb.className = "zr-quiz-feedback show " + (right ? "right" : "wrong");
+      try { A()?.playSfx?.(right ? "correct" : "wrong"); } catch (_) {}
+    });
+  }
+
+  async function timeEpoch(id) {
+    let doors;
+    try {
+      doors = await loadLocalized(TIME_DOORS);
+      if (!Array.isArray(doors) || !doors.length) throw new Error("Time epochs are empty");
+    } catch (_) { return failure(() => timeEpoch(id), fmt("roomsTimeUnavailable", { id })); }
+    const idx = doors.findIndex(x => x && String(x.id) === String(id));
+    if (idx < 0) return openTime();
+    const d = doors[idx], prev = doors[idx - 1], next = doors[idx + 1];
+    const e = frame(`<div class="zr-room time"><button class="zr-x" id="zr-close" aria-label="${esc(t("close"))}">×</button>
+      <article class="zr-reader"><div class="zr-kicker">ZIVO TIME • ${esc(fmt("roomsDoorLabel", { id: d.id }))}/${doors.length}</div>
+        <h1>${esc(d.title)}</h1><div class="zr-divider"></div><div class="zr-time-text zr-md">${md(d.content)}</div>
+        ${renderTruthWidget(d.truth)}
+        <p class="zr-note">${esc(TIME_NOTE())}</p>
+        <div class="zr-nav">${prev ? `<button type="button" data-go="${esc(prev.id)}">→ ${esc(prev.title)}</button>` : "<span></span>"}${next ? `<button type="button" data-go="${esc(next.id)}">${esc(next.title)} ←</button>` : "<span></span>"}</div>
+        <button id="zr-back" type="button">${esc(t("roomsBackToTime"))}</button></article></div>`, "time", d.title);
+    markRead("tm:" + d.id);
+    e.querySelector("#zr-close").onclick = () => close();
+    e.querySelector("#zr-back").onclick = openTime;
+    e.querySelectorAll("[data-go]").forEach(b => b.onclick = () => timeEpoch(b.dataset.go));
+    bindTruthWidget(e, d.truth);
+    try { A()?.playSfx?.("click_light"); } catch (_) {}
+  }
+
   window.addEventListener("zivozone:route", ev => {
     const route = ev.detail || {};
     if (route.type === "story" && route.id) {
@@ -781,7 +854,7 @@
 
   // ---- public API + wiring (home cards, data-zivo-room attributes) -------------------------
   window.ZIVOZONE = window.ZIVOZONE || {};
-  window.ZIVOZONE.RealRooms = { enter, openStories, openHealth, openStory, healthDoor, openHealthGame, close: () => close() };
+  window.ZIVOZONE.RealRooms = { enter, openStories, openHealth, openStory, healthDoor, openHealthGame, openTime, timeEpoch, close: () => close() };
 
   const kindOf = el => el.dataset.zivoRoom || (el.hasAttribute("data-zivo-story-room") ? "stories" : "health");
   document.addEventListener("click", ev => {

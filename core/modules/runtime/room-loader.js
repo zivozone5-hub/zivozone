@@ -82,6 +82,7 @@
     { sel: "[data-beauty-room]", key: "beauty", invoke: api => api.start() },
     { sel: "[data-zivo-story-room]", key: "rooms", invoke: api => api.enter("stories") },
     { sel: "[data-zivo-health-room]", key: "rooms", invoke: api => api.enter("health") },
+    { sel: "[data-zivo-room='time']", key: "rooms", invoke: api => api.enter("time") },
     { sel: "[data-football-room]", key: "football", invoke: api => api.start() }
   ];
 
