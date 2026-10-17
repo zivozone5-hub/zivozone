@@ -5,8 +5,8 @@
   window.ZIVOZONE_CONFIG = Object.freeze({
     ...existing,
     APP_NAME: 'ZIVOZONE',
-    APP_VERSION: '1230.114',
-    CORE_VERSION: '1230.114-clean-core',
+    APP_VERSION: '1230.115',
+    CORE_VERSION: '1230.115-clean-core',
     ADMIN_EMAIL: 'raefalbtish@gmail.com',
     ADMIN_EMAIL_NORMALIZED: 'raefalbtish@gmail.com',
     FREE_FIRST: true,
@@ -24,7 +24,7 @@
        keyed by the same names already used in index.html's data-ad-slot attributes. AUTO_ADS, on by
        default, fills the mobile gap the manual slots leave (see ZIVOZONE_ADS_SETUP.md). Set it to
        false to disable and rely only on the manual slots once real AdSense IDs are in place. */
-    ADSENSE_PUBLISHER_ID: 'ca-pub-0000000000000000',
+    ADSENSE_PUBLISHER_ID: 'ca-pub-3509511160414409',
     ADSENSE_SLOT_IDS: { top: '0000000001', bottom: '0000000002', 'left-1': '0000000003', 'left-2': '0000000004', 'right-1': '0000000005', 'right-2': '0000000006' },
     ADSENSE_AUTO_ADS: true,
     /* V1230 — rights protection: hostnames authorized to serve this build. Not a security boundary

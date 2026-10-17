@@ -27,7 +27,6 @@
   const adsCfg = () => window.ZIVOZONE_CONFIG || {};
   const pubId = () => String(adsCfg().ADSENSE_PUBLISHER_ID || '');
   const adsenseConfigured = () => /^ca-pub-\d+$/.test(pubId()) && pubId() !== PLACEHOLDER_PUB_ID;
-  const consentGranted = () => window.ZIVOZONE?.Events?.consent?.get?.() === 'granted';
 
   let scriptLoading = null, autoAdsRequested = false;
   function loadAdSenseScript() {
@@ -86,7 +85,6 @@
 
   function apply() {
     const slots = [...document.querySelectorAll('.ad-slot')];
-    if (!slots.length) return;
     /* V1230.80 — before a real AdSense account is wired in (ADSENSE_PUBLISHER_ID still the
        placeholder), these slots rendered as empty "your ad space here" boxes to every visitor —
        a visibly unfinished element on a site meant to look professional, confirmed live by the
@@ -100,7 +98,22 @@
       const badge = slot.querySelector('.ad-badge');
       if (badge) badge.hidden = !cfg.label;
     });
-    if (showPlaceholders && consentGranted()) {
+    /* V1230.115 — two fixes made together, both from getting AdSense actually linked:
+       1) This whole function used to return at the very top whenever the page had no manual
+          .ad-slot placeholders — true of every page except the homepage (stories/, academy/, rooms/,
+          the per-language clones' deep routes...). Auto Ads (requestAutoAdsIfEnabled below) needs no
+          manual slots at all, so that early exit was silently stopping Auto Ads from ever running on
+          100+ of this site's pages, not just skipping the (correctly slot-less) manual fill step. The
+          slots-length guard now only wraps the manual-slot loop above, not the whole function.
+       2) Loading the base AdSense script used to wait for a site-wide GDPR-style cookie-consent signal
+          (same gate analytics used). That is the right default for a new AdSense integration, but
+          Google's own "Connect your site" verification step asks for the script to be present and
+          firing unconditionally on every page (see index.html's matching static <script> tag) — the
+          owner explicitly chose prioritizing fast AdSense verification over waiting for that signal
+          here, so the condition below no longer checks it. Ads personalization itself still runs
+          through AdSense's own consent-mode signalling (Google's script, not a gate in this file) —
+          this change only affects how early the base script loads. */
+    if (cfg.enabled && adsenseConfigured()) {
       loadAdSenseScript().then(ok => { if (ok) { slots.forEach(fillSlot); requestAutoAdsIfEnabled(); } });
     }
   }
@@ -124,7 +137,8 @@
 
   window.ZIVOZONE_ADS = { apply, open, get: () => ({ ...cfg }), isConfigured: adsenseConfigured, isAutoAdsEnabled: () => !!adsCfg().ADSENSE_AUTO_ADS };
   document.addEventListener('DOMContentLoaded', apply);
-  /* Ads are consent-gated the same way analytics is (1229.0): loading AdSense and filling slots only
-     happens after the visitor accepts, and re-runs automatically if they accept later in the session. */
+  /* V1230.115 — AdSense loading is no longer gated on consent (see apply()'s matching note above);
+     this listener now mainly keeps the manual ad-slot placeholders and the settings modal's
+     "personalized ads" note in sync if the visitor changes their cookie choice mid-session. */
   window.addEventListener('zivozone-consent', apply);
 })();
