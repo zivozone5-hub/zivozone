@@ -103,5 +103,14 @@
 .zr-truth{margin:30px 0 0;padding:22px;border-radius:18px;border:1px solid #e8c46733;background:#0c1430}
 .zr-truth-kicker{font-size:12px;letter-spacing:2px;color:#e8c467;margin-bottom:10px}
 .zr-truth-claim{font-size:19px;color:#fff;line-height:1.7;margin:0 0 18px}
+/* V1230.123 — live community truth-meter: shown after the visitor answers, filled from a public
+   Firestore vote counter (rooms.js's voteTruth()/timeVotes/{doorId}). */
+.zr-truth-stats{margin-top:18px}
+.zr-truth-stats-label{font-size:13px;letter-spacing:.2px;color:#d7dbee;margin-bottom:8px;font-weight:600}
+.zr-truth-bar{height:10px;border-radius:99px;background:#ff769130;overflow:hidden}
+.zr-truth-bar i{display:block;height:100%;background:linear-gradient(90deg,#63dfba,#e8c467);transition:width .5s ease}
+.zr-truth-share{background:#e8c4671a;border-color:#e8c46755}
+.zr-truth-share:hover{background:#e8c4672c}
+@media(prefers-reduced-motion:reduce){.zr-truth-bar i{transition:none}}
 .zr-truth-options{grid-template-columns:1fr 1fr}
 @media(max-width:480px){.zr-truth-options{grid-template-columns:1fr}}

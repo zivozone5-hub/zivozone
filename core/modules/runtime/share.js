@@ -235,6 +235,43 @@
     return buildInviteMessage(options.name, options.uid);
   }
 
+  // V1230.123 — "Share your stance" (Beyond Time room): lets a visitor who just answered a
+  // Fact-or-Illusion claim send a friend a message stating their own pick on that specific claim,
+  // with a link that deep-links straight to that door (room-loader.js reads ?timeDoor=<id> on load
+  // and opens it directly) — so the recipient lands on the exact same claim, not just the homepage.
+  // Reuses the same native-share/clipboard/WhatsApp fallback chain as every other share action here.
+  function buildTimeDoorUrl(doorId) {
+    try {
+      const u = new URL("/", SITE_ORIGIN);
+      u.searchParams.set("timeDoor", clean(doorId));
+      return u.href;
+    } catch (_) {
+      return `${SITE_ORIGIN}/`;
+    }
+  }
+  function buildStanceMessage(doorId, claim, pickLabel, utmSource = "share") {
+    const url = withUtm(buildTimeDoorUrl(doorId), { source: utmSource, medium: "social", campaign: "time_stance" });
+    const claimText = clean(claim);
+    const message = `${fmt("timeShareStanceMessage", { pick: clean(pickLabel), claim: claimText })}\n${url}`;
+    return {
+      title: fmt("timeShareStanceTitle", { claim: claimText }),
+      text: message,
+      url,
+      canonicalUrl: buildTimeDoorUrl(doorId),
+      params: { doorId, claim: claimText, pickLabel: clean(pickLabel) }
+    };
+  }
+  function buildStance(options = {}) {
+    return buildStanceMessage(options.doorId, options.claim, options.pickLabel, options.utmSource);
+  }
+  async function shareStance(options = {}) {
+    const built = buildStance(options);
+    return dispatch(
+      utmSource => buildStanceMessage(options.doorId, options.claim, options.pickLabel, utmSource),
+      { doorId: built.params.doorId, claim: built.params.claim, stance: true }
+    );
+  }
+
   async function invite(options = {}) {
     const built = await buildInvite(options);
     return dispatch(() => built, { uid: built.params.uid, invite: true });
@@ -393,6 +430,10 @@
     buildInviteMessage,
     buildInvite,
     invite,
+    buildTimeDoorUrl,
+    buildStanceMessage,
+    buildStance,
+    shareStance,
     resolveShortLink,
     copyToClipboard,
     nativeShare,

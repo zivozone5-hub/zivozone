@@ -112,5 +112,21 @@
   document.addEventListener("click", handle, true);
   document.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") handle(e); }, true);
 
+  // V1230.123 — "share your stance" deep link (share.js's buildTimeDoorUrl(), rooms.js's
+  // shareStance button): a recipient who opens /?timeDoor=<id> lands straight on that epoch instead
+  // of the homepage, so they see the exact claim being argued about. Strips the param from the
+  // visible URL immediately (history.replaceState, no reload) so a refresh or re-share from the
+  // recipient's own session doesn't keep re-triggering this. rooms.js is lazy, so this is exactly
+  // the same "load it on demand" job this loader already does for every other room trigger.
+  try {
+    const u = new URL(location.href);
+    const doorId = u.searchParams.get("timeDoor");
+    if (doorId) {
+      u.searchParams.delete("timeDoor");
+      history.replaceState(history.state, "", u.href);
+      ensure("rooms").then(api => api.timeEpoch(doorId)).catch(err => console.warn("ZIVOZONE room lazy-load failed:", "rooms", err));
+    }
+  } catch (_) {}
+
   window.ZIVOZONE_ROOM_LOADER = Object.freeze({ ensure });
 })();

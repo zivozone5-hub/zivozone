@@ -778,7 +778,42 @@
     e.querySelectorAll("[data-epoch]").forEach(b => b.onclick = () => timeEpoch(b.dataset.epoch));
   }
 
-  function renderTruthWidget(tr, container) {
+  // ---- live community truth-meter (Firestore timeVotes/{doorId} = {fact, illusion}) -------------
+  // V1230.123 — same guarded default-app pattern as share.js's shortDb(), duplicated locally rather
+  // than imported: rooms.js is a lazy-loaded, self-contained module (see room-loader.js) with no
+  // build-time import system, and share.js may not have run yet when this first fires.
+  let _timeDb;
+  function timeDb() {
+    if (_timeDb !== undefined) return _timeDb;
+    try {
+      const CFG = window.ZIVOZONE_FIREBASE_CONFIG;
+      if (!CFG || !window.firebase?.initializeApp) { _timeDb = null; return _timeDb; }
+      if (!firebase.apps.some(a => a.name === "[DEFAULT]")) firebase.initializeApp(CFG);
+      _timeDb = firebase.firestore();
+    } catch (_) { _timeDb = null; }
+    return _timeDb;
+  }
+  // Increments the picked side by 1 and returns the resulting {fact, illusion} totals — or null if
+  // Firestore isn't reachable (offline, blocked, or this sandbox/dev build with no live project),
+  // in which case the caller just skips showing the live bar. Never blocks or fails the quiz itself.
+  async function voteTruth(doorId, pick) {
+    const db = timeDb();
+    if (!db || !["fact", "illusion"].includes(pick)) return null;
+    const ref = db.collection("timeVotes").doc(String(doorId));
+    try {
+      await db.runTransaction(async tx => {
+        const snap = await tx.get(ref);
+        const cur = snap.exists ? (snap.data() || {}) : {};
+        const fact = Number(cur.fact) || 0, illusion = Number(cur.illusion) || 0;
+        tx.set(ref, { fact: fact + (pick === "fact" ? 1 : 0), illusion: illusion + (pick === "illusion" ? 1 : 0) }, { merge: true });
+      });
+      const snap = await ref.get();
+      const d = snap.data() || {};
+      return { fact: Number(d.fact) || 0, illusion: Number(d.illusion) || 0 };
+    } catch (e) { console.warn("ZIVOZONE timeVotes:", e); return null; }
+  }
+
+  function renderTruthWidget(tr) {
     if (!tr || !tr.claim) return "";
     return `<div class="zr-truth" id="zr-truth-widget">
       <div class="zr-truth-kicker">${esc(t("timeTruthKicker"))}</div>
@@ -788,13 +823,19 @@
         <button type="button" class="zr-quiz-opt" data-truth="illusion">${esc(t("timeTruthAnswerIllusion"))}</button>
       </div>
       <div class="zr-quiz-feedback" id="zr-truth-feedback" hidden></div>
+      <div class="zr-truth-stats" id="zr-truth-stats" hidden>
+        <div class="zr-truth-stats-label" id="zr-truth-stats-label">${esc(t("timeVoteLoading"))}</div>
+        <div class="zr-truth-bar"><i id="zr-truth-bar-fact"></i></div>
+        <div class="zr-truth-stats-row"><span id="zr-truth-pct-fact"></span><span id="zr-truth-pct-illusion"></span></div>
+      </div>
+      <button type="button" class="zr-quiz-cta zr-truth-share" id="zr-truth-share" hidden>${esc(t("timeShareCta"))}</button>
     </div>`;
   }
-  function bindTruthWidget(e, tr) {
+  function bindTruthWidget(e, tr, doorId) {
     const wrap = e.querySelector("#zr-truth-widget");
     if (!wrap || !tr) return;
     const opts = [...wrap.querySelectorAll("[data-truth]")];
-    opts.forEach(b => b.onclick = () => {
+    opts.forEach(b => b.onclick = async () => {
       opts.forEach(x => x.disabled = true);
       const picked = b.dataset.truth;
       const right = picked === tr.answer;
@@ -805,6 +846,26 @@
       fb.textContent = (right ? t("timeTruthCorrectLabel") : t("timeTruthWrongLabel")) + " " + tr.explanation;
       fb.className = "zr-quiz-feedback show " + (right ? "right" : "wrong");
       try { A()?.playSfx?.(right ? "correct" : "wrong"); } catch (_) {}
+
+      const shareBtn = wrap.querySelector("#zr-truth-share");
+      const pickLabel = t(picked === "fact" ? "timeTruthAnswerFact" : "timeTruthAnswerIllusion");
+      if (shareBtn) {
+        shareBtn.hidden = false;
+        shareBtn.onclick = () => window.ZIVOZONE?.Share?.shareStance?.({ doorId, claim: tr.claim, pickLabel });
+      }
+
+      const totals = await voteTruth(doorId, picked);
+      if (!totals) return;
+      const sum = totals.fact + totals.illusion;
+      if (sum <= 0) return;
+      const factPct = Math.round((totals.fact / sum) * 100);
+      const illusionPct = 100 - factPct;
+      const stats = wrap.querySelector("#zr-truth-stats");
+      const bar = wrap.querySelector("#zr-truth-bar-fact");
+      if (bar) bar.style.width = factPct + "%";
+      const label = wrap.querySelector("#zr-truth-stats-label");
+      if (label) label.textContent = fmt("timeVoteStatsLabel", { factPct, illusionPct, count: sum });
+      if (stats) stats.hidden = false;
     });
   }
 
@@ -820,7 +881,7 @@
     const e = frame(`<div class="zr-room time"><button class="zr-x" id="zr-close" aria-label="${esc(t("close"))}">×</button>
       <article class="zr-reader"><div class="zr-kicker">ZIVO TIME • ${esc(fmt("roomsDoorLabel", { id: d.id }))}/${doors.length}</div>
         <h1>${esc(d.title)}</h1><div class="zr-divider"></div><div class="zr-time-text zr-md">${md(d.content)}</div>
-        ${renderTruthWidget(d.truth)}
+        ${renderTruthWidget(d.truth, d.id)}
         <p class="zr-note">${esc(TIME_NOTE())}</p>
         <div class="zr-nav">${prev ? `<button type="button" data-go="${esc(prev.id)}">→ ${esc(prev.title)}</button>` : "<span></span>"}${next ? `<button type="button" data-go="${esc(next.id)}">${esc(next.title)} ←</button>` : "<span></span>"}</div>
         <button id="zr-back" type="button">${esc(t("roomsBackToTime"))}</button></article></div>`, "time", d.title);
@@ -828,7 +889,7 @@
     e.querySelector("#zr-close").onclick = () => close();
     e.querySelector("#zr-back").onclick = openTime;
     e.querySelectorAll("[data-go]").forEach(b => b.onclick = () => timeEpoch(b.dataset.go));
-    bindTruthWidget(e, d.truth);
+    bindTruthWidget(e, d.truth, d.id);
     try { A()?.playSfx?.("click_light"); } catch (_) {}
   }
 

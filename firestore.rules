@@ -404,6 +404,23 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // V1230.123 — "Beyond Time" room's live community truth-meter (rooms.js's voteTruth()): an
+    // anonymous, unauthenticated public counter per claim (timeVotes/{doorId} = {fact, illusion}),
+    // same threat model as shortLinks above (public write, no auth required, worst case is click-spam
+    // skewing a fun stat, not a security issue). Each write may ONLY increment exactly one of the two
+    // counters by exactly 1 and must not touch the other — blocks both a "set my vote count to
+    // 999999" forgery and a write that tries to change both fields in one call.
+    match /timeVotes/{doorId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['fact','illusion'])
+        && ((request.resource.data.fact == 1 && request.resource.data.illusion == 0)
+          || (request.resource.data.illusion == 1 && request.resource.data.fact == 0));
+      allow update: if request.resource.data.keys().hasOnly(['fact','illusion'])
+        && ((request.resource.data.fact == resource.data.get('fact', 0) + 1 && request.resource.data.illusion == resource.data.get('illusion', 0))
+          || (request.resource.data.illusion == resource.data.get('illusion', 0) + 1 && request.resource.data.fact == resource.data.get('fact', 0)));
+      allow delete: if false;
+    }
+
     /* V1230.68 — FUTURE TIGHTENING, INERT, NOT ACTIVE. ===============================================
        Written alongside functions/index.js (real server-side game-result verification; see that
        file's header for full context and deploy steps) for the day the user upgrades off the free
