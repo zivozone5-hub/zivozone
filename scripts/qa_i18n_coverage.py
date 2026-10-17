@@ -51,7 +51,11 @@ ALLOW_FR = {"questions10", "xp", "coins", "score", "sportFootball", "sportBasket
             "lightEscapePause"}
 ALLOW_FA = {"xp", "coins", "emailPlaceholder", "exit", "horrorQuestion", "walletModalLabel", "loginShort", "questionCountSuffix",
             # V1230.46 — same as ALLOW_FR above.
-            "achRewardLabel"}
+            "achRewardLabel",
+            # V1230.118 — "متوسط" (motavasset/"medium") is a fully adopted, everyday Persian word
+            # ("سطح متوسط", "مدرسه متوسطه", ...), not a leftover untranslated Arabic copy — the new
+            # difficulty-picker's "Medium" option, same reason as the other entries in this set.
+            "difficultyMedium"}
 
 js = r"""
 const fs=require('fs');global.window=global;global.dispatchEvent=()=>{};global.CustomEvent=function(){};

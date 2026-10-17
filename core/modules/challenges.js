@@ -26,6 +26,49 @@ function toast(message,type='info'){
   const node=document.createElement('div');node.className=`toast ${type}`;node.textContent=message;box.appendChild(node);
   setTimeout(()=>node.remove(),3600);
 }
+
+// V1230.118 — player-selectable difficulty (see the long comment on chooseQuestions()'s DIFF_PRESET
+// below for why this exists). One global setting (not per-challenge-type — simplest, matches what
+// was asked for), persisted in localStorage, with a small chip in the Challenge Center header to
+// change it any time, plus a one-time picker shown before a brand-new player's very first round ever
+// (guarded by DIFF_ASKED_KEY so it never nags someone who already made a choice, including "medium").
+const DIFF_KEY='zivozone_difficulty_v1', DIFF_ASKED_KEY='zivozone_difficulty_asked_v1';
+const DIFF_LEVELS=['easy','medium','hard'];
+function getDifficulty(){try{const v=localStorage.getItem(DIFF_KEY);return DIFF_LEVELS.includes(v)?v:'medium'}catch(_){return'medium'}}
+function setDifficulty(level){if(!DIFF_LEVELS.includes(level))return;try{localStorage.setItem(DIFF_KEY,level);localStorage.setItem(DIFF_ASKED_KEY,'1')}catch(_){}renderDifficultyChip()}
+function difficultyMeta(level){return{
+  easy:{emoji:'🌱',label:t('difficultyEasy'),desc:t('difficultyEasyDesc')},
+  medium:{emoji:'⚖️',label:t('difficultyMedium'),desc:t('difficultyMediumDesc')},
+  hard:{emoji:'🔥',label:t('difficultyHard'),desc:t('difficultyHardDesc')}
+}[level]}
+function renderDifficultyChip(){
+  const chip=document.getElementById('zivo-difficulty-chip');if(!chip)return;
+  const m=difficultyMeta(getDifficulty());
+  chip.textContent=`${m.emoji} ${m.label}`;
+  chip.setAttribute('aria-label',t('difficultyChipAria'));
+}
+function openDifficultyPicker(opts){
+  const{firstTime=false,onDone=null}=opts||{};
+  const root=document.getElementById('modal-root');if(!root){onDone?.();return}
+  const current=getDifficulty();
+  root.innerHTML=`<div class="modal-backdrop"><div class="modal-card zivo-diff-modal" role="dialog" aria-modal="true">
+    <button data-close aria-label="${esc(t('close'))}" class="modal-close">×</button>
+    <h3>${esc(firstTime?t('difficultyFirstTimeTitle'):t('difficultyPickTitle'))}</h3>
+    <p class="muted">${esc(t('difficultyPickDesc'))}</p>
+    <div class="zivo-diff-options">${DIFF_LEVELS.map(lvl=>{const m=difficultyMeta(lvl);return `<button type="button" class="zivo-diff-option${lvl===current?' active':''}" data-diff="${lvl}"><span class="zivo-diff-emoji">${m.emoji}</span><b>${esc(m.label)}</b><small>${esc(m.desc)}</small></button>`}).join('')}</div>
+  </div></div>`;
+  root.setAttribute('aria-hidden','false');
+  let done=false;
+  const close=()=>{if(done)return;done=true;root.innerHTML='';root.setAttribute('aria-hidden','true');onDone?.()};
+  root.querySelectorAll('[data-close]').forEach(b=>b.onclick=close);
+  root.querySelector('.modal-backdrop').onclick=e=>{if(e.target.classList.contains('modal-backdrop'))close()};
+  root.querySelectorAll('[data-diff]').forEach(b=>b.onclick=()=>{setDifficulty(b.dataset.diff);if(!firstTime)toast(t('difficultyChanged'),'success');close()});
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  renderDifficultyChip();
+  document.getElementById('zivo-difficulty-chip')?.addEventListener('click',()=>openDifficultyPicker());
+});
+window.addEventListener('zivozone-language',renderDifficultyChip);
 // V1230.83 — forensic-case.css travels with forensic-case-core.js now instead of loading eagerly
 // on every page (same pattern as the other five rooms in room-loader.js; see that file's header).
 function loadForensicCss(){
@@ -82,7 +125,17 @@ function chooseQuestions(b,count){
   const avg=hist.length?hist.reduce((n,x)=>n+(Number(x.score)||0),0)/hist.length:50;
   const adaptive=read(STORE+':adaptive',{}), a=adaptive[b.id]||{};
   let shift=level>=20?1:level>=8?.5:0;if(avg>=80)shift+=.5;if(avg<45)shift-=.5;shift+=Math.min(2.5,(Number(a.perfectRuns)||0)*.7);
-  const target=Array.from({length:count},(_,i)=>Math.max(1,Math.min(10,Math.round((i/(count-1||1))*9+1+shift*(i/(count-1||1))))));
+  // V1230.118 — the adaptive shift above only reacts AFTER a player already has 8 rounds of history
+  // (avg defaults to 50 with none), so a brand-new player — any age — always got the unmodified
+  // 1→10 curve on their very first-ever round, before the adaptive system had anything to correct
+  // with. That's the root cause behind "the questions feel too hard": there was no player-facing
+  // lever at all, just a slow self-correction that only helps from the 2nd round onward. "medium"
+  // below is exactly the old formula (base 1, span 9, full shift) — unchanged for anyone who doesn't
+  // touch the new difficulty chip — "easy" is strictly additive (a real level-selection filter, see
+  // getDifficulty()/setDifficulty()), and "hard" is an explicit, opt-in tier for players who want it.
+  const DIFF_PRESET={easy:{base:1,span:4,shiftMul:.5,cap:6},medium:{base:1,span:9,shiftMul:1,cap:10},hard:{base:3,span:7,shiftMul:1,cap:10}};
+  const dp=DIFF_PRESET[getDifficulty()]||DIFF_PRESET.medium;
+  const target=Array.from({length:count},(_,i)=>{const frac=i/(count-1||1);return Math.max(1,Math.min(dp.cap,Math.round(frac*dp.span+dp.base+shift*dp.shiftMul*frac)))});
   // Only the longest-unseen slice competes for a slot (up to 2x what's needed, capped by bank size) —
   // keeps the LRU bias meaningful instead of letting the whole bank dilute it back to arbitrary.
   const left=pool.slice(0,Math.min(pool.length,Math.max(count*2,count))),run=[];
@@ -444,7 +497,15 @@ const runner={mount:null,run:null,index:0,correct:0,score:0,streak:0,best:0,time
     daily/forensic/horror-trivia) goes through to actually START playing, so gating here once covers
     all of them instead of repeating the check per game. Logged-in users/admins pass straight through. */
  async start(id){return window.ZIVOZONE_REQUIRE_PLAY?window.ZIVOZONE_REQUIRE_PLAY(()=>this._startInner(id)):this._startInner(id)},
- async _startInner(id){if(id==='horror')document.body.classList.add('zivo-darkroom-active');else document.body.classList.remove('zivo-darkroom-active');
+ async _startInner(id){
+  // V1230.118 — one-time difficulty check before this player's very first-ever round (any challenge,
+  // including Dark Room/Forensic): see DIFF_PRESET's comment on chooseQuestions() for why — without
+  // this, a brand-new player got the unmodified hardest curve with zero say in it. Guarded by
+  // DIFF_ASKED_KEY so returning players (who already have a choice on record, "medium" included)
+  // never see it again; they can still change it any time via the chip in the Challenge Center header.
+  let askedAlready=true;try{askedAlready=!!localStorage.getItem(DIFF_ASKED_KEY)}catch(_){}
+  if(!askedAlready){await new Promise(res=>openDifficultyPicker({firstTime:true,onDone:res}));try{localStorage.setItem(DIFF_ASKED_KEY,'1')}catch(_){}}
+  if(id==='horror')document.body.classList.add('zivo-darkroom-active');else document.body.classList.remove('zivo-darkroom-active');
   if(id==='forensic'){
     this.guest=!user();
     if(window.ZIVOZONE_FORENSIC_CORE?.start)return window.ZIVOZONE_FORENSIC_CORE.start();

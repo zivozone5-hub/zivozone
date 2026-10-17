@@ -72,7 +72,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.117">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.118">
 
 
 
@@ -96,8 +96,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.117">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.117">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.118">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.118">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -233,6 +233,13 @@
     <div><span class="eyebrow" data-i18n="challengeEyebrow">CHALLENGE CENTER</span><h2 data-i18n="challengeTitle">Challenge Center</h2><p class="muted" data-i18n="challengeText">Every challenge starts easy, then raises the pressure until the final questions.</p></div>
     <div class="challenge-center-meta"><span id="player-level-chip" class="level-chip">Level 1</span><span class="challenge-live-chip">● LIVE CHALLENGE ENGINE</span></div>
   </div>
+  <!-- V1230.118 — player-selectable difficulty chip (challenges.js): opens a picker (سهل/متوسط/صعب)
+       that reshapes each round's 1→10 difficulty curve. See chooseQuestions()'s DIFF_PRESET comment
+       for why this exists. Deliberately OUTSIDE .challenge-center-meta: that row is display:none on
+       mobile (index.css, max-width:700px) to reduce clutter there — exactly the viewport this chip
+       matters most on, so it needs to be a sibling, not a child, to stay visible there. -->
+  <div class="zivo-diff-chip-row"><button id="zivo-difficulty-chip" type="button" class="level-chip zivo-diff-chip">⚖️ متوسط</button></div>
+  </div>
   <div class="ad-slot ad-top" data-ad-slot="top"><span class="ad-badge" data-i18n="ad">Ad</span><strong data-i18n="adTitle">Your advertising space</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
   <div class="challenge-layout premium-challenge-layout">
     <aside class="ad-column ad-left" aria-label="Future advertising area">
@@ -278,7 +285,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1230.117"></script>
+<script type="module" src="zivo-ai.js?v=1230.118"></script>
 
 
 
@@ -301,7 +308,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.117"></script>
+<script src="dist/app.bundle.js?v=1230.118"></script>
 
 
 

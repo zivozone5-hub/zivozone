@@ -1030,3 +1030,21 @@ body.zivo-nav-open #zivo-nav-toggle span:nth-child(3){transform:translateY(-4px)
    word here (keeping just avatar + name) buys the name itself more of the little room left, instead
    of both getting squeezed and the name ending up the one that's cut. */
 @media(max-width:480px){.zivo-profile-chip .zprof-greet{display:none}.zivo-profile-chip .zprof-name{max-width:88px;font-size:10px}.zivo-profile-chip{padding:4px 8px 4px 4px;gap:5px}}
+
+/* V1230.118 — player-selectable round difficulty (see challenges.js's chooseQuestions()/DIFF_PRESET
+   comment). The chip reuses .level-chip's existing look (just adds pointer+hover) so it reads as part
+   of the same header-chip family as #player-level-chip right next to it, not a bolted-on control. */
+.zivo-diff-chip-row{position:relative;z-index:1;max-width:1180px;margin:0 auto 14px;display:flex;justify-content:flex-end}
+@media(max-width:700px){.zivo-diff-chip-row{justify-content:flex-start;margin-bottom:12px}}
+.zivo-diff-chip{cursor:pointer;font:inherit;transition:.15s;white-space:nowrap}
+.zivo-diff-chip:hover,.zivo-diff-chip:focus-visible{border-color:#5d6bff;color:#fff}
+.zivo-diff-modal{max-width:460px}
+.zivo-diff-modal h3{margin:4px 0 6px;font-size:19px}
+.zivo-diff-options{display:grid;gap:10px;margin-top:16px}
+.zivo-diff-option{display:flex;align-items:center;gap:12px;text-align:start;padding:13px 14px;border:1px solid #303653;border-radius:14px;background:#111426;color:#fff;cursor:pointer;font:inherit}
+.zivo-diff-option:hover{border-color:#5d6bff}
+.zivo-diff-option.active{border-color:#35dcff;background:rgba(53,220,255,.08);box-shadow:0 0 0 1px rgba(53,220,255,.3) inset}
+.zivo-diff-option .zivo-diff-emoji{font-size:22px;flex:0 0 auto}
+.zivo-diff-option b{display:block;font-size:14px}
+.zivo-diff-option small{display:block;color:#8f99b5;font-size:11px;margin-top:2px;line-height:1.5;white-space:normal}
+@media(max-width:480px){.zivo-diff-chip{font-size:11px;padding:7px 10px}}
