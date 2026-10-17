@@ -251,6 +251,14 @@ body.zivo-darkroom-active .zcr-question{width:100%!important}
    fixed guess silently let this banner overlap and block the nav underneath. --zivo-nav-clearance
    is now set from the nav's actual measured height by app-shell.js's syncConsentNavClearance(). */
 @media(max-width:760px){.zivo-consent{bottom:calc(var(--zivo-nav-clearance,84px) + env(safe-area-inset-bottom,0px))}}
+/* V1230.117 — #zivo-audio-control (audio.js) is fixed at a PHYSICAL right:14px/bottom:14px, 48x48,
+   z-index:100001 — not RTL-aware, same as this same codebase's .zrw-footer rule above already notes
+   and reserves clearance for. This banner's own Decline button wraps onto the same physical-right
+   corner at narrow widths (confirmed via measured rects: the two overlapped by ~33x33px), so the
+   audio button was sitting half on top of "رفض", right where someone would tap to decline. Reserving
+   the same ~66px on the physical right side the existing .zrw-footer fix already uses keeps the
+   banner's own action row clear of it, instead of fighting that very high stacking order. */
+@media(max-width:760px){.zivo-consent{padding-right:70px}}
 .zivo-clone-warning{position:fixed;inset-inline:12px;top:12px;z-index:9999;max-width:720px;margin-inline:auto;padding:10px 16px;border-radius:14px;background:#2a0b12;border:1px solid rgba(255,80,110,.4);box-shadow:0 12px 40px rgba(0,0,0,.55);color:#ffd7dd;font-size:13px;line-height:1.6;text-align:center}
 .zivo-clone-warning p{margin:0}
 
