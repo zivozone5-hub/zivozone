@@ -34,10 +34,14 @@ service cloud.firestore {
     // loosening one can never accidentally loosen the other.
     function validProfileUpdate() {
       let keys = request.resource.data.diff(resource.data).affectedKeys();
-      return keys.hasOnly(['language','name','age','updatedAt'])
+      return keys.hasOnly(['language','name','age','avatar','updatedAt'])
         && (!keys.hasAny(['language']) || (request.resource.data.language is string && request.resource.data.language.size() <= 5))
         && (!keys.hasAny(['name']) || (request.resource.data.name is string && request.resource.data.name.size() <= 24))
-        && (!keys.hasAny(['age']) || (request.resource.data.age is number && request.resource.data.age >= 13 && request.resource.data.age <= 100));
+        && (!keys.hasAny(['age']) || (request.resource.data.age is number && request.resource.data.age >= 13 && request.resource.data.age <= 100))
+        // V1230.129 — the avatar is a cosmetic, client-trusted pick (same low-stakes trust level as
+        // achievements/badges, which are also purely client-derived) — not server-verified against
+        // "earned" status; just size-capped so it can't be abused as a free-text storage channel.
+        && (!keys.hasAny(['avatar']) || (request.resource.data.avatar is string && request.resource.data.avatar.size() <= 32));
     }
     // auth.js's touchSession() — the existing "last seen" presence ping (players/{uid}.lastSeenAt/
     // lastSeenPath). Pre-existing, already-active write path; carved out here so the progress-sync
@@ -53,12 +57,13 @@ service cloud.firestore {
     function validLeaderboardEntry(uid) {
       let d = request.resource.data;
       let prevXp = resource == null ? 0 : resource.data.get('xp', 0);
-      return d.keys().hasOnly(['uid','name','level','xp','streak','updatedAt'])
+      return d.keys().hasOnly(['uid','name','level','xp','streak','avatar','updatedAt'])
         && d.uid == uid
         && d.name is string && d.name.size() <= 24
         && d.level is number && d.level >= 1 && d.level <= 999
         && d.xp is number && d.xp >= prevXp && d.xp - prevXp <= 500
         && d.streak is number && d.streak >= 0 && d.streak <= 3660
+        && (!d.keys().hasAny(['avatar']) || (d.avatar is string && d.avatar.size() <= 32))
         && d.updatedAt == request.time;
     }
     // V1230.61 — reward-forgery hardening (see economy.js's startGameSession() for the full writeup).
@@ -105,13 +110,13 @@ service cloud.firestore {
     // V1230.128 — share_reward (share.js's rewardFirstShareToday(): one small ZIVO for the first
     // successful share action of the day, any channel) added here AND in economy.js's credit()
     // switch in the SAME change, learning from the 1230.59/.60/.70 history above.
-    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward','share_reward']; }
+    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward','share_reward','legend_reward']; }
     // V1230.84 — unified every "finished a test/game perfectly" reward to a flat 5 ZIVO (challenge_reward
     // was 10; story/health/beauty/horror/light_escape_reward were 2). Must match economy.js's credit()
     // switch exactly, in the SAME change — see that file's V1230.84 note for why a mismatch here
     // silently rejects every claim of the changed type (same failure mode as the 1230.59/.60 history
     // above). Achievement/mission/competition rewards are untouched (different mechanic).
-    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'share_reward' && request.resource.data.amount == 1); }
+    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'share_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'legend_reward' && request.resource.data.amount == 5); }
     function validRewardClaim(claimId) {
       return request.resource.data.claimId == claimId
         && request.resource.data.status == 'consumed'
@@ -137,7 +142,8 @@ service cloud.firestore {
         && (request.resource.data.type != 'story_epic_reward' || request.resource.data.policy == 'story_epic_reward')
         && (request.resource.data.type != 'health_epic_reward' || request.resource.data.policy == 'health_epic_reward')
         && (request.resource.data.type != 'football_epic_reward' || request.resource.data.policy == 'football_epic_reward')
-        && (request.resource.data.type != 'share_reward' || request.resource.data.policy == 'share_reward');
+        && (request.resource.data.type != 'share_reward' || request.resource.data.policy == 'share_reward')
+        && (request.resource.data.type != 'legend_reward' || request.resource.data.policy == 'legend_reward');
     }
     function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
     // V1230.89 — this used to hardcode an exact question count (10, then briefly 20) that had to be

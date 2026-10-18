@@ -360,7 +360,12 @@
       // itself already bakes in today's date, so the once-per-day cap is enforced by the existing
       // idempotent-claim transaction, not a new mechanism. Added here AND in firestore.rules'
       // rewardTypeValid()/rewardAmountValid()/validRewardClaim() in this same change.
-      : type === 'share_reward' ? 'share_reward' : '';
+      : type === 'share_reward' ? 'share_reward'
+      // V1230.129 — one-time bonus for completing all 5 "Legend Journey" milestones
+      // (legend-journey.js's grantIfComplete()). The claimId there is a fixed constant
+      // ('legend_journey_complete'), so — same idempotent-claim mechanism as every reward above —
+      // this can only ever be granted once per player, with zero extra anti-abuse code needed.
+      : type === 'legend_reward' ? 'legend_reward' : '';
     // V1230.84 — unified every "you finished a test/game perfectly" reward to a flat 5 ZIVO
     // (challenge_reward and the single-game "_reward" room-clears used to pay 10 and 2 respectively;
     // the "_epic_reward" full-room-clear types were already 5). Mirrored exactly in firestore.rules'
@@ -384,7 +389,8 @@
       : type === 'story_epic_reward' ? value === 5
       : type === 'health_epic_reward' ? value === 5
       : type === 'football_epic_reward' ? value === 5
-      : type === 'share_reward' ? value === 1 : false;
+      : type === 'share_reward' ? value === 1
+      : type === 'legend_reward' ? value === 5 : false;
     if (!policy || !allowed) return false;
 
     try {

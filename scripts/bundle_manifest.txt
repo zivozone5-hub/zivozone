@@ -47,11 +47,13 @@ core/modules/epic50.js
 core/modules/minigame-content.js
 core/modules/challenges.js
 core/modules/cloud.js
+core/modules/avatar.js
 core/modules/achievements.js
 core/modules/leaderboard.js
 core/modules/daily.js
 core/modules/competition.js
 core/modules/missions.js
+core/modules/legend-journey.js
 core/modules/player-hub.js
 core/modules/news.js
 core/modules/admin.js

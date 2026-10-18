@@ -327,3 +327,22 @@ body.zivo-darkroom-active .zcr-question{width:100%!important}
 .zss-ico{font-size:22px}
 @media(min-width:620px){.zss-root.open{align-items:center}.zss-card{border-radius:22px;transform:translateY(16px) scale(.96)}.zss-root.open .zss-card{transform:translateY(0) scale(1)}}
 @media(prefers-reduced-motion:reduce){.zss-card{transition:none}.zss-backdrop{transition:none}}
+/* V1230.129 — Avatar picker (.zav-*) and Legend Journey panel (.zlj-*). Both reuse the existing
+   .v31-overlay/.v31-card/.v31-head/.v31-emblem/.v31-list/.v31-badge classes (achievements.js's
+   panel) for a consistent look, adding only what's genuinely new: the avatar chip itself (reused
+   anywhere an avatar needs to render — player-hub.js header, leaderboard.js rows) and the picker
+   grid/legendary glow ring. */
+.zav-chip{border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
+.zav-legend{box-shadow:0 0 0 2px rgba(255,217,107,.55),0 0 18px rgba(255,122,61,.55);animation:zav-pulse 2.2s ease-in-out infinite}
+@keyframes zav-pulse{0%,100%{box-shadow:0 0 0 2px rgba(255,217,107,.45),0 0 14px rgba(255,122,61,.4)}50%{box-shadow:0 0 0 3px rgba(255,217,107,.75),0 0 24px rgba(255,122,61,.75)}}
+.zav-card{width:min(520px,100%)}
+.zav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:4px}
+.zav-opt{display:flex;align-items:center;justify-content:center;padding:0;border:0;background:none;cursor:pointer;border-radius:50%}
+.zav-opt-chip{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid transparent;transition:transform .15s ease,border-color .15s ease}
+.zav-opt:hover .zav-opt-chip{transform:scale(1.07)}
+.zav-opt.on .zav-opt-chip{border-color:#fff}
+.zav-opt.locked{cursor:not-allowed}
+.zav-opt.locked .zav-opt-chip{opacity:.55;filter:grayscale(.4)}
+@media(max-width:480px){.zav-grid{grid-template-columns:repeat(4,1fr)}}
+.zlj-intro{color:#aab2c8;font-size:13px;line-height:1.7;margin:0 0 14px}
+.zlj-unlock{margin-top:14px;padding:12px;border-radius:12px;background:rgba(255,217,107,.1);border:1px solid rgba(255,217,107,.3);color:#ffe9ad;font-size:13px;font-weight:700;text-align:center}

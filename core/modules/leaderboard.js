@@ -20,8 +20,16 @@
     } catch (e) { console.warn('Leaderboard fetch:', e); return null; }
   }
 
+  // V1230.129 — the leaderboard/{uid} projection now optionally carries an `avatar` id (see
+  // auth.js's syncProgress() and firestore.rules' validLeaderboardEntry()); avatar.js's chip()
+  // already falls back to the default avatar for any id it doesn't recognize (including an empty
+  // string from rows written before this change), so this never breaks on old data.
   function row(entry, rank, isYou) {
-    return `<div class="zlb-row${isYou ? ' zlb-you' : ''}"><span class="zlb-rank">#${rank}</span><span class="zlb-name">${esc(entry.name || '—')}${isYou ? ` <small>(${esc(t('lbYouLabel'))})</small>` : ''}</span><span class="zlb-level">${esc(t('level'))} ${Math.max(1, Number(entry.level) || 1)}</span><b class="zlb-xp">${Math.max(0, Number(entry.xp) || 0)} ${esc(t('xp'))}</b></div>`;
+    // Pass an explicit fallback id ('z1'), never a falsy value — chip(id) with no id defaults to
+    // the CURRENT signed-in player's own avatar (right for player-hub.js's own header), which would
+    // be wrong here: every other row without stored avatar data would wrongly show the viewer's own.
+    const chip = window.ZIVOZONE?.Avatar?.chip?.(entry.avatar || 'z1', 30) || '';
+    return `<div class="zlb-row${isYou ? ' zlb-you' : ''}"><span class="zlb-rank">#${rank}</span>${chip}<span class="zlb-name">${esc(entry.name || '—')}${isYou ? ` <small>(${esc(t('lbYouLabel'))})</small>` : ''}</span><span class="zlb-level">${esc(t('level'))} ${Math.max(1, Number(entry.level) || 1)}</span><b class="zlb-xp">${Math.max(0, Number(entry.xp) || 0)} ${esc(t('xp'))}</b></div>`;
   }
 
   async function render() {

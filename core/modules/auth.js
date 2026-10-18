@@ -218,7 +218,7 @@
     try{
       await Promise.all([
         db.collection('players').doc(user.uid).set(safe,{merge:true}),
-        db.collection('leaderboard').doc(user.uid).set({uid:user.uid,name:String(player.name||'ZIVO Player').slice(0,24),level:safe.level,xp:safe.xp,streak:safe.streak,updatedAt:stamp},{merge:true})
+        db.collection('leaderboard').doc(user.uid).set({uid:user.uid,name:String(player.name||'ZIVO Player').slice(0,24),level:safe.level,xp:safe.xp,streak:safe.streak,...(player.avatar?{avatar:String(player.avatar).slice(0,32)}:{}),updatedAt:stamp},{merge:true})
       ]);
       player={...player,...safe};saveLocal();
       return true;

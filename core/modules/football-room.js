@@ -248,6 +248,7 @@
       <p>${esc(t("tacticsIntro"))}</p>
       <p class="zfr-controls-hint">${esc(t("tacticsOpenHint"))}</p>
       ${continueBtn}
+      <button type="button" class="zfr-trivia" id="tct-trivia">${esc(t("tacticsTriviaBtn"))}</button>
       <p class="zfr-reward-note">${esc(t("tacticsRewardNote"))}</p>
     </div></div></div>`;
     r.classList.add("active");
@@ -256,6 +257,23 @@
     r.querySelector("#tct-start")?.addEventListener("click", () => gatedStartAt(1));
     r.querySelector("#tct-continue")?.addEventListener("click", () => gatedStartAt(saved + 1));
     r.querySelector("#tct-restart")?.addEventListener("click", () => gatedStartAt(1));
+    // V1230.129 — real football knowledge (leagues/players/World Cup history/tactics terms) lives
+    // in the Challenge Center's existing bank.football question pool (question-bank.js), now with
+    // 24 new trivia questions added there. Rather than reinventing this room's Epic50 tap-reflex
+    // engine as a quiz UI, this button launches that same quiz runner directly from inside the
+    // football room itself, so the room covers both tactical reflexes AND real football knowledge.
+    // Deliberately NOT calling close() here: close() sets location.hash="#home", and app-shell.js's
+    // 'zivozone-home-reset' listener (fired async on that hashchange) unconditionally wipes
+    // #modal-root and #zivo-challenge-core as a "went back to the homepage" cleanup — which would
+    // silently destroy the play-gate modal / quiz this click is about to open a moment later, with
+    // no error anywhere (found live: the button appeared to do nothing). Just hiding this room's own
+    // overlay, without touching the hash, avoids triggering that cleanup at all.
+    r.querySelector("#tct-trivia")?.addEventListener("click", () => {
+      try { A()?.stopAmbient?.(); } catch (_) {}
+      root().classList.remove("active");
+      document.body.classList.remove("zivo-football-active");
+      try { window.ZIVOZONE_CHALLENGE_CORE?.start?.("football"); } catch (_) {}
+    });
     try { A()?.unlock?.(); A()?.transitionAmbient?.("football"); } catch (_) {}
   }
 
