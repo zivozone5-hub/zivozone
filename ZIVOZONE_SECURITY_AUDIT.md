@@ -1,4 +1,4 @@
-# ZIVOZONE — Security Audit (current as of V1230.13)
+# ZIVOZONE — Security Audit (current as of V1230.133)
 
 This replaces the previous version of this document, which referenced version numbers (1229.6,
 1229.10) from well before the reward system, the Dark Room/Puzzle Room/Beauty Room/Health World
@@ -61,3 +61,86 @@ that `policy` matches the reward type's own name, which is even less effort to f
 ## No new Cloud Functions, paid APIs, or second rules file
 Confirmed again this round: `firestore.rules` remains the single rules file, and nothing added since
 requires leaving the Spark (free) plan.
+
+---
+
+## V1230.132 / V1230.133 round — full site audit (2026-10-18)
+
+A full cybersecurity/engineering review of the entire site was run this round, covering Firebase
+Hosting exposure, the match-data CI pipeline, storage rules, response headers, and a Playwright
+crawl of the live pages for console/runtime errors and basic accessibility. Two critical findings,
+one minor hardening, and several smaller professional-grade fixes came out of it. All are deployed
+to the repo and pushed to `origin/main`; the Firebase Hosting / Storage Rules changes still need the
+project owner to run `firebase deploy` for them to take effect on the live site (see "Deploy status"
+below) — nothing in this round changed anything on the live site by itself.
+
+### Critical finding 1 — public plaintext answer-key leak (fixed, V1230.132)
+`firebase.json`'s hosting config serves the entire repo (`"public": "."`) except whatever is listed
+under `"ignore"`. `functions/**` was never in that list, so `functions/data/answer-key.json` — a
+484KB plaintext export of the correct answer to every quiz question, in every language — was
+publicly fetchable by anyone who guessed or found the URL, even though no page actually linked to it.
+**Fixed**: added `"functions/**"` to the ignore list, plus `Disallow: /functions/` in `robots.txt` as
+a defense-in-depth signal to crawlers.
+
+### Critical finding 2 — same leak via raw, unminified source (fixed, V1230.133)
+The same answer data was *also* reachable a second way: `core/**` (the raw, fully-commented
+pre-build source, as opposed to the minified `dist/` bundle actually loaded by the live pages) was
+likewise never excluded from hosting. `core/modules/question-bank.js` embeds every correct answer
+inline in its `Q(id, type, q, answers, correctIndex, ...)` calls, in clear text, with helpful
+comments. Confirmed via a repo-wide search that no served HTML page references anything under
+`core/` directly (everything live loads from `dist/app.bundle.js`), so excluding it has zero effect
+on functionality. **Fixed**: added `"core/**"` to the hosting ignore list and removed the
+now-pointless `/core/**` Cache-Control header rule that referenced it.
+
+### Critical finding 3 — month-long broken match-data pipeline (fixed and verified live)
+`scripts/fetch_matches.py` stamped `"version":"1197"` into every file it writes, while
+`scripts/validate_match_data.py` (run right after it on every push and on a 15-minute cron) hard-
+required that version to equal `"1201"`. Every single run failed validation for at least a month,
+so `data/matches/*.json` stayed frozen on a stale 2026-09-20 snapshot while the live homepage's
+Match Center kept requesting "today"'s file and getting 404s on every page load. **Fixed** by
+correcting the three `"1197"` stamps to `"1201"` in `fetch_matches.py`. **Verified fixed in
+production**, not just in theory: the workflow was manually dispatched after the fix, confirmed to
+pass validation, and a near-simultaneous automatic run landed fresh match data (2026-10-11 through
+2026-10-25) on `origin/main`.
+
+### Hardening — storage.rules email-verification gap (fixed, V1230.132)
+`storage.rules`'s admin check for `/reels/{fileName}` writes/deletes checked the admin email but,
+unlike the equivalent check in `firestore.rules`, never required `email_verified == true`. Firebase
+Auth doesn't allow a second account to register the exact same email, so this wasn't independently
+exploitable — but it's a one-line fix for consistency between the two rule files, so it's done.
+
+### Other hardening this round
+- Added `Strict-Transport-Security: max-age=31536000; includeSubDomains; preload` to the sitewide
+  response headers (was previously missing).
+- Added `.well-known/security.txt` (RFC 9116) with a real contact address, so a security researcher
+  who finds a problem has an obvious, standard way to report it responsibly instead of posting it
+  publicly. Had to add a `"!.well-known/**"` negation to the hosting ignore list too, since the
+  existing blanket dotfile-ignore rule (`"**/.*"`) would otherwise have swallowed it.
+- Re-ran a Playwright crawl across the homepage (AR + EN), five room pages, two academy pages, a
+  story page, privacy/terms, and the 404 page: zero console errors, zero broken local resources.
+- Basic accessibility pass on the homepage (missing `alt` text, unlabeled buttons/inputs): clean.
+
+### Known and accepted, not pursued further — public GitHub repository
+The GitHub repo backing this site (`zivozone5-hub/zivozone`) is public, which means the full source
+— including anything excluded from Firebase Hosting above — can simply be `git clone`d regardless
+of any hosting-level fix. The owner was informed of this, and of the caveat that GitHub Pages on a
+private repo needs a paid GitHub plan to keep serving (this repo has Pages enabled, with a `CNAME`
+for `www.zivozone.com`, so it may be a live parallel deployment target). **Decision: do not change
+repo visibility** — the owner explicitly asked to avoid any change that could affect the live site,
+so this stays as an acknowledged, accepted trade-off rather than an open task. If this is revisited
+later: GitHub → repo Settings → Danger Zone → "Change repository visibility" → Private, and confirm
+the GitHub Pages plan situation first.
+
+### Flagged, not attempted — eager bundle size
+`core/modules/question-bank.js` (730KB raw) and `core/modules/i18n.js` (484KB raw) are the two
+largest contributors to the ~600KB gzip JS the homepage loads eagerly. Splitting them (the question
+bank by room category, i18n by active language only) could meaningfully cut first-load size, but is
+a large, regression-risky refactor that deserves its own dedicated, carefully-tested session rather
+than being folded into a general audit pass. Not started.
+
+### Deploy status
+Everything above is committed and pushed to `origin/main` (through V1230.133). The `firebase.json`
+and `storage.rules` changes are config, not application code — they only take effect once the owner
+runs `firebase deploy --only hosting` and `firebase deploy --only storage:rules` respectively. The
+match-data pipeline fix is already live (GitHub Actions deploys data independently of `firebase
+deploy`). No action in this round touched the live site directly.
