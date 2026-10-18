@@ -2,6 +2,21 @@
 # ZIVOZONE V1180 — Match Data Engine
 # Architecture: Discovery (TheSportsDB) -> Coverage adapters (ESPN) -> Normalizer -> Merge/Dedupe -> Static Store.
 # Free-only. No paid API key. Never replaces good data with an empty result.
+#
+# V1230.132 — CRITICAL FIX: every file this script writes (each day's own JSON, manifest.json,
+# index.json) was stamped "version":"1197", but scripts/validate_match_data.py (the CI gate the
+# "تحديث مركز المباريات" workflow runs right after this script, every 15 minutes AND on every push)
+# hard-asserts the version is exactly "1201". That made the CI job fail its validation step 100% of
+# the time, on every single run, for over a month straight — confirmed via `gh run list`: every
+# scheduled and push-triggered run since late September failed at the "فحص ملفات البيانات" step,
+# before the "git push" step ever ran. The practical effect: data/matches/*.json was silently frozen
+# at its last version-1201 snapshot (2026-09-20) while the live site's Match Center kept guessing at
+# "today"/"yesterday"/"tomorrow" files that were never actually updated — a full month of stale
+# fixtures, invisible unless someone checked the Actions tab or noticed the console 404s this caused
+# on every homepage load. Bumped to "1201" here to match what validate_match_data.py actually checks
+# for (and what the last known-good committed snapshot already used) — if either file's expected
+# version is ever intentionally bumped again, bump BOTH in the same change, the same lesson already
+# learned the hard way for reward types across economy.js/firestore.rules in this codebase.
 import json, urllib.request, urllib.error, time, re, os
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -198,7 +213,7 @@ for d in DAYS:
         # Do not publish an empty snapshot for a day we have never populated.
         continue
     path=OUT/f"{key}.json"
-    payload={"version":"1197","date":key,"timezone":"Asia/Amman","matches":merged}
+    payload={"version":"1201","date":key,"timezone":"Asia/Amman","matches":merged}
     text=json.dumps(payload,ensure_ascii=False,indent=2)
     if not path.exists() or path.read_text(encoding='utf-8')!=text:
         path.write_text(text,encoding='utf-8'); updated+=1
@@ -215,16 +230,16 @@ if total==0:
         merged=merge(results.get(key,[]))
         if not merged: continue
         path=OUT/f"{key}.json"
-        path.write_text(json.dumps({"version":"1197","date":key,"timezone":"Asia/Amman","matches":merged},ensure_ascii=False,indent=2),encoding="utf-8")
+        path.write_text(json.dumps({"version":"1201","date":key,"timezone":"Asia/Amman","matches":merged},ensure_ascii=False,indent=2),encoding="utf-8")
         written.append(path.name)
         total += len(merged)
     if total==0:
         raise SystemExit('لا توجد بيانات مباريات صالحة؛ تم إيقاف النشر لحماية آخر نسخة ناجحة.')
 
-manifest={"version":"1197","generatedAt":datetime.now(TZ).isoformat(),"timezone":"Asia/Amman",
+manifest={"version":"1201","generatedAt":datetime.now(TZ).isoformat(),"timezone":"Asia/Amman",
            "days":written,"totalMatches":total,"providers":["TheSportsDB discovery","ESPN enrichment"],
            "coverage":"بيانات محفوظة + تحديث مباشر للمباريات المتاحة، مع الحفاظ على آخر لقطة ناجحة عند تعطل المصدر."}
 (OUT/"manifest.json").write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding="utf-8")
-(OUT/"index.json").write_text(json.dumps({"version":"1197","generatedAt":manifest["generatedAt"],"timezone":"Asia/Amman",
+(OUT/"index.json").write_text(json.dumps({"version":"1201","generatedAt":manifest["generatedAt"],"timezone":"Asia/Amman",
     "totalMatches":total,"files":written,"provider":"TheSportsDB + ESPN merged","note":"لا يتم استبدال آخر بيانات ناجحة ببيانات فارغة."},ensure_ascii=False,indent=2),encoding="utf-8")
 print(json.dumps({**manifest,"updatedFiles":updated},ensure_ascii=False,indent=2))
