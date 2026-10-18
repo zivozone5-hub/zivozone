@@ -672,6 +672,19 @@ T.fr=T.fr||Object.assign({},T.en); T.fa=T.fa||Object.assign({},T.ar);
   Object.assign(T.fr,{shareResultTitle:"Mon résultat à {challenge} | ZIVOZONE",shareResultMessage:"🧠 Je viens de cartonner{scorePart} au défi {challenge} sur ZIVOZONE !\n🔥 Peux-tu battre mon score ?\n🎮 Joue maintenant :",shareScorePart:" avec {score}%",shareDefaultChallengeName:"le défi"});
   Object.assign(T.fa,{shareResultTitle:"نتیجه من در {challenge} | ZIVOZONE",shareResultMessage:"🧠 در چالش {challenge} در ZIVOZONE{scorePart} عالی ظاهر شدم!\n🔥 می‌تونی از من جلو بزنی؟\n🎮 همین حالا بازی کن:",shareScorePart:" با {score}%",shareDefaultChallengeName:"چالش"});
 
+  /* V1230.128 — universal share sheet (share.js's openShareSheet()/buildCardImageBlob()): the
+     custom multi-platform bottom sheet shown when the browser has no native share sheet (mainly
+     desktop), plus the branded shareable result-image feature offered on every platform. Brand
+     names (WhatsApp/Facebook/Telegram/Twitter/Email) are left untranslated on purpose — they're
+     proper nouns, same as every other room already hardcodes "ZIVOZONE" itself. */
+  Object.assign(T.ar,{shareSheetTitle:"شارك عبر",shareSheetCopyLink:"نسخ الرابط",shareSheetLinkCopied:"تم نسخ الرابط ✅",shareSheetShareImage:"مشاركة كصورة 🖼️",shareSheetSaveImage:"حفظ الصورة 💾",shareCardFooterCta:"جرّب الآن 👇"});
+  Object.assign(T.en,{shareSheetTitle:"Share via",shareSheetCopyLink:"Copy link",shareSheetLinkCopied:"Link copied ✅",shareSheetShareImage:"Share as image 🖼️",shareSheetSaveImage:"Save image 💾",shareCardFooterCta:"Try it now 👇"});
+  Object.assign(T.zh,{shareSheetTitle:"分享到",shareSheetCopyLink:"复制链接",shareSheetLinkCopied:"链接已复制 ✅",shareSheetShareImage:"以图片分享 🖼️",shareSheetSaveImage:"保存图片 💾",shareCardFooterCta:"立即体验 👇"});
+  Object.assign(T.hi,{shareSheetTitle:"इसके ज़रिए शेयर करें",shareSheetCopyLink:"लिंक कॉपी करें",shareSheetLinkCopied:"लिंक कॉपी हो गया ✅",shareSheetShareImage:"इमेज के रूप में शेयर करें 🖼️",shareSheetSaveImage:"इमेज सेव करें 💾",shareCardFooterCta:"अभी आज़माएं 👇"});
+  Object.assign(T.es,{shareSheetTitle:"Compartir por",shareSheetCopyLink:"Copiar enlace",shareSheetLinkCopied:"Enlace copiado ✅",shareSheetShareImage:"Compartir como imagen 🖼️",shareSheetSaveImage:"Guardar imagen 💾",shareCardFooterCta:"Pruébalo ahora 👇"});
+  Object.assign(T.fr,{shareSheetTitle:"Partager via",shareSheetCopyLink:"Copier le lien",shareSheetLinkCopied:"Lien copié ✅",shareSheetShareImage:"Partager en image 🖼️",shareSheetSaveImage:"Enregistrer l'image 💾",shareCardFooterCta:"Essaie maintenant 👇"});
+  Object.assign(T.fa,{shareSheetTitle:"اشتراک‌گذاری از طریق",shareSheetCopyLink:"کپی لینک",shareSheetLinkCopied:"لینک کپی شد ✅",shareSheetShareImage:"اشتراک به‌صورت تصویر 🖼️",shareSheetSaveImage:"ذخیره تصویر 💾",shareCardFooterCta:"همین حالا امتحان کن 👇"});
+
   /* V1230.111 — router.js's blockUnavailable() toast, and core/modules/runtime/seo.js's DEFAULTS
      (title/description used for document.title/meta description on EVERY SPA 'zivozone:route' home
      navigation, on every language, not just Arabic — the live bug: clicking a nav link back to

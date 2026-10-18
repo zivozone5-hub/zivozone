@@ -9,6 +9,11 @@
   // (see challenges.js/horror-room.js/etc.), kept local since share.js has no other i18n calls.
   const t = k => { try { return window.zivoT ? window.zivoT(k) : (window.ZIVOZONE_I18N?.tr?.(k) || k); } catch (_) { return k; } };
   const fmt = (k, vars) => Object.entries(vars || {}).reduce((s, [key, val]) => s.split(`{${key}}`).join(val), t(k));
+  // V1230.128 — universal share sheet: esc() for the custom bottom-sheet markup below, same
+  // global every other module uses (core/modules/util-esc.js, loaded earlier in the bundle).
+  const esc = window.ZIVOZONE_ESC || (v => String(v ?? ""));
+  const RTL_LANGS = new Set(["ar", "fa"]);
+  function isRtl() { try { return RTL_LANGS.has(window.ZIVOZONE_I18N?.get?.() || "ar"); } catch (_) { return true; } }
 
   function buildGameUrl(gameId) {
     const id = clean(gameId);
@@ -277,6 +282,28 @@
     return dispatch(() => built, { uid: built.params.uid, invite: true });
   }
 
+  // V1230.128 — generic entry point for any interactive feature that has its own already-localized
+  // title/body text (e.g. achievements.js's player-card share) but previously called navigator.share
+  // directly, bypassing the clipboard/WhatsApp-Web/image-card/custom-sheet fallbacks every other
+  // share action here gets for free. Takes a pre-built {title, text} and wraps it exactly like every
+  // other builder above, so it goes through the same dispatch() chain.
+  function buildCustomMessage(options = {}) {
+    const url = withUtm(options.url || `${SITE_ORIGIN}/`, {
+      source: options.utmSource || "share", medium: "social", campaign: options.campaign || "custom_share"
+    });
+    const text = options.text ? `${clean(options.text)}\n${url}` : url;
+    return {
+      title: options.title || "ZIVOZONE",
+      text,
+      url,
+      canonicalUrl: options.canonicalUrl || options.url || `${SITE_ORIGIN}/`,
+      params: { ...(options.params || {}), custom: true }
+    };
+  }
+  async function shareCustom(options = {}) {
+    return dispatch(utmSource => buildCustomMessage({ ...options, utmSource }), { ...(options.params || {}), custom: true });
+  }
+
   // Reads ?challenger=&cscore= from the current URL without side effects (safe to call anytime).
   function getDuelParams() {
     try {
@@ -303,6 +330,99 @@
       window.history.replaceState(window.history.state, "", u.href);
     } catch (_) {}
     return params;
+  }
+
+  // V1230.128 — branded, shareable result-image generator. A plain text/link share consistently
+  // underperforms an image when it lands on Instagram/Snapchat Stories (the actual repost surface
+  // that drives the "spread the site widely" goal) — those surfaces are built around media, not
+  // links. Works for every dispatch() caller (score shares, duels, the Beyond Time "stance" share,
+  // and plain invites) by reading only the fields every builder already returns (title/params),
+  // so no per-caller changes were needed anywhere else in the codebase.
+  function prettyUrl(url) {
+    try { const u = new URL(url); return (u.host + u.pathname).replace(/\/$/, ""); }
+    catch (_) { return String(url || "").replace(/^https?:\/\//, ""); }
+  }
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = String(text || "").split(/\s+/).filter(Boolean);
+    let line = "", lines = [];
+    for (const w of words) {
+      const test = line ? `${line} ${w}` : w;
+      if (line && ctx.measureText(test).width > maxWidth) { lines.push(line); line = w; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    const startY = y - ((lines.length - 1) * lineHeight) / 2;
+    lines.forEach((l, i) => ctx.fillText(l, x, startY + i * lineHeight));
+    return lines.length;
+  }
+  const FONT = (weight, size) => `${weight} ${size}px Tahoma, "Segoe UI", Arial, sans-serif`;
+  async function buildCardImageBlob(data) {
+    try {
+      if (typeof document === "undefined" || !document.createElement) return null;
+      const p = data?.params || {};
+      const hasScore = p.score !== null && p.score !== undefined && clean(p.score) !== "";
+      const heading = String(data?.title || "ZIVOZONE").replace(/\s*\|\s*ZIVOZONE\s*$/i, "").trim() || "ZIVOZONE";
+      const W = 1080, H = 1920;
+      const canvas = document.createElement("canvas");
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+      ctx.direction = isRtl() ? "rtl" : "ltr";
+      ctx.textAlign = "center";
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, "#0a1626"); bg.addColorStop(1, "#03070d");
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+      const glow = ctx.createRadialGradient(W / 2, H * 0.34, 20, W / 2, H * 0.34, 620);
+      glow.addColorStop(0, "rgba(70,205,255,.32)"); glow.addColorStop(1, "rgba(70,205,255,0)");
+      ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = "rgba(70,205,255,.35)"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(W / 2, H * 0.34, 330, 0, Math.PI * 2); ctx.stroke();
+      ctx.fillStyle = "#46cdff"; ctx.font = FONT(800, 50);
+      ctx.fillText("ZIVOZONE", W / 2, 190);
+      ctx.fillStyle = "#f5f8ff"; ctx.font = FONT(700, 58);
+      wrapCanvasText(ctx, heading, W / 2, hasScore ? 340 : 420, W - 160, 70);
+      if (hasScore) {
+        ctx.fillStyle = "#ffffff"; ctx.font = FONT(900, 230);
+        ctx.fillText(`${clean(p.score)}%`, W / 2, H * 0.44);
+      }
+      ctx.fillStyle = "#9fb3c8"; ctx.font = FONT(500, 40);
+      wrapCanvasText(ctx, t("shareCardFooterCta"), W / 2, H - 230, W - 200, 50);
+      ctx.fillStyle = "#46cdff"; ctx.font = FONT(700, 44);
+      ctx.fillText(prettyUrl(data?.canonicalUrl || data?.url), W / 2, H - 150);
+      return await new Promise(resolve => canvas.toBlob(resolve, "image/png", 0.95));
+    } catch (_) { return null; }
+  }
+  function canShareFiles(file) {
+    try { return typeof navigator.canShare === "function" && navigator.canShare({ files: [file] }); }
+    catch (_) { return false; }
+  }
+  async function nativeShareWithImage(file, data) {
+    if (typeof navigator.share !== "function" || !canShareFiles(file)) return { ok: false, method: "unsupported" };
+    try {
+      await navigator.share({ files: [file], title: data.title, text: data.text });
+      return { ok: true, method: "native-image" };
+    } catch (error) {
+      return { ok: false, cancelled: error?.name === "AbortError", method: "native-image" };
+    }
+  }
+  // V1230.128 — one small ZIVO reward for the first *successful* share action of the day (any
+  // channel: native image/text share, or any icon in the custom sheet below). claimId bakes in
+  // today's date (Asia/Amman, matching admin.js/economy.js's own day-key convention elsewhere),
+  // so Economy.credit()'s existing claim/ledger transaction naturally caps this at once per day —
+  // no new anti-abuse mechanism needed, just reusing the same idempotent-claim contract every other
+  // reward in economy.js already relies on. Mirrored in economy.js's credit() switch and
+  // firestore.rules' rewardTypeValid()/rewardAmountValid()/validRewardClaim() in this same change.
+  async function rewardFirstShareToday() {
+    try {
+      const credit = window.ZIVOZONE?.Economy?.credit;
+      if (typeof credit !== "function") return;
+      const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Amman" }).format(new Date());
+      await credit(1, { type: "share_reward", source: "share", claimId: `share_${day}` });
+    } catch (_) {}
+  }
+  function afterShareSuccess(emitBase, method) {
+    try { window.ZIVOZONE?.Events?.emit("SHARE_RESULT", { ...emitBase, method }); } catch (_) {}
+    rewardFirstShareToday();
   }
 
   async function copyToClipboard(data) {
@@ -343,31 +463,126 @@
     }
   }
 
-  // V1230.91 — shareResult()'s native-share -> clipboard+WhatsApp fallback chain, generalized so the
-  // duel flow below can reuse it instead of duplicating it with a second copy of the same 3 branches.
-  // `builder(utmSource)` is called once per branch (not a single prebuilt `data`) so each channel keeps
-  // its own UTM tag exactly as before this refactor: "share_sheet" for the native share sheet,
-  // "copy_link" for the clipboard/WhatsApp fallback (WhatsApp's own retag() then overrides that to
-  // "whatsapp" — see API.whatsapp below, unchanged).
+  // V1230.128 — rewritten three-step chain (was native-share -> silent WhatsApp-only fallback):
+  //   1. Try sharing the branded result IMAGE through the native share sheet — the richest, most
+  //      repostable format, and what actually makes a share spread (an Instagram/Snapchat Story,
+  //      WhatsApp Status, etc. are built around media, not bare links). Skipped instantly (no
+  //      dialog shown) on a browser that can't share files — this never costs an interaction.
+  //   2. Fall back to the plain native share sheet (text + link) — on mobile this already lists
+  //      every installed app (WhatsApp, Telegram, Instagram DM, Messenger, SMS, Mail...), so it's
+  //      the broadest "share to everywhere" option with zero custom UI.
+  //   3. On a browser with neither (desktop, mainly) open our own rich multi-platform sheet
+  //      (openShareSheet below) instead of silently guessing WhatsApp was the right channel.
+  // `builder(utmSource)` is called once per branch so each channel keeps its own UTM tag, exactly
+  // as before this rewrite.
   async function dispatch(builder, emitBase) {
     const shareSheetData = builder("share_sheet");
+    try {
+      const blob = await buildCardImageBlob(shareSheetData);
+      if (blob) {
+        const file = new File([blob], "zivozone-share.png", { type: "image/png" });
+        const withImage = await nativeShareWithImage(file, shareSheetData);
+        if (withImage.ok) { afterShareSuccess(emitBase, withImage.method); return { ...withImage, data: shareSheetData }; }
+        if (withImage.cancelled) return { ...withImage, data: shareSheetData };
+      }
+    } catch (_) {}
     const native = await nativeShare(shareSheetData);
-    if (native.ok) {
-      const result = { ...native, data: shareSheetData };
-      try { window.ZIVOZONE?.Events?.emit('SHARE_RESULT', { ...emitBase, method: native.method }); } catch (_) {}
-      return result;
-    }
+    if (native.ok) { afterShareSuccess(emitBase, native.method); return { ...native, data: shareSheetData }; }
     if (native.cancelled) return { ...native, data: shareSheetData };
-    // V1230.19 — on a browser with no Web Share API (desktop; most phones' own share sheet already
-    // lists WhatsApp as a target, so this path is mainly desktop), this used to silently fall back to
-    // a clipboard copy with no further action — a dead end for a MENA/Jordanian audience, where
-    // WhatsApp is the dominant sharing channel. API.whatsapp() already existed fully implemented but
-    // had zero callers anywhere. Now opens WhatsApp Web directly with the message pre-filled, and still
-    // copies to the clipboard too so the text is ready to paste anywhere else if the player wants.
-    const data = builder("copy_link");
-    await copyToClipboard(data);
-    const opened = API.whatsapp(data);
-    return { ok: Boolean(opened), method: "whatsapp", data };
+    return openShareSheet(builder, emitBase);
+  }
+
+  // V1230.128 — the custom bottom-sheet fallback for browsers with no Web Share API at all (mainly
+  // desktop). Calls `builder(channel)` per icon — the SAME per-call builder dispatch() was given —
+  // instead of the old desktop fallback's retag()/buildMessage() shortcut, which silently rebuilt a
+  // generic score-share link even for a duel/stance/invite share (those builders' own params, like
+  // the duel's short link + challenger name, were discarded). Using the real builder here fixes that
+  // latent bug as a side effect of adding the richer UI.
+  const CHANNEL_OPENERS = {
+    whatsapp: tagged => { openExternal("https://wa.me/?text=", tagged); return true; },
+    twitter: tagged => { const q = new URLSearchParams({ text: tagged.text, url: tagged.url }); window.open(`https://twitter.com/intent/tweet?${q}`, "_blank", "noopener,noreferrer"); return true; },
+    facebook: tagged => { const q = new URLSearchParams({ u: tagged.url }); window.open(`https://www.facebook.com/sharer/sharer.php?${q}`, "_blank", "noopener,noreferrer"); return true; },
+    telegram: tagged => { const q = new URLSearchParams({ url: tagged.url, text: tagged.title }); window.open(`https://t.me/share/url?${q}`, "_blank", "noopener,noreferrer"); return true; },
+    email: tagged => { const q = new URLSearchParams({ subject: tagged.title, body: tagged.text }); window.location.href = `mailto:?${q}`; return true; }
+  };
+  const CHANNEL_LABELS = { whatsapp: "WhatsApp", facebook: "Facebook", twitter: "Twitter/X", telegram: "Telegram", email: "Email" };
+  const CHANNEL_ICONS = { whatsapp: "🟢", facebook: "🔵", twitter: "⚫", telegram: "🔵", email: "✉️" };
+  function sheetRoot() {
+    let o = document.getElementById("zivo-share-sheet");
+    if (!o) { o = document.createElement("div"); o.id = "zivo-share-sheet"; o.className = "zss-root"; document.body.appendChild(o); }
+    return o;
+  }
+  function openShareSheet(builder, emitBase) {
+    return new Promise(resolve => {
+      const data = builder("copy_link");
+      const o = sheetRoot();
+      const rtl = isRtl();
+      let previewUrl = null, settled = false;
+      const settle = result => { if (settled) return; settled = true; resolve(result); };
+      const cleanup = () => { if (previewUrl) { try { URL.revokeObjectURL(previewUrl); } catch (_) {} previewUrl = null; } o.classList.remove("open"); setTimeout(() => { if (!o.classList.contains("open")) o.innerHTML = ""; }, 260); };
+      const finish = (method, tagged) => { cleanup(); afterShareSuccess(emitBase, method); settle({ ok: true, method, data: tagged }); };
+      const dismiss = () => { cleanup(); settle({ ok: false, cancelled: true, method: "sheet", data }); };
+      const chButtons = Object.keys(CHANNEL_OPENERS).map(ch =>
+        `<button type="button" class="zss-opt" data-ch="${ch}"><span class="zss-ico">${CHANNEL_ICONS[ch]}</span><b>${esc(CHANNEL_LABELS[ch])}</b></button>`
+      ).join("");
+      o.innerHTML = `
+        <div class="zss-backdrop"></div>
+        <div class="zss-card" dir="${rtl ? "rtl" : "ltr"}">
+          <button type="button" class="zss-close" id="zss-close" aria-label="close">×</button>
+          <div class="zss-handle"></div>
+          <h3>${esc(t("shareSheetTitle"))}</h3>
+          <div class="zss-preview" id="zss-preview"><div class="zss-preview-skel"></div></div>
+          <button type="button" class="zss-image-btn" id="zss-image-btn" disabled>${esc(t("shareSheetShareImage"))}</button>
+          <div class="zss-grid">${chButtons}<button type="button" class="zss-opt" data-ch="copy"><span class="zss-ico">🔗</span><b id="zss-copy-label">${esc(t("shareSheetCopyLink"))}</b></button></div>
+        </div>`;
+      requestAnimationFrame(() => o.classList.add("open"));
+      o.querySelector(".zss-backdrop").onclick = dismiss;
+      o.querySelector("#zss-close").onclick = dismiss;
+      o.querySelectorAll(".zss-opt").forEach(btn => {
+        btn.onclick = async () => {
+          const ch = btn.dataset.ch;
+          const tagged = builder(ch);
+          if (ch === "copy") {
+            await copyToClipboard(tagged);
+            const label = btn.querySelector("#zss-copy-label");
+            if (label) label.textContent = t("shareSheetLinkCopied");
+            setTimeout(() => finish("copy_link", tagged), 650);
+            return;
+          }
+          CHANNEL_OPENERS[ch]?.(tagged);
+          finish(ch, tagged);
+        };
+      });
+      const imgBtn = o.querySelector("#zss-image-btn");
+      let cachedBlob = null;
+      buildCardImageBlob(data).then(blob => {
+        const preview = o.querySelector("#zss-preview");
+        if (!blob) { preview?.remove(); imgBtn?.remove(); return; }
+        cachedBlob = blob;
+        previewUrl = URL.createObjectURL(blob);
+        if (preview) preview.innerHTML = `<img src="${previewUrl}" alt="">`;
+        if (!imgBtn) return;
+        const file = new File([blob], "zivozone-share.png", { type: "image/png" });
+        const canShareImg = canShareFiles(file);
+        imgBtn.textContent = canShareImg ? t("shareSheetShareImage") : t("shareSheetSaveImage");
+        imgBtn.disabled = false;
+        imgBtn.onclick = async () => {
+          imgBtn.disabled = true;
+          try {
+            if (canShareImg) {
+              const shared = await nativeShareWithImage(new File([cachedBlob], "zivozone-share.png", { type: "image/png" }), data);
+              if (shared.ok) { finish(shared.method, data); return; }
+              if (shared.cancelled) { imgBtn.disabled = false; return; }
+            }
+            const url = URL.createObjectURL(cachedBlob);
+            const a = document.createElement("a"); a.href = url; a.download = "zivozone-share.png";
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 4000);
+            finish("image_download", data);
+          } catch (_) { imgBtn.disabled = false; }
+        };
+      }).catch(() => { o.querySelector("#zss-preview")?.remove(); imgBtn?.remove(); });
+    });
   }
 
   async function shareResult(gameId, score, challengeName) {
@@ -434,6 +649,8 @@
     buildStanceMessage,
     buildStance,
     shareStance,
+    buildCustomMessage,
+    shareCustom,
     resolveShortLink,
     copyToClipboard,
     nativeShare,

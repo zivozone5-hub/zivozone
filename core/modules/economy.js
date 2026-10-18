@@ -353,7 +353,14 @@
       // V1230.70 — football-room.js's new "Tactics Trainer" Epic50 game, added right the first time
       // this time (both here AND firestore.rules in the same change) instead of repeating the
       // 1230.59/1230.60 silently-rejected-claim mistake.
-      : type === 'football_epic_reward' ? 'football_epic_reward' : '';
+      : type === 'football_epic_reward' ? 'football_epic_reward'
+      // V1230.128 — one small ZIVO for the first successful share action of the day (any channel,
+      // from share.js's rewardFirstShareToday()). No extra proof needed beyond the policy match —
+      // same trust level as achievement/mission/story/etc. rewards below — because the claimId
+      // itself already bakes in today's date, so the once-per-day cap is enforced by the existing
+      // idempotent-claim transaction, not a new mechanism. Added here AND in firestore.rules'
+      // rewardTypeValid()/rewardAmountValid()/validRewardClaim() in this same change.
+      : type === 'share_reward' ? 'share_reward' : '';
     // V1230.84 — unified every "you finished a test/game perfectly" reward to a flat 5 ZIVO
     // (challenge_reward and the single-game "_reward" room-clears used to pay 10 and 2 respectively;
     // the "_epic_reward" full-room-clear types were already 5). Mirrored exactly in firestore.rules'
@@ -376,7 +383,8 @@
       : type === 'puzzle_epic_reward' ? value === 5
       : type === 'story_epic_reward' ? value === 5
       : type === 'health_epic_reward' ? value === 5
-      : type === 'football_epic_reward' ? value === 5 : false;
+      : type === 'football_epic_reward' ? value === 5
+      : type === 'share_reward' ? value === 1 : false;
     if (!policy || !allowed) return false;
 
     try {
