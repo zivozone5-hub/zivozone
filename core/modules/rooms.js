@@ -902,6 +902,14 @@
       if (document.body.classList.contains("zivo-seo-route") && route.reason === "boot") return;
       openStory(route.id, { fromRoute: true }).catch(() => {});
     } else if (route.type === "home" && isOpen()) {
+      // V1230.123 — router.js's boot() emits this same "home" event (reason:"boot") on every page
+      // load, including one that lands on /?timeDoor=<id>: room-loader.js's deep-link handler races
+      // this exact event, and when rooms.js's own lazy module and the door's content both happen to
+      // load faster than DOMContentLoaded fires, the shared-link recipient would see their door open
+      // for a moment and then get slammed shut by this very branch a few hundred ms later. A real SPA
+      // "back to home" navigation is never tagged "boot", so skipping just this one reason costs
+      // nothing on the normal close-on-home-nav path.
+      if (route.reason === "boot") return;
       activeStoryId = null;
       close(true);
       SEO()?.home();
