@@ -376,7 +376,13 @@
       // V1230.130 — football-levels.js's 20-level progression: a small, once-per-level-ever reward
       // (claimId is a fixed 'football_level_<n>' constant per level, same idempotent-claim mechanism
       // as legend_reward above, so replaying an already-cleared level for fun can never re-pay it).
-      : type === 'football_level_reward' ? 'football_level_reward' : '';
+      : type === 'football_level_reward' ? 'football_level_reward'
+      // V1230.131 — "Lucky Strike": the sitewide shared-counter jackpot (see pressLuckyStrike()
+      // below). The claimId itself bakes in the exact win round ('lucky_strike_round_<N>'), so this
+      // reuses the same once-only idempotent-claim mechanism as every reward above; the real
+      // anti-forgery check lives in firestore.rules' validRewardClaim(), which cross-checks the
+      // claimer against publicState/luckyStrike's actual recorded winner for that round.
+      : type === 'lucky_strike_reward' ? 'lucky_strike_reward' : '';
     // V1230.84 — unified every "you finished a test/game perfectly" reward to a flat 5 ZIVO
     // (challenge_reward and the single-game "_reward" room-clears used to pay 10 and 2 respectively;
     // the "_epic_reward" full-room-clear types were already 5). Mirrored exactly in firestore.rules'
@@ -402,7 +408,8 @@
       : type === 'football_epic_reward' ? value === 5
       : type === 'share_reward' ? value === 1
       : type === 'legend_reward' ? value === 5
-      : type === 'football_level_reward' ? value === 2 : false;
+      : type === 'football_level_reward' ? value === 2
+      : type === 'lucky_strike_reward' ? value === 50 : false;
     if (!policy || !allowed) return false;
 
     try {
@@ -554,6 +561,68 @@
   }
   function signedInZivoGate() { try { return !!user(); } catch (_) { return false; } }
 
+  // V1230.131 — "Lucky Strike": one SHARED, sitewide counter every signed-in visitor's
+  // daily press advances together (publicState/luckyStrike — a single global document, not one per
+  // user). Whoever's press lands exactly on #1000 (count goes from 999 to the reset 0) wins a 50
+  // ZIVO jackpot. Both writes below (the global counter AND this user's own once-per-day marker)
+  // happen in ONE Firestore transaction, so the daily gate and the shared counter can never drift
+  // apart from each other. See firestore.rules' validLuckyStrikeState()/validLuckyStrikeDaily() for
+  // the server-side bounds (no Cloud Functions on the Spark plan, so — same honest trade-off as
+  // everywhere else in this app — those rules bound each write rather than cryptographically proving
+  // it): the counter may only move forward by 1 or reset-with-winner from exactly 999, the SAME uid
+  // may never press twice in a row back-to-back (closes the obvious "one visitor alone races it from
+  // 0 to 999" abuse the user explicitly asked to avoid), and the once-per-day flag can never be
+  // rewritten with the same date twice.
+  const luckyStrikeState = () => db()?.collection('publicState')?.doc('luckyStrike') || null;
+  function luckyStrikeName() {
+    try { return String(window.ZIVOZONE?.Player?.get?.()?.name || t('chatGuestName')).slice(0, 24) || t('chatGuestName'); }
+    catch (_) { return 'Player'; }
+  }
+  async function pressLuckyStrike() {
+    const u = user(), d = db();
+    if (!u || !d) return { ok: false, reason: 'signed-out' };
+    if (admin(u)) return { ok: false, reason: 'admin' }; // keep the admin test account out of the race, same spirit as challenge rewards
+    const today = new Date().toISOString().slice(0, 10);
+    try {
+      const stateRef = luckyStrikeState();
+      const dailyRef = root(u.uid).doc('luckyStrikeDaily');
+      const name = luckyStrikeName();
+      const outcome = await d.runTransaction(async tx => {
+        const [ss, ds] = await Promise.all([tx.get(stateRef), tx.get(dailyRef)]);
+        if (ds.exists && ds.data()?.lastPressDate === today) return { ok: false, reason: 'already-today' };
+        const sd = ss.exists ? ss.data() : null;
+        if (sd && sd.lastPresserUid === u.uid) return { ok: false, reason: 'same-user' };
+        const fv = F().firestore.FieldValue;
+        const prevCount = num(sd?.count);
+        const prevRound = num(sd?.lastWinRound);
+        let win = false, round = prevRound, payload;
+        if (sd && prevCount >= 999) {
+          win = true; round = prevRound + 1;
+          payload = { count: 0, lastPresserUid: u.uid, lastWinnerUid: u.uid, lastWinnerName: name, lastWinRound: round, lastWinAt: fv.serverTimestamp(), updatedAt: fv.serverTimestamp() };
+        } else {
+          payload = { count: prevCount + 1, lastPresserUid: u.uid, lastWinnerUid: sd?.lastWinnerUid ?? null, lastWinnerName: sd?.lastWinnerName ?? null, lastWinRound: prevRound, lastWinAt: sd?.lastWinAt ?? null, updatedAt: fv.serverTimestamp() };
+        }
+        tx.set(stateRef, payload, { merge: false });
+        tx.set(dailyRef, { lastPressDate: today, updatedAt: fv.serverTimestamp() }, { merge: false });
+        return { ok: true, win, count: payload.count, round };
+      });
+      if (outcome.ok && outcome.win) {
+        await credit(50, {
+          type: 'lucky_strike_reward', label: `🍀 ${t('lsLedgerLabel')}`, source: 'lucky-strike',
+          claimId: `lucky_strike_round_${outcome.round}`
+        });
+        window.ZIVOZONE?.Events?.emit?.('LUCKY_STRIKE_WON', { uid: u.uid, name, round: outcome.round });
+      } else if (outcome.ok) {
+        window.ZIVOZONE?.Events?.emit?.('LUCKY_STRIKE_PRESSED', { count: outcome.count });
+      }
+      return outcome;
+    } catch (e) {
+      console.warn('ZIVO Economy pressLuckyStrike:', e);
+      window.ZIVOZONE?.ErrorTracker?.report?.(`economy.pressLuckyStrike failed: ${e?.message || e}`, { stack: e?.stack });
+      return { ok: false, reason: 'error' };
+    }
+  }
+
   async function addXP(amount) {
     try { window.ZIVOZONE?.Player?.addXP?.(Number(amount) || 0); return true; }
     catch (e) { console.warn('ZIVO Economy addXP:', e); return false; }
@@ -637,7 +706,7 @@
   window.ZIVOZONE = window.ZIVOZONE || {};
   window.ZIVOZONE.Economy = Object.freeze({
     open, refresh, getWallet: () => ({ ...state, ledger: [...state.ledger] }), mine,
-    rewardPerfect, rewardChallenge, credit, spend, addXP, startGameSession,
+    rewardPerfect, rewardChallenge, credit, spend, addXP, startGameSession, pressLuckyStrike,
     status: () => ({ legacy:false, cloud:!!user(), admin:admin(), version: '1202' })
   });
   window.ZIVOZONE.EconomyVersion = '1141-unified-reward-contract';

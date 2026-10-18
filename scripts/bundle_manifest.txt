@@ -58,6 +58,7 @@ core/modules/football-levels.js
 core/modules/player-hub.js
 core/modules/news.js
 core/modules/admin.js
+core/modules/lucky-strike.js
 core/modules/chat.js
 core/modules/ui.js
 core/app.js

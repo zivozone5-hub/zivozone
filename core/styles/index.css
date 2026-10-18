@@ -1010,6 +1010,44 @@ body.zivo-nav-open #zivo-nav-toggle span:nth-child(3){transform:translateY(-4px)
 /* V1230.112 — see the .zivo-v21-hud note above: same mobile-nav-overlap bug, same fix
    (--zivo-nav-clearance instead of a fixed bottom:8px guess). */
 @media(max-width:600px){.zivo-public-chat{right:8px;bottom:calc(var(--zivo-nav-clearance,84px) + env(safe-area-inset-bottom,0px))}.zpc-panel{height:min(70vh,520px)}.zivo-exit-card h2{font-size:23px}.zivo-exit-card{padding:25px 18px}}
+/* ============================================================
+   V1230.131 — LUCKY STRIKE (ضربة حظ): sitewide shared-counter jackpot button.
+   Deliberately placed at right:16px/top:50% (vertically centered) rather than either bottom corner —
+   .zivo-v21-hud already owns bottom-left:16px and .zivo-public-chat already owns bottom-right:16px
+   (see both widgets' notes above this block); this sits clear of both on every breakpoint instead of
+   fighting them for the same corner, the exact bug those two notes describe fixing. See
+   core/modules/lucky-strike.js for the press/celebration logic.
+============================================================ */
+.zls-widget{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:9000;font-family:Cairo,Tahoma,sans-serif}
+.zls-btn{display:flex;align-items:center;gap:9px;border:1px solid rgba(255,214,110,.55);border-radius:20px;padding:11px 16px 11px 12px;cursor:pointer;color:#2a1a02;font-weight:900;position:relative;overflow:hidden;background:linear-gradient(145deg,#ffe9ad,#ffd36b 42%,#d99a2b);box-shadow:0 14px 38px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.25) inset;animation:zlsGlow 3.2s ease-in-out infinite}
+.zls-btn:before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.55) 42%,transparent 60%);transform:translateX(-120%);animation:zlsShine 3.6s ease-in-out infinite}
+@keyframes zlsShine{0%,55%{transform:translateX(-120%)}75%{transform:translateX(120%)}100%{transform:translateX(120%)}}
+@keyframes zlsGlow{0%,100%{box-shadow:0 14px 38px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.25) inset,0 0 0 0 rgba(255,214,110,.5)}50%{box-shadow:0 14px 38px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.25) inset,0 0 0 9px rgba(255,214,110,0)}}
+.zls-icon{font-size:21px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
+.zls-text{display:flex;flex-direction:column;line-height:1.3;position:relative;z-index:1}
+.zls-text b{font-size:13px}
+.zls-text small{font-size:9px;opacity:.85;font-weight:700;letter-spacing:.02em}
+.zls-btn.zls-done{cursor:default;filter:grayscale(.55);opacity:.75;animation:none}
+.zls-btn.zls-done:before{display:none}
+.zls-btn.zls-pending{opacity:.7;pointer-events:none}
+@media(max-width:600px){.zls-widget{right:8px;transform:translateY(-50%) scale(.88);transform-origin:right center}}
+@media(prefers-reduced-motion:reduce){.zls-btn,.zls-btn:before{animation:none!important}}
+
+.zls-confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:2147483600;overflow:hidden}
+.zls-confetti-piece{position:absolute;width:8px;height:12px;border-radius:2px;opacity:0;animation:zlsBurst .9s ease-out forwards}
+.zls-confetti-piece.zls-confetti-fall{top:-20px;animation:zlsFall var(--dur,3s) linear forwards}
+@keyframes zlsBurst{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx,0),var(--dy,-100px)) rotate(var(--rot,180deg))}}
+@keyframes zlsFall{0%{opacity:1;transform:translate(0,0) rotate(0)}85%{opacity:1}100%{opacity:0;transform:translate(var(--dx,0),108vh) rotate(var(--rot,360deg))}}
+@media(prefers-reduced-motion:reduce){.zls-confetti-piece{display:none}}
+
+.zls-win-overlay{position:fixed;inset:0;z-index:2147483620;display:none;align-items:center;justify-content:center;background:rgba(6,8,4,.72);backdrop-filter:blur(6px);padding:20px}
+.zls-win-overlay.open{display:flex}
+.zls-win-card{max-width:400px;width:100%;text-align:center;padding:36px 28px;border-radius:26px;background:linear-gradient(160deg,#1a1404,#0c0a03);border:1px solid rgba(255,214,110,.4);box-shadow:0 30px 90px rgba(0,0,0,.55);color:#ffe9ad;animation:zlsPopIn .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes zlsPopIn{from{opacity:0;transform:scale(.8) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.zls-win-trophy{font-size:62px;margin-bottom:6px}
+.zls-win-card h2{font-size:24px;margin:6px 0;color:#fff7e0}
+.zls-win-card p{color:#e8d4a0;line-height:1.8;font-size:15px;margin:0 0 20px}
+.zls-win-close{border:0;border-radius:999px;padding:13px 32px;background:linear-gradient(145deg,#ffe9ad,#ffd36b);color:#2a1a02;font-weight:900;font-size:15px;cursor:pointer}
 /* V1230.15 — SEO: internal "room details" links on signature/challenge cards + prerendered room-landing article shell */
 .zivo-seo-link{display:inline-block;margin-top:8px;font-size:10px;color:#9fe8ff;opacity:.8;text-decoration:underline;text-underline-offset:2px}.zivo-seo-link:hover{opacity:1}
 .zivo-seo-story{color:var(--text)}.zivo-seo-story .eyebrow{font-size:10px;letter-spacing:.08em;color:#9fe8ff;font-weight:800}.zivo-seo-story h1{font-size:clamp(26px,4vw,40px);margin:10px 0}.zivo-seo-story .muted{color:var(--muted)}.zivo-seo-story h2{font-size:20px;margin:26px 0 8px}.zivo-seo-story p{line-height:1.9}.zivo-seo-story .btn{display:inline-block;border-radius:12px;padding:12px 22px;font-weight:800;border:1px solid rgba(255,255,255,.14);color:var(--text)}.zivo-seo-story .btn-primary{background:linear-gradient(145deg,#7c3cff,#2ddcff);border:0;color:#06070d}

@@ -118,13 +118,17 @@ service cloud.firestore {
     // V1230.128 — share_reward (share.js's rewardFirstShareToday(): one small ZIVO for the first
     // successful share action of the day, any channel) added here AND in economy.js's credit()
     // switch in the SAME change, learning from the 1230.59/.60/.70 history above.
-    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward','share_reward','legend_reward','football_level_reward']; }
+    // V1230.131 — lucky_strike_reward (the new sitewide "Lucky Strike" jackpot: press #1000 of a
+    // SHARED global counter wins 50 ZIVO). Added here AND in economy.js's credit() switch in the
+    // SAME change, learning from the 1230.59/.60/.70/.128 history above: every previous reward type
+    // was added to one side and not the other first.
+    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward','share_reward','legend_reward','football_level_reward','lucky_strike_reward']; }
     // V1230.84 — unified every "finished a test/game perfectly" reward to a flat 5 ZIVO (challenge_reward
     // was 10; story/health/beauty/horror/light_escape_reward were 2). Must match economy.js's credit()
     // switch exactly, in the SAME change — see that file's V1230.84 note for why a mismatch here
     // silently rejects every claim of the changed type (same failure mode as the 1230.59/.60 history
     // above). Achievement/mission/competition rewards are untouched (different mechanic).
-    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'share_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'legend_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2); }
+    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'share_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'legend_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'lucky_strike_reward' && request.resource.data.amount == 50); }
     function validRewardClaim(claimId) {
       return request.resource.data.claimId == claimId
         && request.resource.data.status == 'consumed'
@@ -152,7 +156,24 @@ service cloud.firestore {
         && (request.resource.data.type != 'football_epic_reward' || request.resource.data.policy == 'football_epic_reward')
         && (request.resource.data.type != 'share_reward' || request.resource.data.policy == 'share_reward')
         && (request.resource.data.type != 'legend_reward' || request.resource.data.policy == 'legend_reward')
-        && (request.resource.data.type != 'football_level_reward' || request.resource.data.policy == 'football_level_reward');
+        && (request.resource.data.type != 'football_level_reward' || request.resource.data.policy == 'football_level_reward')
+        // V1230.131 — lucky_strike_reward is the first reward type that must be cross-checked against
+        // ANOTHER player's shared document, not just the claimer's own progress: anyone signed in
+        // could otherwise write a matching rewardClaims doc and mint 50 ZIVO without ever being the
+        // real winner. get() reads publicState/luckyStrike's CURRENT committed state (see that match
+        // block below) and requires this claimer to actually be its lastWinnerUid, AND the claimId to
+        // exactly name that same round ('lucky_strike_round_<N>') — a fixed, deterministic id, so the
+        // existing claim+ledger-exists idempotency check (see credit()'s transaction in economy.js)
+        // still guarantees that one real win can only ever be paid out once, exactly like every other
+        // reward type above. Known, accepted trade-off (same honest free-Spark-plan limits documented
+        // throughout this file): if a NEW round's win overwrites lastWinnerUid/lastWinRound before the
+        // original winner claims, their claim would then fail this check — acceptable because a new
+        // round requires 999 more presses by other people first, a wide enough window in practice.
+        && (request.resource.data.type != 'lucky_strike_reward' || (
+          request.resource.data.policy == 'lucky_strike_reward'
+          && get(/databases/$(database)/documents/publicState/luckyStrike).data.lastWinnerUid == request.auth.uid
+          && request.resource.data.claimId == 'lucky_strike_round_' + string(get(/databases/$(database)/documents/publicState/luckyStrike).data.lastWinRound)
+        ));
     }
     // V1230.130 — the economy's first DEDUCTION claim type, mirroring rewardTypeValid()/
     // rewardAmountValid()/validRewardClaim() above but for spending ZIVO instead of earning it
@@ -168,6 +189,57 @@ service cloud.firestore {
         && spendTypeValid()
         && spendAmountValid()
         && (request.resource.data.type != 'protection_card_purchase' || request.resource.data.policy == 'protection_card_purchase');
+    }
+    // V1230.131 — "Lucky Strike" (ضربة حظ): a SHARED, sitewide counter (publicState/luckyStrike, one
+    // single global document, not per-user) that every signed-in visitor's daily press increments.
+    // Whoever's press lands it on 999→reset is the jackpot winner (see lucky_strike_reward above for
+    // how that's paid out). No Cloud Functions on the Spark plan, so — same honest trade-off as every
+    // other mechanic in this file — this is enforced by bounding what a single write may change
+    // rather than proving it cryptographically: each write may only move the counter forward by
+    // exactly 1 (or reset it to 0 while recording the winner, if and only if the PRIOR count was
+    // already 999), may never touch the winner/round fields except on that exact winning write, and
+    // the SAME uid may never press twice in a row back-to-back (resource.data.lastPresserUid must
+    // differ from request.auth.uid) — a cheap, rules-only deterrent against one visitor alone racing
+    // the counter from 0 to 999 by themselves, which the user explicitly asked to avoid ("من
+    // مستخدمين مختلفين" — from different users). The once-per-day-per-user limit is enforced by the
+    // sibling users/{uid}/zivozone/luckyStrikeDaily doc just below, written in the SAME client
+    // transaction (see economy.js's pressLuckyStrike()).
+    function validLuckyStrikeState() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['count','lastPresserUid','lastWinnerUid','lastWinnerName','lastWinRound','lastWinAt','updatedAt'])
+        && d.count is number && d.count >= 0 && d.count <= 999
+        && d.lastPresserUid == request.auth.uid
+        && d.updatedAt == request.time
+        && (resource == null || resource.data.get('lastPresserUid', null) != request.auth.uid)
+        && (
+          resource == null
+            ? (d.count == 1 && d.lastWinnerUid == null && d.lastWinnerName == null && d.lastWinRound == 0 && d.lastWinAt == null)
+            : (
+              (resource.data.count < 999
+                && d.count == resource.data.count + 1
+                && d.lastWinnerUid == resource.data.get('lastWinnerUid', null)
+                && d.lastWinnerName == resource.data.get('lastWinnerName', null)
+                && d.lastWinRound == resource.data.get('lastWinRound', 0)
+                && d.lastWinAt == resource.data.get('lastWinAt', null))
+              ||
+              (resource.data.count >= 999
+                && d.count == 0
+                && d.lastWinnerUid == request.auth.uid
+                && d.lastWinnerName is string && d.lastWinnerName.size() >= 1 && d.lastWinnerName.size() <= 24
+                && d.lastWinRound == resource.data.get('lastWinRound', 0) + 1
+                && d.lastWinAt == request.time)
+            )
+        );
+    }
+    // Client-trusted once-per-day gate (same trust level as daily.js's local-date mining/challenge
+    // gating elsewhere in this app): a date string that must differ from whatever was stored before,
+    // so the SAME claimed date can never be written twice. Written alongside publicState/luckyStrike
+    // in one transaction so the daily flag and the global counter can never drift apart.
+    function validLuckyStrikeDaily() {
+      return request.resource.data.keys().hasOnly(['lastPressDate','updatedAt'])
+        && request.resource.data.lastPressDate is string && request.resource.data.lastPressDate.size() == 10
+        && request.resource.data.updatedAt == request.time
+        && (resource == null || request.resource.data.lastPressDate != resource.data.lastPressDate);
     }
     function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
     // V1230.89 — this used to hardcode an exact question count (10, then briefly 20) that had to be
@@ -274,6 +346,14 @@ service cloud.firestore {
         allow delete: if false;
       }
 
+      // V1230.131 — Lucky Strike's once-per-day gate (see validLuckyStrikeDaily() above). Same fixed-
+      // doc shape as wallet/mining/gameSession above, not an unbounded subcollection.
+      match /zivozone/luckyStrikeDaily {
+        allow read: if isOwner() || isSelf(userId);
+        allow create, update: if isSelf(userId) && validLuckyStrikeDaily();
+        allow delete: if false;
+      }
+
       // V1230.69 — dead-code audit: removed the singular `zivozone/rewardClaim` rule that used to be
       // here. No JS anywhere references a 'rewardClaim' document id (singular) — confirmed by search
       // — and it already denied all writes (allow write: if false), so removing it changes nothing
@@ -340,7 +420,8 @@ service cloud.firestore {
               || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5)
               || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5)
               || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2))
+              || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2)
+              || (request.resource.data.type == 'lucky_strike_reward' && request.resource.data.amount == 50))
           )
           ||
           // V1230.130 — spend() ledger entries are negative (a deduction, not a reward), tied to the
@@ -439,6 +520,16 @@ service cloud.firestore {
       allow delete: if isOwner();
     }
         match /public/{document=**} { allow read: if true; allow write: if false; }
+
+    // V1230.131 — "Lucky Strike": the ONE shared global document the whole site presses toward
+    // together (not per-user). Readable by anyone (even signed-out visitors should see the live
+    // count ticking), writable only by a signed-in presser and only through validLuckyStrikeState()'s
+    // narrow allowed transitions above.
+    match /publicState/luckyStrike {
+      allow read: if true;
+      allow create, update: if signedIn() && validLuckyStrikeState();
+      allow delete: if false;
+    }
 
     // V1230.114 — short links for "challenge a friend" (duel) and "invite friends" (referral).
     // Problem: those links used to carry the full target inline as query params
