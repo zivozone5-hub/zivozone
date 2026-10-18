@@ -1,18 +1,28 @@
 {
   "version": "1201",
-  "generatedAt": "2026-09-19T19:15:00+03:00",
+  "generatedAt": "2026-10-18T20:52:22.202554+03:00",
   "timezone": "Asia/Amman",
   "days": [
-    "2026-09-18.json",
-    "2026-09-19.json",
-    "2026-09-20.json"
+    "2026-10-11.json",
+    "2026-10-12.json",
+    "2026-10-13.json",
+    "2026-10-14.json",
+    "2026-10-15.json",
+    "2026-10-16.json",
+    "2026-10-17.json",
+    "2026-10-18.json",
+    "2026-10-19.json",
+    "2026-10-20.json",
+    "2026-10-21.json",
+    "2026-10-22.json",
+    "2026-10-23.json",
+    "2026-10-24.json",
+    "2026-10-25.json"
   ],
-  "totalMatches": 13,
+  "totalMatches": 45,
   "providers": [
-    "ESPN",
-    "TheSportsDB",
-    "JFA verified fallback"
+    "TheSportsDB discovery",
+    "ESPN enrichment"
   ],
-  "coverage": "لقطة أولية حقيقية للأمس/اليوم/الغد، مع التحديث المباشر عبر ESPN ومصادر JFA عند توفرها.",
-  "runtimeVersion": "1201.0"
+  "coverage": "بيانات محفوظة + تحديث مباشر للمباريات المتاحة، مع الحفاظ على آخر لقطة ناجحة عند تعطل المصدر."
 }
