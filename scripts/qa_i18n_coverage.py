@@ -32,6 +32,8 @@ ALLOW_FR = {"questions10", "xp", "coins", "score", "sportFootball", "sportBasket
             "epic50Points",
             # V1230.31 — "Genre" is the real French word too (identical spelling, not a leftover copy).
             "roomsGenreAria",
+            # V1230.130 — "Question" is the real French word too (identical spelling, not a leftover copy).
+            "flvQuestionLabel",
             # V1230.34 — "Exploration", "Interaction", "Mode", "Phase" and "Mission" are the real French
             # words too (identical spelling, not leftover copies) — challenges.js renderWorld() chrome.
             "challengesPhaseExplore", "challengesPhaseInteract", "challengesModeLabel",

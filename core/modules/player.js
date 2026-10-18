@@ -66,6 +66,14 @@
   // Cloud sync reuses Auth.update() (already strips economy-critical keys) so this one call is the
   // whole write path; firestore.rules' validProfileUpdate() is the matching server-side allowlist.
   function setAvatar(id){const old=read(ID_KEY,{});old.avatar=String(id||'').replace(/[^a-z0-9_]/gi,'').slice(0,32);old.name=old.name||defaultName();write(ID_KEY,old);try{window.ZIVOZONE?.Auth?.update?.({avatar:old.avatar})}catch(_){}window.dispatchEvent(new CustomEvent('zivozone-avatar',{detail:{avatar:old.avatar}}));return old.avatar;}
+  // V1230.130 — football-levels.js's 20-level progression. footballLevel = highest level CLEARED
+  // (0..20, not the level currently being attempted); footballCards = unused "level protection
+  // cards" in inventory. Same identity-store + Auth.update() sync path as setAvatar() just above —
+  // low-stakes client-trusted progress, not the ZIVO balance itself (that's economy.js's
+  // server-verified wallet). firestore.rules' validProfileUpdate() is the matching allowlist.
+  function getFootballProgress(){const old=read(ID_KEY,{});return{level:Math.max(0,Math.min(20,Number(old.footballLevel)||0)),cards:Math.max(0,Number(old.footballCards)||0)};}
+  function setFootballLevel(n){const old=read(ID_KEY,{});old.footballLevel=Math.max(0,Math.min(20,Number(n)||0));old.name=old.name||defaultName();write(ID_KEY,old);try{window.ZIVOZONE?.Auth?.update?.({footballLevel:old.footballLevel})}catch(_){}return old.footballLevel;}
+  function setFootballCards(n){const old=read(ID_KEY,{});old.footballCards=Math.max(0,Number(n)||0);old.name=old.name||defaultName();write(ID_KEY,old);try{window.ZIVOZONE?.Auth?.update?.({footballCards:old.footballCards})}catch(_){}return old.footballCards;}
   function record(d={}){const old=read(ID_KEY,{}),all=challengeStats(),key=String(d.challenge||'general').slice(0,60),q=all[key]||{games:0,correct:0,total:0,best:0};q.games++;q.correct+=Number(d.correct)||0;q.total+=Number(d.total)||0;q.best=Math.max(q.best,Number(d.score)||0);all[key]=q;old.challengeStats=all;old.name=old.name||defaultName();write(ID_KEY,old);return q;}
   function get(){const p=state(),old=read(ID_KEY,{}),u=user(),wallet=window.ZIVOZONE?.Economy?.getWallet?.()||{};const out={...old,name:clean(u?.displayName||old.name),level:Number(p.level)||1,xp:Number(p.xp)||0,games:Number(p.played??p.games)||0,balance:Number(wallet.zivo)||Number(old.balance)||0,bestScore:Number(p.bestScore)||0,streak:Number(p.streak)||0,challengeStats:challengeStats(),history:Array.isArray(p.history)?p.history:[]};publishState(out);return out;}
   function renderMain(){const s=get();const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=String(v)};set('profile-name',s.name||'زائر');set('profile-email',user()?.email||'يمكنك اللعب كزائر ثم إنشاء حساب لحفظ تقدمك.');set('profile-level',s.level);set('profile-xp',s.xp);set('profile-coins',s.balance);set('profile-wins',s.games);set('profile-best-streak',s.streak);const bar=document.getElementById('xp-progress');if(bar){const base=(s.level-1)*100,next=s.level*100;bar.style.width=Math.min(100,Math.max(0,((s.xp-base)/(next-base))*100))+'%';}}
@@ -101,7 +109,7 @@
   // uses ZIVOZONE.Player, which already exposes the same state/addProgress/levelFor under its real
   // name via `progress:state`). Same class of unused shadow-alias as ui.js's ZIVOZONE.UI, removed for
   // the same reason.
-  window.ZIVOZONE.Player=Object.freeze({get,state,progress:state,levelFor,addProgress,addXP,record,stats:challengeStats,render:renderMain,sanitizeName:clean,hydrateFromCloud,setAvatar});
+  window.ZIVOZONE.Player=Object.freeze({get,state,progress:state,levelFor,addProgress,addXP,record,stats:challengeStats,render:renderMain,sanitizeName:clean,hydrateFromCloud,setAvatar,getFootballProgress,setFootballLevel,setFootballCards});
   window.addEventListener('zivozone-result',e=>{const d=e.detail||{};if(d.__coreProgressApplied)return;d.__coreProgressApplied=true;addProgress(Number(d.xp)||Math.max(0,(Number(d.correct)||0)*10),Number(d.correct)||0,Number(d.score)||0);record(d);});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',renderMain);else renderMain();
 })();

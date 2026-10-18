@@ -5,7 +5,7 @@ service cloud.firestore {
     // V1229: an unverified e-mail must never grant admin rights.
     function isOwner() { return signedIn() && request.auth.token.email == 'raefalbtish@gmail.com' && request.auth.token.email_verified == true; }
     function isSelf(id) { return signedIn() && request.auth.uid == id; }
-    function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastRewardClaimId']); }
+    function validWalletKeys() { return request.resource.data.keys().hasOnly(['zivo','createdAt','updatedAt','mode','lastRewardClaimId','lastSpendClaimId']); }
     // V1230.87 — progress sync (players/{uid}.xp/level/streak/... and the public leaderboard/{uid}
     // projection it feeds). Same honest trade-off already documented for ZIVO reward claims
     // elsewhere in this file: on the Spark plan there is no Cloud Functions layer to verify these
@@ -34,14 +34,22 @@ service cloud.firestore {
     // loosening one can never accidentally loosen the other.
     function validProfileUpdate() {
       let keys = request.resource.data.diff(resource.data).affectedKeys();
-      return keys.hasOnly(['language','name','age','avatar','updatedAt'])
+      return keys.hasOnly(['language','name','age','avatar','footballLevel','footballCards','updatedAt'])
         && (!keys.hasAny(['language']) || (request.resource.data.language is string && request.resource.data.language.size() <= 5))
         && (!keys.hasAny(['name']) || (request.resource.data.name is string && request.resource.data.name.size() <= 24))
         && (!keys.hasAny(['age']) || (request.resource.data.age is number && request.resource.data.age >= 13 && request.resource.data.age <= 100))
         // V1230.129 — the avatar is a cosmetic, client-trusted pick (same low-stakes trust level as
         // achievements/badges, which are also purely client-derived) — not server-verified against
         // "earned" status; just size-capped so it can't be abused as a free-text storage channel.
-        && (!keys.hasAny(['avatar']) || (request.resource.data.avatar is string && request.resource.data.avatar.size() <= 32));
+        && (!keys.hasAny(['avatar']) || (request.resource.data.avatar is string && request.resource.data.avatar.size() <= 32))
+        // V1230.130 — football-levels.js's 20-level progression: highest level cleared (0..20) and
+        // how many unused "level protection cards" the player holds. Same client-trusted, low-stakes
+        // cosmetic/progress tier as avatar just above — not the ZIVO balance itself (that stays
+        // server-verified via the wallet/spendClaims path below) — just the inventory count and
+        // level marker, size/range-capped so this can't be abused as a free-text or runaway-number
+        // storage channel.
+        && (!keys.hasAny(['footballLevel']) || (request.resource.data.footballLevel is number && request.resource.data.footballLevel >= 0 && request.resource.data.footballLevel <= 20))
+        && (!keys.hasAny(['footballCards']) || (request.resource.data.footballCards is number && request.resource.data.footballCards >= 0 && request.resource.data.footballCards <= 50));
     }
     // auth.js's touchSession() — the existing "last seen" presence ping (players/{uid}.lastSeenAt/
     // lastSeenPath). Pre-existing, already-active write path; carved out here so the progress-sync
@@ -110,13 +118,13 @@ service cloud.firestore {
     // V1230.128 — share_reward (share.js's rewardFirstShareToday(): one small ZIVO for the first
     // successful share action of the day, any channel) added here AND in economy.js's credit()
     // switch in the SAME change, learning from the 1230.59/.60/.70 history above.
-    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward','share_reward','legend_reward']; }
+    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward','share_reward','legend_reward','football_level_reward']; }
     // V1230.84 — unified every "finished a test/game perfectly" reward to a flat 5 ZIVO (challenge_reward
     // was 10; story/health/beauty/horror/light_escape_reward were 2). Must match economy.js's credit()
     // switch exactly, in the SAME change — see that file's V1230.84 note for why a mismatch here
     // silently rejects every claim of the changed type (same failure mode as the 1230.59/.60 history
     // above). Achievement/mission/competition rewards are untouched (different mechanic).
-    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'share_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'legend_reward' && request.resource.data.amount == 5); }
+    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'share_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'legend_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2); }
     function validRewardClaim(claimId) {
       return request.resource.data.claimId == claimId
         && request.resource.data.status == 'consumed'
@@ -143,7 +151,23 @@ service cloud.firestore {
         && (request.resource.data.type != 'health_epic_reward' || request.resource.data.policy == 'health_epic_reward')
         && (request.resource.data.type != 'football_epic_reward' || request.resource.data.policy == 'football_epic_reward')
         && (request.resource.data.type != 'share_reward' || request.resource.data.policy == 'share_reward')
-        && (request.resource.data.type != 'legend_reward' || request.resource.data.policy == 'legend_reward');
+        && (request.resource.data.type != 'legend_reward' || request.resource.data.policy == 'legend_reward')
+        && (request.resource.data.type != 'football_level_reward' || request.resource.data.policy == 'football_level_reward');
+    }
+    // V1230.130 — the economy's first DEDUCTION claim type, mirroring rewardTypeValid()/
+    // rewardAmountValid()/validRewardClaim() above but for spending ZIVO instead of earning it
+    // (football-levels.js's "level protection card", 15 ZIVO). Kept as its own small function set
+    // rather than folded into the reward ones so a future bug in one can never silently loosen the
+    // other — same reasoning as validProgressUpdate() vs validProfileUpdate() being split apart.
+    function spendTypeValid() { return request.resource.data.type in ['protection_card_purchase']; }
+    function spendAmountValid() { return request.resource.data.type == 'protection_card_purchase' && request.resource.data.amount == 15; }
+    function validSpendClaim(claimId) {
+      return request.resource.data.claimId == claimId
+        && request.resource.data.status == 'consumed'
+        && request.resource.data.consumedAt == request.time
+        && spendTypeValid()
+        && spendAmountValid()
+        && (request.resource.data.type != 'protection_card_purchase' || request.resource.data.policy == 'protection_card_purchase');
     }
     function validMiningKeys() { return request.resource.data.keys().hasOnly(['lastMiningAt','nextMiningAt','amount','version']); }
     // V1230.89 — this used to hardcode an exact question count (10, then briefly 20) that had to be
@@ -207,7 +231,17 @@ service cloud.firestore {
             // V1230.68: rewardClaims is a sibling of zivozone now, not nested under it — see the fix note at match /rewardClaims/{claimId} below.
             getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.status == 'consumed' &&
             getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.amount == request.resource.data.zivo - resource.data.zivo &&
-            getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.consumedAt == request.time)
+            getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(request.resource.data.lastRewardClaimId)).data.consumedAt == request.time) ||
+          // V1230.130 — the decrease branch: economy.js's spend(). resource.data.zivo (the PRIOR
+          // balance, read fresh by the rules engine itself, not trusted from the client) must already
+          // cover the deduction — this is the actual guarantee a forged/stale local balance can never
+          // produce a negative wallet, not just a client-side "do I have enough" check.
+          (request.resource.data.zivo < resource.data.zivo &&
+            resource.data.zivo >= resource.data.zivo - request.resource.data.zivo &&
+            request.resource.data.lastSpendClaimId is string &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(request.resource.data.lastSpendClaimId)).data.status == 'consumed' &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(request.resource.data.lastSpendClaimId)).data.amount == resource.data.zivo - request.resource.data.zivo &&
+            getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(request.resource.data.lastSpendClaimId)).data.consumedAt == request.time)
         ));
         allow delete: if false;
       }
@@ -261,6 +295,16 @@ service cloud.firestore {
         allow update,delete: if false;
       }
 
+      // V1230.130 — sibling of rewardClaims/{claimId} just above, for the economy's first spend
+      // (deduction) path. Same idempotent-claim shape; validSpendClaim() does the type/amount check,
+      // and the wallet update rule below additionally re-reads the PRIOR balance to refuse a spend
+      // that would ever take zivo negative — the actual anti-cheat, not just the claim shape.
+      match /spendClaims/{claimId} {
+        allow read: if isOwner() || isSelf(userId);
+        allow create: if isSelf(userId) && validSpendClaim(claimId);
+        allow update,delete: if false;
+      }
+
       match /zivozone/wallet/ledger/{entryId} {
         allow read: if isOwner() || isSelf(userId);
         allow create: if isSelf(userId) && (
@@ -295,7 +339,19 @@ service cloud.firestore {
               || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5)
               || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5)
               || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5))
+              || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5)
+              || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2))
+          )
+          ||
+          // V1230.130 — spend() ledger entries are negative (a deduction, not a reward), tied to the
+          // sibling spendClaims/{claimId} doc instead of rewardClaims/{claimId}.
+          (
+            request.resource.data.eventId == entryId
+            && request.resource.data.claimId == entryId
+            && getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(entryId)).data.status == 'consumed'
+            && getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(entryId)).data.amount == -request.resource.data.amount
+            && request.resource.data.type == 'protection_card_purchase'
+            && request.resource.data.amount == -15
           )
         );
         allow update,delete: if false;

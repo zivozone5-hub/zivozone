@@ -54,6 +54,7 @@ core/modules/daily.js
 core/modules/competition.js
 core/modules/missions.js
 core/modules/legend-journey.js
+core/modules/football-levels.js
 core/modules/player-hub.js
 core/modules/news.js
 core/modules/admin.js

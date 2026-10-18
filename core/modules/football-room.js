@@ -249,6 +249,7 @@
       <p class="zfr-controls-hint">${esc(t("tacticsOpenHint"))}</p>
       ${continueBtn}
       <button type="button" class="zfr-trivia" id="tct-trivia">${esc(t("tacticsTriviaBtn"))}</button>
+      <button type="button" class="zfr-trivia zfr-levels" id="tct-levels">${esc(t("flvBtn"))}</button>
       <p class="zfr-reward-note">${esc(t("tacticsRewardNote"))}</p>
     </div></div></div>`;
     r.classList.add("active");
@@ -273,6 +274,14 @@
       root().classList.remove("active");
       document.body.classList.remove("zivo-football-active");
       try { window.ZIVOZONE_CHALLENGE_CORE?.start?.("football"); } catch (_) {}
+    });
+    // V1230.130 — "Football Journey": the new 20-level progression (football-levels.js), opened the
+    // same deliberately-not-close()'d way as #tct-trivia right above, for the exact same reason.
+    r.querySelector("#tct-levels")?.addEventListener("click", () => {
+      try { A()?.stopAmbient?.(); } catch (_) {}
+      root().classList.remove("active");
+      document.body.classList.remove("zivo-football-active");
+      try { window.ZIVOZONE?.FootballLevels?.open?.(); } catch (_) {}
     });
     try { A()?.unlock?.(); A()?.transitionAmbient?.("football"); } catch (_) {}
   }

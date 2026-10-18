@@ -346,3 +346,37 @@ body.zivo-darkroom-active .zcr-question{width:100%!important}
 @media(max-width:480px){.zav-grid{grid-template-columns:repeat(4,1fr)}}
 .zlj-intro{color:#aab2c8;font-size:13px;line-height:1.7;margin:0 0 14px}
 .zlj-unlock{margin-top:14px;padding:12px;border-radius:12px;background:rgba(255,217,107,.1);border:1px solid rgba(255,217,107,.3);color:#ffe9ad;font-size:13px;font-weight:700;text-align:center}
+/* V1230.130 — Football Journey (.zfl-*): the 20-level map, the per-question quiz screen, and the
+   pass/fail result screen. All three share one overlay root (#zivo-football-levels) and the same
+   .v31-overlay/.v31-card/.v31-close/.v31-head/.v31-emblem base as every other panel here — only the
+   level grid, option buttons and result layout are genuinely new. */
+.zfl-card{width:min(560px,100%)}
+.zfl-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:4px}
+.zfl-node{aspect-ratio:1;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:#e8eeff;font-weight:800;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s ease,background .15s ease}
+.zfl-node:hover:not(:disabled){transform:translateY(-2px);background:rgba(255,255,255,.07)}
+.zfl-node.zfl-cleared{background:rgba(93,224,160,.14);border-color:rgba(93,224,160,.4);color:#bdf5d8}
+.zfl-node.zfl-current{background:rgba(255,217,107,.16);border-color:rgba(255,217,107,.55);color:#ffe9ad;animation:zav-pulse 2.2s ease-in-out infinite}
+.zfl-node.zfl-locked{cursor:not-allowed;opacity:.45}
+@media(max-width:480px){.zfl-grid{grid-template-columns:repeat(4,1fr)}}
+.zfl-cardbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:16px;padding:12px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06);font-size:13px;color:#cfd4e6;flex-wrap:wrap}
+.zfl-buycard{padding:9px 16px;border-radius:999px;border:1px solid rgba(93,224,160,.4);background:rgba(93,224,160,.12);color:#bdf5d8;font-weight:700;font-size:12px;cursor:pointer}
+.zfl-buycard:hover{background:rgba(93,224,160,.2)}
+.zfl-note{margin:10px 2px 0;font-size:11px;color:#858ca1;text-align:center;min-height:14px}
+.zfl-note-bad{color:#ff9a9a}
+.zfl-qhead{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#9aa1b6;margin-bottom:8px}
+.zfl-qbar{height:4px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;margin-bottom:18px}
+.zfl-qbar i{display:block;height:100%;background:linear-gradient(90deg,#5de0a0,#ffd96b);transition:width .3s ease}
+.zfl-qtext{font-size:17px;line-height:1.6;margin:0 0 16px}
+.zfl-opts{display:grid;gap:9px}
+.zfl-opt{padding:13px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.035);color:#e8eeff;font-size:14px;text-align:start;cursor:pointer;transition:background .15s ease}
+.zfl-opt:hover:not(:disabled){background:rgba(255,255,255,.07)}
+.zfl-opt:disabled{cursor:default}
+.zfl-opt.zfl-right{background:rgba(93,224,160,.22);border-color:rgba(93,224,160,.6);color:#bdf5d8}
+.zfl-opt.zfl-wrong{background:rgba(255,110,110,.18);border-color:rgba(255,110,110,.5);color:#ffcccc}
+.zfl-result{text-align:center}
+.zfl-resulticon{font-size:44px;margin-bottom:6px}
+.zfl-result h2{margin:4px 0}
+.zfl-result p{color:#aab2c8;font-size:14px;line-height:1.7;margin:0 0 6px}
+.zfl-actions{display:flex;flex-direction:column;gap:9px;margin-top:16px}
+.zfl-primary{padding:13px;border-radius:12px;border:0;background:#fff;color:#080910;font-weight:900;cursor:pointer;font-size:14px}
+.zfl-secondary{padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#e8eeff;font-weight:700;cursor:pointer;font-size:13px}

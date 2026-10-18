@@ -32,6 +32,13 @@
   // written to Firestore through this path. See firestore.rules' matching fix (rewardClaims is now
   // matched as /rewardClaims/{claimId}, a sibling of /zivozone/..., not /zivozone/rewardClaims/...).
   const rewardClaims = (uid) => db().collection('users').doc(uid).collection('rewardClaims');
+  // V1230.130 — spendClaims is rewardClaims' mirror image: an idempotent, Firestore-verified record
+  // of a ZIVO DEDUCTION (first real spend path in the economy — everything before this was earn-only).
+  // Needed for football-levels.js's "level protection card" purchase. Same trust model as credit():
+  // no Cloud Functions on the Spark plan, so firestore.rules bounds the write (fixed price, fixed
+  // type, and — critically — the wallet's PRIOR balance must already be >= the price) instead of
+  // proving it cryptographically.
+  const spendClaims = (uid) => db().collection('users').doc(uid).collection('spendClaims');
 
   function toast(msg) {
     let x = document.getElementById('zivo-economy-toast');
@@ -365,7 +372,11 @@
       // (legend-journey.js's grantIfComplete()). The claimId there is a fixed constant
       // ('legend_journey_complete'), so — same idempotent-claim mechanism as every reward above —
       // this can only ever be granted once per player, with zero extra anti-abuse code needed.
-      : type === 'legend_reward' ? 'legend_reward' : '';
+      : type === 'legend_reward' ? 'legend_reward'
+      // V1230.130 — football-levels.js's 20-level progression: a small, once-per-level-ever reward
+      // (claimId is a fixed 'football_level_<n>' constant per level, same idempotent-claim mechanism
+      // as legend_reward above, so replaying an already-cleared level for fun can never re-pay it).
+      : type === 'football_level_reward' ? 'football_level_reward' : '';
     // V1230.84 — unified every "you finished a test/game perfectly" reward to a flat 5 ZIVO
     // (challenge_reward and the single-game "_reward" room-clears used to pay 10 and 2 respectively;
     // the "_epic_reward" full-room-clear types were already 5). Mirrored exactly in firestore.rules'
@@ -390,7 +401,8 @@
       : type === 'health_epic_reward' ? value === 5
       : type === 'football_epic_reward' ? value === 5
       : type === 'share_reward' ? value === 1
-      : type === 'legend_reward' ? value === 5 : false;
+      : type === 'legend_reward' ? value === 5
+      : type === 'football_level_reward' ? value === 2 : false;
     if (!policy || !allowed) return false;
 
     try {
@@ -487,6 +499,61 @@
     }
   }
 
+  // V1230.130 — spend(): the economy's first DEDUCTION path, mirroring credit()'s idempotent-claim
+  // transaction exactly but subtracting instead of adding, and refusing up front (before ever
+  // touching Firestore) if the locally-known balance can't cover it — a fast, friendly "not enough
+  // ZIVO" instead of a failed write. The real enforcement is still server-side: firestore.rules'
+  // validSpendClaim()/the wallet update rule's new decrease branch re-check the PRIOR balance from
+  // the transaction's own read, so a stale/forged local balance can never produce a negative wallet.
+  // Only one spend type exists today (protection_card_purchase, football-levels.js); add new ones the
+  // same two-sided way every reward type was added (this switch AND firestore.rules, same change).
+  async function spend(amount, meta = {}) {
+    const u = user(), d = db();
+    const value = Number(amount) || 0;
+    if (!u || !d || value <= 0) return { ok: false, reason: 'invalid' };
+    if (!signedInZivoGate()) return { ok: false, reason: 'signed-out' };
+
+    const type = String(meta.type || '');
+    const policy = type === 'protection_card_purchase' ? 'protection_card_purchase' : '';
+    const allowed = type === 'protection_card_purchase' && value === 15;
+    if (!policy || !allowed) return { ok: false, reason: 'invalid' };
+
+    try {
+      const r = root(u.uid), wallet = r.doc('wallet');
+      await ensureWallet(u);
+      const rawClaim = String(meta.claimId || meta.eventId || `${type}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`);
+      const claimId = rawClaim.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 140) || `spend_${Date.now()}`;
+      const claimRef = spendClaims(u.uid).doc(claimId);
+      const ledgerRef = wallet.collection('ledger').doc(claimId);
+
+      const outcome = await d.runTransaction(async tx => {
+        const [claimSnap, ledgerSnap, ws] = await Promise.all([
+          tx.get(claimRef), tx.get(ledgerRef), tx.get(wallet)
+        ]);
+        if (claimSnap.exists || ledgerSnap.exists) return { ok: true, already: true };
+        const current = num(ws.data()?.zivo);
+        if (current < value) return { ok: false, reason: 'insufficient' };
+
+        const fv = F().firestore.FieldValue;
+        const claim = { claimId, type, amount: value, status: 'consumed', consumedAt: fv.serverTimestamp(), policy };
+        tx.set(claimRef, claim);
+        tx.set(wallet, { zivo: current - value, updatedAt: fv.serverTimestamp(), lastSpendClaimId: claimId, mode: 'zivozone-economy-v1202' }, { merge: true });
+        tx.set(ledgerRef, { type, label: meta.label || t('spendFallbackLabel'), amount: -value, source: meta.source || 'economy', eventId: claimId, createdAt: fv.serverTimestamp(), claimId });
+        return { ok: true };
+      });
+      if (!outcome.ok) return outcome;
+      await refresh();
+      window.ZIVOZONE_AUDIO?.purchaseBurn?.();
+      window.ZIVOZONE?.Events?.emit?.('REWARD_GRANTED', { type, amount: -value });
+      return { ok: true };
+    } catch (e) {
+      console.warn('ZIVO Economy spend:', e);
+      window.ZIVOZONE?.ErrorTracker?.report?.(`economy.spend(${type}) failed: ${e?.message || e}`, { stack: e?.stack });
+      return { ok: false, reason: 'error' };
+    }
+  }
+  function signedInZivoGate() { try { return !!user(); } catch (_) { return false; } }
+
   async function addXP(amount) {
     try { window.ZIVOZONE?.Player?.addXP?.(Number(amount) || 0); return true; }
     catch (e) { console.warn('ZIVO Economy addXP:', e); return false; }
@@ -570,7 +637,7 @@
   window.ZIVOZONE = window.ZIVOZONE || {};
   window.ZIVOZONE.Economy = Object.freeze({
     open, refresh, getWallet: () => ({ ...state, ledger: [...state.ledger] }), mine,
-    rewardPerfect, rewardChallenge, credit, addXP, startGameSession,
+    rewardPerfect, rewardChallenge, credit, spend, addXP, startGameSession,
     status: () => ({ legacy:false, cloud:!!user(), admin:admin(), version: '1202' })
   });
   window.ZIVOZONE.EconomyVersion = '1141-unified-reward-contract';
