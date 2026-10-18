@@ -46,6 +46,14 @@
   const R = () => window.ZIVOZONE_ROUTER;
   const SEO = () => window.ZIVOZONE_SEO;
   const esc = window.ZIVOZONE_ESC;
+  // V1230.124 — close()'s own explicit window.scrollTo({top:0}) (below) was being overwritten a beat
+  // later by Chrome's native scroll-restoration kicking in on the history.back() this module uses to
+  // close a room (see V1230.99's comment on frame()): the browser remembers the scroll offset the
+  // page had when the room's pushState entry was created and silently snaps back to it after our
+  // scroll already ran. 'manual' hands scroll position fully to this app's own JS on every
+  // back/forward in this SPA (nothing else in the codebase reads/sets this), so close()'s scrollTo
+  // sticks instead of racing the browser's restoration.
+  try { if ("scrollRestoration" in history) history.scrollRestoration = "manual"; } catch (_) {}
 
   // ---- data ------------------------------------------------------------------
   const memo = new Map();
@@ -210,6 +218,18 @@
     }
     if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (_) {} }
     lastFocus = null;
+    // V1230.124 — every other room module (horror/puzzle/beauty/football) and challenges.js's own
+    // close() already land the visitor back at the top of the homepage on exit. rooms.js
+    // (Stories/Health/Beyond Time) was the one holdout — its close() only restored keyboard focus, so
+    // closing a door anywhere down the page (the Beyond Time card sits near the bottom) left the
+    // visitor stranded mid-scroll instead of back at the top like every other room. Deliberately just
+    // the scroll, NOT the other rooms' `location.hash = "#home"`: this module already runs its own
+    // pushState/history.back() bookkeeping above (the V1230.99 mobile-back-button fix) to make a
+    // room's own X/Escape/hardware-back close the room instead of exiting the site entirely — forcing
+    // the hash on top of that would race the pending back() and could push a second, bogus history
+    // entry. The scroll covers the Escape key and the Android/browser back button too, since both
+    // already route through this same close().
+    try { window.scrollTo?.({ top: 0, behavior: "instant" }); } catch (_) {}
   }
 
   document.addEventListener("keydown", ev => {
