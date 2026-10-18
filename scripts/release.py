@@ -108,4 +108,22 @@ def with_lastmod(m):
 sitemap = re.sub(r"<url><loc>([^<]+)</loc>(?:<lastmod>[^<]*</lastmod>)?</url>", with_lastmod, sitemap)
 sitemap_p.write_text(sitemap, encoding="utf-8")
 
+# V1230.127 — durably record what shipped each release so the admin panel's "آخر تحديثات الموقع"
+# panel (core/modules/admin.js, loadChangelog()) can show real history via a cheap static-file
+# fetch (zero Firestore cost), instead of the admin having no way to see what changed and when.
+# Usage: python3 scripts/release.py <ver> ["<short Arabic summary of what this release changed>"]
+# The note is optional so release.py keeps working unchanged if it's omitted (a generic fallback
+# is recorded instead) — but passing one is how future releases stay genuinely informative.
+import json
+changelog_p = ROOT / "data" / "changelog.json"
+note = sys.argv[2] if len(sys.argv) > 2 else f"إصدار {ver}"
+try:
+    changelog = json.loads(changelog_p.read_text(encoding="utf-8")) if changelog_p.exists() else []
+except Exception:
+    changelog = []
+changelog = [e for e in changelog if e.get("version") != ver]  # re-running the same version replaces its entry, doesn't duplicate it
+changelog.insert(0, {"version": ver, "date": datetime.date.today().isoformat(), "summary": note})
+changelog = changelog[:40]
+changelog_p.write_text(json.dumps(changelog, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
 print(f"stamped {ver}: {len(shell)} precache entries")
