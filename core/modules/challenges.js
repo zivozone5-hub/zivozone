@@ -1328,7 +1328,7 @@ function renderCenter(){
   const seen=new Set(); const list=all.filter(x=>x&&!['horror','forensic'].includes(x.id)&&!seen.has(x.id)&&seen.add(x.id));
   const seoSlug={football:'football-pitch',football_intelligence:'football-intelligence'};
   const locTitle=x=>text(x.title||x.name||x.id), locDesc=x=>text(x.desc)||t('genericChallengeDesc');
-  host.innerHTML=list.map(x=>{
+  host.innerHTML=list.map((x,i)=>{
     const dark=x.id==='horror', forensic=x.id==='forensic', dailyDone=done&&x.id==='daily';
     const img=posterMap[x.id]||'assets/challenge-posters/visual.svg'; const total=Array.isArray(x.questions)?x.questions.length:0;
     const cls=`challenge-card ${dark?'challenge-card-dark':''} ${forensic?'challenge-card-forensic':''} ${dailyDone?'challenge-card-done':''}`;
@@ -1336,7 +1336,10 @@ function renderCenter(){
     const metaRow=(dark||forensic)
       ? `<div class="challenge-badges"><span class="card-tag ${dark?'danger':''}">${dark?'DARK ROOM':esc(t('forensicLabTag'))}</span><span class="challenge-count">${total} ${esc(t('questionCountSuffix'))}</span></div>`
       : `<div class="challenge-meta-row"><span class="challenge-icon-badge" style="--badge-accent:${accent}">${icon}</span><span class="level-badge">${esc(t('level'))} ${level}</span></div>`;
-    return `<article class="${cls}" data-challenge="${esc(x.id)}" tabindex="0" role="button" aria-label="${esc(locTitle(x))}" style="--card-accent:${accent}">
+    // V1230.125 — --i feeds the staggered entrance animation in index.css (challengeCardIn); capped at
+    // 12 so a long list doesn't push the last cards' delay out to where they'd feel broken/stuck,
+    // rather than just entering a beat later than the first row.
+    return `<article class="${cls}" data-challenge="${esc(x.id)}" tabindex="0" role="button" aria-label="${esc(locTitle(x))}" style="--card-accent:${accent};--i:${Math.min(i,12)}">
       <div class="challenge-visual"><img src="${img}" alt="" loading="lazy"><span class="challenge-visual-glow"></span>${dark?'<span class="challenge-cinematic-badge">FULL SCREEN</span>':''}${forensic?'<span class="challenge-cinematic-badge forensic">CASE LAB</span>':''}</div>
       <div class="challenge-copy">${dark||forensic?metaRow:''}
       <h3>${esc(locTitle(x))}</h3><p>${esc(locDesc(x))}</p>${dark||forensic?'':metaRow}<div class="challenge-enter-line"><span>${dailyDone?esc(t('completedTodayTag')):esc(t('clickAnywhereToEnter'))}</span><b>↗</b></div>${seoSlug[x.id]?`<a href="/rooms/${seoSlug[x.id]}" class="zivo-seo-link" onclick="event.stopPropagation()">${esc(t('seoRoomDetailsLink'))}</a>`:''}</div>
