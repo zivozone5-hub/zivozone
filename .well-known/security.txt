@@ -1,0 +1,4 @@
+Contact: mailto:raefalbtish@gmail.com
+Expires: 2027-10-18T00:00:00.000Z
+Preferred-Languages: ar, en
+Canonical: https://zivozone.com/.well-known/security.txt
