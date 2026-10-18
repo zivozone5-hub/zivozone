@@ -231,7 +231,12 @@
   <section class="zac-grid bottom"><section class="zac-panel"><div class="zac-title"><div><h3>📡 مصدر الزوار</h3><small>من وين إجا زوار اليوم</small></div></div><div class="zac-activities">${sourceHtml}</div></section><section class="zac-panel"><div class="zac-title"><div><h3>📱 الجهاز والمتصفح</h3><small>موبايل، تابلت أو كمبيوتر — زوار اليوم</small></div></div><div class="zac-activities">${deviceHtml}</div></section></section>
   <section class="zac-panel"><div class="zac-title"><div><h3>📦 آخر تحديثات الموقع</h3><small>الإصدار الحالي: v${appVersion}</small></div></div><div class="zac-activities">${changelogHtml}</div></section>
   </main></div>`;
-  o.querySelector('.zac-close').onclick=close;o.querySelector('.zac-refresh').onclick=async e=>{e.currentTarget.disabled=true;try{render(await collect(80))}finally{e.currentTarget.disabled=false}};
+  // V1230.134 — fixed "Cannot set properties of null (setting 'disabled')": e.currentTarget is
+  // only valid WHILE the event is dispatching; the DOM spec nulls it out once dispatch finishes,
+  // which happens synchronously, well before an `await` inside the handler resolves. So by the
+  // time this handler reached its `finally` block, e.currentTarget was already null. Fixed by
+  // capturing the button reference up front instead of reading it from the stale event object.
+  o.querySelector('.zac-close').onclick=close;o.querySelector('.zac-refresh').onclick=async e=>{const btn=e.currentTarget;btn.disabled=true;try{render(await collect(80))}finally{btn.disabled=false}};
   const searchEl=o.querySelector('#zac-user-search');if(searchEl)searchEl.oninput=e=>{searchQuery=e.target.value;refreshUsersList()};
   const sortEl=o.querySelector('#zac-user-sort');if(sortEl)sortEl.onchange=e=>{sortKey=e.target.value;refreshUsersList()};
   const exportEl=o.querySelector('#zac-user-export');if(exportEl)exportEl.onclick=exportUsersCsv;

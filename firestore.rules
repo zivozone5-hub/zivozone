@@ -399,29 +399,29 @@ service cloud.firestore {
           )
           ||
           (
+            // V1230.134 — CRITICAL FIX: this branch used to hand-copy its own type/amount matrix
+            // instead of reusing rewardTypeValid()/rewardAmountValid() above, and that copy had
+            // silently drifted out of sync with every change made to the real matrix since:
+            //   - challenge_reward/story_reward/health_reward/beauty_reward/horror_reward/
+            //     light_escape_reward were still hard-coded at their PRE-V1230.84 amounts
+            //     (10 / 2), while economy.js and rewardAmountValid() moved all of them to 5
+            //     in V1230.84 — so every one of those reward's ledger writes was rejected here,
+            //     even though its rewardClaims document had already been written successfully.
+            //   - share_reward (V1230.128) and legend_reward (V1230.129) were never added to
+            //     this list at all — so claiming either reward got exactly as far as creating
+            //     a rewardClaims doc, then failed with "Missing or insufficient permissions" on
+            //     the very next write in the same transaction (confirmed live in the admin
+            //     error panel: "economy.credit(share_reward) failed" / "economy.credit
+            //     (challenge_reward) failed", both "Missing or insufficient permissions").
+            // Fixed by reusing rewardTypeValid()/rewardAmountValid() directly instead of a
+            // second hand-maintained copy, so this can never drift out of sync again.
             request.resource.data.eventId == entryId
             && request.resource.data.claimId == entryId
             // V1230.68: rewardClaims is a sibling of zivozone now, not nested under it — see the fix note at match /rewardClaims/{claimId}.
             && getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(entryId)).data.status == 'consumed'
             && getAfter(/databases/$(database)/documents/users/$(userId)/rewardClaims/$(entryId)).data.amount == request.resource.data.amount
-            && ((request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 10)
-              || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2])
-              || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5])
-              || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1)
-              || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 2)
-              || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 2)
-              || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 2)
-              || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 2)
-              || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 2)
-              || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5)
-              || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2)
-              || (request.resource.data.type == 'lucky_strike_reward' && request.resource.data.amount == 50))
+            && rewardTypeValid()
+            && rewardAmountValid()
           )
           ||
           // V1230.130 — spend() ledger entries are negative (a deduction, not a reward), tied to the
