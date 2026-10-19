@@ -1,6 +1,8 @@
-/* ZIVOZONE V1230.136 — "الملعب الحي" (The Living Pitch) flagship arcade game. Reuses the existing
-   .v31-overlay/.v31-card/.zfl-grid/.zfl-node/.zfl-actions/.zfl-primary/.zfl-secondary/.zfl-result
-   chrome (core.css) instead of duplicating it — only the canvas-specific gameplay chrome is new. */
+/* ZIVOZONE V1230.138 — The Living Pitch, now a billiards-physics game. Reuses the
+   existing .v31-overlay/.v31-card/.zfl-grid/.zfl-node/.zfl-actions/.zfl-primary/.zfl-secondary/
+   .zfl-result chrome (core.css) instead of duplicating it — only the canvas gameplay chrome here
+   is new, and the gameplay itself (bumpers, hazards, keeper, ball, aim line) is drawn on canvas in
+   pitch-arena.js, not in this stylesheet. */
 .pta-card{width:min(420px,100%)}
 .pta-map{max-height:85vh;overflow-y:auto}
 /* V1230.137 — per-chapter grouping on the level map, now that Chapter 2 joined Chapter 1. */
@@ -15,6 +17,7 @@
 .pta-hud-level{font-weight:800;color:#e8eeff}
 .pta-hud-goals{font-weight:800;color:#ffd96b}
 .pta-canvas-wrap{width:100%;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.pta-canvas{display:block;width:100%;touch-action:none}
+.pta-canvas{display:block;width:100%;touch-action:none;cursor:grab}
+.pta-canvas:active{cursor:grabbing}
 .pta-hint{margin:10px 2px 0;font-size:12px;color:#9aa1b6;text-align:center;min-height:16px}
 @media(max-width:480px){.pta-grid{grid-template-columns:repeat(3,1fr)}}
