@@ -15,6 +15,58 @@
   const RTL_LANGS = new Set(["ar", "fa"]);
   function isRtl() { try { return RTL_LANGS.has(window.ZIVOZONE_I18N?.get?.() || "ar"); } catch (_) { return true; } }
 
+  // V1230.134 — lazy-loads core/modules/runtime/qr-encoder.js (dist/lazy/qr-encoder.js in
+  // production) only the first time a share-card image is actually built, same "don't make
+  // everyone pay for a feature only some visitors use" pattern as room-loader.js's room modules.
+  // Cached by promise so a second share in the same session never re-fetches the script.
+  let _qrPromise;
+  function loadQrEncoder() {
+    if (window.ZIVOZONE_QR) return Promise.resolve(window.ZIVOZONE_QR);
+    if (_qrPromise) return _qrPromise;
+    _qrPromise = new Promise((resolve, reject) => {
+      try {
+        const v = window.ZIVOZONE_CONFIG?.APP_VERSION || Date.now();
+        const s = document.createElement("script");
+        s.src = `dist/lazy/qr-encoder.js?v=${v}`;
+        s.onload = () => window.ZIVOZONE_QR ? resolve(window.ZIVOZONE_QR) : reject(new Error("qr-encoder-missing-after-load"));
+        s.onerror = () => reject(new Error("qr-encoder-network-error"));
+        document.head.appendChild(s);
+      } catch (e) { reject(e); }
+    }).catch(e => { _qrPromise = null; throw e; });
+    return _qrPromise;
+  }
+  // Draws a scannable QR code (encoding `url`) inside a white rounded box on the canvas, with a
+  // caption above it. Returns true/false so the caller can decide whether to still draw the plain
+  // fallback URL text below (it always does — a QR code is an ADDITION, not a replacement: not
+  // every recipient has a camera handy, and the short link is short enough to type by hand too).
+  function drawQrBlock(ctx, qr, url, W, boxTop) {
+    const boxSize = 360, pad = 24;
+    const boxLeft = (W - boxSize) / 2;
+    ctx.fillStyle = "#9fb3c8"; ctx.font = FONT(600, 36);
+    ctx.fillText(t("shareCardScanCta"), W / 2, boxTop - 24);
+    ctx.fillStyle = "#ffffff";
+    const r = 22;
+    ctx.beginPath();
+    ctx.moveTo(boxLeft + r, boxTop);
+    ctx.arcTo(boxLeft + boxSize, boxTop, boxLeft + boxSize, boxTop + boxSize, r);
+    ctx.arcTo(boxLeft + boxSize, boxTop + boxSize, boxLeft, boxTop + boxSize, r);
+    ctx.arcTo(boxLeft, boxTop + boxSize, boxLeft, boxTop, r);
+    ctx.arcTo(boxLeft, boxTop, boxLeft + boxSize, boxTop, r);
+    ctx.closePath(); ctx.fill();
+    const model = qr.makeQr(url, "M");
+    const count = model.getModuleCount();
+    const inner = boxSize - pad * 2;
+    const cell = inner / count;
+    ctx.fillStyle = "#0a1626";
+    for (let row = 0; row < count; row++) {
+      for (let col = 0; col < count; col++) {
+        if (model.isDark(row, col)) {
+          ctx.fillRect(boxLeft + pad + col * cell, boxTop + pad + row * cell, Math.ceil(cell) + 0.5, Math.ceil(cell) + 0.5);
+        }
+      }
+    }
+  }
+
   function buildGameUrl(gameId) {
     const id = clean(gameId);
     if (!id) return `${SITE_ORIGIN}/`;
@@ -385,6 +437,16 @@
         ctx.fillStyle = "#ffffff"; ctx.font = FONT(900, 230);
         ctx.fillText(`${clean(p.score)}%`, W / 2, H * 0.44);
       }
+      // V1230.134 — a QR code baked into the image itself, so a friend who only receives the
+      // PICTURE (Instagram/Snapchat Stories and similar strip the caption text entirely) still has
+      // a one-tap way straight into this exact challenge, not just the homepage. Best-effort: on
+      // any failure (lazy-load blocked, encoder error) this just silently skips the QR block and
+      // the card still works exactly as it always did, with only the plain URL text below.
+      try {
+        const qr = await loadQrEncoder();
+        const scanUrl = data?.url || data?.canonicalUrl;
+        if (qr && scanUrl) drawQrBlock(ctx, qr, scanUrl, W, 1080);
+      } catch (_) {}
       ctx.fillStyle = "#9fb3c8"; ctx.font = FONT(500, 40);
       wrapCanvasText(ctx, t("shareCardFooterCta"), W / 2, H - 230, W - 200, 50);
       ctx.fillStyle = "#46cdff"; ctx.font = FONT(700, 44);

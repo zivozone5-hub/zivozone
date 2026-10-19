@@ -53,6 +53,10 @@ LAZY_MODULES = [
     "core/modules/beauty-room.js",
     "core/modules/rooms.js",
     "core/modules/football-room.js",
+    # V1230.134 — the QR encoder is only ever needed while generating a shareable result image
+    # (share.js's buildCardImageBlob()), never at page load, so it's lazy like the rooms above
+    # instead of growing the eager bundle for every visitor who never shares anything.
+    "core/modules/runtime/qr-encoder.js",
 ]
 
 
