@@ -53,7 +53,9 @@
     puzzle: { src: "dist/lazy/puzzle-room.js", css: "dist/styles/puzzle-room.css", check: () => window.ZIVOZONE?.PuzzleRoom },
     beauty: { src: "dist/lazy/beauty-room.js", css: "dist/styles/beauty-room.css", check: () => window.ZIVOZONE?.BeautyRoom },
     rooms: { src: "dist/lazy/rooms.js", css: "dist/styles/rooms.css", check: () => window.ZIVOZONE?.RealRooms },
-    football: { src: "dist/lazy/football-room.js", css: "dist/styles/football-room.css", check: () => window.ZIVOZONE?.FootballRoom }
+    football: { src: "dist/lazy/football-room.js", css: "dist/styles/football-room.css", check: () => window.ZIVOZONE?.FootballRoom },
+    // V1230.136 — "The Living Pitch" (Pitch Arena), the new flagship arcade game.
+    pitch: { src: "dist/lazy/pitch-arena.js", css: "dist/styles/pitch-arena.css", check: () => window.ZIVOZONE?.PitchArena }
   };
   const pending = {};
 
@@ -83,7 +85,8 @@
     { sel: "[data-zivo-story-room]", key: "rooms", invoke: api => api.enter("stories") },
     { sel: "[data-zivo-health-room]", key: "rooms", invoke: api => api.enter("health") },
     { sel: "[data-zivo-room='time']", key: "rooms", invoke: api => api.enter("time") },
-    { sel: "[data-football-room]", key: "football", invoke: api => api.start() }
+    { sel: "[data-football-room]", key: "football", invoke: api => api.start() },
+    { sel: "[data-pitch-arena]", key: "pitch", invoke: api => api.open() }
   ];
 
   function handle(e) {

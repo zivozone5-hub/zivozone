@@ -72,7 +72,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.135">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.136">
 
 
 
@@ -96,8 +96,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.135">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.135">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.136">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.136">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -203,6 +203,10 @@
 <section class="zivo-signature-zone" id="zivo-rooms-hub" aria-label="Experiencias distintivas de ZIVOZONE" data-i18n-aria-label="sigTitle">
   <div class="zivo-signature-head"><div><span class="eyebrow">ZIVOZONE SIGNATURE</span><h2 data-i18n="sigTitle">Experiencias distintivas de ZIVOZONE</h2><p data-i18n="sigDesc">Una sola sección con las salas distintivas de ZIVOZONE, cada una con su propio carácter.</p></div><span class="zivo-signature-live">● <span data-i18n="sigLive">Entrada en vivo</span></span></div>
   <div class="zivo-signature-grid">
+    <article class="zivo-signature-card flagship pitch-arena" data-pitch-arena tabindex="0" role="button" aria-label="Entrar a El Campo Vivo" data-i18n-aria-label="sigPitchArenaAria">
+      <div class="zivo-signature-media" style="background:radial-gradient(circle,#0e3b22,#06130c);display:grid;place-items:center;font-size:84px">⚽</div>
+      <div class="zivo-signature-copy"><span data-i18n="sigPitchArenaKicker">00 // JUEGO INSIGNIA</span><h3>⚽ <span data-i18n="sigPitchArenaTitle">El Campo Vivo</span></h3><p data-i18n="sigPitchArenaDesc">Un juego arcade de habilidad en tiempo real: evade a los defensas, lee al portero y marca. El Capítulo 1 ya está disponible con nueve niveles.</p><b><span data-i18n="sigPitchArenaCta">Entrar a El Campo Vivo</span> ↗</b></div>
+    </article>
     <article class="zivo-signature-card dark" data-horror-room tabindex="0" role="button" aria-label="Entrar a la Sala Oscura" data-i18n-aria-label="sigDarkAria">
       <div class="zivo-signature-media"><img src="assets/challenge-posters/horror.svg" alt="" loading="eager"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status">FULL SCREEN</span></div>
       <div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 <span data-i18n="sigDarkTitle">Sala Oscura</span></h3><p data-i18n="sigDarkDesc">Una experiencia cinematográfica a pantalla completa. Toca donde sea para entrar al instante.</p><b><span data-i18n="sigDarkCta">Entrar a la sala</span> ↗</b><a href="/rooms/dark-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">Detalles de la sala</a></div>
@@ -289,7 +293,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1230.135"></script>
+<script type="module" src="zivo-ai.js?v=1230.136"></script>
 
 
 
@@ -312,7 +316,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.135"></script>
+<script src="dist/app.bundle.js?v=1230.136"></script>
 
 
 

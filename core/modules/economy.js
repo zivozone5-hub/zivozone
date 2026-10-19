@@ -382,7 +382,13 @@
       // reuses the same once-only idempotent-claim mechanism as every reward above; the real
       // anti-forgery check lives in firestore.rules' validRewardClaim(), which cross-checks the
       // claimer against publicState/luckyStrike's actual recorded winner for that round.
-      : type === 'lucky_strike_reward' ? 'lucky_strike_reward' : '';
+      : type === 'lucky_strike_reward' ? 'lucky_strike_reward'
+      // V1230.136 — "The Living Pitch" (Pitch Arena), the new flagship real-time arcade game: same
+      // once-per-level-ever pattern as football_level_reward above (claimId 'pitch_level_<n>'), plus
+      // a one-time full-chapter clear bonus (claimId 'pitch_chapter_<n>', same shape as every other
+      // "_epic_reward"/"_chapter_reward" one-time bonus in this file).
+      : type === 'pitch_level_reward' ? 'pitch_level_reward'
+      : type === 'pitch_chapter_reward' ? 'pitch_chapter_reward' : '';
     // V1230.84 — unified every "you finished a test/game perfectly" reward to a flat 5 ZIVO
     // (challenge_reward and the single-game "_reward" room-clears used to pay 10 and 2 respectively;
     // the "_epic_reward" full-room-clear types were already 5). Mirrored exactly in firestore.rules'
@@ -409,7 +415,9 @@
       : type === 'share_reward' ? value === 1
       : type === 'legend_reward' ? value === 5
       : type === 'football_level_reward' ? value === 2
-      : type === 'lucky_strike_reward' ? value === 50 : false;
+      : type === 'lucky_strike_reward' ? value === 50
+      : type === 'pitch_level_reward' ? value === 2
+      : type === 'pitch_chapter_reward' ? value === 5 : false;
     if (!policy || !allowed) return false;
 
     try {

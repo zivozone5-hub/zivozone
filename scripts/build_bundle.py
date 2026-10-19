@@ -53,6 +53,9 @@ LAZY_MODULES = [
     "core/modules/beauty-room.js",
     "core/modules/rooms.js",
     "core/modules/football-room.js",
+    # V1230.136 — "الملعب الحي" (The Living Pitch) flagship arcade game: a brand-new Canvas 2D game
+    # engine, same reasoning as the five rooms above — only fetched when a visitor actually opens it.
+    "core/modules/pitch-arena.js",
     # V1230.134 — the QR encoder is only ever needed while generating a shareable result image
     # (share.js's buildCardImageBlob()), never at page load, so it's lazy like the rooms above
     # instead of growing the eager bundle for every visitor who never shares anything.

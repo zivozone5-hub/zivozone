@@ -34,7 +34,7 @@ service cloud.firestore {
     // loosening one can never accidentally loosen the other.
     function validProfileUpdate() {
       let keys = request.resource.data.diff(resource.data).affectedKeys();
-      return keys.hasOnly(['language','name','age','avatar','footballLevel','footballCards','updatedAt'])
+      return keys.hasOnly(['language','name','age','avatar','footballLevel','footballCards','pitchLevel','updatedAt'])
         && (!keys.hasAny(['language']) || (request.resource.data.language is string && request.resource.data.language.size() <= 5))
         && (!keys.hasAny(['name']) || (request.resource.data.name is string && request.resource.data.name.size() <= 24))
         && (!keys.hasAny(['age']) || (request.resource.data.age is number && request.resource.data.age >= 13 && request.resource.data.age <= 100))
@@ -49,7 +49,11 @@ service cloud.firestore {
         // level marker, size/range-capped so this can't be abused as a free-text or runaway-number
         // storage channel.
         && (!keys.hasAny(['footballLevel']) || (request.resource.data.footballLevel is number && request.resource.data.footballLevel >= 0 && request.resource.data.footballLevel <= 20))
-        && (!keys.hasAny(['footballCards']) || (request.resource.data.footballCards is number && request.resource.data.footballCards >= 0 && request.resource.data.footballCards <= 50));
+        && (!keys.hasAny(['footballCards']) || (request.resource.data.footballCards is number && request.resource.data.footballCards >= 0 && request.resource.data.footballCards <= 50))
+        // V1230.136 — "الملعب الحي" (Pitch Arena) flagship game: highest chapter-1 level cleared
+        // (0..9: 8 regular levels + 1 boss). Same client-trusted, low-stakes progress tier as
+        // footballLevel just above.
+        && (!keys.hasAny(['pitchLevel']) || (request.resource.data.pitchLevel is number && request.resource.data.pitchLevel >= 0 && request.resource.data.pitchLevel <= 9));
     }
     // auth.js's touchSession() — the existing "last seen" presence ping (players/{uid}.lastSeenAt/
     // lastSeenPath). Pre-existing, already-active write path; carved out here so the progress-sync
@@ -122,13 +126,16 @@ service cloud.firestore {
     // SHARED global counter wins 50 ZIVO). Added here AND in economy.js's credit() switch in the
     // SAME change, learning from the 1230.59/.60/.70/.128 history above: every previous reward type
     // was added to one side and not the other first.
-    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward','share_reward','legend_reward','football_level_reward','lucky_strike_reward']; }
+    // V1230.136 — pitch_level_reward/pitch_chapter_reward ("الملعب الحي" flagship arcade game).
+    // Added here AND in economy.js's credit() switch in the SAME change, learning from the
+    // 1230.59/.60/.70/.128/.131 history above.
+    function rewardTypeValid() { return request.resource.data.type in ['challenge_reward','mission_reward','competition_reward','achievement_reward','story_reward','health_reward','beauty_reward','horror_reward','light_escape_reward','light_escape_epic_reward','beauty_epic_reward','forensic_epic_reward','puzzle_epic_reward','story_epic_reward','health_epic_reward','football_epic_reward','share_reward','legend_reward','football_level_reward','lucky_strike_reward','pitch_level_reward','pitch_chapter_reward']; }
     // V1230.84 — unified every "finished a test/game perfectly" reward to a flat 5 ZIVO (challenge_reward
     // was 10; story/health/beauty/horror/light_escape_reward were 2). Must match economy.js's credit()
     // switch exactly, in the SAME change — see that file's V1230.84 note for why a mismatch here
     // silently rejects every claim of the changed type (same failure mode as the 1230.59/.60 history
     // above). Achievement/mission/competition rewards are untouched (different mechanic).
-    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'share_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'legend_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'lucky_strike_reward' && request.resource.data.amount == 50); }
+    function rewardAmountValid() { return (request.resource.data.type == 'challenge_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'mission_reward' && request.resource.data.amount in [1,2]) || (request.resource.data.type == 'competition_reward' && request.resource.data.amount in [1,5]) || (request.resource.data.type == 'achievement_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'story_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'horror_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'light_escape_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'beauty_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'forensic_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'puzzle_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'story_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'health_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_epic_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'share_reward' && request.resource.data.amount == 1) || (request.resource.data.type == 'legend_reward' && request.resource.data.amount == 5) || (request.resource.data.type == 'football_level_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'lucky_strike_reward' && request.resource.data.amount == 50) || (request.resource.data.type == 'pitch_level_reward' && request.resource.data.amount == 2) || (request.resource.data.type == 'pitch_chapter_reward' && request.resource.data.amount == 5); }
     function validRewardClaim(claimId) {
       return request.resource.data.claimId == claimId
         && request.resource.data.status == 'consumed'
@@ -157,6 +164,10 @@ service cloud.firestore {
         && (request.resource.data.type != 'share_reward' || request.resource.data.policy == 'share_reward')
         && (request.resource.data.type != 'legend_reward' || request.resource.data.policy == 'legend_reward')
         && (request.resource.data.type != 'football_level_reward' || request.resource.data.policy == 'football_level_reward')
+        // V1230.136 — "الملعب الحي" (Pitch Arena) flagship game: same once-per-level-ever /
+        // once-per-chapter-ever policy-match pattern as football_level_reward just above.
+        && (request.resource.data.type != 'pitch_level_reward' || request.resource.data.policy == 'pitch_level_reward')
+        && (request.resource.data.type != 'pitch_chapter_reward' || request.resource.data.policy == 'pitch_chapter_reward')
         // V1230.131 — lucky_strike_reward is the first reward type that must be cross-checked against
         // ANOTHER player's shared document, not just the claimer's own progress: anyone signed in
         // could otherwise write a matching rewardClaims doc and mint 50 ZIVO without ever being the
