@@ -43,7 +43,6 @@
   const esc = window.ZIVOZONE_ESC || (s => String(s));
   const reduceMotion = () => { try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } };
 
-  const LEVELS = 9;
   const LANES = 3;
   const ZONES = 5;
   const LEVEL_REWARD = 2;
@@ -52,7 +51,23 @@
   const MAX_HOLD_MS = 1100;
   const SAFETY_AUTO_RELEASE_MS = 2600;
 
-  // Chapter 1 (The Alley) level config — hand-tuned difficulty ramp, no placeholders.
+  // Chapter metadata — each chapter is a contiguous level range sharing the same visual theme and
+  // its own one-time chapter-clear reward (claimId keyed per chapter, so clearing chapter 1 long
+  // before chapter 2 existed already paid out and is never re-paid; see levelResult()).
+  const CHAPTERS = [
+    { id: 1, from: 1, to: 9, nameKey: 'ptaChapterAlley', claimId: 'pitch_chapter_1', bg: ['#0e3b22', '#06130c'], stripes: false },
+    { id: 2, from: 10, to: 18, nameKey: 'ptaChapterAcademy', claimId: 'pitch_chapter_2', bg: ['#123a4a', '#061018'], stripes: true }
+  ];
+  const LEVELS = CHAPTERS[CHAPTERS.length - 1].to;
+  function chapterFor(level) { return CHAPTERS.find(c => level >= c.from && level <= c.to) || CHAPTERS[0]; }
+
+  // Chapter 1 (The Alley) + Chapter 2 (The Academy) level configs — hand-tuned difficulty ramp, no
+  // placeholders. Chapter 2 pushes every knob further: more defenders, shorter dribble windows,
+  // narrower valid-power bands, and more goals needed per attempt. minZoneDist is deliberately
+  // capped at 2 everywhere (never 3+): with 5 zones (0..4), a keeper leaning on the middle zone (2)
+  // has no zone 3+ away from it, which would make some attempts mathematically unwinnable — a bug
+  // class caught here by actually computing every level+attempt combination before shipping it,
+  // not by eyeballing the numbers.
   const PITCH_LEVELS = {
     1: { defenders: 1, dribbleMs: 3200, minZoneDist: 1, powerMin: 0.22, powerMax: 0.90, goalsNeeded: 2, attempts: 4, boss: false },
     2: { defenders: 1, dribbleMs: 3000, minZoneDist: 1, powerMin: 0.26, powerMax: 0.86, goalsNeeded: 2, attempts: 4, boss: false },
@@ -62,7 +77,16 @@
     6: { defenders: 3, dribbleMs: 2500, minZoneDist: 2, powerMin: 0.40, powerMax: 0.76, goalsNeeded: 4, attempts: 6, boss: false },
     7: { defenders: 3, dribbleMs: 2350, minZoneDist: 2, powerMin: 0.43, powerMax: 0.74, goalsNeeded: 4, attempts: 6, boss: false },
     8: { defenders: 3, dribbleMs: 2200, minZoneDist: 2, powerMin: 0.46, powerMax: 0.72, goalsNeeded: 4, attempts: 6, boss: false },
-    9: { defenders: 4, dribbleMs: 2050, minZoneDist: 2, powerMin: 0.48, powerMax: 0.70, goalsNeeded: 5, attempts: 7, boss: true }
+    9: { defenders: 4, dribbleMs: 2050, minZoneDist: 2, powerMin: 0.48, powerMax: 0.70, goalsNeeded: 5, attempts: 7, boss: true },
+    10: { defenders: 3, dribbleMs: 2000, minZoneDist: 2, powerMin: 0.45, powerMax: 0.75, goalsNeeded: 4, attempts: 6, boss: false },
+    11: { defenders: 3, dribbleMs: 1900, minZoneDist: 2, powerMin: 0.47, powerMax: 0.73, goalsNeeded: 4, attempts: 6, boss: false },
+    12: { defenders: 4, dribbleMs: 1900, minZoneDist: 2, powerMin: 0.48, powerMax: 0.72, goalsNeeded: 4, attempts: 6, boss: false },
+    13: { defenders: 4, dribbleMs: 1800, minZoneDist: 2, powerMin: 0.49, powerMax: 0.71, goalsNeeded: 5, attempts: 7, boss: false },
+    14: { defenders: 4, dribbleMs: 1750, minZoneDist: 2, powerMin: 0.50, powerMax: 0.70, goalsNeeded: 5, attempts: 7, boss: false },
+    15: { defenders: 5, dribbleMs: 1700, minZoneDist: 2, powerMin: 0.51, powerMax: 0.69, goalsNeeded: 5, attempts: 7, boss: false },
+    16: { defenders: 5, dribbleMs: 1650, minZoneDist: 2, powerMin: 0.52, powerMax: 0.68, goalsNeeded: 5, attempts: 7, boss: false },
+    17: { defenders: 5, dribbleMs: 1600, minZoneDist: 2, powerMin: 0.53, powerMax: 0.67, goalsNeeded: 6, attempts: 8, boss: false },
+    18: { defenders: 5, dribbleMs: 1550, minZoneDist: 2, powerMin: 0.54, powerMax: 0.66, goalsNeeded: 6, attempts: 8, boss: true }
   };
 
   function readState() {
@@ -91,17 +115,24 @@
 
   function renderMap() {
     const o = root(), s = readState();
-    const nodes = Array.from({ length: LEVELS }, (_, i) => i + 1).map(n => {
-      const cls = levelNodeClass(n, s);
-      const boss = PITCH_LEVELS[n].boss;
-      const label = cls === 'cleared' ? '✓' : cls === 'locked' ? '🔒' : (boss ? '👑' : n);
-      return `<button type="button" class="zfl-node pta-node zfl-${cls}" data-level="${n}" ${cls === 'locked' ? 'disabled' : ''} title="${esc(t('ptaLevelWord'))} ${n}">${label}</button>`;
+    const chaptersHtml = CHAPTERS.map(ch => {
+      const locked = s.highestCleared < ch.from - 1 && ch.from > 1;
+      const nodes = Array.from({ length: ch.to - ch.from + 1 }, (_, i) => ch.from + i).map(n => {
+        const cls = levelNodeClass(n, s);
+        const boss = PITCH_LEVELS[n].boss;
+        const label = cls === 'cleared' ? '✓' : cls === 'locked' ? '🔒' : (boss ? '👑' : n);
+        return `<button type="button" class="zfl-node pta-node zfl-${cls}" data-level="${n}" ${cls === 'locked' ? 'disabled' : ''} title="${esc(t('ptaLevelWord'))} ${n}">${label}</button>`;
+      }).join('');
+      return `<div class="pta-chapter ${locked ? 'pta-chapter-locked' : ''}">
+        <div class="pta-chapter-head"><b>${esc(t('ptaChapterWord'))} ${ch.id}: ${esc(t(ch.nameKey))}</b>${locked ? `<span>${esc(t('ptaLocked'))}</span>` : ''}</div>
+        <div class="zfl-grid pta-grid">${nodes}</div>
+      </div>`;
     }).join('');
     const allClear = s.highestCleared >= LEVELS;
-    o.innerHTML = `<div class="v31-card zfl-card pta-card">
+    o.innerHTML = `<div class="v31-card zfl-card pta-card pta-map">
       <button class="v31-close">×</button>
-      <div class="v31-head"><div class="v31-emblem">⚽</div><div><small>THE LIVING PITCH — CH.1</small><h2>${esc(t('ptaTitle'))}</h2><span>${esc(t('ptaSub'))}</span></div></div>
-      <div class="zfl-grid pta-grid">${nodes}</div>
+      <div class="v31-head"><div class="v31-emblem">⚽</div><div><small>THE LIVING PITCH</small><h2>${esc(t('ptaTitle'))}</h2><span>${esc(t('ptaSub'))}</span></div></div>
+      ${chaptersHtml}
       <p class="zfl-note">${esc(allClear ? t('ptaAllClear') : t('ptaRewardNote'))}</p>
       ${allClear ? `<p class="zfl-note pta-moresoon">${esc(t('ptaMoreSoon'))}</p>` : ''}
     </div>`;
@@ -140,7 +171,7 @@
     const s = readState();
     if (level > s.highestCleared + 1 && level !== s.currentTarget) return; // only currentTarget or an already-cleared level is playable
     teardownRun();
-    run = { level, cfg: PITCH_LEVELS[level], attempt: 1, goals: 0, phase: 'dribble', laneIndex: 1, listeners: [] };
+    run = { level, cfg: PITCH_LEVELS[level], chapter: chapterFor(level), attempt: 1, goals: 0, phase: 'dribble', laneIndex: 1, listeners: [] };
     renderGameShell();
     startAttempt();
   }
@@ -151,7 +182,7 @@
     o.innerHTML = `<div class="v31-card zfl-card pta-card pta-play">
       <button class="v31-close">×</button>
       <div class="pta-hud">
-        <span class="pta-hud-level">${esc(t('ptaLevelWord'))} ${run.level}${cfg.boss ? ' 👑 ' + esc(t('ptaBossLabel')) : ''}</span>
+        <span class="pta-hud-level">${esc(t(run.chapter.nameKey))} — ${esc(t('ptaLevelWord'))} ${run.level}${cfg.boss ? ' 👑 ' + esc(t('ptaBossLabel')) : ''}</span>
         <span class="pta-hud-mid" data-hud-attempt></span>
         <span class="pta-hud-goals" data-hud-goals></span>
       </div>
@@ -271,10 +302,15 @@
       if (run.level === s.currentTarget) s.currentTarget = Math.min(LEVELS + 1, s.currentTarget + 1);
       writeState(s);
       const allClear = s.highestCleared >= LEVELS;
-      if (allClear && window.ZIVOZONE?.Economy?.credit) {
-        window.ZIVOZONE.Economy.credit(CHAPTER_REWARD, { type: 'pitch_chapter_reward', source: 'pitch_arena', claimId: 'pitch_chapter_1', label: t('ptaTitle') }).catch(() => {});
+      // Each chapter pays its own one-time reward exactly when ITS OWN last level is first cleared
+      // (not "highestCleared >= LEVELS", which only fires once for the whole game and would have
+      // silently stopped paying chapter 1's reward the moment chapter 2's levels were added above).
+      const chapterJustFinished = firstClear && CHAPTERS.find(c => c.to === run.level);
+      if (chapterJustFinished && window.ZIVOZONE?.Economy?.credit) {
+        window.ZIVOZONE.Economy.credit(CHAPTER_REWARD, { type: 'pitch_chapter_reward', source: 'pitch_arena', claimId: chapterJustFinished.claimId, label: t(chapterJustFinished.nameKey) }).catch(() => {});
       }
-      bodyHtml = `<h2>${esc(t('ptaPassTitle'))}</h2><p>${esc(allClear ? t('ptaAllClear') : t('ptaPassBody'))}</p>`;
+      const chapterDone = chapterJustFinished && !allClear; // finished a chapter, but more chapters are shipped and waiting
+      bodyHtml = `<h2>${esc(t('ptaPassTitle'))}</h2><p>${esc(allClear ? t('ptaAllClear') : (chapterDone ? t('ptaChapterDone') : t('ptaPassBody')))}</p>`;
       actionsHtml = allClear
         ? `<button type="button" class="zfl-primary" data-map>${esc(t('ptaBackToMap'))}</button>`
         : `<button type="button" class="zfl-primary" data-next>${esc(t('ptaContinueBtn'))}</button><button type="button" class="zfl-secondary" data-map>${esc(t('ptaBackToMap'))}</button>`;
@@ -339,17 +375,25 @@
   }
 
   // ---------------------------------------------------------------- drawing ----
-  function pitchBg(ctx, w, h) {
+  function pitchBg(ctx, w, h, chapter) {
+    const ch = chapter || CHAPTERS[0];
     const g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#0e3b22'); g.addColorStop(1, '#06130c');
+    g.addColorStop(0, ch.bg[0]); g.addColorStop(1, ch.bg[1]);
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    // Chapter 2 ("The Academy") gets alternating turf stripes — a real, cheap visual-fidelity step
+    // up from chapter 1's flat gradient (still pure Canvas 2D, no new engine capability needed).
+    if (ch.stripes) {
+      const stripeW = w / 7;
+      ctx.fillStyle = 'rgba(255,255,255,.035)';
+      for (let i = 0; i < 7; i += 2) ctx.fillRect(i * stripeW, 0, stripeW, h);
+    }
     ctx.strokeStyle = 'rgba(255,255,255,.14)'; ctx.lineWidth = 2;
     for (let i = 1; i < LANES; i++) { ctx.beginPath(); ctx.moveTo((w / LANES) * i, 0); ctx.lineTo((w / LANES) * i, h); ctx.stroke(); }
   }
 
   function drawDribble(elapsed) {
     const { ctx, w, h } = run;
-    pitchBg(ctx, w, h);
+    pitchBg(ctx, w, h, run.chapter);
     const playerY = h - 36;
     // defenders: animate toward their challenge line as their moment approaches
     run.challenges.forEach(ch => {
@@ -376,7 +420,7 @@
 
   function drawShot() {
     const { ctx, w, h } = run;
-    pitchBg(ctx, w, h);
+    pitchBg(ctx, w, h, run.chapter);
     const goalTop = 40, goalH = 70, zoneW = w / ZONES;
     ctx.strokeStyle = '#fff'; ctx.lineWidth = 3;
     ctx.strokeRect(6, goalTop, w - 12, goalH);
@@ -402,7 +446,7 @@
 
   function drawFeedback(scored, reason) {
     const { ctx, w, h } = run;
-    pitchBg(ctx, w, h);
+    pitchBg(ctx, w, h, run.chapter);
     ctx.textAlign = 'center';
     ctx.font = '38px sans-serif';
     ctx.fillText(scored ? '⚽🎉' : (reason === 'tackled' ? '🛑' : '🧤'), w / 2, h / 2);
@@ -411,6 +455,12 @@
   }
 
   function open() { renderMap(); }
+
+  // Same self-registering bubble-phase listener every other lazy room (football-room.js etc.)
+  // attaches on load — room-loader.js only invokes open() for the FIRST click, before this file has
+  // loaded; every click after that needs this module's own listener, exactly like the others.
+  document.addEventListener('click', e => { if (e.target.closest('[data-pitch-arena]')) { e.preventDefault(); open(); } });
+  document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('[data-pitch-arena]')) { e.preventDefault(); open(); } });
 
   window.ZIVOZONE = window.ZIVOZONE || {};
   window.ZIVOZONE.PitchArena = Object.freeze({ open, state: readState });

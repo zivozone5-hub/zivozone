@@ -53,7 +53,8 @@ service cloud.firestore {
         // V1230.136 — "الملعب الحي" (Pitch Arena) flagship game: highest chapter-1 level cleared
         // (0..9: 8 regular levels + 1 boss). Same client-trusted, low-stakes progress tier as
         // footballLevel just above.
-        && (!keys.hasAny(['pitchLevel']) || (request.resource.data.pitchLevel is number && request.resource.data.pitchLevel >= 0 && request.resource.data.pitchLevel <= 9));
+        // V1230.137 — widened 9->18 when Chapter 2 ("The Academy") joined Chapter 1 on the map.
+        && (!keys.hasAny(['pitchLevel']) || (request.resource.data.pitchLevel is number && request.resource.data.pitchLevel >= 0 && request.resource.data.pitchLevel <= 18));
     }
     // auth.js's touchSession() — the existing "last seen" presence ping (players/{uid}.lastSeenAt/
     // lastSeenPath). Pre-existing, already-active write path; carved out here so the progress-sync

@@ -2,6 +2,12 @@
    .v31-overlay/.v31-card/.zfl-grid/.zfl-node/.zfl-actions/.zfl-primary/.zfl-secondary/.zfl-result
    chrome (core.css) instead of duplicating it — only the canvas-specific gameplay chrome is new. */
 .pta-card{width:min(420px,100%)}
+.pta-map{max-height:85vh;overflow-y:auto}
+/* V1230.137 — per-chapter grouping on the level map, now that Chapter 2 joined Chapter 1. */
+.pta-chapter{margin-top:14px}
+.pta-chapter-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:13px;color:#cfd4e6}
+.pta-chapter-head span{font-size:11px;color:#7d8496;border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:2px 8px}
+.pta-chapter-locked{opacity:.55}
 .pta-grid{grid-template-columns:repeat(5,1fr)}
 .pta-node.zfl-current{position:relative}
 .pta-moresoon{color:#7d8496}
