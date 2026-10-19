@@ -54,7 +54,7 @@ service cloud.firestore {
         // (0..9: 8 regular levels + 1 boss). Same client-trusted, low-stakes progress tier as
         // footballLevel just above.
         // V1230.137 — widened 9->18 when Chapter 2 ("The Academy") joined Chapter 1 on the map.
-        && (!keys.hasAny(['pitchLevel']) || (request.resource.data.pitchLevel is number && request.resource.data.pitchLevel >= 0 && request.resource.data.pitchLevel <= 18));
+        && (!keys.hasAny(['pitchLevel']) || (request.resource.data.pitchLevel is number && request.resource.data.pitchLevel >= 0 && request.resource.data.pitchLevel <= 100));
     }
     // auth.js's touchSession() — the existing "last seen" presence ping (players/{uid}.lastSeenAt/
     // lastSeenPath). Pre-existing, already-active write path; carved out here so the progress-sync
