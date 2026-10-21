@@ -34,36 +34,6 @@
       "summaryUrl": "https://www.thesportsdb.com/event/2398136"
     },
     {
-      "id": "tsdb-2426799",
-      "league": {
-        "id": "tsdb-4794",
-        "key": "tsdb-4794",
-        "ar": "بطولة كرة القدم",
-        "icon": "⚽"
-      },
-      "leagueName": "بطولة كرة القدم",
-      "leagueRaw": "Uzbekistan Super League",
-      "leagueKey": "tsdb-4794",
-      "date": "2026-10-20T15:00:00",
-      "dateKey": "2026-10-20",
-      "home": "Xorazm Urganch",
-      "away": "Buxoro",
-      "homeShort": "Xorazm Urganch",
-      "awayShort": "Buxoro",
-      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/nanj981739029487.png",
-      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/h15y8a1656015375.png",
-      "homeScore": null,
-      "awayScore": null,
-      "status": "UPCOMING",
-      "statusText": "NS",
-      "venue": "Xorazm SM",
-      "city": "",
-      "broadcast": [],
-      "source": "TheSportsDB",
-      "sourceLeagueId": "4794",
-      "summaryUrl": "https://www.thesportsdb.com/event/2426799"
-    },
-    {
       "id": "tsdb-2412701",
       "league": {
         "id": "tsdb-4403",
@@ -92,6 +62,36 @@
       "source": "TheSportsDB",
       "sourceLeagueId": "4403",
       "summaryUrl": "https://www.thesportsdb.com/event/2412701"
+    },
+    {
+      "id": "tsdb-2431501",
+      "league": {
+        "id": "tsdb-4404",
+        "key": "tsdb-4404",
+        "ar": "بطولة كرة القدم",
+        "icon": "⚽"
+      },
+      "leagueName": "بطولة كرة القدم",
+      "leagueRaw": "Brazilian Serie B",
+      "leagueKey": "tsdb-4404",
+      "date": "2026-10-20T22:30:00",
+      "dateKey": "2026-10-20",
+      "home": "Londrina",
+      "away": "Cuiabá",
+      "homeShort": "Londrina",
+      "awayShort": "Cuiabá",
+      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/xp2z9j1740846583.png",
+      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/ykbxfa1766506334.png",
+      "homeScore": "1",
+      "awayScore": "0",
+      "status": "UPCOMING",
+      "statusText": "FT",
+      "venue": "Estádio do Café",
+      "city": "",
+      "broadcast": [],
+      "source": "TheSportsDB",
+      "sourceLeagueId": "4404",
+      "summaryUrl": "https://www.thesportsdb.com/event/2431501"
     }
   ]
 }
