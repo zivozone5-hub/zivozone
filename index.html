@@ -71,7 +71,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.153">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.155">
 
 
 
@@ -95,8 +95,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.153">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.153">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.155">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.155">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -205,20 +205,35 @@
 </section>
 
 <section class="section zivo-contest-section" aria-label="مسابقة ZIVOZONE" id="zivo-contest">
-  <div class="zivo-contest-card">
-    <div class="zivo-contest-head">
-      <h3 data-i18n="contestTitle">🏆 مسابقة ZIVOZONE</h3>
-      <p class="muted" data-i18n="contestSubtitle">سجّل حساب، العب، واجمع أعلى نقاط — وكن أول المتصدرين!</p>
-    </div>
-    <p class="zivo-contest-rules" data-i18n="contestRulesText">سجّل حسابًا مجانيًا على الموقع، والعب أي تحدٍ أو لعبة — كل نقاط الخبرة (XP) التي تجمعها تُحسب لك تلقائيًا. صاحب أعلى رصيد XP عند انتهاء المسابقة هو الفائز.</p>
-    <div class="zivo-contest-meta">
+  <div class="zivo-contest-banner">
+    <div class="zivo-contest-glow" aria-hidden="true"></div>
+    <div class="zivo-contest-top">
+      <span class="zivo-contest-live"><i></i><span data-i18n="contestLiveLabel">المسابقة شغّالة الآن</span></span>
       <span class="zivo-contest-sponsor" data-i18n="contestSponsorLine">برعاية أكاديمية جيرونا الأردن لكرة القدم 🤝</span>
-      <span class="zivo-contest-end"><span data-i18n="contestEndLabel">تنتهي المسابقة في</span> <b id="zivo-contest-end-date">9 نوفمبر 2026</b></span>
     </div>
-    <p class="zivo-contest-prize" data-i18n="contestPrizeNote">سيتم الإعلان عن الجائزة لاحقًا من الأكاديمية الراعية 🎁</p>
-    <div class="zivo-contest-top10">
+    <div class="zivo-contest-main">
+      <div class="zivo-contest-copy">
+        <h3 data-i18n="contestTitle">🏆 مسابقة ZIVOZONE</h3>
+        <p data-i18n="contestSubtitle">سجّل حساب، العب، واجمع أعلى نقاط — وكن أول المتصدرين!</p>
+        <ol class="zivo-contest-steps">
+          <li><span>1</span><p data-i18n="contestStep1">سجّل حساب مجاني</p></li>
+          <li><span>2</span><p data-i18n="contestStep2">العب أي تحدٍ أو لعبة</p></li>
+          <li><span>3</span><p data-i18n="contestStep3">تصدّر بأعلى نقاط XP</p></li>
+        </ol>
+        <button type="button" class="zivo-contest-cta" id="zivo-contest-cta" data-i18n="contestCta">🚀 سجّل والعب الآن</button>
+        <p class="zivo-contest-prize" data-i18n="contestPrizeNote">سيتم الإعلان عن الجائزة لاحقًا من الأكاديمية الراعية 🎁</p>
+      </div>
+      <div class="zivo-contest-countdown" role="timer" aria-label="الوقت المتبقي لانتهاء المسابقة">
+        <div class="zivo-contest-cd-box"><b id="zivo-cd-d">00</b><span data-i18n="contestDaysLabel">يوم</span></div>
+        <div class="zivo-contest-cd-box"><b id="zivo-cd-h">00</b><span data-i18n="contestHoursLabel">ساعة</span></div>
+        <div class="zivo-contest-cd-box"><b id="zivo-cd-m">00</b><span data-i18n="contestMinsLabel">دقيقة</span></div>
+        <div class="zivo-contest-cd-box"><b id="zivo-cd-s">00</b><span data-i18n="contestSecsLabel">ثانية</span></div>
+      </div>
+    </div>
+    <div class="zivo-contest-podium-wrap">
       <h4 data-i18n="contestTop10Label">المتصدّرون الآن</h4>
-      <div id="contest-top10-list" class="zlb-list"></div>
+      <div id="contest-podium" class="zivo-contest-podium"></div>
+      <div id="contest-rest-list" class="zivo-contest-rest"></div>
     </div>
   </div>
 </section>
@@ -316,7 +331,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1230.153"></script>
+<script type="module" src="zivo-ai.js?v=1230.155"></script>
 
 
 
@@ -339,7 +354,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.153"></script>
+<script src="dist/app.bundle.js?v=1230.155"></script>
 
 
 
