@@ -34,6 +34,36 @@
       "summaryUrl": "https://www.thesportsdb.com/event/2398512"
     },
     {
+      "id": "tsdb-2398518",
+      "league": {
+        "id": "tsdb-4351",
+        "key": "tsdb-4351",
+        "ar": "الدوري البرازيلي",
+        "icon": "⚽"
+      },
+      "leagueName": "الدوري البرازيلي",
+      "leagueRaw": "Brazilian Serie A",
+      "leagueKey": "tsdb-4351",
+      "date": "2026-10-29T00:30:00",
+      "dateKey": "2026-10-29",
+      "home": "Remo",
+      "away": "Botafogo",
+      "homeShort": "Remo",
+      "awayShort": "Botafogo",
+      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/u36jfy1579341655.png",
+      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/bs5mbw1733004596.png",
+      "homeScore": "2",
+      "awayScore": "1",
+      "status": "UPCOMING",
+      "statusText": "FT",
+      "venue": "Estádio Evandro Almeida",
+      "city": "",
+      "broadcast": [],
+      "source": "TheSportsDB",
+      "sourceLeagueId": "4351",
+      "summaryUrl": "https://www.thesportsdb.com/event/2398518"
+    },
+    {
       "id": "tsdb-2398511",
       "league": {
         "id": "tsdb-4351",
@@ -62,36 +92,6 @@
       "source": "TheSportsDB",
       "sourceLeagueId": "4351",
       "summaryUrl": "https://www.thesportsdb.com/event/2398511"
-    },
-    {
-      "id": "tsdb-2398515",
-      "league": {
-        "id": "tsdb-4351",
-        "key": "tsdb-4351",
-        "ar": "الدوري البرازيلي",
-        "icon": "⚽"
-      },
-      "leagueName": "الدوري البرازيلي",
-      "leagueRaw": "Brazilian Serie A",
-      "leagueKey": "tsdb-4351",
-      "date": "2026-10-29T22:30:00",
-      "dateKey": "2026-10-29",
-      "home": "Coritiba",
-      "away": "Vitória",
-      "homeShort": "Coritiba",
-      "awayShort": "Vitória",
-      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/ywwsyu1473538050.png",
-      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/tysrrx1473538156.png",
-      "homeScore": null,
-      "awayScore": null,
-      "status": "UPCOMING",
-      "statusText": "NS",
-      "venue": "Estádio Major Antônio Couto Pereira",
-      "city": "",
-      "broadcast": [],
-      "source": "TheSportsDB",
-      "sourceLeagueId": "4351",
-      "summaryUrl": "https://www.thesportsdb.com/event/2398515"
     }
   ]
 }
