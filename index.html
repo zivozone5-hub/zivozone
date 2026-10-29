@@ -71,7 +71,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.168">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.170">
 
 
 
@@ -95,8 +95,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.168">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.168">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.170">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.170">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -106,6 +106,11 @@
 <body>
 <div id="zivo-splash" class="zivo-splash" role="dialog" aria-modal="true" aria-label="ZIVOZONE">
   <div class="zivo-splash-glow" aria-hidden="true"></div>
+  <!-- V1230.170 — ZIVO, the site's original hero mascot (assets/characters/zivo-hero.svg), as a big
+       atmospheric backdrop behind the splash's existing orb/title/button (all untouched below). See
+       that file's header comment for what it is and isn't (100% hand-drawn vector, no AI-generated
+       image, no existing character). -->
+  <div class="zivo-splash-hero" aria-hidden="true"></div>
   <div class="zivo-splash-inner">
     <div class="zivo-splash-orb"><span>Z</span></div>
     <h1 class="zivo-splash-title">ZIVOZONE</h1>
@@ -116,9 +121,39 @@
 <script>(function(){try{if(sessionStorage.getItem('zivo_splash_seen')==='1'){var s=document.getElementById('zivo-splash');if(s)s.style.display='none'}}catch(e){}})();</script>
 <noscript><div style="padding:24px;text-align:center;color:#fff;background:#05060b">ZIVOZONE يحتاج إلى تفعيل JavaScript. / ZIVOZONE requires JavaScript.</div></noscript>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
+<!-- V1230.169 — left-sidebar nav + restructured header shell (structure-only phase: see the
+     module header comment in core/modules/runtime/app-shell.js's sidebar block for the full design.
+     Every pre-existing control below (audio-toggle, firebase-status, both language selects,
+     pwa-install-btn, zivo-profile-chip, login-btn, main-nav + its data-player-home link) keeps its
+     original id/class/data-action so no existing JS wiring breaks; .main-nav is now sidebar-duty-
+     redundant and hidden via CSS (desktop) while the sidebar covers wide screens, kept in the DOM
+     purely so #language-select-nav remains a real, functional element for app-shell.js's language
+     sync. The sidebar itself (#zivo-sidebar) is new: 9 items, each a data-sidebar action handled by
+     app-shell.js's delegated click listener, mapped to the closest real existing destination (no new
+     pages/sections were invented for this pass) — see that listener for the exact mapping. -->
+<nav id="zivo-sidebar" class="zivo-sidebar" aria-label="القائمة الرئيسية" data-i18n-aria-label="sidebarMenuAria">
+  <a class="zivo-sidebar-brand" href="/" aria-label="ZIVOZONE"><span class="brand-mark">Z</span><span class="zivo-sidebar-brand-name">ZIVOZONE</span></a>
+  <div class="zivo-sidebar-items">
+    <button type="button" class="zivo-sidebar-item" data-sidebar="home"><span class="zsb-icon" aria-hidden="true">🏠</span><span class="zsb-label" data-i18n="sidebarHome">الرئيسية</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="rooms"><span class="zsb-icon" aria-hidden="true">🚪</span><span class="zsb-label" data-i18n="sidebarRooms">الغرف</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="games"><span class="zsb-icon" aria-hidden="true">🎮</span><span class="zsb-label" data-i18n="sidebarGames">الألعاب</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="matches"><span class="zsb-icon" aria-hidden="true">⚽</span><span class="zsb-label" data-i18n="sidebarMatches">مركز المباريات</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="economy"><span class="zsb-icon" aria-hidden="true">💎</span><span class="zsb-label" data-i18n="sidebarEconomy">الاقتصاد</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="rewards"><span class="zsb-icon" aria-hidden="true">🏅</span><span class="zsb-label" data-i18n="sidebarRewards">المكافآت</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="news"><span class="zsb-icon" aria-hidden="true">📰</span><span class="zsb-label" data-i18n="sidebarNews">الأخبار</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="profile"><span class="zsb-icon" aria-hidden="true">👤</span><span class="zsb-label" data-i18n="sidebarProfile">الملف الشخصي</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="settings"><span class="zsb-icon" aria-hidden="true">⚙️</span><span class="zsb-label" data-i18n="sidebarSettings">الإعدادات</span></button>
+  </div>
+</nav>
+<div id="zivo-sidebar-backdrop" class="zivo-sidebar-backdrop" hidden></div>
 <header class="topbar">
+  <button id="zivo-sidebar-toggle" type="button" class="zivo-sidebar-toggle" aria-label="Menu" aria-expanded="false" data-i18n-aria-label="sidebarMenuAria"><span></span><span></span><span></span></button>
   <a class="brand" href="/" aria-label="ZIVOZONE"><span class="brand-mark">Z</span><span class="brand-name">ZIVOZONE</span></a>
-  <button id="zivo-nav-toggle" type="button" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <button id="zivo-nav-toggle" type="button" aria-label="Menu" aria-expanded="false" hidden><span></span><span></span><span></span></button>
+  <div class="zivo-header-search">
+    <span class="zivo-header-search-icon" aria-hidden="true">🔍</span>
+    <input type="search" id="zivo-header-search-input" class="zivo-header-search-input" data-i18n-placeholder="headerSearchPlaceholder" placeholder="بحث في ZIVOZONE..." aria-label="بحث" data-i18n-aria-label="headerSearchPlaceholder">
+  </div>
   <nav class="main-nav" aria-label="main navigation">
     <a href="/" data-i18n="home">الرئيسية</a><a href="#challenges" data-i18n="challenges">مركز التحديات</a>
     <a href="#ai" data-i18n="ai">ZIVO AI</a>
@@ -136,7 +171,9 @@
       <option value="fa">فارسی</option>
     </select>
   </nav>
-  <div class="top-actions"><button id="audio-toggle" class="icon-btn" type="button" aria-label="Sound">🔊</button><span id="firebase-status" class="firebase-status" title="Firebase">●</span>
+  <div class="top-actions">
+    <button id="zivo-notif-btn" class="icon-btn zivo-notif-btn" type="button" aria-label="Notifications" data-i18n-aria-label="notificationsAria">🔔<span id="zivo-notif-dot" class="zivo-notif-dot" hidden></span></button>
+    <button id="audio-toggle" class="icon-btn" type="button" aria-label="Sound">🔊</button><span id="firebase-status" class="firebase-status" title="Firebase">●</span>
     <label class="sr-only" for="language-select">Language</label>
     <select id="language-select" aria-label="Language">
       <option value="ar">العربية</option>
@@ -153,14 +190,46 @@
          button (see index.css's #login-btn media-query history). #login-btn itself is untouched and
          still used as-is for guests and for the admin account; this chip is shown only in between
          (populated/toggled by app-shell.js's profile(), reusing the same live player name it already
-         read for #login-btn). data-action="login" reuses the existing account-route click wiring. -->
+         read for #login-btn). data-action="login" reuses the existing account-route click wiring.
+         V1230.169 — chip body now also carries a level/XP/coins meta row (.zprof-meta), filled by
+         app-shell.js's profile() from the same Player/economy state it already reads; purely visual,
+         no new state. -->
     <button id="zivo-profile-chip" class="zivo-profile-chip" type="button" data-action="login" hidden>
       <span class="zprof-avatar" id="zivo-profile-avatar">Z</span>
-      <span class="zprof-text"><small class="zprof-greet" id="zivo-profile-greet">أهلاً،</small><b class="zprof-name" id="zivo-profile-name">ZIVO Player</b></span>
+      <span class="zprof-text">
+        <small class="zprof-greet" id="zivo-profile-greet">أهلاً،</small><b class="zprof-name" id="zivo-profile-name">ZIVO Player</b>
+        <span class="zprof-meta"><b class="zprof-level" id="zivo-profile-level">Lv 1</b><span class="zprof-xpbar"><i class="zprof-xpfill" id="zivo-profile-xpfill" style="width:0%"></i></span></span>
+      </span>
     </button>
     <button id="login-btn" class="btn btn-primary" data-i18n="login">🔐 إنشاء حساب / دخول</button>
   </div>
 </header>
+<!-- V1230.169 — minimal settings panel for the sidebar's "⚙️ الإعدادات" item. These controls are
+     NEW elements (distinct ids) wired by app-shell.js to call the exact same changeLanguage()/audio
+     toggle logic the header's own controls already use, rather than moving those real header
+     elements out of the header — so both stay in sync and nothing in the existing header wiring is
+     touched. Reuses the .z101-overlay/.z101-modal classes already defined for economy.js's wallet
+     and earn-ZIVO panels, for a consistent look with zero new CSS needed for the modal shell itself. -->
+<div id="zivo-settings-modal" class="z101-overlay" aria-hidden="true">
+  <div class="z101-modal zivo-settings-card" role="dialog" aria-label="الإعدادات" data-i18n-aria-label="settingsModalTitle">
+    <button type="button" class="z101-modal-close" aria-label="Close">×</button>
+    <h2 data-i18n="settingsModalTitle">الإعدادات</h2>
+    <div class="zsp-row">
+      <label for="zivo-settings-lang" data-i18n="settingsLanguageLabel">اللغة</label>
+      <select id="zivo-settings-lang" aria-label="Language">
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+        <option value="hi">हिन्दी</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="fa">فارسی</option>
+      </select>
+    </div>
+    <button type="button" id="zivo-settings-audio" class="btn btn-ghost zsp-toggle-btn"><span id="zivo-settings-audio-icon">🔊</span> <span data-i18n="settingsSoundLabel">الصوت</span></button>
+    <button type="button" id="zivo-settings-install" class="btn btn-ghost zsp-toggle-btn" data-i18n="installApp" hidden>⬇️ ثبّت التطبيق</button>
+  </div>
+</div>
 <main>
 
 
@@ -199,7 +268,15 @@
     <div class="hero-actions"><button class="btn btn-primary btn-lg" data-action="scroll-contest" data-i18n="joinContest">🏆 شارك في المسابقة الآن</button><button class="btn btn-ghost btn-lg" data-action="scroll-challenges" data-i18n="play">🚀 ابدأ اللعب</button></div>
     <div class="hero-stats"><div><b>7</b><span data-i18n="languages">لغات</span></div><div><b>10+</b><span data-i18n="modes">أنماط ألعاب</span></div><div><b>100+</b><span data-i18n="challengesCount">تحديات</span></div></div>
   </div>
-  <div class="hero-orb-wrap"><div class="hero-orb"><span>Z</span></div><span class="float-tag t1">IQ</span><span class="float-tag t2">AI</span><span class="float-tag t3">HORROR</span><span class="float-tag t4">SPORT</span></div>
+  <div class="hero-orb-wrap">
+    <!-- V1230.170 — ZIVO (assets/characters/zivo-hero.svg) as a layered backdrop behind the
+         existing animated orb + float-tags (all untouched below, same markup/CSS/animations as
+         before). A dedicated element rather than reusing .hero-orb-wrap's own background, since an
+         older, higher-priority rule further down this file (.hero-orb{display:grid!important}, see
+         its own comment) already wins that fight on purpose — not something to re-litigate here. -->
+    <div class="hero-character" aria-hidden="true"></div>
+    <div class="hero-orb"><span>Z</span></div><span class="float-tag t1">IQ</span><span class="float-tag t2">AI</span><span class="float-tag t3">HORROR</span><span class="float-tag t4">SPORT</span>
+  </div>
 </section>
 
 
@@ -348,7 +425,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1230.168"></script>
+<script type="module" src="zivo-ai.js?v=1230.170"></script>
 
 
 
@@ -371,7 +448,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.168"></script>
+<script src="dist/app.bundle.js?v=1230.170"></script>
 
 
 
