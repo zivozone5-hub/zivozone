@@ -197,10 +197,13 @@ service cloud.firestore {
     // other — same reasoning as validProgressUpdate() vs validProfileUpdate() being split apart.
     // V1230.145 — pitch_super_shot_purchase (10 ZIVO, pitch-arena.js's "Super Shot") joined
     // protection_card_purchase as the economy's second deduction type. Same shape, new fixed price.
-    function spendTypeValid() { return request.resource.data.type in ['protection_card_purchase', 'pitch_super_shot_purchase']; }
+    // V1230.167 — forensic_stage_unlock (10 ZIVO, forensic-case-core.js's stage-gate ladder) joined
+    // as the economy's third deduction type. Same shape, same fixed price as pitch_super_shot_purchase.
+    function spendTypeValid() { return request.resource.data.type in ['protection_card_purchase', 'pitch_super_shot_purchase', 'forensic_stage_unlock']; }
     function spendAmountValid() {
       return (request.resource.data.type == 'protection_card_purchase' && request.resource.data.amount == 15)
-        || (request.resource.data.type == 'pitch_super_shot_purchase' && request.resource.data.amount == 10);
+        || (request.resource.data.type == 'pitch_super_shot_purchase' && request.resource.data.amount == 10)
+        || (request.resource.data.type == 'forensic_stage_unlock' && request.resource.data.amount == 10);
     }
     function validSpendClaim(claimId) {
       return request.resource.data.claimId == claimId
@@ -209,7 +212,8 @@ service cloud.firestore {
         && spendTypeValid()
         && spendAmountValid()
         && (request.resource.data.type != 'protection_card_purchase' || request.resource.data.policy == 'protection_card_purchase')
-        && (request.resource.data.type != 'pitch_super_shot_purchase' || request.resource.data.policy == 'pitch_super_shot_purchase');
+        && (request.resource.data.type != 'pitch_super_shot_purchase' || request.resource.data.policy == 'pitch_super_shot_purchase')
+        && (request.resource.data.type != 'forensic_stage_unlock' || request.resource.data.policy == 'forensic_stage_unlock');
     }
     // V1230.131 — "Lucky Strike" (ضربة حظ): a SHARED, sitewide counter (publicState/luckyStrike, one
     // single global document, not per-user) that every signed-in visitor's daily press increments.
@@ -463,6 +467,16 @@ service cloud.firestore {
             && getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(entryId)).data.status == 'consumed'
             && getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(entryId)).data.amount == -request.resource.data.amount
             && request.resource.data.type == 'pitch_super_shot_purchase'
+            && request.resource.data.amount == -10
+          )
+          ||
+          // V1230.167 — forensic_stage_unlock ledger entries, same shape, 10 ZIVO fixed price.
+          (
+            request.resource.data.eventId == entryId
+            && request.resource.data.claimId == entryId
+            && getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(entryId)).data.status == 'consumed'
+            && getAfter(/databases/$(database)/documents/users/$(userId)/spendClaims/$(entryId)).data.amount == -request.resource.data.amount
+            && request.resource.data.type == 'forensic_stage_unlock'
             && request.resource.data.amount == -10
           )
         );

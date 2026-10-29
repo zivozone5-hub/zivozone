@@ -71,7 +71,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.166">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.167">
 
 
 
@@ -95,8 +95,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.166">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.166">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.167">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.167">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -104,6 +104,16 @@
      case specifically) at the exact moment its room's JS is lazy-loaded — same trigger, same click,
      just CSS alongside it instead of upfront. See room-loader.js's header for the full design. --></head>
 <body>
+<div id="zivo-splash" class="zivo-splash" role="dialog" aria-modal="true" aria-label="ZIVOZONE">
+  <div class="zivo-splash-glow" aria-hidden="true"></div>
+  <div class="zivo-splash-inner">
+    <div class="zivo-splash-orb"><span>Z</span></div>
+    <h1 class="zivo-splash-title">ZIVOZONE</h1>
+    <p class="zivo-splash-tag" data-i18n="splashTag">عالمك الرقمي الممتع</p>
+    <button type="button" class="zivo-feature-btn zivo-splash-enter-btn" data-action="enter-site" data-i18n-aria-label="splashEnterAria" aria-label="ادخل الموقع"><span class="zivo-feature-btn-icon">🚀</span><span class="zivo-feature-btn-label" data-i18n="splashEnter">ادخل</span></button>
+  </div>
+</div>
+<script>(function(){try{if(sessionStorage.getItem('zivo_splash_seen')==='1'){var s=document.getElementById('zivo-splash');if(s)s.style.display='none'}}catch(e){}})();</script>
 <noscript><div style="padding:24px;text-align:center;color:#fff;background:#05060b">ZIVOZONE يحتاج إلى تفعيل JavaScript. / ZIVOZONE requires JavaScript.</div></noscript>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
 <header class="topbar">
@@ -197,6 +207,14 @@
 <section class="zivo-newsbar" aria-label="أخبار ZIVOZONE" data-news-core="1229">
   <div class="zivo-newsbar-head"><span class="zivo-newsbar-live">عاجل</span><span class="zivo-newsbar-brand">ZIVOZONE</span></div>
   <div class="zivo-newsbar-window"><div class="zivo-newsbar-track" id="zivoNewsTicker"><span class="zivo-ticker-item"><span class="zivo-ticker-tag general">ZIVOZONE</span><span class="zivo-ticker-headline">جاري تحميل الأخبار...</span></span></div></div>
+</section>
+
+<section id="identity" class="section zivo-quiz-promo" aria-label="اختبارات الشخصية والمركز">
+  <div class="zivo-quiz-promo-head"><span class="eyebrow" data-i18n="identityEyebrow">من أنا؟</span><h2 data-i18n="identityTitle">اكتشف شخصيتك داخل ZIVOZONE</h2></div>
+  <div class="zivo-quiz-promo-actions">
+    <button type="button" class="zivo-feature-btn" data-action="open-identity"><span class="zivo-feature-btn-icon">🧠</span><span class="zivo-feature-btn-label" data-i18n="identityStart">اكتشف شخصيتك</span></button>
+    <button type="button" class="zivo-feature-btn" data-action="open-football-position"><span class="zivo-feature-btn-icon">⚽</span><span class="zivo-feature-btn-label" data-i18n="footballPosStart">اكتشف مركزك</span></button>
+  </div>
 </section>
 
 <section class="section zivo-contest-section" aria-label="مسابقة ZIVOZONE" id="zivo-contest">
@@ -303,7 +321,6 @@
   </div>
   <div class="ad-slot ad-bottom" data-ad-slot="bottom"><span class="ad-badge" data-i18n="ad">إعلان</span><strong data-i18n="adTitle">مساحتك الإعلانية هنا</strong><button class="btn btn-small btn-ghost" data-action="ads-control">⚙️</button></div>
 </section>
-<section id="identity" class="section"><div class="identity-panel"><div><span class="eyebrow" data-i18n="identityEyebrow">من أنا؟</span><h2 data-i18n="identityTitle">اكتشف شخصيتك داخل ZIVOZONE</h2><p data-i18n="identityText">اختبار ترفيهي يحلل نمط اختياراتك، وليس تشخيصًا نفسيًا.</p></div><div class="identity-panel-actions"><button class="btn btn-primary btn-lg" data-action="open-identity" data-i18n="identityStart">ابدأ الاختبار</button><button class="btn btn-ghost btn-lg" data-action="open-football-position" data-i18n="footballPosStart">⚽ أي مركز لاعب أنت؟</button></div></div></section>
 <section id="ai" class="section alt"><div class="section-heading"><div><span class="eyebrow" data-i18n="aiEyebrow">ZIVO AI</span><h2 data-i18n="aiTitle">مساعد ZIVO الذكي</h2></div></div><div class="ai-panel"><div id="ai-messages" class="ai-messages"><div class="ai-message bot" data-i18n="aiWelcome">أهلًا بك 🤖 اسألني عن مستواك أو الألعاب أو التحديات أو الرياضة.</div></div><form id="ai-form" class="ai-form"><input id="ai-input" maxlength="1000" required data-i18n-placeholder="aiPlaceholder" placeholder="اكتب سؤالك..."><button class="btn btn-primary" type="submit" data-i18n="send">إرسال</button></form><small class="muted" data-i18n="aiNote">اسأل مساعد ZIVO عن مستواك أو تحدياتك أو الرياضة — حتى 10 رسائل مجانية يوميًا.</small></div></section>
 <section id="sports" class="section"><div class="section-heading"><div><span class="eyebrow" data-i18n="sportsEyebrow">أخبار وبيانات الرياضة</span><h2 data-i18n="sportsTitle">الرياضة العالمية</h2><p class="muted" data-i18n="sportsIntro">أخبار رياضية مباشرة وروابط رسمية.</p></div><button class="btn btn-ghost" data-action="refresh-sports" data-i18n="refresh">🔄 تحديث</button></div><div class="subheading"><h3 data-i18n="newsSources">مصادر الأخبار</h3></div><div id="news-list" class="sports-grid"></div><div class="subheading jordan-heading"><h3 data-i18n="jordanFootballNews">🇯🇴 كرة القدم الأردنية</h3><span class="live-badge" data-i18n="officialLive">مصادر رسمية + مباشر</span></div><div id="jordan-news-list" class="sports-grid"></div><div class="subheading mc-heading"><div><h3 data-i18n="fixtureCenter">⚽ مركز المباريات</h3><p>النتائج والمواعيد والمباريات المباشرة والبطولات في مكان واحد.</p></div><span class="live-badge">مباشر · مركز المباريات</span></div><div id="fixture-list" class="match-center-host"></div></section>
 
@@ -331,7 +348,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script type="module" src="zivo-ai.js?v=1230.166"></script>
+<script type="module" src="zivo-ai.js?v=1230.167"></script>
 
 
 
@@ -354,7 +371,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.166"></script>
+<script src="dist/app.bundle.js?v=1230.167"></script>
 
 
 
