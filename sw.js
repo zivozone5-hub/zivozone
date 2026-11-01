@@ -8,11 +8,11 @@ const LEGAL_ROUTE=/^\/(?:privacy|terms)(?:\/|$)/i;
 const SHELL=[
   '/',
   '/index.html',
-  '/dist/styles/index.css?v=1230.178',
-  '/dist/styles/core.css?v=1230.178',
-  '/dist/styles/player-hub.css?v=1230.178',
-  '/zivo-ai.js?v=1230.178',
-  '/dist/app.bundle.js?v=1230.178',
+  '/dist/styles/index.css?v=1230.179',
+  '/dist/styles/core.css?v=1230.179',
+  '/dist/styles/player-hub.css?v=1230.179',
+  '/zivo-ai.js?v=1230.179',
+  '/dist/app.bundle.js?v=1230.179',
   '/assets/icons/zivo-192.png',
   '/assets/icons/zivo-512.png',
   '/manifest.webmanifest'
