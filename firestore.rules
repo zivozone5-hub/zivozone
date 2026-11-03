@@ -519,6 +519,84 @@ service cloud.firestore {
       allow delete: if false;
     }
     match /admins/{uid} { allow read: if isOwner() && request.auth.uid == uid; allow write: if false; }
+    /* ===== V1230.182 — Mind Battle (معركة العقول) =====
+       Honest limits: these rules cap and shape what a client may write (max 700 per round, one official
+       daily result per account per day, a board score can only go up, every answer counter moves by
+       exactly +1 and only together with one create-only submission doc per account+question). They
+       CANNOT prove a score was earned honestly, because the question bank ships to the browser.
+       Server-verified scoring would need Cloud Functions. No ZIVO / wallet field is touched here. */
+    match /mindBattleConfig/{id} { allow read: if true; allow write: if isOwner(); }
+    match /mindBattleQuestions/{id} { allow read: if true; allow write: if isOwner(); }
+    match /mindBattleRuns/{id} {
+      allow read: if isOwner() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid','mode','score','day','rares','createdAt'])
+        && request.resource.data.mode in ['solo','daily','practice']
+        && request.resource.data.score is int && request.resource.data.score >= 0 && request.resource.data.score <= 700
+        && request.resource.data.rares is int && request.resource.data.rares >= 0 && request.resource.data.rares <= 7
+        && request.resource.data.day is string && request.resource.data.day.size() == 10
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+    match /mindBattleDaily/{id} {
+      allow read: if isOwner() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && id == request.resource.data.day + '_' + request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid','day','score','createdAt'])
+        && request.resource.data.score is int && request.resource.data.score >= 0 && request.resource.data.score <= 700
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+    match /mindBattleBoards/{period}/entries/{uid} {
+      allow read: if true;
+      allow create: if isSelf(uid) && request.resource.data.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','name','score','updatedAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40
+        && request.resource.data.score is int && request.resource.data.score >= 0 && request.resource.data.score <= 700
+        && request.resource.data.updatedAt == request.time;
+      allow update: if isSelf(uid) && request.resource.data.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','name','score','updatedAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40
+        && request.resource.data.score is int && request.resource.data.score <= 700
+        && request.resource.data.score >= resource.data.score
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if isOwner();
+    }
+    match /mindBattleSubs/{id} {
+      allow read: if isOwner() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid','qid','createdAt'])
+        && request.resource.data.qid is string && id == request.auth.uid + '_' + request.resource.data.qid
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
+    }
+    match /mindBattleStats/{qid} {
+      allow read: if true;
+      allow create: if signedIn()
+        && !exists(/databases/$(database)/documents/mindBattleSubs/$(request.auth.uid + '_' + qid))
+        && existsAfter(/databases/$(database)/documents/mindBattleSubs/$(request.auth.uid + '_' + qid))
+        && request.resource.data.keys().size() == 1
+        && request.resource.data.keys()[0].matches('c[0-9]{1,2}')
+        && request.resource.data[request.resource.data.keys()[0]] == 1;
+      allow update: if signedIn()
+        && !exists(/databases/$(database)/documents/mindBattleSubs/$(request.auth.uid + '_' + qid))
+        && existsAfter(/databases/$(database)/documents/mindBattleSubs/$(request.auth.uid + '_' + qid))
+        && request.resource.data.diff(resource.data).affectedKeys().size() == 1
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(request.resource.data.keys())
+        && request.resource.data.diff(resource.data).affectedKeys().toList()[0].matches('c[0-9]{1,2}')
+        && request.resource.data[request.resource.data.diff(resource.data).affectedKeys().toList()[0]]
+           == (resource.data.get(request.resource.data.diff(resource.data).affectedKeys().toList()[0], 0) + 1);
+      allow delete: if isOwner();
+    }
+    match /mindBattleReports/{id} {
+      allow read: if isOwner();
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid','qid','createdAt'])
+        && request.resource.data.qid is string && request.resource.data.qid.size() <= 40
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if isOwner();
+    }
+
     match /siteStats/visitors/{day}/{visitorId} { allow read: if isOwner(); allow create,update: if request.resource.data.type == 'guest' && request.resource.data.status == 'visitor' && request.resource.data.visitorId == visitorId && visitorId.size() <= 64 && request.resource.data.keys().hasOnly(['visitorId','type','status','firstSeenAt','lastSeenAt','lastSeenPath','referrer','language','userAgent','updatedAt']) && request.resource.data.lastSeenAt == request.time && request.resource.data.updatedAt == request.time && request.resource.data.lastSeenPath.size() <= 100 && request.resource.data.referrer.size() <= 200 && request.resource.data.language.size() <= 10 && request.resource.data.userAgent.size() <= 180; allow delete: if false; }
     match /siteStats/{document=**} { allow read: if isOwner(); allow write: if false; }
     match /publicChat/{messageId} {
