@@ -4,7 +4,7 @@
   "timezone": "Asia/Amman",
   "matches": [
     {
-      "id": "tsdb-2481262",
+      "id": "tsdb-2481258",
       "league": {
         "id": "tsdb-4497",
         "key": "tsdb-4497",
@@ -14,24 +14,24 @@
       "leagueName": "بطولة كرة القدم",
       "leagueRaw": "Colombia Categoría Primera A",
       "leagueKey": "tsdb-4497",
-      "date": "2026-11-10T00:30:00",
+      "date": "2026-11-10T00:00:00",
       "dateKey": "2026-11-10",
-      "home": "Independiente Santa Fe",
-      "away": "Deportivo Pasto",
-      "homeShort": "Independiente Santa Fe",
-      "awayShort": "Deportivo Pasto",
-      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/16vs771629122765.png",
-      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/zlmyh31576159327.png",
+      "home": "Atlético Junior",
+      "away": "Cúcuta Deportivo",
+      "homeShort": "Atlético Junior",
+      "awayShort": "Cúcuta Deportivo",
+      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/zzarls1576161686.png",
+      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/petg3h1778087075.png",
       "homeScore": null,
       "awayScore": null,
       "status": "UPCOMING",
       "statusText": "NS",
-      "venue": "Estadio El Campín",
+      "venue": "Estadio Metropolitano Roberto Meléndez",
       "city": "",
       "broadcast": [],
       "source": "TheSportsDB",
       "sourceLeagueId": "4497",
-      "summaryUrl": "https://www.thesportsdb.com/event/2481262"
+      "summaryUrl": "https://www.thesportsdb.com/event/2481258"
     },
     {
       "id": "tsdb-2522946",
