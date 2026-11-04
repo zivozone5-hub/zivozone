@@ -597,6 +597,27 @@ service cloud.firestore {
       allow update, delete: if isOwner();
     }
 
+    /* ===== V1230.183 — Arcade (ساحة الألعاب) boards =====
+       One entry per account per game. Level <= 30, score <= 20000, both can only go up. Honest limit: the games
+       run in the browser, so these rules shape and cap what is written; they cannot prove a run was fair.
+       No XP/ZIVO/wallet field is written here (XP is applied client-side by Player.addXP as everywhere else). */
+    match /arcadeBoards/{gameId}/entries/{uid} {
+      allow read: if true;
+      allow create: if isSelf(uid) && gameId in ['memory','math','focus_v18','visual_v22','language_v22','lateral_v22']
+        && request.resource.data.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','name','level','score','updatedAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40
+        && request.resource.data.level is int && request.resource.data.level >= 1 && request.resource.data.level <= 30
+        && request.resource.data.score is int && request.resource.data.score >= 0 && request.resource.data.score <= 20000
+        && request.resource.data.updatedAt == request.time;
+      allow update: if isSelf(uid) && request.resource.data.uid == uid
+        && request.resource.data.keys().hasOnly(['uid','name','level','score','updatedAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() <= 40
+        && request.resource.data.level is int && request.resource.data.level <= 30 && request.resource.data.level >= resource.data.level
+        && request.resource.data.score is int && request.resource.data.score <= 20000 && request.resource.data.score >= resource.data.score
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if isOwner();
+    }
     match /siteStats/visitors/{day}/{visitorId} { allow read: if isOwner(); allow create,update: if request.resource.data.type == 'guest' && request.resource.data.status == 'visitor' && request.resource.data.visitorId == visitorId && visitorId.size() <= 64 && request.resource.data.keys().hasOnly(['visitorId','type','status','firstSeenAt','lastSeenAt','lastSeenPath','referrer','language','userAgent','updatedAt']) && request.resource.data.lastSeenAt == request.time && request.resource.data.updatedAt == request.time && request.resource.data.lastSeenPath.size() <= 100 && request.resource.data.referrer.size() <= 200 && request.resource.data.language.size() <= 10 && request.resource.data.userAgent.size() <= 180; allow delete: if false; }
     match /siteStats/{document=**} { allow read: if isOwner(); allow write: if false; }
     match /publicChat/{messageId} {
