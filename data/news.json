@@ -1,193 +1,229 @@
 {
-  "updatedAt": 1793773186481,
+  "updatedAt": 1793821454085,
   "sports": [
     {
-      "headline": "بعد خسائر الجمهوريين.. ماذا ينتظر الشرق الأوسط؟",
+      "headline": "العاهل المغربي يترأس اجتماعا بشأن مرحلة ما بعد \"المينورسو\"",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902542-%D8%AE%D8%B3%D8%A7%D8%A6%D8%B1-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86-%D9%8A%D9%86%D8%AA%D8%B8%D8%B1-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%A7%D9%84%D8%A3%D9%88%D8%B3%D8%B7",
-      "published": "Wed, 04 Nov 2026 05:59:27 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1902722-%D8%A7%D9%84%D8%B9%D8%A7%D9%87%D9%84-%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8%D9%8A-%D9%8A%D8%AA%D8%B1%D8%A3%D8%B3-%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D8%A7-%D8%A8%D8%B4%D8%A3%D9%86-%D9%85%D8%B1%D8%AD%D9%84%D8%A9-%D8%A8%D8%B9%D8%AF-%D8%A7%D9%84%D9%85%D9%8A%D9%86%D9%88%D8%B1%D8%B3%D9%88",
+      "published": "Wed, 04 Nov 2026 19:15:30 GMT"
     },
     {
-      "headline": "بعد الثلاجات الأوروبية.. أجهزة ومعدات أخرى يمكن اختراقها",
+      "headline": "بديل محتمل لأوزمبيك.. اكتشاف جزيء جديد يكبح الشهية",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1902475-%D8%A7%D9%84%D8%AB%D9%84%D8%A7%D8%AC%D8%A7%D8%AA-%D8%A7%D9%84%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D9%8A%D8%A9-%D8%A3%D8%AC%D9%87%D8%B2%D8%A9-%D9%88%D9%85%D8%B9%D8%AF%D8%A7%D8%AA-%D8%A3%D8%AE%D8%B1%D9%89-%D9%8A%D9%85%D9%83%D9%86-%D8%A7%D8%AE%D8%AA%D8%B1%D8%A7%D9%82%D9%87%D8%A7",
-      "published": "Wed, 04 Nov 2026 05:56:06 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1902710-%D8%A8%D8%AF%D9%8A%D9%84-%D9%85%D8%AD%D8%AA%D9%85%D9%84-%D9%84%D8%A3%D9%88%D8%B2%D9%85%D8%A8%D9%8A%D9%83-%D8%A7%D9%83%D8%AA%D8%B4%D8%A7%D9%81-%D8%AC%D8%B2%D9%8A%D8%A1-%D8%AC%D8%AF%D9%8A%D8%AF-%D9%8A%D9%83%D8%A8%D8%AD-%D8%A7%D9%84%D8%B4%D9%87%D9%8A%D8%A9",
+      "published": "Wed, 04 Nov 2026 19:01:19 GMT"
     },
     {
-      "headline": "البلوغرز في قلب عاصفة إعلامية بمصر.. اجتماع رسمي يفجر الخلاف",
+      "headline": "ترامب: حرب إيران أثرت على نتائج انتخابات التجديد النصفي",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/varieties/1902466-%D8%A7%D9%84%D8%A8%D9%84%D9%88%D8%BA%D8%B1%D8%B2-%D9%82%D9%84%D8%A8-%D8%B9%D8%A7%D8%B5%D9%81%D8%A9-%D8%A5%D8%B9%D9%84%D8%A7%D9%85%D9%8A%D8%A9-%D8%A8%D9%85%D8%B5%D8%B1-%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9-%D8%B1%D8%B3%D9%85%D9%8A-%D9%8A%D9%81%D8%AC%D8%B1-%D8%A7%D9%84%D8%AE%D9%84%D8%A7%D9%81",
-      "published": "Wed, 04 Nov 2026 05:51:36 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902719-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D8%AD%D8%B1%D8%A8-%D8%A5%D9%8A%D8%B1%D8%A7%D9%86-%D8%A3%D8%AB%D8%B1%D8%AA-%D9%86%D8%AA%D8%A7%D8%A6%D8%AC-%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF-%D8%A7%D9%84%D9%86%D8%B5%D9%81%D9%8A",
+      "published": "Wed, 04 Nov 2026 18:40:45 GMT"
     },
     {
-      "headline": "بوتومز تصنع التاريخ.. أول امرأة سوداء تحكم ولاية أميركية",
+      "headline": "هل يصبح هيغسيث \"كبش فداء\" لخسارة الجمهوريين؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902547-%D8%A8%D9%88%D8%AA%D9%88%D9%85%D8%B2-%D8%AA%D8%B5%D9%86%D8%B9-%D8%A7%D9%84%D8%AA%D8%A7%D8%B1%D9%8A%D8%AE-%D8%A7%D9%85%D8%B1%D8%A3%D8%A9-%D8%B3%D9%88%D8%AF%D8%A7%D8%A1-%D8%AA%D8%AD%D9%83%D9%85-%D9%88%D9%84%D8%A7%D9%8A%D8%A9-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D8%A9",
-      "published": "Wed, 04 Nov 2026 05:46:00 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902717-%D9%8A%D8%B5%D8%A8%D8%AD-%D9%87%D9%8A%D8%BA%D8%B3%D9%8A%D8%AB-%D9%83%D8%A8%D8%B4-%D9%81%D8%AF%D8%A7%D8%A1-%D9%84%D8%AE%D8%B3%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86",
+      "published": "Wed, 04 Nov 2026 18:09:05 GMT"
     },
     {
-      "headline": "إنذارات القنابل تربك أوروبا.. طائرات وسفن في دائرة التهديد",
+      "headline": "شومر يطالب بوقف حرب إيران.. وفانس يحملها خسارة الجمهوريين",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902482-%D8%A5%D9%86%D8%B0%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%82%D9%86%D8%A7%D8%A8%D9%84-%D8%AA%D8%B1%D8%A8%D9%83-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%B7%D8%A7%D8%A6%D8%B1%D8%A7%D8%AA-%D9%88%D8%B3%D9%81%D9%86-%D8%AF%D8%A7%D8%A6%D8%B1%D8%A9-%D8%A7%D9%84%D8%AA%D9%87%D8%AF%D9%8A%D8%AF",
-      "published": "Wed, 04 Nov 2026 05:43:05 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902714-%D8%B4%D9%88%D9%85%D8%B1-%D9%8A%D8%B7%D8%A7%D9%84%D8%A8-%D8%A8%D9%88%D9%82%D9%81-%D8%AD%D8%B1%D8%A8-%D8%A5%D9%8A%D8%B1%D8%A7%D9%86-%D9%88%D9%81%D8%A7%D9%86%D8%B3-%D9%8A%D8%AD%D9%85%D9%84%D9%87%D8%A7-%D8%AE%D8%B3%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86",
+      "published": "Wed, 04 Nov 2026 17:50:21 GMT"
     },
     {
-      "headline": "انتخابات الغضب.. هل انتصر الديمقراطيون أم خسر ترامب؟",
+      "headline": "الكونغرس بيد الديمقراطيين.. ماذا ينتظر ترامب؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902540-%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%BA%D8%B6%D8%A8-%D8%A7%D9%86%D8%AA%D8%B5%D8%B1-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%88%D9%86-%D8%AE%D8%B3%D8%B1-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8",
-      "published": "Wed, 04 Nov 2026 05:29:01 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902708-%D8%A7%D9%84%D9%83%D9%88%D9%86%D8%BA%D8%B1%D8%B3-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%8A%D9%86-%D9%8A%D9%86%D8%AA%D8%B8%D8%B1-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8",
+      "published": "Wed, 04 Nov 2026 17:17:04 GMT"
     },
     {
-      "headline": "بعد خسائر الجمهوريين.. ماذا ينتظر ترامب في عاميه الأخيرين؟",
+      "headline": "البيت الأبيض يذكّر الأميركيين: ترامب لا يزال رئيسكم",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902539-%D8%AE%D8%B3%D8%A7%D8%A6%D8%B1-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86-%D9%8A%D9%86%D8%AA%D8%B8%D8%B1-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D8%B9%D8%A7%D9%85%D9%8A%D9%87-%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D9%8A%D9%86",
-      "published": "Wed, 04 Nov 2026 05:06:10 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902712-%D8%A7%D9%84%D8%A8%D9%8A%D8%AA-%D8%A7%D9%84%D8%A3%D8%A8%D9%8A%D8%B6-%D9%8A%D8%B0%D9%83%D8%B1-%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D9%8A%D9%86-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D8%B2%D8%A7%D9%84-%D8%B1%D8%A6%D9%8A%D8%B3%D9%83%D9%85",
+      "published": "Wed, 04 Nov 2026 16:43:44 GMT"
     },
     {
-      "headline": "بقبعة حمراء \"فيتو\".. ترامب يوجه رسالة إلى الديمقراطيين",
+      "headline": "نزاع على وقف تاريخي وأزمة عقارية.. السيسي يتدخل لحسم الموقف",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902532-%D8%A8%D9%82%D8%A8%D8%B9%D8%A9-%D8%AD%D9%85%D8%B1%D8%A7%D8%A1-%D9%81%D9%8A%D8%AA%D9%88-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D9%88%D8%AC%D9%87-%D8%B1%D8%B3%D8%A7%D9%84%D8%A9-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%8A%D9%86",
-      "published": "Wed, 04 Nov 2026 05:00:49 GMT"
+      "url": "https://www.skynewsarabia.com/varieties/1902695-%D9%86%D8%B2%D8%A7%D8%B9-%D9%88%D9%82%D9%81-%D8%AA%D8%A7%D8%B1%D9%8A%D8%AE%D9%8A-%D9%88%D8%A3%D8%B2%D9%85%D8%A9-%D8%B9%D9%82%D8%A7%D8%B1%D9%8A%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%B3%D9%8A-%D9%8A%D8%AA%D8%AF%D8%AE%D9%84-%D9%84%D8%AD%D8%B3%D9%85-%D8%A7%D9%84%D9%85%D9%88%D9%82%D9%81",
+      "published": "Wed, 04 Nov 2026 16:26:55 GMT"
     },
     {
-      "headline": "زلزال انتخابي في أميركا.. 7 أسباب وراء انتكاسة الجمهوريين",
+      "headline": "علماء يحددون بروتينا قد يؤثر في خصوبة الرجال",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902530-%D8%B2%D9%84%D8%B2%D8%A7%D9%84-%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D9%8A-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D8%A7-7-%D8%A3%D8%B3%D8%A8%D8%A7%D8%A8-%D9%88%D8%B1%D8%A7%D8%A1-%D8%A7%D9%86%D8%AA%D9%83%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86",
-      "published": "Wed, 04 Nov 2026 04:50:45 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1902636-%D8%B9%D9%84%D9%85%D8%A7%D8%A1-%D9%8A%D8%AD%D8%AF%D8%AF%D9%88%D9%86-%D8%A8%D8%B1%D9%88%D8%AA%D9%8A%D9%86%D8%A7-%D9%8A%D8%A4%D8%AB%D8%B1-%D8%AE%D8%B5%D9%88%D8%A8%D8%A9-%D8%A7%D9%84%D8%B1%D8%AC%D8%A7%D9%84",
+      "published": "Wed, 04 Nov 2026 15:58:40 GMT"
     },
     {
-      "headline": "بعد انتكاسة الجمهوريين.. ترامب يفاجئ الديمقراطيين بتعهد جديد",
+      "headline": "بسبب مادة مشبوهة.. استنفار أمني في مقر الرئيس الإسرائيلي",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902527-%D8%A7%D9%86%D8%AA%D9%83%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D9%81%D8%A7%D8%AC%D8%A6-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%8A%D9%86-%D8%A8%D8%AA%D8%B9%D9%87%D8%AF-%D8%AC%D8%AF%D9%8A%D8%AF",
-      "published": "Wed, 04 Nov 2026 04:35:35 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1902706-%D8%A8%D8%B3%D8%A8%D8%A8-%D9%85%D8%A7%D8%AF%D8%A9-%D9%85%D8%B4%D8%A8%D9%88%D9%87%D8%A9-%D8%A7%D8%B3%D8%AA%D9%86%D9%81%D8%A7%D8%B1-%D8%A3%D9%85%D9%86%D9%8A-%D9%85%D9%82%D8%B1-%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3-%D8%A7%D9%84%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A",
+      "published": "Wed, 04 Nov 2026 15:46:01 GMT"
     },
     {
-      "headline": "الديمقراطيون ينتزعون السيطرة على مجلس النواب من الجمهوريين",
+      "headline": "أول حاملة طائرات نووية في العالم في طريقها للتفكيك",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902525-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%88%D9%86-%D9%8A%D9%86%D8%AA%D8%B2%D8%B9%D9%88%D9%86-%D8%A7%D9%84%D8%B3%D9%8A%D8%B7%D8%B1%D8%A9-%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D9%86%D9%88%D8%A7%D8%A8-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86",
-      "published": "Wed, 04 Nov 2026 03:31:08 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902704-%D8%AD%D8%A7%D9%85%D9%84%D8%A9-%D8%B7%D8%A7%D8%A6%D8%B1%D8%A7%D8%AA-%D9%86%D9%88%D9%88%D9%8A%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85-%D8%B7%D8%B1%D9%8A%D9%82%D9%87%D8%A7-%D9%84%D9%84%D8%AA%D9%81%D9%83%D9%8A%D9%83",
+      "published": "Wed, 04 Nov 2026 15:30:44 GMT"
     },
     {
-      "headline": "ديمقراطية تطيح شقيقة ليندسي غراهام من مجلس الشيوخ",
+      "headline": "بشرتك قد تكشف أمراضا خفية خطيرة في جسمك",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902523-%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D8%A9-%D8%AA%D8%B7%D9%8A%D8%AD-%D8%B4%D9%82%D9%8A%D9%82%D8%A9-%D9%84%D9%8A%D9%86%D8%AF%D8%B3%D9%8A-%D8%BA%D8%B1%D8%A7%D9%87%D8%A7%D9%85-%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D8%B4%D9%8A%D9%88%D8%AE",
-      "published": "Wed, 04 Nov 2026 03:21:58 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1902602-%D8%A8%D8%B4%D8%B1%D8%AA%D9%83-%D8%AA%D9%83%D8%B4%D9%81-%D8%A3%D9%85%D8%B1%D8%A7%D8%B6%D8%A7-%D8%AE%D9%81%D9%8A%D8%A9-%D8%AE%D8%B7%D9%8A%D8%B1%D8%A9-%D8%AC%D8%B3%D9%85%D9%83",
+      "published": "Wed, 04 Nov 2026 14:33:11 GMT"
     },
     {
-      "headline": "مع تحرك الدولار.. هكذا تتأثر أسعار الأدوية في مصر",
+      "headline": "العراق.. تحقيقات في عقود حكومية يشتبه بتمويلها جهات مسلحة",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1902423-%D8%AA%D8%AD%D8%B1%D9%83-%D8%A7%D9%84%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D8%AA%D8%AA%D8%A3%D8%AB%D8%B1-%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%A3%D8%AF%D9%88%D9%8A%D8%A9-%D9%85%D8%B5%D8%B1",
-      "published": "Wed, 04 Nov 2026 03:06:52 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1902679-%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82-%D8%AA%D8%AD%D9%82%D9%8A%D9%82%D8%A7%D8%AA-%D8%B9%D9%82%D9%88%D8%AF-%D8%AD%D9%83%D9%88%D9%85%D9%8A%D8%A9-%D9%8A%D8%B4%D8%AA%D8%A8%D9%87-%D8%A8%D8%AA%D9%85%D9%88%D9%8A%D9%84%D9%87%D8%A7-%D8%AC%D9%87%D8%A7%D8%AA-%D9%85%D8%B3%D9%84%D8%AD%D8%A9",
+      "published": "Wed, 04 Nov 2026 14:28:55 GMT"
     },
     {
-      "headline": "الملك تشارلز يعلق على \"ماضي العبودية\" البريطاني",
+      "headline": "بسبب التكاليف وتراجع مبيعات الصين.. أرباح \"BMW\" تهبط 11%",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902468-%D8%A7%D9%84%D9%85%D9%84%D9%83-%D8%AA%D8%B4%D8%A7%D8%B1%D9%84%D8%B2-%D9%8A%D8%B9%D9%84%D9%82-%D9%85%D8%A7%D8%B6%D9%8A-%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%AF%D9%8A%D8%A9-%D8%A7%D9%84%D8%A8%D8%B1%D9%8A%D8%B7%D8%A7%D9%86%D9%8A",
-      "published": "Wed, 04 Nov 2026 02:50:45 GMT"
+      "url": "https://www.skynewsarabia.com/business/1902697-%D8%A8%D8%B3%D8%A8%D8%A8-%D8%A7%D9%84%D8%AA%D9%83%D8%A7%D9%84%D9%8A%D9%81-%D9%88%D8%AA%D8%B1%D8%A7%D8%AC%D8%B9-%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA-%D8%A7%D9%84%D8%B5%D9%8A%D9%86-%D8%A3%D8%B1%D8%A8%D8%A7%D8%AD-bmw-%D8%AA%D9%87%D8%A8%D8%B7-11",
+      "published": "Wed, 04 Nov 2026 14:19:09 GMT"
     },
     {
-      "headline": "3 رسائل غاضبة من ترامب مع إغلاق مراكز الاقتراع",
+      "headline": "بعد اختراق لوحة في مصر.. كيف يسيطر القراصنة على الشاشات؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902520-3-%D8%B1%D8%B3%D8%A7%D8%A6%D9%84-%D8%BA%D8%A7%D8%B6%D8%A8%D8%A9-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D8%A5%D8%BA%D9%84%D8%A7%D9%82-%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A7%D9%82%D8%AA%D8%B1%D8%A7%D8%B9",
-      "published": "Wed, 04 Nov 2026 02:15:37 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1902433-%D8%A7%D8%AE%D8%AA%D8%B1%D8%A7%D9%82-%D9%84%D9%88%D8%AD%D8%A9-%D9%85%D8%B5%D8%B1-%D9%8A%D8%B3%D9%8A%D8%B7%D8%B1-%D8%A7%D9%84%D9%82%D8%B1%D8%A7%D8%B5%D9%86%D8%A9-%D8%A7%D9%84%D8%B4%D8%A7%D8%B4%D8%A7%D8%AA",
+      "published": "Wed, 04 Nov 2026 14:14:51 GMT"
     },
     {
-      "headline": "ترمب يقر بهزيمة الجمهوريين في انتخابات التجديد النصفي",
+      "headline": "بعد رحيل قوات التحالف.. لماذا ترفض فصائل عراقية تسليم السلاح لحكومة تدعمها؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%b9%d8%a7%d8%ac%d9%84-%d8%aa%d8%b1%d9%85%d8%a8-%d8%aa%d9%87%d8%a7%d9%86%d9%8a%d9%86%d8%a7-%d9%84%d9%84%d8%af%d9%8a%d9%85%d9%82%d8%b1%d8%a7%d8%b7%d9%8a%d9%8a%d9%86?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 05:08:00 +0300"
+      "url": "https://www.aljazeera.net/politics/2026/11/4/%d8%a8%d8%b9%d8%af-%d8%b1%d8%ad%d9%8a%d9%84-%d9%82%d9%88%d8%a7%d8%aa-%d8%a7%d9%84%d8%aa%d8%ad%d8%a7%d9%84%d9%81-%d9%84%d9%85%d8%a7%d8%b0%d8%a7-%d8%aa%d8%b1%d9%81%d8%b6-%d9%81%d8%b5%d8%a7%d8%a6%d9%84?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 19:14:41 +0300"
     },
     {
-      "headline": "الديمقراطيون ينتزعون أغلبية مجلس الشيوخ.. انتصارات تاريخية في معاقل جمهورية",
+      "headline": "خسر مصروفه وخاف أن يحكي.. كيف نساعد أبناءنا إذا وقعوا ضحية للنصب؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%b9%d8%a7%d8%ac%d9%84-%d8%a7%d9%84%d8%af%d9%8a%d9%85%d9%82%d8%b1%d8%a7%d8%b7%d9%8a%d9%88%d9%86-%d9%8a%d8%ad%d9%82%d9%82%d9%88%d9%86-%d8%a3%d8%ba%d9%84%d8%a8%d9%8a%d8%a9-%d9%81%d9%8a?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 04:39:05 +0300"
+      "url": "https://www.aljazeera.net/family/2026/11/4/%d8%ae%d8%b3%d8%b1-%d9%85%d8%b5%d8%b1%d9%88%d9%81%d9%87-%d9%88%d8%ae%d8%a7%d9%81-%d8%a3%d9%86-%d9%8a%d8%ad%d9%83%d9%8a-%d9%83%d9%8a%d9%81-%d9%86%d8%b3%d8%a7%d8%b9%d8%af?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 19:06:10 +0300"
     },
     {
-      "headline": "لماذا قد تنتظر أمريكا أسبوعين لمعرفة الفائز بمقعد الشيوخ في ألاسكا؟",
+      "headline": "كتاب \"إمبراطورية الأكاذيب\" لتشارلز غويِت.. تشريح حروب الدولة العميقة وأزمات أمريكا",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d9%84%d9%85%d8%a7%d8%b0%d8%a7-%d9%82%d8%af-%d8%aa%d9%86%d8%aa%d8%b8%d8%b1-%d8%a3%d9%85%d8%b1%d9%8a%d9%83%d8%a7-%d8%a3%d8%b3%d8%a8%d9%88%d8%b9%d9%8a%d9%86-%d9%84%d9%85%d8%b9%d8%b1%d9%81%d8%a9?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 03:29:22 +0300"
+      "url": "https://www.aljazeera.net/culture/2026/11/4/%d8%a5%d9%85%d8%a8%d8%b1%d8%a7%d8%b7%d9%88%d8%b1%d9%8a%d8%a9-%d8%a7%d9%84%d8%a3%d9%83%d8%a7%d8%b0%d9%8a%d8%a8-%d9%82%d8%b1%d8%a7%d8%a1%d8%a9-%d8%ad%d8%a7%d8%af%d8%a9?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 19:06:00 +0300"
     },
     {
-      "headline": "وجوه غير مشهورة.. تاريخ العرب والمسلمين في الكونغرس الأمريكي",
+      "headline": "المحكمة العليا البريطانية تنظر في الطعن في حظر \"فلسطين أكشن\"",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/11/4/%d9%88%d8%ac%d9%88%d9%87-%d8%ba%d9%8a%d8%b1-%d9%85%d8%b4%d9%87%d9%88%d8%b1%d8%a9-%d8%aa%d8%a7%d8%b1%d9%8a%d8%ae-%d8%a7%d9%84%d8%b9%d8%b1%d8%a8-%d9%88%d8%a7%d9%84%d9%85%d8%b3%d9%84%d9%85%d9%8a%d9%86?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 02:54:33 +0300"
+      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%a7%d9%84%d9%85%d8%ad%d9%83%d9%85%d8%a9-%d8%a7%d9%84%d8%b9%d9%84%d9%8a%d8%a7-%d8%a7%d9%84%d8%a8%d8%b1%d9%8a%d8%b7%d8%a7%d9%86%d9%8a%d8%a9-%d8%aa%d9%86%d8%b8%d8%b1-%d9%81%d9%8a?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 19:05:53 +0300"
     },
     {
-      "headline": "3 سيناريوهات لحرب إيران.. اتفاق أم قصف أم ضربة نووية؟",
+      "headline": "فوز الديمقراطيين بالكونغرس يرفع أسهم أوروبا إلى أعلى مستوى في شهرين",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/11/4/3-%d8%b3%d9%8a%d9%86%d8%a7%d8%b1%d9%8a%d9%88%d9%87%d8%a7%d8%aa-%d9%84%d8%ad%d8%b1%d8%a8-%d8%a5%d9%8a%d8%b1%d8%a7%d9%86-%d8%a7%d8%aa%d9%81%d8%a7%d9%82-%d8%a3%d9%85-%d9%82%d8%b5%d9%81-%d8%a3%d9%85?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 02:44:30 +0300"
+      "url": "https://www.aljazeera.net/ebusiness/2026/11/4/%d9%81%d9%88%d8%b2-%d8%a7%d9%84%d8%af%d9%8a%d9%85%d9%82%d8%b1%d8%a7%d8%b7%d9%8a%d9%8a%d9%86-%d8%a8%d8%a7%d9%84%d9%83%d9%88%d9%86%d8%ba%d8%b1%d8%b3-%d9%8a%d8%b1%d9%81%d8%b9-%d8%a3%d8%b3%d9%87%d9%85?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 19:03:46 +0300"
     },
     {
-      "headline": "اليمن يتهم 21 خبيرا إيرانيا ولبنانيا بإدارة عمليات الحوثيين العسكرية",
+      "headline": "ضربة للزمالك ومنتخب فلسطين.. الكشف عن طبيعة إصابة عدي الدباغ",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%a7%d9%84%d9%8a%d9%85%d9%86-%d9%8a%d8%aa%d9%87%d9%85-21-%d8%ae%d8%a8%d9%8a%d8%b1%d8%a7-%d8%a5%d9%8a%d8%b1%d8%a7%d9%86%d9%8a%d8%a7-%d9%88%d9%84%d8%a8%d9%86%d8%a7%d9%86%d9%8a%d8%a7?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 02:10:44 +0300"
+      "url": "https://www.aljazeera.net/sport/2026/11/4/%d8%b6%d8%b1%d8%a8%d8%a9-%d9%84%d9%84%d8%b2%d9%85%d8%a7%d9%84%d9%83-%d9%88%d9%85%d9%86%d8%aa%d8%ae%d8%a8-%d9%81%d9%84%d8%b3%d8%b7%d9%8a%d9%86-%d8%a7%d9%84%d9%83%d8%b4%d9%81-%d8%b9%d9%86?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 19:00:00 +0300"
     },
     {
-      "headline": "الثأر يهزم هيبة الدولة",
+      "headline": "من إيران إلى التجارة والتكنولوجيا.. كيف يؤثر الكونغرس الجديد على العالم؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/opinions/2026/11/4/%d8%a7%d9%84%d8%ab%d8%a3%d8%b1-%d9%8a%d9%87%d8%b2%d9%85-%d9%87%d9%8a%d8%a8%d8%a9-%d8%a7%d9%84%d8%af%d9%88%d9%84%d8%a9?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 02:02:21 +0300"
+      "url": "https://www.aljazeera.net/ebusiness/2026/11/4/%d9%85%d9%86-%d8%a5%d9%8a%d8%b1%d8%a7%d9%86-%d8%a5%d9%84%d9%89-%d8%a7%d9%84%d8%aa%d8%ac%d8%a7%d8%b1%d8%a9-%d9%88%d8%a7%d9%84%d8%aa%d9%83%d9%86%d9%88%d9%84%d9%88%d8%ac%d9%8a%d8%a7-%d9%83%d9%8a%d9%81?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:49:10 +0300"
     },
     {
-      "headline": "هل تفتح حرب إيران أبواب الشرق الأوسط أمام الصين؟",
+      "headline": "حصر السلاح في العراق.. جدل بين كتائب حزب الله وحكومة الزيدي",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/11/4/%d9%87%d9%84-%d8%aa%d9%81%d8%aa%d8%ad%d8%ad%d8%b1%d8%a8-%d8%a5%d9%8a%d8%b1%d8%a7%d9%86-%d8%a3%d8%a8%d9%88%d8%a7%d8%a8-%d8%a7%d9%84%d8%b4%d8%b1%d9%82-%d8%a7%d9%84%d8%a3%d9%88%d8%b3%d8%b7?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 01:14:15 +0300"
+      "url": "https://www.aljazeera.net/video/behindthenews/2026/11/4/%d8%ad%d8%b5%d8%b1-%d8%a7%d9%84%d8%b3%d9%84%d8%a7%d8%ad-%d9%81%d9%8a-%d8%a7%d9%84%d8%b9%d8%b1%d8%a7%d9%82-%d8%ac%d8%af%d9%84-%d8%a8%d9%8a%d9%86-%d9%83%d8%aa%d8%a7%d8%a6%d8%a8-%d8%ad%d8%b2%d8%a8?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:42:56 +0300"
     },
     {
-      "headline": "بدء إغلاق مراكز الاقتراع في انتخابات الكونغرس وترمب يهدد بسلاح \"الفيتو\"",
+      "headline": "خطط لإقامة 42 مستوطنة جديدة شمالي الضفة.. ما التفاصيل؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%a8%d8%af%d8%a1-%d8%a5%d8%ba%d9%84%d8%a7%d9%82-%d9%85%d8%b1%d8%a7%d9%83%d8%b2-%d8%a7%d9%84%d8%a7%d9%82%d8%aa%d8%b1%d8%a7%d8%b9-%d9%81%d9%8a-%d8%a7%d9%86%d8%aa%d8%ae%d8%a7%d8%a8%d8%a7%d8%aa?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 01:11:46 +0300"
+      "url": "https://www.aljazeera.net/politics/2026/11/4/%d9%85%d8%b3%d8%a4%d9%88%d9%84-%d9%81%d9%84%d8%b3%d8%b7%d9%8a%d9%86%d9%8a-%d8%a7%d9%84%d8%a7%d8%ad%d8%aa%d9%84%d8%a7%d9%84-%d9%8a%d8%ae%d8%b7%d8%b7-42-%d9%85%d8%b3%d8%aa%d9%88%d8%b7%d9%86%d8%a9?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:42:28 +0300"
     },
     {
-      "headline": "المستشارة القضائية الإسرائيلية تعرقل تحقيق الشاباك مع 3 سياسيين عرب بشأن الانتخابات",
+      "headline": "هل تكفي مكاسب الأرض لتخرج روسيا من الحرب أقوى؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%a7%d9%84%d9%85%d8%b3%d8%aa%d8%b4%d8%a7%d8%b1%d8%a9-%d8%a7%d9%84%d9%82%d8%b6%d8%a7%d8%a6%d9%8a%d8%a9-%d8%a7%d9%84%d8%a5%d8%b3%d8%b1%d8%a7%d8%a6%d9%8a%d9%84%d9%8a%d8%a9-2?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 01:01:10 +0300"
+      "url": "https://www.aljazeera.net/video/scales/2026/11/4/%d9%85%d9%88%d8%a7%d8%b2%d9%8a%d9%86-%d8%b1%d9%88%d8%b3%d9%8a%d8%a7-%d8%a3%d9%88%d9%83%d8%b1%d8%a7%d9%86%d9%8a%d8%a7-%d8%a7%d9%84%d8%ad%d8%b1%d8%a8-%d8%a3%d9%88%d8%b1%d9%88%d8%a8%d8%a7?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:33:04 +0300"
     },
     {
-      "headline": "مفاجأة وارتباك وقلق.. كيف استقبلت إسرائيل إعلان ترمب وقف المساعدات العسكرية؟",
+      "headline": "بين إعلان الانتصار والتحفظ على التغيير.. كيف تنظر طهران لنتائج الانتخابات الأمريكية؟",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d9%85%d9%81%d8%a7%d8%ac%d8%a3%d8%a9-%d9%88%d9%82%d9%84%d9%82-%d9%81%d9%8a-%d8%aa%d9%84-%d8%a3%d8%a8%d9%8a%d8%a8-%d8%aa%d8%b1%d9%85%d8%a8-%d9%8a%d9%88%d9%82%d9%81?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 00:21:46 +0300"
+      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%a8%d9%8a%d9%86-%d8%a5%d8%b9%d9%84%d8%a7%d9%86-%d8%a7%d9%84%d8%a7%d9%86%d8%aa%d8%b5%d8%a7%d8%b1-%d9%88%d8%a7%d9%84%d8%aa%d8%ad%d9%81%d8%b8-%d8%b9%d9%84%d9%89?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:32:30 +0300"
     },
     {
-      "headline": "من ترمب إلى العالم.. عدوى \"سرقة الانتخابات\" تهدد الديمقراطيات",
+      "headline": "هزيمة مدوية.. لهذه الأسباب تخلى الأمريكيون عن الحزب الجمهوري",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/politics/2026/11/4/%d9%85%d9%86-%d8%aa%d8%b1%d9%85%d8%a8-%d8%a5%d9%84%d9%89-%d8%a7%d9%84%d8%b9%d8%a7%d9%84%d9%85-%d8%b9%d8%af%d9%88%d9%89-%d8%b3%d8%b1%d9%82%d8%a9?traffic_source=rss",
-      "published": "Wed, 04 Nov 2026 00:21:34 +0300"
+      "url": "https://www.aljazeera.net/news/2026/11/4/%d9%87%d8%b2%d9%8a%d9%85%d8%a9-%d9%85%d8%af%d9%88%d9%8a%d8%a9-%d9%84%d9%87%d8%b0%d9%87-%d8%a7%d9%84%d8%a3%d8%b3%d8%a8%d8%a7%d8%a8-%d8%aa%d8%ae%d9%84%d9%89?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:32:26 +0300"
     },
     {
-      "headline": "إيران تعدم شخصين في قضية مرتبطة باحتجاجات أصفهان",
+      "headline": "ناقوس زوال الترمبية يقرع أخيرا.. زلزال انتخابي يهز معاقل الجمهوريين",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%a5%d9%8a%d8%b1%d8%a7%d9%86-%d8%aa%d8%b9%d8%af%d9%85-%d8%b4%d8%ae%d8%b5%d9%8a%d9%86-%d9%81%d9%8a-%d9%82%d8%b6%d9%8a%d8%a9-%d9%85%d8%b1%d8%aa%d8%a8%d8%b7%d8%a9?traffic_source=rss",
-      "published": "Tue, 03 Nov 2026 23:22:50 +0300"
+      "url": "https://www.aljazeera.net/politics/2026/11/4/%d9%86%d8%a7%d9%82%d9%88%d8%b3-%d8%b2%d9%88%d8%a7%d9%84-%d8%a7%d9%84%d8%aa%d8%b1%d8%a7%d9%85%d8%a8%d9%8a%d8%a9-%d9%8a%d9%82%d8%b1%d8%b9-%d8%a3%d8%ae%d9%8a%d8%b1%d8%a7-%d8%b2%d9%84%d8%b2%d8%a7%d9%84?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:31:48 +0300"
     },
     {
-      "headline": "\"الاستبدال العظيم\".. حملة تضليل إسرائيلية تستهدف المسلمين في 30 دولة",
+      "headline": "صفقة قد تصل إلى المحاكم.. ريال مدريد يقترب من ضم موهبة مانشستر يونايتد",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%a7%d9%84%d8%a7%d8%b3%d8%aa%d8%a8%d8%af%d8%a7%d9%84-%d8%a7%d9%84%d8%b9%d8%b8%d9%8a%d9%85-%d8%ad%d9%85%d9%84%d8%a9-%d8%aa%d8%b6%d9%84%d9%8a%d9%84?traffic_source=rss",
-      "published": "Tue, 03 Nov 2026 23:21:30 +0300"
+      "url": "https://www.aljazeera.net/sport/2026/11/4/%d8%b1%d9%8a%d8%a7%d9%84-%d9%85%d8%af%d8%b1%d9%8a%d8%af-%d8%ac%d9%8a%d9%87-%d8%ac%d9%8a%d9%87-%d8%ba%d8%a7%d8%a8%d8%b1%d9%8a%d9%8a%d9%84-%d9%85%d8%a7%d9%86%d8%b4%d8%b3%d8%aa%d8%b1?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:30:00 +0300"
     },
     {
-      "headline": "تأثيرها لن ينحصر في إيران.. لماذا يريد ترمب استخدام \"القنبلة القذرة\" في جبل الفأس؟",
+      "headline": "بورصة إسرائيل تهبط لأدنى مستوى في 6 أشهر بعد فوز الديمقراطيين بالكونغرس الأمريكي",
       "source": "الجزيرة",
-      "url": "https://www.aljazeera.net/news/2026/11/4/%d8%aa%d8%a3%d8%ab%d9%8a%d8%b1%d9%87%d8%a7-%d9%84%d9%86-%d9%8a%d9%86%d8%ad%d8%b5%d8%b1-%d9%81%d9%8a-%d8%a5%d9%8a%d8%b1%d8%a7%d9%86-%d9%84%d9%85%d8%a7%d8%b0%d8%a7-%d9%8a%d8%b1%d9%8a%d8%af?traffic_source=rss",
-      "published": "Tue, 03 Nov 2026 23:03:43 +0300"
+      "url": "https://www.aljazeera.net/ebusiness/2026/11/4/%d8%a8%d9%88%d8%b1%d8%b5%d8%a9-%d8%aa%d9%84-%d8%a3%d8%a8%d9%8a%d8%a8-%d8%aa%d9%87%d8%a8%d8%b7-%d9%84%d8%a3%d8%af%d9%86%d9%89-%d9%85%d8%b3%d8%aa%d9%88%d9%89-%d9%81%d9%8a-6-%d8%a3%d8%b4%d9%87%d8%b1?traffic_source=rss",
+      "published": "Wed, 04 Nov 2026 18:01:53 +0300"
     }
   ],
   "general": [
     {
-      "headline": "ترامب يعلن استعداده لقبول نتائج انتخابات التجديد النصفي والعمل مع الحزب الديمقراطي",
+      "headline": "الديمقراطيون ينتزعون الأغلبية في الكونغرس الأمريكي، وفانس يقول إن \"حرب إيران\" هي السبب",
       "source": "BBC عربي",
-      "url": "https://www.bbc.co.uk/arabic/live/cqwyrmd2z8jjt?at_medium=RSS&at_campaign=rss",
-      "published": ""
+      "url": "https://www.bbc.com/arabic/articles/c64g1vl7p3xgo?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 17:54:41 GMT"
+    },
+    {
+      "headline": "الحوثيون يعلنون استهداف مطار الرياض، وحزب الله ينفي دعمهم عسكرياً",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cq70pd6k6n7eo?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 15:37:44 GMT"
+    },
+    {
+      "headline": "أوروبا تواجه هجمات سيبرانية تستهدف الغذاء..هل هي مقدمة لحربٍ أكبر؟ وما دور الذكاء الاصطناعي فيها؟",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cq369dg3ele3o?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 17:16:46 GMT"
+    },
+    {
+      "headline": "من الثلاجة إلى المشلعيب.. كيف أعادت الحرب السودانيين عقوداً إلى الوراء؟",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/c60rle54pwejo?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 15:25:26 GMT"
+    },
+    {
+      "headline": "ما الذي يعنيه فوز الديمقراطيين في انتخابات التجديد النصفي؟ - الغارديان",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cq98z61de751o?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 12:50:03 GMT"
+    },
+    {
+      "headline": "من هو عبد الرحمن السيد، الذي يوشك أن يصبح أول عضو مسلم في مجلس الشيوخ الأمريكي؟",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/cw146dj810e4o?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 12:10:02 GMT"
+    },
+    {
+      "headline": "مراسل بي بي سي: انتصارات تاريخية للديمقراطيين بينما يندفعون بعمق في معاقل الجمهوريين",
+      "source": "BBC عربي",
+      "url": "https://www.bbc.com/arabic/articles/ckpdg0ne4ggjo?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 08:35:53 GMT"
     },
     {
       "headline": "وزيرة الداخلية البريطانية \"تتراجع\" عن تشديد شروط الإقامة الدائمة للعاملين المهاجرين في قطاع الرعاية",
@@ -202,40 +238,16 @@
       "published": "Tue, 03 Nov 2026 18:19:02 GMT"
     },
     {
-      "headline": "هزيمة ساحقة في انتخابات الكونغرس ستجعل ترامب أكثر خطورة - مقال في الإندبندنت",
+      "headline": "بعد سيطرة الديمقراطيين على الكونغرس.. ماذا ينتظر الرئيس الأمريكي؟",
       "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/cwj34626dgpvo?at_medium=RSS&at_campaign=rss",
-      "published": "Tue, 03 Nov 2026 13:52:57 GMT"
+      "url": "https://www.bbc.com/arabic/watch/cmz65z3yn74no?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 14:04:41 GMT"
     },
     {
-      "headline": "ما معنى \"الاستقالة الهادئة\" وكيف تؤثر على الاقتصاد؟",
+      "headline": "من هو عبد الرحمن السيد، أول مسلم في مجلس الشيوخ الأمريكي؟",
       "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/c6vg9w7qk015o?at_medium=RSS&at_campaign=rss",
-      "published": "Tue, 03 Nov 2026 17:03:05 GMT"
-    },
-    {
-      "headline": "ترامب يؤكد شنّ الولايات المتحدة ضربة على تجهيزات للدفاع الجوي في إيران",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/cqjdm4jdnnm3o?at_medium=RSS&at_campaign=rss",
-      "published": "Tue, 03 Nov 2026 13:46:45 GMT"
-    },
-    {
-      "headline": "كأس آسيا: السعودية تؤجّل فعاليات دولية بارزة، فما أثر ذلك على رؤية 2030؟",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/c8wy9kw2xee3o?at_medium=RSS&at_campaign=rss",
-      "published": "Tue, 03 Nov 2026 07:28:46 GMT"
-    },
-    {
-      "headline": "كيف ينهي الذهب رحلته في 2026؟ وما الذي يقف وراء خسائره الأخيرة؟",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/cj3vq05ezzl3o?at_medium=RSS&at_campaign=rss",
-      "published": "Tue, 03 Nov 2026 02:24:56 GMT"
-    },
-    {
-      "headline": "كيف تفاعل رواد مواقع التواصل مع قصة المصرية التي خسرت منزل أحلامها بعد 18 عاماً من الزواج؟",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/cmdxw8vre401o?at_medium=RSS&at_campaign=rss",
-      "published": "Mon, 02 Nov 2026 15:44:20 GMT"
+      "url": "https://www.bbc.com/arabic/watch/cjqlnw65v55qo?at_medium=RSS&at_campaign=rss",
+      "published": "Wed, 04 Nov 2026 11:06:02 GMT"
     },
     {
       "headline": "ماذا نعرف عن انتخابات التجديد النصفي الأمريكية؟",
@@ -256,112 +268,100 @@
       "published": "Sat, 31 Oct 2026 07:22:05 GMT"
     },
     {
-      "headline": "اختراق بينانس.. ما تفاصيل أكبر سرقة في تاريخ العملات المشفرة؟",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/watch/c53982rpyd7xo?at_medium=RSS&at_campaign=rss",
-      "published": "Fri, 30 Oct 2026 15:39:15 GMT"
-    },
-    {
-      "headline": "لماذا يتصارع الجميع على مدينة تعز اليمنية؟",
-      "source": "BBC عربي",
-      "url": "https://www.bbc.com/arabic/articles/ckly06vp2l33o?at_medium=RSS&at_campaign=rss",
-      "published": "Thu, 29 Oct 2026 13:14:54 GMT"
-    },
-    {
-      "headline": "هل تغيّر نتائج الانتخابات النصفية المشهد السياسي في واشنطن؟",
+      "headline": "كيف سيتعامل الرئيس ترامب مع معارضة ديمقراطية قوية في الكونغرس؟",
       "source": "BBC عربي",
       "url": "https://www.bbc.com/arabic/articles/ckjrwvw7glxgo?at_medium=RSS&at_campaign=rss",
-      "published": "Tue, 03 Nov 2026 19:17:29 GMT"
+      "published": "Wed, 04 Nov 2026 09:52:06 GMT"
     },
     {
-      "headline": "بعد خسائر الجمهوريين.. ماذا ينتظر الشرق الأوسط؟",
+      "headline": "العاهل المغربي يترأس اجتماعا بشأن مرحلة ما بعد \"المينورسو\"",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902542-%D8%AE%D8%B3%D8%A7%D8%A6%D8%B1-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86-%D9%8A%D9%86%D8%AA%D8%B8%D8%B1-%D8%A7%D9%84%D8%B4%D8%B1%D9%82-%D8%A7%D9%84%D8%A3%D9%88%D8%B3%D8%B7",
-      "published": "Wed, 04 Nov 2026 05:59:27 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1902722-%D8%A7%D9%84%D8%B9%D8%A7%D9%87%D9%84-%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8%D9%8A-%D9%8A%D8%AA%D8%B1%D8%A3%D8%B3-%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D8%A7-%D8%A8%D8%B4%D8%A3%D9%86-%D9%85%D8%B1%D8%AD%D9%84%D8%A9-%D8%A8%D8%B9%D8%AF-%D8%A7%D9%84%D9%85%D9%8A%D9%86%D9%88%D8%B1%D8%B3%D9%88",
+      "published": "Wed, 04 Nov 2026 19:15:30 GMT"
     },
     {
-      "headline": "بعد الثلاجات الأوروبية.. أجهزة ومعدات أخرى يمكن اختراقها",
+      "headline": "بديل محتمل لأوزمبيك.. اكتشاف جزيء جديد يكبح الشهية",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/technology/1902475-%D8%A7%D9%84%D8%AB%D9%84%D8%A7%D8%AC%D8%A7%D8%AA-%D8%A7%D9%84%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D9%8A%D8%A9-%D8%A3%D8%AC%D9%87%D8%B2%D8%A9-%D9%88%D9%85%D8%B9%D8%AF%D8%A7%D8%AA-%D8%A3%D8%AE%D8%B1%D9%89-%D9%8A%D9%85%D9%83%D9%86-%D8%A7%D8%AE%D8%AA%D8%B1%D8%A7%D9%82%D9%87%D8%A7",
-      "published": "Wed, 04 Nov 2026 05:56:06 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1902710-%D8%A8%D8%AF%D9%8A%D9%84-%D9%85%D8%AD%D8%AA%D9%85%D9%84-%D9%84%D8%A3%D9%88%D8%B2%D9%85%D8%A8%D9%8A%D9%83-%D8%A7%D9%83%D8%AA%D8%B4%D8%A7%D9%81-%D8%AC%D8%B2%D9%8A%D8%A1-%D8%AC%D8%AF%D9%8A%D8%AF-%D9%8A%D9%83%D8%A8%D8%AD-%D8%A7%D9%84%D8%B4%D9%87%D9%8A%D8%A9",
+      "published": "Wed, 04 Nov 2026 19:01:19 GMT"
     },
     {
-      "headline": "البلوغرز في قلب عاصفة إعلامية بمصر.. اجتماع رسمي يفجر الخلاف",
+      "headline": "ترامب: حرب إيران أثرت على نتائج انتخابات التجديد النصفي",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/varieties/1902466-%D8%A7%D9%84%D8%A8%D9%84%D9%88%D8%BA%D8%B1%D8%B2-%D9%82%D9%84%D8%A8-%D8%B9%D8%A7%D8%B5%D9%81%D8%A9-%D8%A5%D8%B9%D9%84%D8%A7%D9%85%D9%8A%D8%A9-%D8%A8%D9%85%D8%B5%D8%B1-%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9-%D8%B1%D8%B3%D9%85%D9%8A-%D9%8A%D9%81%D8%AC%D8%B1-%D8%A7%D9%84%D8%AE%D9%84%D8%A7%D9%81",
-      "published": "Wed, 04 Nov 2026 05:51:36 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902719-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D8%AD%D8%B1%D8%A8-%D8%A5%D9%8A%D8%B1%D8%A7%D9%86-%D8%A3%D8%AB%D8%B1%D8%AA-%D9%86%D8%AA%D8%A7%D8%A6%D8%AC-%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%AA%D8%AC%D8%AF%D9%8A%D8%AF-%D8%A7%D9%84%D9%86%D8%B5%D9%81%D9%8A",
+      "published": "Wed, 04 Nov 2026 18:40:45 GMT"
     },
     {
-      "headline": "بوتومز تصنع التاريخ.. أول امرأة سوداء تحكم ولاية أميركية",
+      "headline": "هل يصبح هيغسيث \"كبش فداء\" لخسارة الجمهوريين؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902547-%D8%A8%D9%88%D8%AA%D9%88%D9%85%D8%B2-%D8%AA%D8%B5%D9%86%D8%B9-%D8%A7%D9%84%D8%AA%D8%A7%D8%B1%D9%8A%D8%AE-%D8%A7%D9%85%D8%B1%D8%A3%D8%A9-%D8%B3%D9%88%D8%AF%D8%A7%D8%A1-%D8%AA%D8%AD%D9%83%D9%85-%D9%88%D9%84%D8%A7%D9%8A%D8%A9-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D8%A9",
-      "published": "Wed, 04 Nov 2026 05:46:00 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902717-%D9%8A%D8%B5%D8%A8%D8%AD-%D9%87%D9%8A%D8%BA%D8%B3%D9%8A%D8%AB-%D9%83%D8%A8%D8%B4-%D9%81%D8%AF%D8%A7%D8%A1-%D9%84%D8%AE%D8%B3%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86",
+      "published": "Wed, 04 Nov 2026 18:09:05 GMT"
     },
     {
-      "headline": "إنذارات القنابل تربك أوروبا.. طائرات وسفن في دائرة التهديد",
+      "headline": "شومر يطالب بوقف حرب إيران.. وفانس يحملها خسارة الجمهوريين",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902482-%D8%A5%D9%86%D8%B0%D8%A7%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%82%D9%86%D8%A7%D8%A8%D9%84-%D8%AA%D8%B1%D8%A8%D9%83-%D8%A3%D9%88%D8%B1%D9%88%D8%A8%D8%A7-%D8%B7%D8%A7%D8%A6%D8%B1%D8%A7%D8%AA-%D9%88%D8%B3%D9%81%D9%86-%D8%AF%D8%A7%D8%A6%D8%B1%D8%A9-%D8%A7%D9%84%D8%AA%D9%87%D8%AF%D9%8A%D8%AF",
-      "published": "Wed, 04 Nov 2026 05:43:05 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902714-%D8%B4%D9%88%D9%85%D8%B1-%D9%8A%D8%B7%D8%A7%D9%84%D8%A8-%D8%A8%D9%88%D9%82%D9%81-%D8%AD%D8%B1%D8%A8-%D8%A5%D9%8A%D8%B1%D8%A7%D9%86-%D9%88%D9%81%D8%A7%D9%86%D8%B3-%D9%8A%D8%AD%D9%85%D9%84%D9%87%D8%A7-%D8%AE%D8%B3%D8%A7%D8%B1%D8%A9-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86",
+      "published": "Wed, 04 Nov 2026 17:50:21 GMT"
     },
     {
-      "headline": "انتخابات الغضب.. هل انتصر الديمقراطيون أم خسر ترامب؟",
+      "headline": "الكونغرس بيد الديمقراطيين.. ماذا ينتظر ترامب؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902540-%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D8%A7%D8%AA-%D8%A7%D9%84%D8%BA%D8%B6%D8%A8-%D8%A7%D9%86%D8%AA%D8%B5%D8%B1-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%88%D9%86-%D8%AE%D8%B3%D8%B1-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8",
-      "published": "Wed, 04 Nov 2026 05:29:01 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902708-%D8%A7%D9%84%D9%83%D9%88%D9%86%D8%BA%D8%B1%D8%B3-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%8A%D9%86-%D9%8A%D9%86%D8%AA%D8%B8%D8%B1-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8",
+      "published": "Wed, 04 Nov 2026 17:17:04 GMT"
     },
     {
-      "headline": "بعد خسائر الجمهوريين.. ماذا ينتظر ترامب في عاميه الأخيرين؟",
+      "headline": "البيت الأبيض يذكّر الأميركيين: ترامب لا يزال رئيسكم",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902539-%D8%AE%D8%B3%D8%A7%D8%A6%D8%B1-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86-%D9%8A%D9%86%D8%AA%D8%B8%D8%B1-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D8%B9%D8%A7%D9%85%D9%8A%D9%87-%D8%A7%D9%84%D8%A3%D8%AE%D9%8A%D8%B1%D9%8A%D9%86",
-      "published": "Wed, 04 Nov 2026 05:06:10 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902712-%D8%A7%D9%84%D8%A8%D9%8A%D8%AA-%D8%A7%D9%84%D8%A3%D8%A8%D9%8A%D8%B6-%D9%8A%D8%B0%D9%83%D8%B1-%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D9%8A%D9%8A%D9%86-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D8%B2%D8%A7%D9%84-%D8%B1%D8%A6%D9%8A%D8%B3%D9%83%D9%85",
+      "published": "Wed, 04 Nov 2026 16:43:44 GMT"
     },
     {
-      "headline": "بقبعة حمراء \"فيتو\".. ترامب يوجه رسالة إلى الديمقراطيين",
+      "headline": "نزاع على وقف تاريخي وأزمة عقارية.. السيسي يتدخل لحسم الموقف",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902532-%D8%A8%D9%82%D8%A8%D8%B9%D8%A9-%D8%AD%D9%85%D8%B1%D8%A7%D8%A1-%D9%81%D9%8A%D8%AA%D9%88-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D9%88%D8%AC%D9%87-%D8%B1%D8%B3%D8%A7%D9%84%D8%A9-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%8A%D9%86",
-      "published": "Wed, 04 Nov 2026 05:00:49 GMT"
+      "url": "https://www.skynewsarabia.com/varieties/1902695-%D9%86%D8%B2%D8%A7%D8%B9-%D9%88%D9%82%D9%81-%D8%AA%D8%A7%D8%B1%D9%8A%D8%AE%D9%8A-%D9%88%D8%A3%D8%B2%D9%85%D8%A9-%D8%B9%D9%82%D8%A7%D8%B1%D9%8A%D8%A9-%D8%A7%D9%84%D8%B3%D9%8A%D8%B3%D9%8A-%D9%8A%D8%AA%D8%AF%D8%AE%D9%84-%D9%84%D8%AD%D8%B3%D9%85-%D8%A7%D9%84%D9%85%D9%88%D9%82%D9%81",
+      "published": "Wed, 04 Nov 2026 16:26:55 GMT"
     },
     {
-      "headline": "زلزال انتخابي في أميركا.. 7 أسباب وراء انتكاسة الجمهوريين",
+      "headline": "علماء يحددون بروتينا قد يؤثر في خصوبة الرجال",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902530-%D8%B2%D9%84%D8%B2%D8%A7%D9%84-%D8%A7%D9%86%D8%AA%D8%AE%D8%A7%D8%A8%D9%8A-%D8%A3%D9%85%D9%8A%D8%B1%D9%83%D8%A7-7-%D8%A3%D8%B3%D8%A8%D8%A7%D8%A8-%D9%88%D8%B1%D8%A7%D8%A1-%D8%A7%D9%86%D8%AA%D9%83%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86",
-      "published": "Wed, 04 Nov 2026 04:50:45 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1902636-%D8%B9%D9%84%D9%85%D8%A7%D8%A1-%D9%8A%D8%AD%D8%AF%D8%AF%D9%88%D9%86-%D8%A8%D8%B1%D9%88%D8%AA%D9%8A%D9%86%D8%A7-%D9%8A%D8%A4%D8%AB%D8%B1-%D8%AE%D8%B5%D9%88%D8%A8%D8%A9-%D8%A7%D9%84%D8%B1%D8%AC%D8%A7%D9%84",
+      "published": "Wed, 04 Nov 2026 15:58:40 GMT"
     },
     {
-      "headline": "بعد انتكاسة الجمهوريين.. ترامب يفاجئ الديمقراطيين بتعهد جديد",
+      "headline": "بسبب مادة مشبوهة.. استنفار أمني في مقر الرئيس الإسرائيلي",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902527-%D8%A7%D9%86%D8%AA%D9%83%D8%A7%D8%B3%D8%A9-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D9%8A%D9%81%D8%A7%D8%AC%D8%A6-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%8A%D9%86-%D8%A8%D8%AA%D8%B9%D9%87%D8%AF-%D8%AC%D8%AF%D9%8A%D8%AF",
-      "published": "Wed, 04 Nov 2026 04:35:35 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1902706-%D8%A8%D8%B3%D8%A8%D8%A8-%D9%85%D8%A7%D8%AF%D8%A9-%D9%85%D8%B4%D8%A8%D9%88%D9%87%D8%A9-%D8%A7%D8%B3%D8%AA%D9%86%D9%81%D8%A7%D8%B1-%D8%A3%D9%85%D9%86%D9%8A-%D9%85%D9%82%D8%B1-%D8%A7%D9%84%D8%B1%D8%A6%D9%8A%D8%B3-%D8%A7%D9%84%D8%A5%D8%B3%D8%B1%D8%A7%D8%A6%D9%8A%D9%84%D9%8A",
+      "published": "Wed, 04 Nov 2026 15:46:01 GMT"
     },
     {
-      "headline": "الديمقراطيون ينتزعون السيطرة على مجلس النواب من الجمهوريين",
+      "headline": "أول حاملة طائرات نووية في العالم في طريقها للتفكيك",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902525-%D8%A7%D9%84%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D9%88%D9%86-%D9%8A%D9%86%D8%AA%D8%B2%D8%B9%D9%88%D9%86-%D8%A7%D9%84%D8%B3%D9%8A%D8%B7%D8%B1%D8%A9-%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D9%86%D9%88%D8%A7%D8%A8-%D8%A7%D9%84%D8%AC%D9%85%D9%87%D9%88%D8%B1%D9%8A%D9%8A%D9%86",
-      "published": "Wed, 04 Nov 2026 03:31:08 GMT"
+      "url": "https://www.skynewsarabia.com/world/1902704-%D8%AD%D8%A7%D9%85%D9%84%D8%A9-%D8%B7%D8%A7%D8%A6%D8%B1%D8%A7%D8%AA-%D9%86%D9%88%D9%88%D9%8A%D8%A9-%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85-%D8%B7%D8%B1%D9%8A%D9%82%D9%87%D8%A7-%D9%84%D9%84%D8%AA%D9%81%D9%83%D9%8A%D9%83",
+      "published": "Wed, 04 Nov 2026 15:30:44 GMT"
     },
     {
-      "headline": "ديمقراطية تطيح شقيقة ليندسي غراهام من مجلس الشيوخ",
+      "headline": "بشرتك قد تكشف أمراضا خفية خطيرة في جسمك",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902523-%D8%AF%D9%8A%D9%85%D9%82%D8%B1%D8%A7%D8%B7%D9%8A%D8%A9-%D8%AA%D8%B7%D9%8A%D8%AD-%D8%B4%D9%82%D9%8A%D9%82%D8%A9-%D9%84%D9%8A%D9%86%D8%AF%D8%B3%D9%8A-%D8%BA%D8%B1%D8%A7%D9%87%D8%A7%D9%85-%D9%85%D8%AC%D9%84%D8%B3-%D8%A7%D9%84%D8%B4%D9%8A%D9%88%D8%AE",
-      "published": "Wed, 04 Nov 2026 03:21:58 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1902602-%D8%A8%D8%B4%D8%B1%D8%AA%D9%83-%D8%AA%D9%83%D8%B4%D9%81-%D8%A3%D9%85%D8%B1%D8%A7%D8%B6%D8%A7-%D8%AE%D9%81%D9%8A%D8%A9-%D8%AE%D8%B7%D9%8A%D8%B1%D8%A9-%D8%AC%D8%B3%D9%85%D9%83",
+      "published": "Wed, 04 Nov 2026 14:33:11 GMT"
     },
     {
-      "headline": "مع تحرك الدولار.. هكذا تتأثر أسعار الأدوية في مصر",
+      "headline": "العراق.. تحقيقات في عقود حكومية يشتبه بتمويلها جهات مسلحة",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/middle-east/1902423-%D8%AA%D8%AD%D8%B1%D9%83-%D8%A7%D9%84%D8%AF%D9%88%D9%84%D8%A7%D8%B1-%D8%AA%D8%AA%D8%A3%D8%AB%D8%B1-%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1-%D8%A7%D9%84%D8%A3%D8%AF%D9%88%D9%8A%D8%A9-%D9%85%D8%B5%D8%B1",
-      "published": "Wed, 04 Nov 2026 03:06:52 GMT"
+      "url": "https://www.skynewsarabia.com/middle-east/1902679-%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82-%D8%AA%D8%AD%D9%82%D9%8A%D9%82%D8%A7%D8%AA-%D8%B9%D9%82%D9%88%D8%AF-%D8%AD%D9%83%D9%88%D9%85%D9%8A%D8%A9-%D9%8A%D8%B4%D8%AA%D8%A8%D9%87-%D8%A8%D8%AA%D9%85%D9%88%D9%8A%D9%84%D9%87%D8%A7-%D8%AC%D9%87%D8%A7%D8%AA-%D9%85%D8%B3%D9%84%D8%AD%D8%A9",
+      "published": "Wed, 04 Nov 2026 14:28:55 GMT"
     },
     {
-      "headline": "الملك تشارلز يعلق على \"ماضي العبودية\" البريطاني",
+      "headline": "بسبب التكاليف وتراجع مبيعات الصين.. أرباح \"BMW\" تهبط 11%",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902468-%D8%A7%D9%84%D9%85%D9%84%D9%83-%D8%AA%D8%B4%D8%A7%D8%B1%D9%84%D8%B2-%D9%8A%D8%B9%D9%84%D9%82-%D9%85%D8%A7%D8%B6%D9%8A-%D8%A7%D9%84%D8%B9%D8%A8%D9%88%D8%AF%D9%8A%D8%A9-%D8%A7%D9%84%D8%A8%D8%B1%D9%8A%D8%B7%D8%A7%D9%86%D9%8A",
-      "published": "Wed, 04 Nov 2026 02:50:45 GMT"
+      "url": "https://www.skynewsarabia.com/business/1902697-%D8%A8%D8%B3%D8%A8%D8%A8-%D8%A7%D9%84%D8%AA%D9%83%D8%A7%D9%84%D9%8A%D9%81-%D9%88%D8%AA%D8%B1%D8%A7%D8%AC%D8%B9-%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA-%D8%A7%D9%84%D8%B5%D9%8A%D9%86-%D8%A3%D8%B1%D8%A8%D8%A7%D8%AD-bmw-%D8%AA%D9%87%D8%A8%D8%B7-11",
+      "published": "Wed, 04 Nov 2026 14:19:09 GMT"
     },
     {
-      "headline": "3 رسائل غاضبة من ترامب مع إغلاق مراكز الاقتراع",
+      "headline": "بعد اختراق لوحة في مصر.. كيف يسيطر القراصنة على الشاشات؟",
       "source": "Sky News Arabia",
-      "url": "https://www.skynewsarabia.com/world/1902520-3-%D8%B1%D8%B3%D8%A7%D8%A6%D9%84-%D8%BA%D8%A7%D8%B6%D8%A8%D8%A9-%D8%AA%D8%B1%D8%A7%D9%85%D8%A8-%D8%A5%D8%BA%D9%84%D8%A7%D9%82-%D9%85%D8%B1%D8%A7%D9%83%D8%B2-%D8%A7%D9%84%D8%A7%D9%82%D8%AA%D8%B1%D8%A7%D8%B9",
-      "published": "Wed, 04 Nov 2026 02:15:37 GMT"
+      "url": "https://www.skynewsarabia.com/technology/1902433-%D8%A7%D8%AE%D8%AA%D8%B1%D8%A7%D9%82-%D9%84%D9%88%D8%AD%D8%A9-%D9%85%D8%B5%D8%B1-%D9%8A%D8%B3%D9%8A%D8%B7%D8%B1-%D8%A7%D9%84%D9%82%D8%B1%D8%A7%D8%B5%D9%86%D8%A9-%D8%A7%D9%84%D8%B4%D8%A7%D8%B4%D8%A7%D8%AA",
+      "published": "Wed, 04 Nov 2026 14:14:51 GMT"
     }
   ]
 }
