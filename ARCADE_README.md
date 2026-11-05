@@ -24,3 +24,9 @@
 - **لم يُختبر**: Firebase حقيقي (المتصدرون/القواعد)، ولا اللعبة القديمة داخل العالم في المتصفح (التغيير فيها اختياري بالوسائط؛ حاولت فتحها آلياً ولم أفلح فلم أحسبها اختباراً).
 - محتوى الألغاز/الجمل بـ30 عنصراً للعربية والإنجليزية فقط؛ zh/hi/es/fr/fa ما زالت 5 عناصر (تتكرر).
 - البوابات (17 + إضافية): ALL GATES PASSED.
+
+## V1230.184 — visual redesign
+- Menu restyled after the owner's mock-up: chamfered neon cards per game (`--h` hue), per-game art in `assets/arcade/art-*.webp`, hex buttons, single progress bar with stage ticks, footer strip (`arcFoot`).
+- Home strip card image replaced (`assets/banners/arcade.webp`, six-game composite).
+- Entry splash = owner key-art (`assets/arcade/entry-hero*.webp`); a transparent real button sits over the baked "ادخل" button (stage emulates object-fit:cover); non-Arabic languages get a live label. The baked title/tagline remain Arabic/English art.
+- Gameplay logic, economy and rules untouched.
