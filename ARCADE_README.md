@@ -30,3 +30,11 @@
 - Home strip card image replaced (`assets/banners/arcade.webp`, six-game composite).
 - Entry splash = owner key-art (`assets/arcade/entry-hero*.webp`); a transparent real button sits over the baked "ادخل" button (stage emulates object-fit:cover); non-Arabic languages get a live label. The baked title/tagline remain Arabic/English art.
 - Gameplay logic, economy and rules untouched.
+
+## V1230.185 — 50 levels, guest limit, ZIVO
+- 50 levels per game, 5 stages of 10. Levels 1-10 need no account; at level 10 a guest's run ends with a sign-in button, and 11-50 require login. A signed-in player starts at the start of their highest stage; one heart is refilled at every 10th level.
+- Difficulty: each game's tested 1..10 curve is climbed over levels 1-40; levels 41-50 keep the hardest geometry and shrink every countdown by up to 20% (PRESS in challenges.js). Memory Vault has no countdown: its difficulty is sequence length/speed only.
+- XP: 4/7/11/15/20 per level by stage, +100 for all 50, cap 500/game/day (XP only counts for signed-in players above 10, since guests stop there).
+- ZIVO (first clear only, signed-in): 0.25 (11-30), 0.5 (31-49), 1 (50); client cap 2 ZIVO/game/day; at most 15.5 per game (93 for all six) ever. Type `arcade_level_reward`, claimId `arcade_<game>_<level>`; added to economy.js and firestore.rules (amount + claimId pattern per tier). Amounts are binary-exact because the wallet rule compares with `==`.
+- DEPLOY: firestore.rules changed — publish the rules or ZIVO claims for the new type will be rejected.
+- Not proven: run is client-side, so rules bound but cannot prove a fair run. Rules not executed against the Firestore emulator here.
