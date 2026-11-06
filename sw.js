@@ -7,10 +7,10 @@ const LEGAL_ROUTE=/^\/(?:privacy|terms)(?:\/|$)/i;
 const SHELL=[
   '/',
   '/index.html',
-  '/dist/styles/index.css?v=1230.196',
-  '/dist/styles/core.css?v=1230.196',
-  '/dist/styles/player-hub.css?v=1230.196',
-  '/dist/app.bundle.js?v=1230.196',
+  '/dist/styles/index.css?v=1230.201',
+  '/dist/styles/core.css?v=1230.201',
+  '/dist/styles/player-hub.css?v=1230.201',
+  '/dist/app.bundle.js?v=1230.201',
   '/assets/icons/zivo-192.png',
   '/assets/icons/zivo-512.png',
   '/manifest.webmanifest'
