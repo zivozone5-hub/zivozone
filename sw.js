@@ -3,14 +3,15 @@ const APP_CODE=/\.(?:js|css)(?:\?.*)?$/i;
 const HTML=/\.html(?:\?.*)?$/i;
 const CONTENT=/\/data\/(?:health|stories)\//i;
 const STORY_ROUTE=/^\/stories(?:\/|$)/i;
+const SHARE_ROUTE=/^\/share(?:\/|$)/i;
 const LEGAL_ROUTE=/^\/(?:privacy|terms)(?:\/|$)/i;
 const SHELL=[
   '/',
   '/index.html',
-  '/dist/styles/index.css?v=1230.201',
-  '/dist/styles/core.css?v=1230.201',
-  '/dist/styles/player-hub.css?v=1230.201',
-  '/dist/app.bundle.js?v=1230.201',
+  '/dist/styles/index.css?v=1230.202',
+  '/dist/styles/core.css?v=1230.202',
+  '/dist/styles/player-hub.css?v=1230.202',
+  '/dist/app.bundle.js?v=1230.202',
   '/assets/icons/zivo-192.png',
   '/assets/icons/zivo-512.png',
   '/manifest.webmanifest'
@@ -40,7 +41,7 @@ self.addEventListener('fetch',event=>{
   // URL never changes) — see the Cache-Control note in firebase.json for the matching HTTP-cache fix.
   if(APP_CODE.test(u.pathname)){event.respondWith(cacheFirst(event.request));return}
   if(CONTENT.test(u.pathname)){event.respondWith(staleWhileRevalidate(event.request));return}
-  if(STORY_ROUTE.test(u.pathname)||LEGAL_ROUTE.test(u.pathname)){event.respondWith(networkFirst(event.request));return}
+  if(STORY_ROUTE.test(u.pathname)||SHARE_ROUTE.test(u.pathname)||LEGAL_ROUTE.test(u.pathname)){event.respondWith(networkFirst(event.request));return}
   if(u.pathname==='/stories'||u.pathname==='/health'||u.pathname==='/challenges'||u.pathname.startsWith('/health/')||u.pathname.startsWith('/challenges/')){event.respondWith(fetch(event.request).catch(()=>caches.match('/index.html')));return}
   event.respondWith(cacheFirst(event.request));
 });
