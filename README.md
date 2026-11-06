@@ -6,14 +6,13 @@
 - `core/` — النواة: `modules/` (الوحدات)، `modules/runtime/` (المحرك: اللغات، الألعاب، الواجهة)، `styles/`.
 - `core/modules/audio.js` — نظام الصوت الوحيد (`window.ZIVOZONE_AUDIO`).
 - `core/modules/rooms.js` + `core/styles/rooms.css` — غرفتا القصص والصحة.
-- `data/` — `stories/index.json` + `stories/manuscripts/tale-NN.md` (12 قصة أصلية)، `health/health-doors.json`، `matches/`، `news.json`.
-- `docs/archive/` — كل ما أُزيل من V1218 (لم يُحذف شيء) و`docs/release-history/` — ملاحظات الإصدارات القديمة.
+- `data/` — `stories/index.json` + `stories/manuscripts/tale-NN.md` (12 قصة أصلية)، `health/health-doors.json`، `academy/`، `mind-battle/`، `time/`.
+- الأرشيف القديم (docs/ والملاحظات القديمة والدوال) أُخرج من المشروع إلى حزمة احتياطية منفصلة في V1230.188.
 
 ## أوامر الصيانة
 ```bash
 python3 scripts/release.py 1222.0        # يوحّد رقم الإصدار ويعيد بناء قائمة كاش الـ service worker
 python3 scripts/build_content_index.py   # يعيد بناء data/stories/index.json من manuscripts/
-python3 scripts/clean_health_doors.py    # يولّد health-doors.json من الأصل المؤرشف
 python3 scripts/verify_site.py           # البوابة الثابتة الوحيدة (يجب أن تنجح قبل أي نشر)
 python3 scripts/browser_smoke.py         # اختبار متصفح حقيقي (Playwright + Chromium)
 ```
@@ -21,7 +20,7 @@ python3 scripts/browser_smoke.py         # اختبار متصفح حقيقي (P
 
 ## مشاكل معروفة (مهمة) — محدّثة مع V1230.31
 1. **الاقتصاد (ZIVO) — لا يزال "اقتصاد تجريبي" وليس عملة حقيقية.** مكافأة الاختبار الرئيسي (quiz) محمية بشرط `perfectClaim()` في `firestore.rules` (يتطلب شكل بيانات متسق: `amount/total/correct == 10`، `policy`، `source: 'game-platform'`، `validatedSessionId`)، و**لا يمكن لأي مستخدم المطالبة بنفس المكافأة مرتين** بفضل `claimId` الحتمي داخل معاملة Firestore واحدة. لكن **لا يوجد تحقق من طرف خادم حقيقي** (لا Cloud Function) على خطة Spark المجانية — فكل حقول `validated`/`validatedSessionId` يكتبها المتصفح نفسه عبر `economy.js`. مستخدم متمرّس بإمكانه كتابة مستند مطابق للشكل المطلوب مباشرة عبر Firestore SDK من console المتصفح دون أن يلعب فعليًا. هذا قرار واعٍ وموثّق (البقاء على الخطة المجانية) وليس خطأً يحتاج إصلاحًا عاجلًا — لكن يجب معرفته قبل الإعلان عن الموقع للجمهور، خصوصًا لو أصبح لـ ZIVO/XP قيمة حقيقية قابلة للاستبدال مستقبلًا. التفاصيل الكاملة في `ZIVOZONE_SECURITY_AUDIT.md`.
-2. **القصص**: 12 قصة أصلية فقط (~550–630 كلمة). القصص الـ56 القديمة (متشابهة بنسبة ~90%) في `docs/archive/templated-stories-v1218/`. أضف قصة بوضع `tale-NN.md` في `manuscripts/` بنفس تنسيق الترويسة ثم شغّل `build_content_index.py`؛ البوابة تفشل إن تكررت فقرة بين قصتين.
+2. **القصص**: 12 قصة أصلية فقط (~550–630 كلمة). القصص الـ56 القديمة (متشابهة بنسبة ~90%) في الحزمة الاحتياطية (أُخرجت من المشروع). أضف قصة بوضع `tale-NN.md` في `manuscripts/` بنفس تنسيق الترويسة ثم شغّل `build_content_index.py`؛ البوابة تفشل إن تكررت فقرة بين قصتين.
 3. **اللغات**: الواجهة بـ7 لغات (عربي/إنجليزي/صيني/هندي/إسباني/فرنسي/فارسي). محتوى القصص (`data/stories/content/tale-NN.<lang>.json`) ومحتوى الصحة (`data/health/health-doors.<lang>.json`) مترجمان بالكامل للسبع لغات منذ V1230.20 (مع hreflang وروابط لكل لغة). ما زال متبقٍّ: نصوص "شكلية" داخل `rooms.js` نفسه (تسميات الأبواب، العناوين الفرعية، التنبيهات) ما زالت عربية ثابتة بدل المرور بنظام `t()` — تجميلي فقط، لا يكسر الوظيفة. صفحتا الخصوصية والشروط مترجمتان الآن للسبع لغات كاملة (V1230.31). كذلك ~10 مفاتيح فرنسية و7 فارسية في واجهة الألعاب ما زالت نسخة طبق الأصل عن الإنجليزية/العربية (قيد التتبع، غير حاجبة للنشر).
 4. لم يُختبر Firebase Emulator ولا نشر `firestore.rules` فعليًا على مشروع Firebase حقيقي من هذه البيئة — هذا يتطلب `firebase login` التفاعلي الذي لا يمكن تنفيذه من هنا (راجع قسم "خطوات النشر الفعلي" أدناه).
 
@@ -55,3 +54,6 @@ Firebase (تسجيل دخول تفاعلي عبر المتصفح) وDNS الدو
    المستخدم (consent banner) — تأكد فقط أن خاصية GA4 بهذا المعرف ما زالت نشطة بحسابك على Google Analytics.
 
 بعد هذه الخطوات الموقع يكون منشورًا فعليًا ويمكن مشاركته كنسخة تجريبية عامة. أي تحديث لاحق للكود: كرّر خطوة 4 فقط.
+
+---
+ZIVOZONE — مع تحيات الكابتن رائف البطوش / With best regards, Captain Raef Al-Batoush.

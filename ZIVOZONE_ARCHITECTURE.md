@@ -4,7 +4,7 @@
 
 ```
 Browser
-  ├─ dist/app.bundle.js (one file, 48 modules concatenated — see V1229_PHASE1_NOTES.md 1229.4)
+  ├─ dist/app.bundle.js (one file, 48 modules concatenated 1229.4)
   │    ├─ Static content data: question-bank.js (questions, in-bundle, zero network cost per question)
   │    ├─ core/state.js: cache/pub-sub/write-behind-queue layer — BUILT, EXPORTED, UNUSED (see below)
   │    └─ Feature modules (economy, challenges, chat, admin, ...): each talks to Firestore directly

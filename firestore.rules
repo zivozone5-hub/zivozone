@@ -748,8 +748,7 @@ service cloud.firestore {
        with a check that the claim was written by the Cloud Function specifically (which uses the
        Admin SDK and so is never actually evaluated against these rules at all — Admin SDK writes
        bypass firestore.rules entirely). The real tightening is therefore not a rule change here, but
-       a CLIENT change: once functions/index.js is deployed and server-verify.js's
-       CLOUD_FUNCTIONS_ENABLED flag is on and proven reliable, economy.js's own client-side
+       a CLIENT change: if a Cloud Function (Blaze plan) is ever added and proven reliable, economy.js's own client-side
        'zivozone-result' listener (onChallenge/rewardPerfect in core/modules/economy.js) can be
        retired, leaving the Cloud Function as the ONLY path that can ever write a challenge_reward
        claim — at which point perfectClaim()'s whole client-attested-shape check becomes moot and

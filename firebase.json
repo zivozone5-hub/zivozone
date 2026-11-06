@@ -12,8 +12,6 @@
       "**/node_modules/**",
       "scripts/**",
       ".github/**",
-      "docs/**",
-      "functions/**",
       "core/**",
       "*.bat",
       "*.cmd",
@@ -22,9 +20,7 @@
       "*.sh",
       "*.com",
       "**/*.md",
-      "QUESTION_BANK_MANIFEST.json",
-      "data/news-sources.json",
-      "V1228_AUDIT.json"
+      "QUESTION_BANK_MANIFEST.json"
     ],
     "headers": [
       {
@@ -80,24 +76,6 @@
           {
             "key": "Cache-Control",
             "value": "no-cache, max-age=0, must-revalidate"
-          }
-        ]
-      },
-      {
-        "source": "/data/news.json",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache, no-store, max-age=0, must-revalidate"
-          }
-        ]
-      },
-      {
-        "source": "/data/matches/**",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache, no-store, max-age=0, must-revalidate"
           }
         ]
       },

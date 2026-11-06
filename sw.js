@@ -1,18 +1,16 @@
 const CACHE='zivozone-shell-v1230';
 const APP_CODE=/\.(?:js|css)(?:\?.*)?$/i;
 const HTML=/\.html(?:\?.*)?$/i;
-const LIVE=/\/data\/(?:matches\/|news\.json)/i;
 const CONTENT=/\/data\/(?:health|stories)\//i;
 const STORY_ROUTE=/^\/stories(?:\/|$)/i;
 const LEGAL_ROUTE=/^\/(?:privacy|terms)(?:\/|$)/i;
 const SHELL=[
   '/',
   '/index.html',
-  '/dist/styles/index.css?v=1230.185',
-  '/dist/styles/core.css?v=1230.185',
-  '/dist/styles/player-hub.css?v=1230.185',
-  '/zivo-ai.js?v=1230.185',
-  '/dist/app.bundle.js?v=1230.185',
+  '/dist/styles/index.css?v=1230.196',
+  '/dist/styles/core.css?v=1230.196',
+  '/dist/styles/player-hub.css?v=1230.196',
+  '/dist/app.bundle.js?v=1230.196',
   '/assets/icons/zivo-192.png',
   '/assets/icons/zivo-512.png',
   '/manifest.webmanifest'
@@ -41,7 +39,6 @@ self.addEventListener('fetch',event=>{
   // same version. cacheFirst is safe here for the same reason index.html itself CAN'T use it (its own
   // URL never changes) — see the Cache-Control note in firebase.json for the matching HTTP-cache fix.
   if(APP_CODE.test(u.pathname)){event.respondWith(cacheFirst(event.request));return}
-  if(LIVE.test(u.pathname)){event.respondWith(networkFirst(event.request));return}
   if(CONTENT.test(u.pathname)){event.respondWith(staleWhileRevalidate(event.request));return}
   if(STORY_ROUTE.test(u.pathname)||LEGAL_ROUTE.test(u.pathname)){event.respondWith(networkFirst(event.request));return}
   if(u.pathname==='/stories'||u.pathname==='/health'||u.pathname==='/challenges'||u.pathname.startsWith('/health/')||u.pathname.startsWith('/challenges/')){event.respondWith(fetch(event.request).catch(()=>caches.match('/index.html')));return}
