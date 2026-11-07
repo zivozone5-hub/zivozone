@@ -64,3 +64,8 @@ Lazy room opened by `[data-positions]` (home button next to "اكتشف مركز
 - اختبار: `scripts/fitness_e2e_test.py`.
 المحتوى تثقيفي وليس نصيحة طبية.
 مع تحيات الكابتن رائف البطوش
+
+## V1230.204
+- بطاقات الميزات الخمس `.zivo-banner` بحجم موحّد (104px) وأيقونات SVG؛ المسابقة تنتهي 2026-11-25؛ بوابة التصفح `ZIVOZONE_REQUIRE_BROWSE` (4 مواضيع مجانية ثم نافذة «التسجيل مجاني») للياقة والمراكز؛ `zivo-fitness-active` مسجّلة في نظام الرجوع؛ وسم `google-adsense-account`؛ لوحة الأدمن: «الاقتصاد» و«أقسام الموقع».
+- اختبارات: `scripts/back_nav_test.py`, `scripts/fitness_e2e_test.py`.
+مع تحيات الكابتن رائف البطوش

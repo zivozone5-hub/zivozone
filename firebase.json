@@ -111,7 +111,7 @@
         "headers": [
           {
             "key": "Cache-Control",
-            "value": "public,max-age=86400,must-revalidate"
+            "value": "public,max-age=604800,must-revalidate"
           }
         ]
       },
@@ -158,6 +158,58 @@
       {
         "source": "/d/**",
         "destination": "/index.html"
+      }
+    ],
+    "redirects": [
+      {
+        "source": "/zh",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/zh/**",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/hi",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/hi/**",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/es",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/es/**",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/fr",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/fr/**",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/fa",
+        "destination": "/en/",
+        "type": 301
+      },
+      {
+        "source": "/fa/**",
+        "destination": "/en/",
+        "type": 301
       }
     ]
   },

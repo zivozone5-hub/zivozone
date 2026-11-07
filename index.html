@@ -20,6 +20,7 @@
      page on the site (stories, academy, rooms — everything that loads dist/app.bundle.js, i.e.
      everywhere) behaves the same way as this literal tag, without needing this exact tag duplicated by
      hand across 100+ individually-authored HTML files. -->
+<meta name="google-adsense-account" content="ca-pub-3509511160414409">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3509511160414409" crossorigin="anonymous"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -29,11 +30,6 @@
 <link rel="canonical" href="https://zivozone.com/">
 <link rel="alternate" hreflang="ar" href="https://zivozone.com/">
 <link rel="alternate" hreflang="en" href="https://zivozone.com/en/">
-<link rel="alternate" hreflang="zh" href="https://zivozone.com/zh/">
-<link rel="alternate" hreflang="hi" href="https://zivozone.com/hi/">
-<link rel="alternate" hreflang="es" href="https://zivozone.com/es/">
-<link rel="alternate" hreflang="fr" href="https://zivozone.com/fr/">
-<link rel="alternate" hreflang="fa" href="https://zivozone.com/fa/">
 <link rel="alternate" hreflang="x-default" href="https://zivozone.com/">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="website">
@@ -71,7 +67,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.203">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.208">
 
 
 
@@ -95,8 +91,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.203">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.203">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.208">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.208">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -164,11 +160,6 @@
     <select id="language-select-nav" class="nav-language-select" aria-label="Language">
       <option value="ar">العربية</option>
       <option value="en">English</option>
-      <option value="zh">中文</option>
-      <option value="hi">हिन्दी</option>
-      <option value="es">Español</option>
-      <option value="fr">Français</option>
-      <option value="fa">فارسی</option>
     </select>
   </nav>
   <div class="top-actions">
@@ -178,11 +169,6 @@
     <select id="language-select" aria-label="Language">
       <option value="ar">العربية</option>
       <option value="en">English</option>
-      <option value="zh">中文</option>
-      <option value="hi">हिन्दी</option>
-      <option value="es">Español</option>
-      <option value="fr">Français</option>
-      <option value="fa">فارسی</option>
     </select>
     <button id="pwa-install-btn" class="btn btn-ghost" type="button" data-i18n="installApp" data-i18n-aria-label="installAppAria" hidden>⬇️ ثبّت التطبيق</button>
     <!-- V1230.116 — professional top-bar identity for a logged-in player: avatar + "Hi, {name} ✨"
@@ -219,11 +205,6 @@
       <select id="zivo-settings-lang" aria-label="Language">
         <option value="ar">العربية</option>
         <option value="en">English</option>
-        <option value="zh">中文</option>
-        <option value="hi">हिन्दी</option>
-        <option value="es">Español</option>
-        <option value="fr">Français</option>
-        <option value="fa">فارسی</option>
       </select>
     </div>
     <button type="button" id="zivo-settings-audio" class="btn btn-ghost zsp-toggle-btn"><span id="zivo-settings-audio-icon">🔊</span> <span data-i18n="settingsSoundLabel">الصوت</span></button>
@@ -286,17 +267,17 @@
 <section id="identity" class="section zivo-quiz-promo" aria-label="اختبارات الشخصية والمركز" data-i18n-aria-label="identityAria">
   <div class="zivo-quiz-promo-head"><span class="eyebrow" data-i18n="identityEyebrow">من أنا؟</span><h2 data-i18n="identityTitle">اكتشف شخصيتك داخل ZIVOZONE</h2></div>
   <div class="zivo-quiz-promo-actions">
-    <button type="button" class="zivo-feature-btn" data-action="open-identity"><span class="zivo-feature-btn-icon">🧠</span><span class="zivo-feature-btn-label" data-i18n="identityStart">اكتشف شخصيتك</span></button>
-    <button type="button" class="zivo-feature-btn" data-positions><span class="zivo-feature-btn-icon">🏟️</span><span class="zivo-feature-btn-label" data-i18n="posWorldStart">اعرف مركزك في ملعب كرة القدم</span></button>
-    <button type="button" class="zivo-feature-btn" data-fitness><span class="zivo-feature-btn-icon">💪</span><span class="zivo-feature-btn-label" data-i18n="fitStart">اللياقة البدنية: اعرف جسمك واختبر نفسك</span></button>
-    <button type="button" class="zivo-feature-btn" data-action="open-football-position"><span class="zivo-feature-btn-icon">⚽</span><span class="zivo-feature-btn-label" data-i18n="footballPosStart">اكتشف مركزك</span></button>
+    <button type="button" class="zivo-banner zb-violet" data-action="open-identity"><span class="zb-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 8c-4 0-7 3-7 7-3 1-5 4-5 7 0 2 1 4 2 5-1 1-2 3-2 5 0 4 3 7 7 7 1 3 4 5 7 5V8z"/><path d="M28 8c4 0 7 3 7 7 3 1 5 4 5 7 0 2-1 4-2 5 1 1 2 3 2 5 0 4-3 7-7 7-1 3-4 5-7 5V8z"/><path d="M14 22h6M28 26h6M16 31h4M28 17h5"/></svg></span><span class="zb-txt"><b data-i18n="identityStart">اكتشف شخصيتك</b><small data-i18n="bnIdentitySub">معرفة أعمق لرحلة أذكى في عالم ZIVOZONE</small></span><span class="zb-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></button>
+    <button type="button" class="zivo-banner zb-purple" data-positions><span class="zb-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="9" width="38" height="30" rx="3"/><path d="M24 9v30"/><circle cx="24" cy="24" r="6"/><path d="M5 18h6v12H5M43 18h-6v12h6"/></svg></span><span class="zb-txt"><b data-i18n="posWorldStart">اعرف مركزك في ملعب كرة القدم</b><small data-i18n="bnPosSub">افهم واجبات كل مركز والتشكيلات بلغة بسيطة</small></span><span class="zb-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></button>
+    <button type="button" class="zivo-banner zb-blue" data-fitness><span class="zb-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 26h9l4-10 6 20 5-14 3 4h13"/><circle cx="37" cy="10" r="4"/><path d="M32 18l5-3 5 5"/></svg></span><span class="zb-txt"><b data-i18n="fitTitle">اللياقة البدنية</b><small data-i18n="bnFitSub">افهم جسمك وقيّم لياقتك باختبارات علمية بسيطة</small></span><span class="zb-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></button>
+    <button type="button" class="zivo-banner zb-green" data-action="open-football-position"><span class="zb-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="10"/><circle cx="24" cy="24" r="3.5"/><path d="M24 3v8M24 37v8M3 24h8M37 24h8"/></svg></span><span class="zb-txt"><b data-i18n="footballPosStart">اكتشف مركزك</b><small data-i18n="bnFootSub">اكتشف مركزك في كرة القدم بدقة واحتراف</small></span><span class="zb-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></button>
   </div>
 </section>
 
 <section class="section zivo-contest-section" aria-label="مسابقة ZIVOZONE" data-i18n-aria-label="contestSectionAria" id="zivo-contest">
   <button type="button" class="fullpage-back-btn" data-action="close-fullpage" data-i18n="backToHome">⟵ العودة للرئيسية</button>
   <div class="contest-gate-wrap">
-    <button type="button" class="zivo-feature-btn" id="zivo-contest-gate-btn" data-action="scroll-contest" data-i18n-aria-label="contestGateAria" aria-label="ادخل صفحة مسابقة ZIVOZONE وشارك"><span class="zivo-feature-btn-icon">🏆</span><span class="zivo-feature-btn-label" data-i18n="contestGateCta">ادخل وشارك</span></button>
+    <button type="button" class="zivo-banner zb-gold" id="zivo-contest-gate-btn" data-action="scroll-contest" data-i18n-aria-label="contestGateAria" aria-label="ادخل صفحة مسابقة ZIVOZONE وشارك"><span class="zb-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M14 6h20v10c0 6-4 11-10 11S14 22 14 16z"/><path d="M14 10H7c0 7 3 10 8 11M34 10h7c0 7-3 10-8 11"/><path d="M24 27v8M16 42h16M18 35h12v7H18z"/></svg></span><span class="zb-txt"><b data-i18n="contestGateCta">ادخل وشارك</b><small data-i18n="bnContestSub">تنافس مع الأصدقاء واربح الجوائز</small></span><span class="zb-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></button>
   </div>
   <div class="zivo-contest-banner">
     <div class="zivo-contest-glow" aria-hidden="true"></div>
@@ -335,7 +316,7 @@
 <section class="zivo-signature-zone" id="zivo-arcade-strip" aria-label="ساحة الألعاب" data-i18n-aria-label="arcTitle">
   <div class="zivo-signature-grid arcade-one">
     <article class="zivo-signature-card arcade zbanner" data-arcade tabindex="0" role="button" aria-label="دخول ساحة الألعاب" data-i18n-aria-label="arcCardAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/arcade.webp" alt="" width="800" height="297" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>ZIVO ARCADE</span><h3>🕹️ <span data-i18n="arcTitle">ساحة الألعاب</span></h3><p data-i18n="arcCardDesc">6 ألعاب مهارة احترافية، 30 مستوى متدرّجاً لكل لعبة، ومكافآت XP.</p><b><span data-i18n="arcCardCta">ادخل الساحة</span> ↗</b></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/arcade.webp" alt="" width="800" height="297" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>ZIVO ARCADE</span><h3>🕹️ <span data-i18n="arcTitle">ساحة الألعاب</span></h3><p data-i18n="arcCardDesc">6 ألعاب مهارة احترافية، 30 مستوى متدرّجاً لكل لعبة، ومكافآت XP.</p><b><span data-i18n="arcCardCta">ادخل الساحة</span> ↗</b></div>
     </article>
   </div>
 </section>
@@ -344,31 +325,31 @@
   <div class="zivo-signature-head"><div><span class="eyebrow">ZIVOZONE SIGNATURE</span><h2 data-i18n="sigTitle">تجارب ZIVOZONE الرئيسية</h2><p data-i18n="sigDesc">قسم واحد يجمع أبرز تجارب ZIVOZONE، كل غرفة بشخصيتها الخاصة.</p></div><span class="zivo-signature-live">● <span data-i18n="sigLive">دخول مباشر</span></span></div>
   <div class="zivo-signature-grid">
     <article class="zivo-signature-card flagship pitch-arena zbanner" data-pitch-arena tabindex="0" role="button" aria-label="دخول الملعب الحي" data-i18n-aria-label="sigPitchArenaAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/pitch-arena.webp" alt="" width="1220" height="314" loading="eager" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigPitchArenaKicker">00 // اللعبة الرئيسية</span><h3>⚽ <span data-i18n="sigPitchArenaTitle">الملعب الحي</span></h3><p data-i18n="sigPitchArenaDesc">لعبة أركيد فيزيائية: اسحب، صوّب، واجعل الكرة ترتد على الملعب لتسجّل بالمرمى. فصلان متاحان الآن بـ18 مستوى.</p><div class="zivo-flagship-meta" data-i18n="sigPitchArenaMeta">🏟️ فصلان • 🎯 18 مستوى</div><b class="zivo-flagship-play"><span data-i18n="sigPitchArenaCta">دخول الملعب الحي</span> ↗</b></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/pitch-arena.webp" alt="" width="1220" height="314" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigPitchArenaKicker">00 // اللعبة الرئيسية</span><h3>⚽ <span data-i18n="sigPitchArenaTitle">الملعب الحي</span></h3><p data-i18n="sigPitchArenaDesc">لعبة أركيد فيزيائية: اسحب، صوّب، واجعل الكرة ترتد على الملعب لتسجّل بالمرمى. فصلان متاحان الآن بـ18 مستوى.</p><div class="zivo-flagship-meta" data-i18n="sigPitchArenaMeta">🏟️ فصلان • 🎯 18 مستوى</div><b class="zivo-flagship-play"><span data-i18n="sigPitchArenaCta">دخول الملعب الحي</span> ↗</b></div>
     </article>
     <article class="zivo-signature-card mindbattle zbanner" data-mind-battle tabindex="0" role="button" aria-label="دخول معركة العقول" data-i18n-aria-label="mbCardAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/mind-battle.webp" alt="" width="800" height="297" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="mbRoomBadge">معركة العقول</span><h3>🧠 <span data-i18n="mbTitle">معركة العقول</span></h3><p data-i18n="mbCardDesc">اكتب إجابة صحيحة نادرة تحصل على نقاط أعلى. 7 أسئلة بـ10 ثوانٍ لكل سؤال.</p><b><span data-i18n="mbCardCta">ادخل المعركة</span> ↗</b></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/mind-battle.webp" alt="" width="800" height="297" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="mbRoomBadge">معركة العقول</span><h3>🧠 <span data-i18n="mbTitle">معركة العقول</span></h3><p data-i18n="mbCardDesc">اكتب إجابة صحيحة نادرة تحصل على نقاط أعلى. 7 أسئلة بـ10 ثوانٍ لكل سؤال.</p><b><span data-i18n="mbCardCta">ادخل المعركة</span> ↗</b></div>
     </article>
     <article class="zivo-signature-card dark zbanner" data-horror-room tabindex="0" role="button" aria-label="دخول الغرفة المظلمة" data-i18n-aria-label="sigDarkAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/dark-room.webp" alt="" width="604" height="224" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 <span data-i18n="sigDarkTitle">الغرفة المظلمة</span></h3><p data-i18n="sigDarkDesc">تجربة سينمائية كاملة الشاشة. اضغط في أي مكان للدخول مباشرة.</p><b><span data-i18n="sigDarkCta">دخول الغرفة</span> ↗</b><a href="/rooms/dark-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/dark-room.webp" alt="" width="604" height="224" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>01 // PSYCHOLOGICAL EXPERIENCE</span><h3>🌑 <span data-i18n="sigDarkTitle">الغرفة المظلمة</span></h3><p data-i18n="sigDarkDesc">تجربة سينمائية كاملة الشاشة. اضغط في أي مكان للدخول مباشرة.</p><b><span data-i18n="sigDarkCta">دخول الغرفة</span> ↗</b><a href="/rooms/dark-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
     <article class="zivo-signature-card puzzle-room zbanner" data-puzzle-room tabindex="0" role="button" aria-label="دخول غرفة الألغاز" data-i18n-aria-label="sigPuzzleAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/puzzle-room.webp" alt="" width="603" height="224" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>02 // PUZZLE EXPERIENCE</span><h3>🧩 <span data-i18n="sigPuzzleTitle">غرفة الألغاز</span></h3><p data-i18n="sigPuzzleDesc">غرفة متسلسلة تجمع الذاكرة والمنطق والمتاهة والشيفرة والأدلة والخزنة النهائية.</p><b><span data-i18n="sigPuzzleCta">دخول غرفة الألغاز</span> ↗</b><a href="/rooms/puzzle-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/puzzle-room.webp" alt="" width="603" height="224" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>02 // PUZZLE EXPERIENCE</span><h3>🧩 <span data-i18n="sigPuzzleTitle">غرفة الألغاز</span></h3><p data-i18n="sigPuzzleDesc">غرفة متسلسلة تجمع الذاكرة والمنطق والمتاهة والشيفرة والأدلة والخزنة النهائية.</p><b><span data-i18n="sigPuzzleCta">دخول غرفة الألغاز</span> ↗</b><a href="/rooms/puzzle-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
-    <article class="zivo-signature-card room-card-story zbanner" data-zivo-story-room tabindex="0" role="button" aria-label="دخول غرفة القصص" data-i18n-aria-label="sigStoryAria"><div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/story-room.webp" alt="" width="604" height="218" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>03 // CINEMATIC STORIES</span><h3>📖 <span data-i18n="sigStoryTitle">غرفة القصص</span></h3><p data-i18n="sigStoryDesc">قصص أصلية متنوعة: رعب وغموض وبوليسي وخيال علمي وألغاز. اختر الحكاية وادخل عالمها.</p><b><span data-i18n="sigStoryCta">دخول غرفة القصص</span> ↗</b><a href="/stories" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div></article>
+    <article class="zivo-signature-card room-card-story zbanner" data-zivo-story-room tabindex="0" role="button" aria-label="دخول غرفة القصص" data-i18n-aria-label="sigStoryAria"><div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/story-room.webp" alt="" width="604" height="218" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>03 // CINEMATIC STORIES</span><h3>📖 <span data-i18n="sigStoryTitle">غرفة القصص</span></h3><p data-i18n="sigStoryDesc">قصص أصلية متنوعة: رعب وغموض وبوليسي وخيال علمي وألغاز. اختر الحكاية وادخل عالمها.</p><b><span data-i18n="sigStoryCta">دخول غرفة القصص</span> ↗</b><a href="/stories" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div></article>
     <a class="zivo-signature-card thinking zbanner" href="#challenges-page" role="button" aria-label="دخول غرفة التفكير" data-i18n-aria-label="sigThinkAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/thinking-room.webp" alt="" width="603" height="218" loading="lazy" decoding="async"></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/thinking-room.webp" alt="" width="603" height="218" loading="lazy" decoding="async"></div>
       <div class="zivo-signature-copy"><h3 data-i18n="sigThinkTitle">غرفة التفكير</h3><p data-i18n="sigThinkDesc">حل التحديات والمنطق بذكاء.</p></div>
     </a>
     <article class="zivo-signature-card beauty zbanner" data-beauty-room tabindex="0" role="button" aria-label="دخول غرفة الجمال" data-i18n-aria-label="sigBeautyAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/beauty-room.webp" alt="" width="604" height="216" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>05 // BEAUTY EXPERIENCE</span><h3>✦ <span data-i18n="sigBeautyTitle">غرفة الجمال</span></h3><p data-i18n="sigBeautyDesc">عناية راقية بالبشرة والجسد والشعر، وصفات بسيطة، وعادات يومية وإطلالات إكسسوارات.</p><b><span data-i18n="sigBeautyCta">دخول غرفة الجمال</span> ↗</b><a href="/rooms/beauty-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/beauty-room.webp" alt="" width="604" height="216" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>05 // BEAUTY EXPERIENCE</span><h3>✦ <span data-i18n="sigBeautyTitle">غرفة الجمال</span></h3><p data-i18n="sigBeautyDesc">عناية راقية بالبشرة والجسد والشعر، وصفات بسيطة، وعادات يومية وإطلالات إكسسوارات.</p><b><span data-i18n="sigBeautyCta">دخول غرفة الجمال</span> ↗</b><a href="/rooms/beauty-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
-    <article class="zivo-signature-card room-card-health zbanner" data-zivo-health-room tabindex="0" role="button" aria-label="دخول غرفة صحتك بالدنيا" data-i18n-aria-label="sigHealthAria"><div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/health-room.webp" alt="" width="603" height="216" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>04 // HEALTH EXPERIENCE</span><h3>❤ <span data-i18n="sigHealthTitle">صحتك بالدنيا</span></h3><p data-i18n="sigHealthDesc">أبواب مستقلة للصحة والرياضة والطعام والنوم والوزن والنفسية وغيرها.</p><b><span data-i18n="sigHealthCta">دخول غرفة الصحة</span> ↗</b><a href="/rooms/health-world" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div></article>
+    <article class="zivo-signature-card room-card-health zbanner" data-zivo-health-room tabindex="0" role="button" aria-label="دخول غرفة صحتك بالدنيا" data-i18n-aria-label="sigHealthAria"><div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/health-room.webp" alt="" width="603" height="216" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>04 // HEALTH EXPERIENCE</span><h3>❤ <span data-i18n="sigHealthTitle">صحتك بالدنيا</span></h3><p data-i18n="sigHealthDesc">أبواب مستقلة للصحة والرياضة والطعام والنوم والوزن والنفسية وغيرها.</p><b><span data-i18n="sigHealthCta">دخول غرفة الصحة</span> ↗</b><a href="/rooms/health-world" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div></article>
     <article class="zivo-signature-card time zbanner" data-zivo-room="time" tabindex="0" role="button" aria-label="دخول غرفة ما وراء الزمن" data-i18n-aria-label="sigTimeAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/beyond-time.webp" alt="" width="604" height="228" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigTimeKicker">08 // تجربة زمنية</span><h3>🕰 <span data-i18n="sigTimeTitle">ما وراء الزمن</span></h3><p data-i18n="sigTimeDesc">من أسرار الماضي إلى تحولات الحاضر — أدلة موثقة وأسئلة "الحقيقة أم الوهم؟" تكشف الفرق بين ما نعرفه فعلًا وما نظنه.</p><b><span data-i18n="sigTimeCta">دخول الغرفة</span> ↗</b></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/beyond-time.webp" alt="" width="604" height="228" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigTimeKicker">08 // تجربة زمنية</span><h3>🕰 <span data-i18n="sigTimeTitle">ما وراء الزمن</span></h3><p data-i18n="sigTimeDesc">من أسرار الماضي إلى تحولات الحاضر — أدلة موثقة وأسئلة "الحقيقة أم الوهم؟" تكشف الفرق بين ما نعرفه فعلًا وما نظنه.</p><b><span data-i18n="sigTimeCta">دخول الغرفة</span> ↗</b></div>
     </article>
     <article class="zivo-signature-card forensic zbanner" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي" data-i18n-aria-label="sigForensicAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="assets/banners/forensic-lab.webp" alt="" width="603" height="228" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigForensicKicker">06 // تجربة التحقيق</span><h3>🕵️ <span data-i18n="sigForensicTitle">المختبر الجنائي</span></h3><p data-i18n="sigForensicDesc">ادخل مسرح القضية، افحص الأدلة، اربط الزمن والوقائع، وابنِ استنتاجك بنفسك.</p><b><span data-i18n="sigForensicCta">بدء التحقيق</span> ↗</b><a href="/rooms/forensic-lab" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/forensic-lab.webp" alt="" width="603" height="228" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigForensicKicker">06 // تجربة التحقيق</span><h3>🕵️ <span data-i18n="sigForensicTitle">المختبر الجنائي</span></h3><p data-i18n="sigForensicDesc">ادخل مسرح القضية، افحص الأدلة، اربط الزمن والوقائع، وابنِ استنتاجك بنفسك.</p><b><span data-i18n="sigForensicCta">بدء التحقيق</span> ↗</b><a href="/rooms/forensic-lab" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
     <article class="zivo-signature-card football zfootball" data-football-room tabindex="0" role="button" aria-label="دخول ملعب القرار" data-i18n-aria-label="sigFootballAria">
       <div class="zivo-signature-media"><img src="assets/rooms/football-decision.svg" alt="" loading="lazy" decoding="async"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigFootballStatus">50 مستوى</span></div>
@@ -455,7 +436,9 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
   setTimeout(release,1800);
 })();
 </script>
-<script src="dist/app.bundle.js?v=1230.203"></script>
+<script>/* V1230.206 - room banners below the first screen load only when scrolled near (saves ~300KB for visitors who do not scroll) */(function(){var im=[].slice.call(document.querySelectorAll('img[data-src]'));function ld(i){var s=i.getAttribute('data-src');if(s){i.src=s;i.removeAttribute('data-src')}}if(!('IntersectionObserver'in window)){im.forEach(ld);return}var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ld(e.target);o.unobserve(e.target)}})},{rootMargin:'250px 0px'});im.forEach(function(i){o.observe(i)})})();</script>
+<script data-bundle-loader>(function(){var V='?v=1230.208',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
+
 
 
 
