@@ -8,9 +8,9 @@ const LEGAL_ROUTE=/^\/(?:privacy|terms)(?:\/|$)/i;
 const SHELL=[
   '/',
   '/index.html',
-  '/dist/styles/index.css?v=1230.213',
-  '/dist/styles/core.css?v=1230.213',
-  '/dist/styles/player-hub.css?v=1230.213',
+  '/dist/styles/index.css?v=1230.214',
+  '/dist/styles/core.css?v=1230.214',
+  '/dist/styles/player-hub.css?v=1230.214',
   '/assets/icons/zivo-192.png',
   '/assets/icons/zivo-512.png',
   '/manifest.webmanifest'
