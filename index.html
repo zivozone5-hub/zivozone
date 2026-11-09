@@ -67,7 +67,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.234">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.235">
 
 
 
@@ -91,8 +91,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.234">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.234">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.235">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.235">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -100,16 +100,6 @@
      case specifically) at the exact moment its room's JS is lazy-loaded — same trigger, same click,
      just CSS alongside it instead of upfront. See room-loader.js's header for the full design. --></head>
 <body>
-<div id="zivo-splash" class="zivo-splash" role="dialog" aria-modal="true" aria-label="ZIVOZONE">
-  <!-- V1230.184 — entry banner = the owner's key-art. The stage is sized like background-size:cover so the real
-       (transparent) enter button always sits exactly over the art's baked "ادخل" button; non-Arabic languages get a live label. -->
-  <div class="zivo-splash-stage">
-    <picture><source media="(max-width:700px)" srcset="/assets/arcade/entry-hero-m.webp"><img class="zivo-splash-art" src="/assets/arcade/entry-hero.webp" alt="" width="1600" height="900" decoding="async" fetchpriority="high"></picture>
-    <h1 class="zivo-sr">ZIVOZONE</h1>
-    <button type="button" class="zivo-splash-enter-btn" data-action="enter-site" data-i18n-aria-label="splashEnterAria" aria-label="ادخل الموقع"><span class="zivo-splash-enter-lbl" data-i18n="splashEnter">ادخل</span></button>
-  </div>
-</div>
-<script>(function(){try{if(sessionStorage.getItem('zivo_splash_seen')==='1'){var s=document.getElementById('zivo-splash');if(s)s.style.display='none'}}catch(e){}})();</script>
 <noscript><div style="padding:24px;text-align:center;color:#fff;background:#05060b">ZIVOZONE يحتاج إلى تفعيل JavaScript. / ZIVOZONE requires JavaScript.</div></noscript>
 <div id="app-loader" class="loader"><div class="loader-logo">Z</div><strong>ZIVOZONE</strong><span data-i18n="loader">جاري تجهيز عالمك...</span></div>
 <!-- V1230.169 — left-sidebar nav + restructured header shell (structure-only phase: see the
@@ -125,23 +115,8 @@
 <nav id="zivo-sidebar" class="zivo-sidebar" aria-label="القائمة الرئيسية" data-i18n-aria-label="sidebarMenuAria">
   <a class="zivo-sidebar-brand" href="/" aria-label="ZIVOZONE"><span class="brand-mark">Z</span><span class="zivo-sidebar-brand-name">ZIVOZONE</span></a>
   <div class="zivo-sidebar-items">
-    <div class="zsb-group" data-i18n="navMain">الرئيسية</div>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="home" data-nav="home"><span class="zsb-icon zsb-emoji" aria-hidden="true">🏠</span><span class="zsb-label" data-i18n="sidebarHome">الرئيسية</span></button>
-    <div class="zsb-group" data-i18n="navGrpFootball">⚽ عالم كرة القدم مع رائف</div>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="football" data-nav="football"><span class="zsb-icon zsb-emoji" aria-hidden="true">⚽</span><span class="zsb-label" data-i18n="navFbHub">مركز كرة القدم (27 موضوعاً)</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="positions"><span class="zsb-icon zsb-emoji" aria-hidden="true">📍</span><span class="zsb-label" data-i18n="posWorldStart">دليل المراكز وتشخيصك</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="fitness"><span class="zsb-icon zsb-emoji" aria-hidden="true">💪</span><span class="zsb-label" data-i18n="fitTitle">اللياقة البدنية</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="fdecision"><span class="zsb-icon zsb-emoji" aria-hidden="true">🎯</span><span class="zsb-label" data-i18n="sigFootballTitle">ملعب القرار</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="farena"><span class="zsb-icon zsb-emoji" aria-hidden="true">🏟️</span><span class="zsb-label" data-i18n="sigPitchArenaTitle">الملعب الحي</span></button>
-    <div class="zsb-group" data-i18n="navGrpZivo">🌐 عالم ZIVOZONE منوع</div>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="zivo" data-nav="zivo"><span class="zsb-icon zsb-emoji" aria-hidden="true">🌐</span><span class="zsb-label" data-i18n="navZvWorld">عالم ZIVOZONE</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="arcade"><span class="zsb-icon zsb-emoji" aria-hidden="true">🕹️</span><span class="zsb-label" data-i18n="arcTitle">ساحة الألعاب</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="challenges"><span class="zsb-icon zsb-emoji" aria-hidden="true">🏆</span><span class="zsb-label" data-i18n="challenges">مركز التحديات</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="rooms"><span class="zsb-icon zsb-emoji" aria-hidden="true">🚪</span><span class="zsb-label" data-i18n="sidebarRooms">الغرف</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="ai"><span class="zsb-icon zsb-emoji" aria-hidden="true">🤖</span><span class="zsb-label" data-i18n="ai">ZIVO AI</span></button>
     <div class="zsb-group" data-i18n="navMine">حسابي ومكافآتي</div>
     <button type="button" class="zivo-sidebar-item" data-sidebar="profile"><span class="zsb-icon" aria-hidden="true"><img class="zsb-img" src="/assets/icons-zivo/premium.webp" alt="" width="40" height="40" decoding="async" loading="lazy"></span><span class="zsb-label" data-i18n="sidebarProfile">الملف الشخصي</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="economy"><span class="zsb-icon" aria-hidden="true"><img class="zivo-coin-inline zsb-coin" src="/assets/brand/zivo-coin-48.png" alt="" width="22" height="22"></span><span class="zsb-label" data-i18n="sidebarEconomy">الاقتصاد</span></button>
     <button type="button" class="zivo-sidebar-item" data-sidebar="rewards"><span class="zsb-icon" aria-hidden="true"><img class="zsb-img" src="/assets/icons-zivo/gift2.webp" alt="" width="40" height="40" decoding="async" loading="lazy"></span><span class="zsb-label" data-i18n="sidebarRewards">المكافآت</span></button>
     <button type="button" class="zivo-sidebar-item" data-sidebar="share" data-share-site><span class="zsb-icon zsb-emoji" aria-hidden="true">📤</span><span class="zsb-label" data-i18n="shareSiteLabel">شارك الموقع</span></button>
     <button type="button" class="zivo-sidebar-item" data-sidebar="settings"><span class="zsb-icon" aria-hidden="true"><img class="zsb-img" src="/assets/icons-zivo/settings.webp" alt="" width="40" height="40" decoding="async" loading="lazy"></span><span class="zsb-label" data-i18n="sidebarSettings">الإعدادات</span></button>
@@ -160,9 +135,6 @@
     <input type="search" id="zivo-header-search-input" class="zivo-header-search-input" data-i18n-placeholder="headerSearchPlaceholder" placeholder="بحث في ZIVOZONE..." aria-label="بحث" data-i18n-aria-label="headerSearchPlaceholder">
   </div>
   <nav class="main-nav" aria-label="main navigation">
-    <a href="#home" data-nav="home" data-i18n="home">الرئيسية</a>
-      <a href="#" data-football-hub data-nav="football" class="nav-football">⚽ <span data-i18n="navFbWorld">عالم الكرة</span></a>
-      <a href="#zivo-world" data-nav="zivo" class="nav-zivo">🌐 <span data-i18n="navZvWorld">عالم ZIVOZONE</span></a>
     <label class="sr-only" for="language-select-nav">Language</label>
     <select id="language-select-nav" class="nav-language-select" aria-label="Language">
       <option value="ar">العربية</option>
@@ -248,17 +220,16 @@
 
 
 
-<section id="home" class="zg section" aria-label="ZIVOZONE">
-  <div class="zg-brand"><h1 class="zg-title">ZIVOZONE</h1><p class="zg-tag" data-i18n="gateTagline">اختر عالمك</p></div>
-  <div class="zg-grid">
-    <button type="button" class="zg-card zg-football" data-football-hub aria-label="عالم كرة القدم مع رائف" data-i18n-aria-label="gateFbTitle">
-      <span class="zg-art" aria-hidden="true"><svg class="zg-art-ball" viewBox="0 0 160 160" aria-hidden="true" focusable="false"><defs><radialGradient id="fhb" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#cdd6e8"/><stop offset="1" stop-color="#6b7694"/></radialGradient></defs><g fill="none" stroke-linecap="round"><ellipse cx="80" cy="80" rx="74" ry="26" transform="rotate(-24 80 80)" stroke="#38bdf8" stroke-width="3" opacity=".85"/><ellipse cx="80" cy="80" rx="70" ry="22" transform="rotate(32 80 80)" stroke="#fbbf24" stroke-width="3" opacity=".9"/></g><circle cx="80" cy="80" r="48" fill="url(#fhb)" stroke="#0b1634" stroke-width="2"/><path d="M80 52l22 16-8 26H66l-8-26z" fill="#0b1634" opacity=".88"/><text x="80" y="95" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="46" fill="#fbbf24" stroke="#7a4a00" stroke-width="1.5">Z</text></svg><svg class="zg-art-pitch" viewBox="0 0 320 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fhg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f9e4f"/><stop offset="1" stop-color="#14632f"/></linearGradient></defs><rect x="2" y="2" width="316" height="196" rx="8" fill="url(#fhg)" stroke="#9af5b8" stroke-opacity=".7" stroke-width="2"/><g fill="none" stroke="#e8fff0" stroke-opacity=".75" stroke-width="1.6"><path d="M160 2v196"/><circle cx="160" cy="100" r="28"/><rect x="2" y="55" width="42" height="90"/><rect x="276" y="55" width="42" height="90"/></g><g stroke="#fde68a" stroke-width="2" fill="none" stroke-dasharray="5 4" stroke-linecap="round"><path d="M70 60Q110 40 135 62"/><path d="M110 150Q150 120 190 135"/><path d="M200 70Q235 45 262 70"/></g><g font-family="Arial" font-size="11" font-weight="800" text-anchor="middle" fill="#fff"><g><circle cx="60" cy="62" r="10" fill="#ef4444"/><text x="60" y="66">9</text></g><g><circle cx="98" cy="148" r="10" fill="#ef4444"/><text x="98" y="152">8</text></g><g><circle cx="140" cy="64" r="10" fill="#ef4444"/><text x="140" y="68">10</text></g><g><circle cx="195" cy="136" r="10" fill="#3b82f6"/><text x="195" y="140">4</text></g><g><circle cx="205" cy="72" r="10" fill="#3b82f6"/><text x="205" y="76">7</text></g><g><circle cx="265" cy="70" r="10" fill="#3b82f6"/><text x="265" y="74">11</text></g><g><circle cx="250" cy="130" r="10" fill="#3b82f6"/><text x="250" y="134">2</text></g></g></svg></span>
-      <span class="zg-copy"><span class="zg-chip" data-i18n="sigFhStatus">من 6 إلى 60 سنة</span><span class="zg-p" data-i18n="gateFbDesc">27 فرعاً لكل عمر.</span><span class="zg-cta"><span data-i18n="gateFbCta">عالم كرة القدم مع رائف</span> <i aria-hidden="true">‹</i></span></span>
-    </button>
-    <button type="button" class="zg-card zg-zivo" data-world="zivo" aria-label="عالم ZIVOZONE منوع" data-i18n-aria-label="gateZvTitle">
-      <span class="zg-art zg-art-zivo" aria-hidden="true"><i>🎮</i><i>🧩</i><i>🏆</i><i>🕯️</i><i>🧠</i><i>📖</i></span>
-      <span class="zg-copy"><span class="zg-chip" data-i18n="gateZvChip">5 أقسام</span><span class="zg-p" data-i18n="gateZvDesc">ألعاب وتحديات وغموض وقصص.</span><span class="zg-cta"><span data-i18n="gateZvCta">عالم ZIVOZONE</span> <i aria-hidden="true">‹</i></span></span>
-    </button>
+<section id="home" class="zivo-landing" aria-label="ZIVOZONE">
+  <!-- V1230.235 — the opening banner IS the home page: the owner's key-art with exactly two doors, one per world. The art's baked "ادخل" button
+       sits under the two real buttons, which are opaque and larger than it, so nothing of it shows. -->
+  <div class="zivo-splash-stage">
+    <picture><source media="(max-width:700px)" srcset="/assets/arcade/entry-hero-m.webp"><img class="zivo-splash-art" src="/assets/arcade/entry-hero.webp" alt="" width="1600" height="900" decoding="async" fetchpriority="high"></picture>
+    <h1 class="zivo-sr">ZIVOZONE</h1>
+    <div class="zsc-row">
+      <button type="button" class="zsc zsc-fb" data-football-hub data-world-enter><span class="zsc-ico" aria-hidden="true">⚽</span><b data-i18n="gateFbCta">عالم كرة القدم مع رائف</b></button>
+      <button type="button" class="zsc zsc-zv" data-world="zivo" data-world-enter><span class="zsc-ico" aria-hidden="true">🌐</span><b data-i18n="gateZvCta">عالم ZIVOZONE</b></button>
+    </div>
   </div>
   <button type="button" hidden data-action="open-football-position" aria-hidden="true" tabindex="-1"></button>
   <button type="button" hidden data-fitness aria-hidden="true" tabindex="-1"></button>
@@ -382,12 +353,6 @@
 <section id="ai" class="section alt"><div class="section-heading"><div><span class="eyebrow" data-i18n="aiEyebrow">ZIVO AI</span><h2 data-i18n="aiTitle">مساعد ZIVO الذكي</h2></div></div><div class="ai-panel"><div id="ai-messages" class="ai-messages"><div class="ai-message bot" data-i18n="aiWelcome">أهلًا بك 🤖 اسألني عن مستواك أو الألعاب أو التحديات أو الرياضة.</div></div><form id="ai-form" class="ai-form"><input id="ai-input" maxlength="1000" required data-i18n-placeholder="aiPlaceholder" placeholder="اكتب سؤالك..."><button class="btn btn-primary" type="submit" data-i18n="send">إرسال</button></form><small class="muted" data-i18n="aiNote">اسأل مساعد ZIVO عن مستواك أو تحدياتك أو الرياضة — حتى 10 رسائل مجانية يوميًا.</small></div></section>
 
 </main>
-<nav class="mobile-nav" aria-label="Mobile navigation">
-  <a href="#home" data-mobile-nav="home" data-nav="home"><img class="mn-img" src="/assets/icons-zivo/home.webp" alt="" width="30" height="30" decoding="async"><span data-i18n="home">الرئيسية</span></a>
-  <a href="#" data-football-hub data-mobile-nav="football" data-nav="football"><span class="mn-emoji" aria-hidden="true">⚽</span><span data-i18n="navFbWorld">عالم الكرة</span></a>
-  <a href="#zivo-world" data-mobile-nav="zivo" data-nav="zivo"><span class="mn-emoji" aria-hidden="true">🌐</span><span data-i18n="navZvWorld">عالم ZIVOZONE</span></a>
-  <button type="button" data-nav-menu data-mobile-nav="menu" aria-label="Menu" data-i18n-aria-label="sidebarMenuAria"><span class="mn-emoji" aria-hidden="true">☰</span><span data-i18n="navMenu">القائمة</span></button>
-</nav>
 </div>
 <footer class="footer"><strong>ZIVOZONE</strong><span id="footer-tagline" data-i18n="footerTagline">Built for the next generation.</span><a class="zivo-footer-link" href="/#zivo-rooms-hub" data-i18n="footerRoomsLinks">استكشف كل الغرف والتحديات</a><a class="zivo-footer-link" href="/rooms/daily-challenge" data-i18n="footerDailyChallenge">تحدي اليوم</a><a class="zivo-footer-link" href="/academy/" data-i18n="footerAcademy">أكاديمية ZIVOZONE</a><a class="zivo-footer-link" href="/about/" data-i18n="footerAbout">من نحن</a><a class="zivo-footer-link" href="/contact/" data-i18n="footerContact">اتصل بنا</a><a class="zivo-footer-link" href="/terms/" data-i18n="footerTerms">الشروط والاستخدام</a><a class="zivo-footer-link" href="/privacy/" data-i18n="footerPrivacy">سياسة الخصوصية</a><button type="button" class="zivo-footer-link" data-share-site data-i18n="shareSiteLabel">شارك الموقع</button><button id="zivo-consent-footer" class="zivo-footer-link" type="button" data-i18n="footerConsent">إعدادات الخصوصية</button><small class="zivo-footer-rights" data-i18n="footerRights">© 2026 ZIVOZONE. جميع الحقوق محفوظة.</small></footer>
 <div id="modal-root" class="modal-root" aria-hidden="true"></div><div id="toast-container" class="toast-container" aria-live="polite"></div>
@@ -426,7 +391,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 })();
 </script>
 <script>/* V1230.206 - room banners below the first screen load only when scrolled near (saves ~300KB for visitors who do not scroll) */(function(){var im=[].slice.call(document.querySelectorAll('img[data-src]'));function ld(i){var s=i.getAttribute('data-src');if(s){i.src=s;i.removeAttribute('data-src')}}if(!('IntersectionObserver'in window)){im.forEach(ld);return}var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ld(e.target);o.unobserve(e.target)}})},{rootMargin:'250px 0px'});im.forEach(function(i){o.observe(i)})})();</script>
-<script data-bundle-loader>(function(){var V='?v=1230.234',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
+<script data-bundle-loader>(function(){var V='?v=1230.235',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
 
 
 
