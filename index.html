@@ -67,7 +67,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.231">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.234">
 
 
 
@@ -91,8 +91,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.231">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.231">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.234">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.234">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -125,14 +125,20 @@
 <nav id="zivo-sidebar" class="zivo-sidebar" aria-label="القائمة الرئيسية" data-i18n-aria-label="sidebarMenuAria">
   <a class="zivo-sidebar-brand" href="/" aria-label="ZIVOZONE"><span class="brand-mark">Z</span><span class="zivo-sidebar-brand-name">ZIVOZONE</span></a>
   <div class="zivo-sidebar-items">
-    <div class="zsb-group" data-i18n="navExplore">استكشف</div>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="home" data-nav="home"><span class="zsb-icon" aria-hidden="true"><img class="zsb-img" src="/assets/icons-zivo/home.webp" alt="" width="40" height="40" decoding="async" loading="lazy"></span><span class="zsb-label" data-i18n="sidebarHome">الرئيسية</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="football" data-nav="football"><span class="zsb-icon zsb-emoji" aria-hidden="true">⚽</span><span class="zsb-label" data-i18n="navFootball">كرة القدم</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="arcade" data-nav="arcade"><span class="zsb-icon" aria-hidden="true"><img class="zsb-img" src="/assets/icons-zivo/games2.webp" alt="" width="40" height="40" decoding="async" loading="lazy"></span><span class="zsb-label" data-i18n="arcTitle">ساحة الألعاب</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="challenges" data-nav="challenges"><span class="zsb-icon zsb-emoji" aria-hidden="true">🏆</span><span class="zsb-label" data-i18n="challenges">مركز التحديات</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="rooms" data-nav="rooms"><span class="zsb-icon" aria-hidden="true"><img class="zsb-img" src="/assets/icons-zivo/rooms.webp" alt="" width="40" height="40" decoding="async" loading="lazy"></span><span class="zsb-label" data-i18n="sidebarRooms">الغرف</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="ai" data-nav="ai"><span class="zsb-icon zsb-emoji" aria-hidden="true">🤖</span><span class="zsb-label" data-i18n="ai">ZIVO AI</span></button>
-    <button type="button" class="zivo-sidebar-item" data-sidebar="positions"><span class="zsb-icon" aria-hidden="true"><img class="zsb-img" src="/assets/icons-zivo/sports.webp" alt="" width="40" height="40" decoding="async" loading="lazy"></span><span class="zsb-label" data-i18n="posWorldStart">دليل المراكز والتشكيلات</span></button>
+    <div class="zsb-group" data-i18n="navMain">الرئيسية</div>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="home" data-nav="home"><span class="zsb-icon zsb-emoji" aria-hidden="true">🏠</span><span class="zsb-label" data-i18n="sidebarHome">الرئيسية</span></button>
+    <div class="zsb-group" data-i18n="navGrpFootball">⚽ عالم كرة القدم مع رائف</div>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="football" data-nav="football"><span class="zsb-icon zsb-emoji" aria-hidden="true">⚽</span><span class="zsb-label" data-i18n="navFbHub">مركز كرة القدم (27 موضوعاً)</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="positions"><span class="zsb-icon zsb-emoji" aria-hidden="true">📍</span><span class="zsb-label" data-i18n="posWorldStart">دليل المراكز وتشخيصك</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="fitness"><span class="zsb-icon zsb-emoji" aria-hidden="true">💪</span><span class="zsb-label" data-i18n="fitTitle">اللياقة البدنية</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="fdecision"><span class="zsb-icon zsb-emoji" aria-hidden="true">🎯</span><span class="zsb-label" data-i18n="sigFootballTitle">ملعب القرار</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="farena"><span class="zsb-icon zsb-emoji" aria-hidden="true">🏟️</span><span class="zsb-label" data-i18n="sigPitchArenaTitle">الملعب الحي</span></button>
+    <div class="zsb-group" data-i18n="navGrpZivo">🌐 عالم ZIVOZONE منوع</div>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="zivo" data-nav="zivo"><span class="zsb-icon zsb-emoji" aria-hidden="true">🌐</span><span class="zsb-label" data-i18n="navZvWorld">عالم ZIVOZONE</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="arcade"><span class="zsb-icon zsb-emoji" aria-hidden="true">🕹️</span><span class="zsb-label" data-i18n="arcTitle">ساحة الألعاب</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="challenges"><span class="zsb-icon zsb-emoji" aria-hidden="true">🏆</span><span class="zsb-label" data-i18n="challenges">مركز التحديات</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="rooms"><span class="zsb-icon zsb-emoji" aria-hidden="true">🚪</span><span class="zsb-label" data-i18n="sidebarRooms">الغرف</span></button>
+    <button type="button" class="zivo-sidebar-item" data-sidebar="ai"><span class="zsb-icon zsb-emoji" aria-hidden="true">🤖</span><span class="zsb-label" data-i18n="ai">ZIVO AI</span></button>
     <div class="zsb-group" data-i18n="navMine">حسابي ومكافآتي</div>
     <button type="button" class="zivo-sidebar-item" data-sidebar="profile"><span class="zsb-icon" aria-hidden="true"><img class="zsb-img" src="/assets/icons-zivo/premium.webp" alt="" width="40" height="40" decoding="async" loading="lazy"></span><span class="zsb-label" data-i18n="sidebarProfile">الملف الشخصي</span></button>
     <button type="button" class="zivo-sidebar-item" data-sidebar="economy"><span class="zsb-icon" aria-hidden="true"><img class="zivo-coin-inline zsb-coin" src="/assets/brand/zivo-coin-48.png" alt="" width="22" height="22"></span><span class="zsb-label" data-i18n="sidebarEconomy">الاقتصاد</span></button>
@@ -155,11 +161,8 @@
   </div>
   <nav class="main-nav" aria-label="main navigation">
     <a href="#home" data-nav="home" data-i18n="home">الرئيسية</a>
-    <a href="#" data-football-hub data-nav="football" class="nav-football">⚽ <span data-i18n="navFootball">كرة القدم</span></a>
-    <a href="#" data-arcade data-nav="arcade" data-i18n="arcTitle">ساحة الألعاب</a>
-    <a href="#challenges-page" data-nav="challenges" data-i18n="challenges">مركز التحديات</a>
-    <a href="#rooms-page" data-nav="rooms" data-i18n="sidebarRooms">الغرف</a>
-    <a href="#ai-page" data-nav="ai" data-i18n="ai">ZIVO AI</a>
+      <a href="#" data-football-hub data-nav="football" class="nav-football">⚽ <span data-i18n="navFbWorld">عالم الكرة</span></a>
+      <a href="#zivo-world" data-nav="zivo" class="nav-zivo">🌐 <span data-i18n="navZvWorld">عالم ZIVOZONE</span></a>
     <label class="sr-only" for="language-select-nav">Language</label>
     <select id="language-select-nav" class="nav-language-select" aria-label="Language">
       <option value="ar">العربية</option>
@@ -245,45 +248,35 @@
 
 
 
-<section id="home" class="hero section">
-  <img class="hero-banner-art" src="assets/banners/home-hero.webp" alt="ZIVOZONE" width="932" height="332" decoding="async" fetchpriority="high">
-  <div class="hero-copy">
-    <span class="eyebrow" data-i18n="heroEyebrow">عالم رقمي • ZIVOZONE</span>
-    <h1><span class="hero-brand">ZIVOZONE</span><br><span data-i18n="heroTitle">عالمك يبدأ من هنا</span></h1>
-    <p data-i18n="heroText">مسابقة ZIVOZONE شغّالة الآن — سجّل، العب، واجمع XP لتتصدّر لوحة المتصدرين.</p>
-    <div class="hero-actions"><button class="btn btn-primary btn-lg" data-action="scroll-contest" data-i18n="joinContest">🏆 شارك في المسابقة الآن</button><button class="btn btn-ghost btn-lg" data-action="scroll-challenges" data-i18n="play">🚀 ابدأ اللعب</button></div>
-    <div class="hero-stats"><div><b>7</b><span data-i18n="languages">لغات</span></div><div><b>10+</b><span data-i18n="modes">أنماط ألعاب</span></div><div><b>100+</b><span data-i18n="challengesCount">تحديات</span></div></div>
+<section id="home" class="zg section" aria-label="ZIVOZONE">
+  <div class="zg-brand"><h1 class="zg-title">ZIVOZONE</h1><p class="zg-tag" data-i18n="gateTagline">اختر عالمك</p></div>
+  <div class="zg-grid">
+    <button type="button" class="zg-card zg-football" data-football-hub aria-label="عالم كرة القدم مع رائف" data-i18n-aria-label="gateFbTitle">
+      <span class="zg-art" aria-hidden="true"><svg class="zg-art-ball" viewBox="0 0 160 160" aria-hidden="true" focusable="false"><defs><radialGradient id="fhb" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#cdd6e8"/><stop offset="1" stop-color="#6b7694"/></radialGradient></defs><g fill="none" stroke-linecap="round"><ellipse cx="80" cy="80" rx="74" ry="26" transform="rotate(-24 80 80)" stroke="#38bdf8" stroke-width="3" opacity=".85"/><ellipse cx="80" cy="80" rx="70" ry="22" transform="rotate(32 80 80)" stroke="#fbbf24" stroke-width="3" opacity=".9"/></g><circle cx="80" cy="80" r="48" fill="url(#fhb)" stroke="#0b1634" stroke-width="2"/><path d="M80 52l22 16-8 26H66l-8-26z" fill="#0b1634" opacity=".88"/><text x="80" y="95" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="46" fill="#fbbf24" stroke="#7a4a00" stroke-width="1.5">Z</text></svg><svg class="zg-art-pitch" viewBox="0 0 320 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fhg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f9e4f"/><stop offset="1" stop-color="#14632f"/></linearGradient></defs><rect x="2" y="2" width="316" height="196" rx="8" fill="url(#fhg)" stroke="#9af5b8" stroke-opacity=".7" stroke-width="2"/><g fill="none" stroke="#e8fff0" stroke-opacity=".75" stroke-width="1.6"><path d="M160 2v196"/><circle cx="160" cy="100" r="28"/><rect x="2" y="55" width="42" height="90"/><rect x="276" y="55" width="42" height="90"/></g><g stroke="#fde68a" stroke-width="2" fill="none" stroke-dasharray="5 4" stroke-linecap="round"><path d="M70 60Q110 40 135 62"/><path d="M110 150Q150 120 190 135"/><path d="M200 70Q235 45 262 70"/></g><g font-family="Arial" font-size="11" font-weight="800" text-anchor="middle" fill="#fff"><g><circle cx="60" cy="62" r="10" fill="#ef4444"/><text x="60" y="66">9</text></g><g><circle cx="98" cy="148" r="10" fill="#ef4444"/><text x="98" y="152">8</text></g><g><circle cx="140" cy="64" r="10" fill="#ef4444"/><text x="140" y="68">10</text></g><g><circle cx="195" cy="136" r="10" fill="#3b82f6"/><text x="195" y="140">4</text></g><g><circle cx="205" cy="72" r="10" fill="#3b82f6"/><text x="205" y="76">7</text></g><g><circle cx="265" cy="70" r="10" fill="#3b82f6"/><text x="265" y="74">11</text></g><g><circle cx="250" cy="130" r="10" fill="#3b82f6"/><text x="250" y="134">2</text></g></g></svg></span>
+      <span class="zg-copy"><span class="zg-chip" data-i18n="sigFhStatus">من 6 إلى 60 سنة</span><span class="zg-p" data-i18n="gateFbDesc">27 فرعاً لكل عمر.</span><span class="zg-cta"><span data-i18n="gateFbCta">عالم كرة القدم مع رائف</span> <i aria-hidden="true">‹</i></span></span>
+    </button>
+    <button type="button" class="zg-card zg-zivo" data-world="zivo" aria-label="عالم ZIVOZONE منوع" data-i18n-aria-label="gateZvTitle">
+      <span class="zg-art zg-art-zivo" aria-hidden="true"><i>🎮</i><i>🧩</i><i>🏆</i><i>🕯️</i><i>🧠</i><i>📖</i></span>
+      <span class="zg-copy"><span class="zg-chip" data-i18n="gateZvChip">5 أقسام</span><span class="zg-p" data-i18n="gateZvDesc">ألعاب وتحديات وغموض وقصص.</span><span class="zg-cta"><span data-i18n="gateZvCta">عالم ZIVOZONE</span> <i aria-hidden="true">‹</i></span></span>
+    </button>
   </div>
-  <div class="hero-orb-wrap">
-    <!-- V1230.171 — ZIVO (assets/characters/zivo-hero-art-coin.png) as a layered backdrop behind the
-         existing animated orb + float-tags (all untouched below, same markup/CSS/animations as
-         before). A dedicated element rather than reusing .hero-orb-wrap's own background, since an
-         older, higher-priority rule further down this file (.hero-orb{display:grid!important}, see
-         its own comment) already wins that fight on purpose — not something to re-litigate here. -->
-    <div class="hero-character" aria-hidden="true"></div>
-    <div class="hero-orb"><span>Z</span></div><span class="float-tag t1" title="IQ"><img src="/assets/icons-zivo/learn.webp" alt="IQ" width="46" height="46" decoding="async"></span><span class="float-tag t2" title="AI"><img src="/assets/icons-zivo/ai.webp" alt="AI" width="46" height="46" decoding="async"></span><span class="float-tag t3" title="HORROR"><img src="/assets/icons-zivo/security.webp" alt="HORROR" width="46" height="46" decoding="async"></span><span class="float-tag t4" title="SPORT"><img src="/assets/icons-zivo/sports.webp" alt="SPORT" width="46" height="46" decoding="async"></span>
-  </div>
+  <button type="button" hidden data-action="open-football-position" aria-hidden="true" tabindex="-1"></button>
+  <button type="button" hidden data-fitness aria-hidden="true" tabindex="-1"></button>
+  <button type="button" hidden data-positions aria-hidden="true" tabindex="-1"></button>
+  <button type="button" hidden data-football-room aria-hidden="true" tabindex="-1"></button>
+  <button type="button" hidden data-pitch-arena aria-hidden="true" tabindex="-1"></button>
+  <button type="button" hidden data-challenge="football" aria-hidden="true" tabindex="-1"></button>
+  <button type="button" hidden data-challenge="football_intelligence" aria-hidden="true" tabindex="-1"></button>
+</section>
+<section id="world-zivo" class="section zw-page" aria-label="عالم ZIVOZONE" data-i18n-aria-label="gateZvTitle">
+  <header class="zw-head"><span class="zw-logo" aria-hidden="true">Z</span><div><h2 data-i18n="gateZvTitle">عالم ZIVOZONE منوع</h2><p data-i18n="zwSub">كل ما في ZIVOZONE مرتب في خمسة أقسام.</p></div></header>
+  <div class="zw-group"><h3 class="zw-gh"><span aria-hidden="true">🏆</span> <span data-i18n="zwG1">المسابقة والمحفظة</span></h3><div id="zw-wallet-slot" class="zw-wallet"></div><div class="zw-grid"><button type="button" class="zw-tile" style="--c:#fbbf24" data-action="scroll-contest" id="zivo-contest-gate-btn"><span class="zw-ico" aria-hidden="true">🏆</span><span class="zw-txt"><b data-i18n="contestGateCta">ادخل وشارك</b><small data-i18n="bnContestSub">تنافس مع الأصدقاء واربح الجوائز</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#38bdf8" data-go="#challenges-page"><span class="zw-ico" aria-hidden="true">🎯</span><span class="zw-txt"><b data-i18n="challengeTitle">مركز التحديات</b><small data-i18n="zwChalD">تحديات منطق وذاكرة وسرعة وثقافة بمستويات متدرجة</small></span><i class="zw-go" aria-hidden="true">‹</i></button></div></div><div class="zw-group"><h3 class="zw-gh"><span aria-hidden="true">🎮</span> <span data-i18n="zwG2">ألعاب وتحديات</span></h3><div class="zw-grid"><button type="button" class="zw-tile" style="--c:#22c55e" data-arcade><span class="zw-ico" aria-hidden="true">🕹️</span><span class="zw-txt"><b data-i18n="arcTitle">ساحة الألعاب</b><small data-i18n="arcTag">ألعاب مهارة</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#a855f7" data-mind-battle><span class="zw-ico" aria-hidden="true">⚔️</span><span class="zw-txt"><b data-i18n="mbTitle">معركة العقول</b><small data-i18n="mbCardDesc">اختبر معلوماتك</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#facc15" data-thinking-room><span class="zw-ico" aria-hidden="true">💡</span><span class="zw-txt"><b data-i18n="sigThinkTitle">غرفة التفكير</b><small data-i18n="sigThinkDesc">ألغاز</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#2f7bff" data-puzzle-room><span class="zw-ico" aria-hidden="true">🧩</span><span class="zw-txt"><b data-i18n="sigPuzzleTitle">غرفة الألغاز</b><small data-i18n="sigPuzzleDesc">ألغاز</small></span><i class="zw-go" aria-hidden="true">‹</i></button></div></div><div class="zw-group"><h3 class="zw-gh"><span aria-hidden="true">🕯️</span> <span data-i18n="zwG3">غموض وإثارة</span></h3><div class="zw-grid"><button type="button" class="zw-tile" style="--c:#ef4444" data-horror-room><span class="zw-ico" aria-hidden="true">🕯️</span><span class="zw-txt"><b data-i18n="sigDarkTitle">الغرفة المظلمة</b><small data-i18n="sigDarkDesc">رعب نفسي</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#38bdf8" data-challenge="forensic"><span class="zw-ico" aria-hidden="true">🔬</span><span class="zw-txt"><b data-i18n="sigForensicTitle">المختبر الجنائي</b><small data-i18n="sigForensicDesc">حل القضايا</small></span><i class="zw-go" aria-hidden="true">‹</i></button></div></div><div class="zw-group"><h3 class="zw-gh"><span aria-hidden="true">📖</span> <span data-i18n="zwG4">قصص ومعرفة</span></h3><div class="zw-grid"><button type="button" class="zw-tile" style="--c:#f59e0b" data-zivo-story-room><span class="zw-ico" aria-hidden="true">📖</span><span class="zw-txt"><b data-i18n="sigStoryTitle">غرفة القصص</b><small data-i18n="sigStoryDesc">قصص</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#34d399" data-zivo-health-room><span class="zw-ico" aria-hidden="true">🩺</span><span class="zw-txt"><b data-i18n="sigHealthTitle">صحتك بالدنيا</b><small data-i18n="sigHealthDesc">صحة</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#818cf8" data-zivo-room="time"><span class="zw-ico" aria-hidden="true">⏳</span><span class="zw-txt"><b data-i18n="sigTimeTitle">ما وراء الزمن</b><small data-i18n="sigTimeDesc">تاريخ</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#f472b6" data-beauty-room><span class="zw-ico" aria-hidden="true">✨</span><span class="zw-txt"><b data-i18n="sigBeautyTitle">غرفة الجمال</b><small data-i18n="sigBeautyDesc">جمال</small></span><i class="zw-go" aria-hidden="true">‹</i></button></div></div><div class="zw-group"><h3 class="zw-gh"><span aria-hidden="true">🧬</span> <span data-i18n="zwG5">اكتشف نفسك</span></h3><div class="zw-grid"><button type="button" class="zw-tile" style="--c:#c084fc" data-action="open-identity"><span class="zw-ico" aria-hidden="true">🧠</span><span class="zw-txt"><b data-i18n="identityStart">اكتشف شخصيتك</b><small data-i18n="bnIdentitySub">معرفة أعمق</small></span><i class="zw-go" aria-hidden="true">‹</i></button><button type="button" class="zw-tile" style="--c:#22d3ee" data-go="#ai-page"><span class="zw-ico" aria-hidden="true">🤖</span><span class="zw-txt"><b data-i18n="aiTitle">مساعد ZIVO الذكي</b><small data-i18n="zwAiD">اسأل ZIVO</small></span><i class="zw-go" aria-hidden="true">‹</i></button></div></div>
 </section>
 
 
 
 
-<section id="zivo-fh-top" class="section zivo-fh-top" aria-label="مركز كرة القدم" data-i18n-aria-label="sigFhAria">
-  <article class="zivo-fh-banner" data-football-hub tabindex="0" role="button" aria-label="مركز كرة القدم" data-i18n-aria-label="sigFhAria">
-    <svg class="fh-art-pitch" viewBox="0 0 320 200" aria-hidden="true" focusable="false"><defs><linearGradient id="fhg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f9e4f"/><stop offset="1" stop-color="#14632f"/></linearGradient></defs><rect x="2" y="2" width="316" height="196" rx="8" fill="url(#fhg)" stroke="#9af5b8" stroke-opacity=".7" stroke-width="2"/><g fill="none" stroke="#e8fff0" stroke-opacity=".75" stroke-width="1.6"><path d="M160 2v196"/><circle cx="160" cy="100" r="28"/><rect x="2" y="55" width="42" height="90"/><rect x="276" y="55" width="42" height="90"/></g><g stroke="#fde68a" stroke-width="2" fill="none" stroke-dasharray="5 4" stroke-linecap="round"><path d="M70 60Q110 40 135 62"/><path d="M110 150Q150 120 190 135"/><path d="M200 70Q235 45 262 70"/></g><g font-family="Arial" font-size="11" font-weight="800" text-anchor="middle" fill="#fff"><g><circle cx="60" cy="62" r="10" fill="#ef4444"/><text x="60" y="66">9</text></g><g><circle cx="98" cy="148" r="10" fill="#ef4444"/><text x="98" y="152">8</text></g><g><circle cx="140" cy="64" r="10" fill="#ef4444"/><text x="140" y="68">10</text></g><g><circle cx="195" cy="136" r="10" fill="#3b82f6"/><text x="195" y="140">4</text></g><g><circle cx="205" cy="72" r="10" fill="#3b82f6"/><text x="205" y="76">7</text></g><g><circle cx="265" cy="70" r="10" fill="#3b82f6"/><text x="265" y="74">11</text></g><g><circle cx="250" cy="130" r="10" fill="#3b82f6"/><text x="250" y="134">2</text></g></g></svg>
-    <div class="zivo-fh-copy"><span class="zivo-fh-chip" data-i18n="sigFhStatus">من 6 إلى 60 سنة</span><h2><span data-i18n="fhTopTitle">كرة القدم مع رائف</span> ⚽</h2><p data-i18n="sigFhDesc">كل ما يخص لاعب كرة القدم لكل عمر.</p><b class="zivo-fh-cta"><span data-i18n="sigFhCta">ادخل المركز</span> <i aria-hidden="true">‹</i></b></div>
-    <svg class="fh-art-ball" viewBox="0 0 160 160" aria-hidden="true" focusable="false"><defs><radialGradient id="fhb" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#ffffff"/><stop offset=".55" stop-color="#cdd6e8"/><stop offset="1" stop-color="#6b7694"/></radialGradient></defs><g fill="none" stroke-linecap="round"><ellipse cx="80" cy="80" rx="74" ry="26" transform="rotate(-24 80 80)" stroke="#38bdf8" stroke-width="3" opacity=".85"/><ellipse cx="80" cy="80" rx="70" ry="22" transform="rotate(32 80 80)" stroke="#fbbf24" stroke-width="3" opacity=".9"/></g><circle cx="80" cy="80" r="48" fill="url(#fhb)" stroke="#0b1634" stroke-width="2"/><path d="M80 52l22 16-8 26H66l-8-26z" fill="#0b1634" opacity=".88"/><text x="80" y="95" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="46" fill="#fbbf24" stroke="#7a4a00" stroke-width="1.5">Z</text></svg>
-  </article>
-</section>
 
-<section id="identity" class="section zivo-quiz-promo" aria-label="اختبارات الشخصية والمركز" data-i18n-aria-label="identityAria">
-  <div class="zivo-quiz-promo-head"><span class="eyebrow" data-i18n="identityEyebrow">من أنت؟</span><h2 data-i18n="identityTitle">اكتشف شخصيتك داخل ZIVOZONE</h2></div>
-  <div class="zivo-quiz-promo-actions">
-    <button type="button" class="zivo-banner zb-violet" data-action="open-identity"><span class="zb-art" aria-hidden="true"></span><span class="zb-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M20 8c-4 0-7 3-7 7-3 1-5 4-5 7 0 2 1 4 2 5-1 1-2 3-2 5 0 4 3 7 7 7 1 3 4 5 7 5V8z"/><path d="M28 8c4 0 7 3 7 7 3 1 5 4 5 7 0 2-1 4-2 5 1 1 2 3 2 5 0 4-3 7-7 7-1 3-4 5-7 5V8z"/><path d="M14 22h6M28 26h6M16 31h4M28 17h5"/></svg></span><span class="zb-txt"><b data-i18n="identityStart">اكتشف شخصيتك</b><small data-i18n="bnIdentitySub">معرفة أعمق لرحلة أذكى في عالم ZIVOZONE</small></span><span class="zb-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></button>
-    <button type="button" class="zivo-banner zb-green zb-has-cta" data-action="open-football-position"><span class="zb-art" aria-hidden="true"></span><span class="zb-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="10"/><circle cx="24" cy="24" r="3.5"/><path d="M24 3v8M24 37v8M3 24h8M37 24h8"/></svg></span><span class="zb-txt"><b data-i18n="bnGuideTitle">دليل المراكز وتشخيصك</b><small data-i18n="bnGuideSub">اكتشف مركزك في كرة القدم بدقة واحترافية</small><span class="zb-cta" role="link" tabindex="0" data-zb-guide data-i18n="bnGuideCta">ادخل الدليل</span></span><span class="zb-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></button>
-    <button type="button" class="zivo-banner zb-blue" data-fitness><span class="zb-art" aria-hidden="true"></span><span class="zb-ico"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 26h9l4-10 6 20 5-14 3 4h13"/><circle cx="37" cy="10" r="4"/><path d="M32 18l5-3 5 5"/></svg></span><span class="zb-txt"><b data-i18n="fitTitle">اللياقة البدنية</b><small data-i18n="bnFitSub">افهم جسمك وقيّم لياقتك باختبارات علمية بسيطة</small></span><span class="zb-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span></button>
-  </div>
-</section>
 
 <section class="section zivo-contest-section" aria-label="مسابقة ZIVOZONE" data-i18n-aria-label="contestSectionAria" id="zivo-contest">
   <button type="button" class="fullpage-back-btn" data-action="close-fullpage" data-i18n="backToHome">⟵ العودة للرئيسية</button>
@@ -324,20 +317,10 @@
   </div>
 </section>
 
-<section class="zivo-signature-zone" id="zivo-arcade-strip" aria-label="ساحة الألعاب" data-i18n-aria-label="arcTitle">
-  <div class="zivo-signature-grid arcade-one">
-    <article class="zivo-signature-card arcade zbanner" data-arcade tabindex="0" role="button" aria-label="دخول ساحة الألعاب" data-i18n-aria-label="arcCardAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/arcade.webp" alt="" width="800" height="297" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>ZIVO ARCADE</span><h3>🕹️ <span data-i18n="arcTitle">ساحة الألعاب</span></h3><p data-i18n="arcCardDesc">6 ألعاب مهارة احترافية، 30 مستوى متدرّجاً لكل لعبة، ومكافآت XP.</p><b><span data-i18n="arcCardCta">ادخل الساحة</span> ↗</b></div>
-    </article>
-  </div>
-</section>
 
 <section class="zivo-signature-zone" id="zivo-rooms-hub" aria-label="تجارب ZIVOZONE الرئيسية" data-i18n-aria-label="sigTitle">
   <div class="zivo-signature-head"><div><span class="eyebrow">ZIVOZONE SIGNATURE</span><h2 data-i18n="sigTitle">تجارب ZIVOZONE الرئيسية</h2><p data-i18n="sigDesc">قسم واحد يجمع أبرز تجارب ZIVOZONE، كل غرفة بشخصيتها الخاصة.</p></div><span class="zivo-signature-live">● <span data-i18n="sigLive">دخول مباشر</span></span></div>
   <div class="zivo-signature-grid">
-    <article class="zivo-signature-card flagship pitch-arena zbanner" data-pitch-arena tabindex="0" role="button" aria-label="دخول الملعب الحي" data-i18n-aria-label="sigPitchArenaAria">
-      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/pitch-arena.webp" alt="" width="1220" height="314" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigPitchArenaKicker">00 // اللعبة الرئيسية</span><h3>⚽ <span data-i18n="sigPitchArenaTitle">الملعب الحي</span></h3><p data-i18n="sigPitchArenaDesc">لعبة أركيد فيزيائية: اسحب، صوّب، واجعل الكرة ترتد على الملعب لتسجّل بالمرمى. فصلان متاحان الآن بـ18 مستوى.</p><div class="zivo-flagship-meta" data-i18n="sigPitchArenaMeta">🏟️ فصلان • 🎯 18 مستوى</div><b class="zivo-flagship-play"><span data-i18n="sigPitchArenaCta">دخول الملعب الحي</span> ↗</b></div>
-    </article>
     <article class="zivo-signature-card mindbattle zbanner" data-mind-battle tabindex="0" role="button" aria-label="دخول معركة العقول" data-i18n-aria-label="mbCardAria">
       <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/mind-battle.webp" alt="" width="800" height="297" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="mbRoomBadge">معركة العقول</span><h3>🧠 <span data-i18n="mbTitle">معركة العقول</span></h3><p data-i18n="mbCardDesc">اكتب إجابة صحيحة نادرة تحصل على نقاط أعلى. 7 أسئلة بـ10 ثوانٍ لكل سؤال.</p><b><span data-i18n="mbCardCta">ادخل المعركة</span> ↗</b></div>
     </article>
@@ -361,14 +344,6 @@
     </article>
     <article class="zivo-signature-card forensic zbanner" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي" data-i18n-aria-label="sigForensicAria">
       <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/forensic-lab.webp" alt="" width="603" height="228" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigForensicKicker">06 // تجربة التحقيق</span><h3>🕵️ <span data-i18n="sigForensicTitle">المختبر الجنائي</span></h3><p data-i18n="sigForensicDesc">ادخل مسرح القضية، افحص الأدلة، اربط الزمن والوقائع، وابنِ استنتاجك بنفسك.</p><b><span data-i18n="sigForensicCta">بدء التحقيق</span> ↗</b><a href="/rooms/forensic-lab" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
-    </article>
-    <article class="zivo-signature-card football zfootball" data-football-hub tabindex="0" role="button" aria-label="مركز كرة القدم" data-i18n-aria-label="sigFhAria">
-      <div class="zivo-signature-media"><img src="assets/rooms/football-hub.svg" alt="" loading="lazy" decoding="async"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigFhStatus">من 6 إلى 60 سنة</span></div>
-      <div class="zivo-signature-copy"><span data-i18n="sigFhKicker">القلب النابض // كرة القدم</span><h3>⚽ <span data-i18n="sigFhTitle">مركز كرة القدم</span></h3><p data-i18n="sigFhDesc">كل ما يخص لاعب كرة القدم لكل عمر: الصالة، المطبخ، النوم، العادات، العائلة، الأصدقاء، النمو والإصابات، بحقائق وشائعات وأرقام.</p><b><span data-i18n="sigFhCta">ادخل المركز</span> ↗</b></div>
-    </article>
-    <article class="zivo-signature-card football zfootball" data-football-room tabindex="0" role="button" aria-label="دخول ملعب القرار" data-i18n-aria-label="sigFootballAria">
-      <div class="zivo-signature-media"><img src="assets/rooms/football-decision.svg" alt="" loading="lazy" decoding="async"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigFootballStatus">50 مستوى</span></div>
-      <div class="zivo-signature-copy"><span data-i18n="sigFootballKicker">07 // تجربة التكتيك</span><h3>⚽ <span data-i18n="sigFootballTitle">ملعب القرار</span></h3><p data-i18n="sigFootballDesc">اقرأ الملعب كمدرب حقيقي: لاعب مفتوح، مدافع يضيق الخط، وتبديل جهة الهجوم — 50 مستوى تتصاعد صعوبتها.</p><b><span data-i18n="sigFootballCta">دخول ملعب القرار</span> ↗</b><a href="/rooms/football-pitch" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
   </div>
 </section>
@@ -409,9 +384,8 @@
 </main>
 <nav class="mobile-nav" aria-label="Mobile navigation">
   <a href="#home" data-mobile-nav="home" data-nav="home"><img class="mn-img" src="/assets/icons-zivo/home.webp" alt="" width="30" height="30" decoding="async"><span data-i18n="home">الرئيسية</span></a>
-  <a href="#" data-football-hub data-mobile-nav="football" data-nav="football"><span class="mn-emoji" aria-hidden="true">⚽</span><span data-i18n="navFootball">كرة القدم</span></a>
-  <a href="#" data-arcade data-mobile-nav="arcade" data-nav="arcade"><img class="mn-img" src="/assets/icons-zivo/games2.webp" alt="" width="30" height="30" decoding="async"><span data-i18n="sidebarGames">الألعاب</span></a>
-  <a href="#challenges-page" data-mobile-nav="challenges" data-nav="challenges"><img class="mn-img" src="/assets/icons-zivo/trophy.webp" alt="" width="30" height="30" decoding="async"><span data-i18n="challenges">التحديات</span></a>
+  <a href="#" data-football-hub data-mobile-nav="football" data-nav="football"><span class="mn-emoji" aria-hidden="true">⚽</span><span data-i18n="navFbWorld">عالم الكرة</span></a>
+  <a href="#zivo-world" data-mobile-nav="zivo" data-nav="zivo"><span class="mn-emoji" aria-hidden="true">🌐</span><span data-i18n="navZvWorld">عالم ZIVOZONE</span></a>
   <button type="button" data-nav-menu data-mobile-nav="menu" aria-label="Menu" data-i18n-aria-label="sidebarMenuAria"><span class="mn-emoji" aria-hidden="true">☰</span><span data-i18n="navMenu">القائمة</span></button>
 </nav>
 </div>
@@ -452,7 +426,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 })();
 </script>
 <script>/* V1230.206 - room banners below the first screen load only when scrolled near (saves ~300KB for visitors who do not scroll) */(function(){var im=[].slice.call(document.querySelectorAll('img[data-src]'));function ld(i){var s=i.getAttribute('data-src');if(s){i.src=s;i.removeAttribute('data-src')}}if(!('IntersectionObserver'in window)){im.forEach(ld);return}var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ld(e.target);o.unobserve(e.target)}})},{rootMargin:'250px 0px'});im.forEach(function(i){o.observe(i)})})();</script>
-<script data-bundle-loader>(function(){var V='?v=1230.231',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
+<script data-bundle-loader>(function(){var V='?v=1230.234',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
 
 
 
