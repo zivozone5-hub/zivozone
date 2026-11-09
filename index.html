@@ -67,7 +67,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.225">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.228">
 
 
 
@@ -91,8 +91,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.225">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.225">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.228">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.228">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -351,6 +351,10 @@
     <article class="zivo-signature-card forensic zbanner" data-challenge="forensic" tabindex="0" role="button" aria-label="دخول المختبر الجنائي" data-i18n-aria-label="sigForensicAria">
       <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/forensic-lab.webp" alt="" width="603" height="228" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span data-i18n="sigForensicKicker">06 // تجربة التحقيق</span><h3>🕵️ <span data-i18n="sigForensicTitle">المختبر الجنائي</span></h3><p data-i18n="sigForensicDesc">ادخل مسرح القضية، افحص الأدلة، اربط الزمن والوقائع، وابنِ استنتاجك بنفسك.</p><b><span data-i18n="sigForensicCta">بدء التحقيق</span> ↗</b><a href="/rooms/forensic-lab" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
     </article>
+    <article class="zivo-signature-card football zfootball" data-football-hub tabindex="0" role="button" aria-label="مركز كرة القدم" data-i18n-aria-label="sigFhAria">
+      <div class="zivo-signature-media"><img src="assets/rooms/football-hub.svg" alt="" loading="lazy" decoding="async"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigFhStatus">من 6 إلى 60 سنة</span></div>
+      <div class="zivo-signature-copy"><span data-i18n="sigFhKicker">القلب النابض // كرة القدم</span><h3>⚽ <span data-i18n="sigFhTitle">مركز كرة القدم</span></h3><p data-i18n="sigFhDesc">كل ما يخص لاعب كرة القدم لكل عمر: الصالة، المطبخ، النوم، العادات، العائلة، الأصدقاء، النمو والإصابات، بحقائق وشائعات وأرقام.</p><b><span data-i18n="sigFhCta">ادخل المركز</span> ↗</b></div>
+    </article>
     <article class="zivo-signature-card football zfootball" data-football-room tabindex="0" role="button" aria-label="دخول ملعب القرار" data-i18n-aria-label="sigFootballAria">
       <div class="zivo-signature-media"><img src="assets/rooms/football-decision.svg" alt="" loading="lazy" decoding="async"><span class="zivo-signature-overlay"></span><span class="zivo-signature-status" data-i18n="sigFootballStatus">50 مستوى</span></div>
       <div class="zivo-signature-copy"><span data-i18n="sigFootballKicker">07 // تجربة التكتيك</span><h3>⚽ <span data-i18n="sigFootballTitle">ملعب القرار</span></h3><p data-i18n="sigFootballDesc">اقرأ الملعب كمدرب حقيقي: لاعب مفتوح، مدافع يضيق الخط، وتبديل جهة الهجوم — 50 مستوى تتصاعد صعوبتها.</p><b><span data-i18n="sigFootballCta">دخول ملعب القرار</span> ↗</b><a href="/rooms/football-pitch" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
@@ -437,7 +441,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 })();
 </script>
 <script>/* V1230.206 - room banners below the first screen load only when scrolled near (saves ~300KB for visitors who do not scroll) */(function(){var im=[].slice.call(document.querySelectorAll('img[data-src]'));function ld(i){var s=i.getAttribute('data-src');if(s){i.src=s;i.removeAttribute('data-src')}}if(!('IntersectionObserver'in window)){im.forEach(ld);return}var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ld(e.target);o.unobserve(e.target)}})},{rootMargin:'250px 0px'});im.forEach(function(i){o.observe(i)})})();</script>
-<script data-bundle-loader>(function(){var V='?v=1230.225',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
+<script data-bundle-loader>(function(){var V='?v=1230.228',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
 
 
 
