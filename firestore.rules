@@ -192,7 +192,7 @@ service cloud.firestore {
         // (a fixed, small total per account, plus 0.25 a day from each daily item) and cannot prove the game was played.
         && (request.resource.data.type != 'explorer_reward' || (
           request.resource.data.policy == 'explorer_reward'
-          && ((request.resource.data.amount == 0.25 && claimId.matches('ex_(bj_[0-7]_[0-4]|gs_([1-9]|1[0-2])|dt_([1-9]|10)|tr_[0-9]{8}|bh_[0-9]{8}|hh_[0-9]{8}|fht_(gym|day|kitchen|sleep|habits|friends|family|mind|growth|private|injuries|psych|comeback|confidence|street|muscle|iq|girls|study|talent|supplements|screens|inclusion|weather|coaching|career)|fhq_[0-9]{8})'))
+          && ((request.resource.data.amount == 0.25 && claimId.matches('ex_(bj_[0-7]_[0-4]|gs_([1-9]|1[0-2])|dt_([1-9]|10)|tr_[0-9]{8}|bh_[0-9]{8}|hh_[0-9]{8}|fht_(gym|day|kitchen|sleep|habits|friends|family|mind|growth|private|injuries|psych|comeback|confidence|street|muscle|iq|girls|study|talent|supplements|screens|inclusion|weather|coaching|career|blend)|fhq_[0-9]{8})'))
            || (request.resource.data.amount == 0.5 && claimId.matches('ex_(bj_done_[0-7]|dt_done)')))
         ))
         // V1230.131 — lucky_strike_reward is the first reward type that must be cross-checked against
