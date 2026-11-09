@@ -67,7 +67,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.223">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.225">
 
 
 
@@ -91,8 +91,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.223">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.223">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.225">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.225">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -400,7 +400,7 @@
   <a href="#player-home" data-mobile-nav="player-home" data-player-home><img class="mn-img" src="/assets/icons-zivo/premium.webp" alt="" width="30" height="30" decoding="async"><span data-i18n="playerJourney">رحلة اللاعب</span></a>
 </nav>
 </div>
-<footer class="footer"><strong>ZIVOZONE</strong><span id="footer-tagline" data-i18n="footerTagline">Built for the next generation.</span><a class="zivo-footer-link" href="/#zivo-rooms-hub" data-i18n="footerRoomsLinks">استكشف كل الغرف والتحديات</a><a class="zivo-footer-link" href="/rooms/daily-challenge" data-i18n="footerDailyChallenge">تحدي اليوم</a><a class="zivo-footer-link" href="/academy/" data-i18n="footerAcademy">أكاديمية ZIVOZONE</a><a class="zivo-footer-link" href="/terms/" data-i18n="footerTerms">الشروط والاستخدام</a><a class="zivo-footer-link" href="/privacy/" data-i18n="footerPrivacy">سياسة الخصوصية</a><button type="button" class="zivo-footer-link" data-share-site data-i18n="shareSiteLabel">شارك الموقع</button><button id="zivo-consent-footer" class="zivo-footer-link" type="button" data-i18n="footerConsent">إعدادات الخصوصية</button><small class="zivo-footer-rights" data-i18n="footerRights">© 2026 ZIVOZONE. جميع الحقوق محفوظة.</small></footer>
+<footer class="footer"><strong>ZIVOZONE</strong><span id="footer-tagline" data-i18n="footerTagline">Built for the next generation.</span><a class="zivo-footer-link" href="/#zivo-rooms-hub" data-i18n="footerRoomsLinks">استكشف كل الغرف والتحديات</a><a class="zivo-footer-link" href="/rooms/daily-challenge" data-i18n="footerDailyChallenge">تحدي اليوم</a><a class="zivo-footer-link" href="/academy/" data-i18n="footerAcademy">أكاديمية ZIVOZONE</a><a class="zivo-footer-link" href="/about/" data-i18n="footerAbout">من نحن</a><a class="zivo-footer-link" href="/contact/" data-i18n="footerContact">اتصل بنا</a><a class="zivo-footer-link" href="/terms/" data-i18n="footerTerms">الشروط والاستخدام</a><a class="zivo-footer-link" href="/privacy/" data-i18n="footerPrivacy">سياسة الخصوصية</a><button type="button" class="zivo-footer-link" data-share-site data-i18n="shareSiteLabel">شارك الموقع</button><button id="zivo-consent-footer" class="zivo-footer-link" type="button" data-i18n="footerConsent">إعدادات الخصوصية</button><small class="zivo-footer-rights" data-i18n="footerRights">© 2026 ZIVOZONE. جميع الحقوق محفوظة.</small></footer>
 <div id="modal-root" class="modal-root" aria-hidden="true"></div><div id="toast-container" class="toast-container" aria-live="polite"></div>
 <script>
 window.ZIVOZONE_FIREBASE_CONFIG={apiKey:'AIzaSyCHTz-ENxa930vgzKcHaH7Ybcax2R_024s',authDomain:'zivozone-fc6ed.firebaseapp.com',projectId:'zivozone-fc6ed',storageBucket:'zivozone-fc6ed.firebasestorage.app',messagingSenderId:'169366383094',appId:'1:169366383094:web:5875e8d24b1c543e4a7fd7',measurementId:'G-ZXW8LP39JY'};
@@ -437,7 +437,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 })();
 </script>
 <script>/* V1230.206 - room banners below the first screen load only when scrolled near (saves ~300KB for visitors who do not scroll) */(function(){var im=[].slice.call(document.querySelectorAll('img[data-src]'));function ld(i){var s=i.getAttribute('data-src');if(s){i.src=s;i.removeAttribute('data-src')}}if(!('IntersectionObserver'in window)){im.forEach(ld);return}var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ld(e.target);o.unobserve(e.target)}})},{rootMargin:'250px 0px'});im.forEach(function(i){o.observe(i)})})();</script>
-<script data-bundle-loader>(function(){var V='?v=1230.223',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
+<script data-bundle-loader>(function(){var V='?v=1230.225',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
 
 
 
