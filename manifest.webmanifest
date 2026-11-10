@@ -10,7 +10,7 @@
   "description": "ZIVOZONE — منصة ألعاب وتحديات ورياضة وأخبار وتجارب رقمية.",
   "id": "/",
   "scope": "/",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "icons": [
     {
       "src": "/assets/icons/zivo-192.png",
@@ -23,6 +23,70 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "categories": [
+    "games",
+    "education",
+    "sports"
+  ],
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "عالم كرة القدم مع رائف",
+      "short_name": "كرة القدم",
+      "url": "/?go=fhub",
+      "icons": [
+        {
+          "src": "/assets/icons/zivo-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "عالم ZIVOZONE",
+      "short_name": "ZIVOZONE",
+      "url": "/#zivo-world",
+      "icons": [
+        {
+          "src": "/assets/icons/zivo-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "ساحة الألعاب",
+      "short_name": "الألعاب",
+      "url": "/?go=arcade",
+      "icons": [
+        {
+          "src": "/assets/icons/zivo-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/icons/shot-wide.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ZIVOZONE"
+    },
+    {
+      "src": "/assets/icons/shot-narrow.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ZIVOZONE"
     }
   ]
 }
