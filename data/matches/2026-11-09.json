@@ -34,36 +34,6 @@
       "summaryUrl": "https://www.thesportsdb.com/event/2481263"
     },
     {
-      "id": "tsdb-2481748",
-      "league": {
-        "id": "tsdb-4688",
-        "key": "tsdb-4688",
-        "ar": "بطولة كرة القدم",
-        "icon": "⚽"
-      },
-      "leagueName": "بطولة كرة القدم",
-      "leagueRaw": "Peruvian Primera Division",
-      "leagueKey": "tsdb-4688",
-      "date": "2026-11-09T01:30:00",
-      "dateKey": "2026-11-09",
-      "home": "Universitario",
-      "away": "Deportivo Moquegua",
-      "homeShort": "Universitario",
-      "awayShort": "Deportivo Moquegua",
-      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/xt290m1603137966.png",
-      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/et9aaf1768236511.png",
-      "homeScore": "2",
-      "awayScore": "2",
-      "status": "UPCOMING",
-      "statusText": "FT",
-      "venue": "Estadio Monumental U",
-      "city": "",
-      "broadcast": [],
-      "source": "TheSportsDB",
-      "sourceLeagueId": "4688",
-      "summaryUrl": "https://www.thesportsdb.com/event/2481748"
-    },
-    {
       "id": "tsdb-2420125",
       "league": {
         "id": "tsdb-4638",
@@ -82,16 +52,46 @@
       "awayShort": "Gagra",
       "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/ifxpmk1615900731.png",
       "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/g0kite1735403323.png",
-      "homeScore": "0",
+      "homeScore": "1",
       "awayScore": "0",
       "status": "UPCOMING",
-      "statusText": "2H",
+      "statusText": "FT",
       "venue": "Mikheil Meskhi Stadium",
       "city": "",
       "broadcast": [],
       "source": "TheSportsDB",
       "sourceLeagueId": "4638",
       "summaryUrl": "https://www.thesportsdb.com/event/2420125"
+    },
+    {
+      "id": "tsdb-2399193",
+      "league": {
+        "id": "tsdb-4358",
+        "key": "tsdb-4358",
+        "ar": "بطولة كرة القدم",
+        "icon": "⚽"
+      },
+      "leagueName": "بطولة كرة القدم",
+      "leagueRaw": "Norwegian Eliteserien",
+      "leagueKey": "tsdb-4358",
+      "date": "2026-11-09T18:00:00",
+      "dateKey": "2026-11-09",
+      "home": "Kristiansund",
+      "away": "Vålerenga",
+      "homeShort": "Kristiansund",
+      "awayShort": "Vålerenga",
+      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/wzrjhc1690695847.png",
+      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/e8c63s1764643725.png",
+      "homeScore": "1",
+      "awayScore": "0",
+      "status": "UPCOMING",
+      "statusText": "FT",
+      "venue": "Kristiansund Stadion",
+      "city": "",
+      "broadcast": [],
+      "source": "TheSportsDB",
+      "sourceLeagueId": "4358",
+      "summaryUrl": "https://www.thesportsdb.com/event/2399193"
     }
   ]
 }
