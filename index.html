@@ -67,7 +67,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.241">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.243">
 
 
 
@@ -91,8 +91,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.241">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.241">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.243">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.243">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -223,17 +223,29 @@
 <section id="home" class="zivo-landing" aria-label="ZIVOZONE">
   <!-- V1230.235 — the opening banner IS the home page: the owner's key-art with exactly two doors, one per world. The art's baked "ادخل" button
        sits under the two real buttons, which are opaque and larger than it, so nothing of it shows. -->
-  <div class="zivo-splash-stage">
-    <picture><source media="(max-width:700px)" srcset="/assets/arcade/entry-hero-m.webp"><img class="zivo-splash-art" src="/assets/arcade/entry-hero.webp" alt="" width="1600" height="900" decoding="async" fetchpriority="high"></picture>
+  <!-- V1230.242 - the first screen follows the owner's key-art exactly: clean art plate + real, live buttons on top (settings, balance, wallet,
+       two world cards, six-item bottom bar). Desktop keeps the 16:9 composition; portrait phones get a stacked layout of the same pieces.
+       Nothing was removed: everything without a button in the art stays one tap away under «المزيد» (the ZIVOZONE world). -->
+  <div class="zh-bg" aria-hidden="true"></div>
+  <div class="zh-stage">
+    <picture><source media="(max-aspect-ratio: 11/10)" srcset="/assets/home/home-hero-m.webp"><img class="zh-plate" src="/assets/home/home-plate.webp" alt="" width="1672" height="941" decoding="async" fetchpriority="high"></picture>
     <h1 class="zivo-sr">ZIVOZONE</h1>
-    <div class="zsc-row">
-      <button type="button" class="zsc zsc-fb" data-football-hub data-world-enter><span class="zsc-ico" aria-hidden="true">⚽</span><span class="zsc-tx"><b data-i18n="gateFbCta">عالم كرة القدم مع رائف</b><small data-i18n="zlFbSub">27 موضوعاً لكل عمر من 6 إلى 60</small></span></button>
-      <button type="button" class="zsc zsc-zv" data-world="zivo" data-world-enter><span class="zsc-ico" aria-hidden="true">🌐</span><span class="zsc-tx"><b data-i18n="gateZvCta">عالم ZIVOZONE</b><small data-i18n="zlZvSub">ألعاب وتحديات وغموض وقصص وحسابك</small></span></button>
-    </div>
+    <button type="button" class="zh-gear" data-sidebar="settings" aria-label="الإعدادات" data-i18n-aria-label="sidebarSettings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6a.5.5 0 0 0 .1-.6l-2-3.5a.5.5 0 0 0-.6-.2l-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6a.5.5 0 0 0-.5-.4h-4a.5.5 0 0 0-.5.4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1a.5.5 0 0 0-.6.2l-2 3.5a.5.5 0 0 0 .1.6L4.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6a.5.5 0 0 0-.1.6l2 3.5c.1.2.4.3.6.2l2.5-1c.5.4 1.1.7 1.7 1l.4 2.6c0 .2.2.4.5.4h4c.3 0 .5-.2.5-.4l.4-2.6c.6-.3 1.200-.6 1.700-1l2.500 1c.2.1.5 0 .6-.2l2-3.500a.5.5 0 0 0-.1-.6zM12 15.500A3.500 3.500 0 1 1 12 8.500a3.500 3.500 0 0 1 0 7z"/></svg></button>
+    <div class="zh-bal zh-hex" role="status"><img src="/assets/brand/zivo-coin-96.png" alt="" width="34" height="34"><span class="zh-bt"><small data-i18n="zhBalance">رصيدك</small><b data-zh-bal>0</b></span></div>
+    <button type="button" class="zh-wal zh-hex" data-sidebar="economy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a3 3 0 0 1 3-3h11v3H6a1 1 0 0 0 0 2h13a2 2 0 0 1 2 2v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm14 6a1.200 1.200 0 1 0 0 2.400 1.200 1.200 0 0 0 0-2.400z"/></svg><span class="zh-wt" data-i18n="zhWallet">المحفظة</span><b class="zh-wb" data-zh-bal>0</b></button>
+    <button type="button" class="zh-card zh-fb zh-hex" data-football-hub data-world-enter><span class="zh-art"><img src="/assets/home/card-ball.webp" alt="" width="132" height="146" loading="eager" decoding="async"></span><span class="zh-ctx"><b data-i18n="zhFb">كرة القدم مع رائف</b><small data-i18n="zhFbSub">اكتشف مركزك في كرة القدم</small><i class="zh-go"><span data-i18n="zhStart">ابدأ الآن</span><em aria-hidden="true"></em></i></span></button>
+    <button type="button" class="zh-card zh-ps zh-hex" data-action="open-identity"><span class="zh-art"><img src="/assets/home/card-brain.webp" alt="" width="155" height="155" loading="eager" decoding="async"></span><span class="zh-ctx"><b data-i18n="zhPers">اكتشف شخصيتك</b><small data-i18n="zhPersSub">اكتشف عالمك الداخلي</small><i class="zh-go"><span data-i18n="zhStart">ابدأ الآن</span><em aria-hidden="true"></em></i></span></button>
+    <div class="zh-side"><div id="zl-quick" class="zl-quick"></div><div class="zl-auth" id="zl-auth"></div></div>
+    <nav class="zh-nav" aria-label="ZIVOZONE">
+      <button type="button" class="zh-ni" data-sidebar="rewards"><img src="/assets/home/ni-ach.webp" alt="" width="60" height="47"><span data-i18n="zhNavAch">إنجازاتك</span></button>
+      <button type="button" class="zh-ni" data-sidebar="profile"><img src="/assets/home/ni-stat.webp" alt="" width="60" height="47"><span data-i18n="zhNavStats">إحصائياتك</span></button>
+      <button type="button" class="zh-ni" data-sidebar="fitness"><img src="/assets/home/ni-fit.webp" alt="" width="60" height="47"><span data-i18n="zhNavFit">اللياقة البدنية</span></button>
+      <button type="button" class="zh-ni zh-home" aria-current="page" data-zh-home><i class="zh-hb"><svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="zhg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#f59e0b"/></linearGradient></defs><path fill="url(#zhg)" d="M12 2.800 2.500 11.200a.8.8 0 0 0 .5 1.400H5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-7.400h2a.8.8 0 0 0 .5-1.400z"/></svg></i><span data-i18n="zhNavHome">الرئيسية</span></button>
+      <button type="button" class="zh-ni" data-sidebar="positions"><img src="/assets/home/ni-pos.webp" alt="" width="60" height="47"><span data-i18n="zhNavPos">دليل المراكز وتشخيصك</span></button>
+      <button type="button" class="zh-ni" data-world="zivo" data-world-enter><img src="/assets/home/ni-more.webp" alt="" width="60" height="47"><span data-i18n="zhNavMore">المزيد</span></button>
+    </nav>
   </div>
   <div class="zl-panel">
-    <div id="zl-quick" class="zl-quick"></div>
-    <div class="zl-auth" id="zl-auth"></div>
     <nav class="zl-links" aria-label="ZIVOZONE">
       <a href="/about/" data-i18n="lnAbout">من نحن</a><a href="/contact/" data-i18n="lnContact">اتصل بنا</a><a href="/terms/" data-i18n="lnTerms">شروط الاستخدام</a><a href="/privacy/" data-i18n="lnPrivacy">سياسة الخصوصية</a><a href="/cookies/" data-i18n="lnCookies">ملفات الارتباط</a><a href="/disclaimer/" data-i18n="lnDisclaimer">إخلاء المسؤولية</a>
     </nav>
@@ -399,7 +411,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 })();
 </script>
 <script>/* V1230.206 - room banners below the first screen load only when scrolled near (saves ~300KB for visitors who do not scroll) */(function(){var im=[].slice.call(document.querySelectorAll('img[data-src]'));function ld(i){var s=i.getAttribute('data-src');if(s){i.src=s;i.removeAttribute('data-src')}}if(!('IntersectionObserver'in window)){im.forEach(ld);return}var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ld(e.target);o.unobserve(e.target)}})},{rootMargin:'250px 0px'});im.forEach(function(i){o.observe(i)})})();</script>
-<script data-bundle-loader>(function(){var V='?v=1230.241',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
+<script data-bundle-loader>(function(){var V='?v=1230.243',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
 
 
 
