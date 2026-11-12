@@ -692,6 +692,29 @@ service cloud.firestore {
     // together (not per-user). Readable by anyone (even signed-out visitors should see the live
     // count ticking), writable only by a signed-in presser and only through validLuckyStrikeState()'s
     // narrow allowed transitions above.
+    // V1230.252 — FOUNDING MEMBERS (first 500 accounts). ONE public counter doc, +1 only, created in the SAME transaction as the member's own doc,
+    // so the counter can never be bumped without a matching member number (and never past 500, never twice for one account).
+    match /publicState/founders {
+      allow read: if true;
+      allow create: if signedIn() && request.resource.data.keys().hasOnly(['count','updatedAt'])
+        && request.resource.data.count == 1 && request.resource.data.updatedAt == request.time
+        && getAfter(/databases/$(database)/documents/publicState/founders/members/$(request.auth.uid)).data.n == 1;
+      allow update: if signedIn() && request.resource.data.keys().hasOnly(['count','updatedAt'])
+        && request.resource.data.count == resource.data.count + 1 && request.resource.data.count <= 500
+        && request.resource.data.updatedAt == request.time
+        && !exists(/databases/$(database)/documents/publicState/founders/members/$(request.auth.uid))
+        && getAfter(/databases/$(database)/documents/publicState/founders/members/$(request.auth.uid)).data.n == request.resource.data.count;
+      allow delete: if false;
+      match /members/{uid} {
+        allow read: if isSelf(uid) || isOwner();
+        allow create: if isSelf(uid) && request.resource.data.keys().hasOnly(['n','at'])
+          && request.resource.data.n is int && request.resource.data.n >= 1 && request.resource.data.n <= 500
+          && request.resource.data.at == request.time
+          && getAfter(/databases/$(database)/documents/publicState/founders).data.count == request.resource.data.n;
+        allow update, delete: if false;
+      }
+    }
+
     match /publicState/luckyStrike {
       allow read: if true;
       allow create, update: if signedIn() && validLuckyStrikeState();
