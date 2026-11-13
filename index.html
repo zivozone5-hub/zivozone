@@ -38,12 +38,12 @@
 <meta property="og:description" content="ZIVOZONE — ألعاب وتحديات ورياضة وتجارب رقمية مع XP وZIVO في منصة واحدة.">
 <meta property="og:site_name" content="ZIVOZONE">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:image" content="https://zivozone.com/assets/og-image.png">
+<meta property="og:image" content="https://zivozone.com/assets/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="ZIVOZONE">
 <meta property="og:locale" content="ar_AR">
-<meta name="twitter:image" content="https://zivozone.com/assets/og-image.png">
+<meta name="twitter:image" content="https://zivozone.com/assets/og-image.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"ZIVOZONE","url":"https://zivozone.com/","inLanguage":["ar","en","zh","hi","es","fr","fa"],"description":"ZIVOZONE — games, challenges, sport and rooms in one place."}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="assets/icons/zivo-192.png" type="image/png">
@@ -67,7 +67,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.261">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.265">
 
 
 
@@ -91,8 +91,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.261">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.261">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.265">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.265">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -235,6 +235,7 @@
     <button type="button" class="zh-wal zh-hex" data-sidebar="economy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a3 3 0 0 1 3-3h11v3H6a1 1 0 0 0 0 2h13a2 2 0 0 1 2 2v7a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm14 6a1.200 1.200 0 1 0 0 2.400 1.200 1.200 0 0 0 0-2.400z"/></svg><span class="zh-wt" data-i18n="zhWallet">المحفظة</span><b class="zh-wb" data-zh-bal>0</b></button>
     <button type="button" class="zh-card zh-fb zh-hex" data-football-hub data-world-enter><span class="zh-art"><img src="/assets/home/card-ball.webp" alt="" width="132" height="146" loading="eager" decoding="async"></span><span class="zh-ctx"><b data-i18n="zhFb">كرة القدم مع رائف</b><small data-i18n="zhFbSub">اكتشف مركزك في كرة القدم</small><i class="zh-go"><span data-i18n="zhStart">ابدأ الآن</span><em aria-hidden="true"></em></i></span></button>
     <button type="button" class="zh-card zh-ps zh-hex" data-action="open-identity"><span class="zh-art"><img src="/assets/home/card-brain.webp" alt="" width="155" height="155" loading="eager" decoding="async"></span><span class="zh-ctx"><b data-i18n="zhPers">اكتشف شخصيتك</b><small data-i18n="zhPersSub">اكتشف عالمك الداخلي</small><i class="zh-go"><span data-i18n="zhStart">ابدأ الآن</span><em aria-hidden="true"></em></i></span></button>
+    <button type="button" class="zh-sf" data-startfit><span class="zh-sf-i" aria-hidden="true">🔥</span><span class="zh-sf-t"><b data-i18n="zhStartFit">ابدأ لياقتك في 7 أيام</b><small data-i18n="zhStartFitSub">بدون تسجيل وبدون أدوات</small></span></button>
     <div class="zh-side"><div id="zl-quick" class="zl-quick"></div><div class="zl-auth" id="zl-auth"></div></div>
     <nav class="zh-nav" aria-label="ZIVOZONE">
       <button type="button" class="zh-ni" data-sidebar="rewards"><img src="/assets/home/ni-ach.webp" alt="" width="60" height="47"><span data-i18n="zhNavAch">إنجازاتك</span></button>
@@ -413,7 +414,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 })();
 </script>
 <script>/* V1230.206 - room banners below the first screen load only when scrolled near (saves ~300KB for visitors who do not scroll) */(function(){var im=[].slice.call(document.querySelectorAll('img[data-src]'));function ld(i){var s=i.getAttribute('data-src');if(s){i.src=s;i.removeAttribute('data-src')}}if(!('IntersectionObserver'in window)){im.forEach(ld);return}var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ld(e.target);o.unobserve(e.target)}})},{rootMargin:'250px 0px'});im.forEach(function(i){o.observe(i)})})();</script>
-<script data-bundle-loader>(function(){var V='?v=1230.261',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
+<script data-bundle-loader>(function(){var V='?v=1230.265',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
 
 
 
