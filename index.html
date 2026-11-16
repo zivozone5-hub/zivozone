@@ -67,7 +67,7 @@
      actual font file when some rendered text needs it), but it trims this stylesheet request and
      keeps the family list honest about what's really used. -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="dist/styles/index.css?v=1230.274">
+<link rel="stylesheet" href="dist/styles/index.css?v=1230.275">
 
 
 
@@ -91,8 +91,8 @@
 
 
 <script>(function(){function r(){var e=document.getElementById("app-loader");if(e){e.classList.add("zivo-loader-released");e.classList.add("hidden");}}setTimeout(r,3500);window.addEventListener("load",r);window.addEventListener("error",r,{once:true});})();</script>
-<link rel="stylesheet" href="dist/styles/core.css?v=1230.274">
-<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.274">
+<link rel="stylesheet" href="dist/styles/core.css?v=1230.275">
+<link rel="stylesheet" href="dist/styles/player-hub.css?v=1230.275">
 <!-- V1230.83 — forensic-case.css, puzzle-room.css, beauty-room.css, horror-room.css,
      football-room.css and rooms.css used to load eagerly here (~290KB combined) on EVERY visit,
      even for visitors who never open a single room. Each one is now injected on demand by
@@ -237,6 +237,7 @@
     <button type="button" class="zh-card zh-ps zh-hex" data-action="open-identity"><span class="zh-art"><img src="/assets/home/card-brain.webp" alt="" width="155" height="155" loading="eager" decoding="async"></span><span class="zh-ctx"><b data-i18n="zhPers">اكتشف شخصيتك</b><small data-i18n="zhPersSub">اكتشف عالمك الداخلي</small><i class="zh-go"><span data-i18n="zhStart">ابدأ الآن</span><em aria-hidden="true"></em></i></span></button>
     <button type="button" class="zh-sf" data-startfit><span class="zh-sf-i" aria-hidden="true">🔥</span><span class="zh-sf-t"><b data-i18n="zhStartFit">ابدأ لياقتك في 7 أيام</b><small data-i18n="zhStartFitSub">بدون تسجيل وبدون أدوات</small></span></button>
     <button type="button" class="zh-sf zh-mt" data-match-room aria-label="تحدّي أعواد الثقاب" data-i18n-aria-label="sigMatchAria"><span class="zh-sf-i" aria-hidden="true">🔥</span><span class="zh-sf-t"><b data-i18n="sigMatchTitle">تحدّي أعواد الثقاب</b><small data-i18n="zhMatchSub">حرّك عوداً واحداً وصحّح المعادلة</small></span></button>
+    <button type="button" class="zh-sf zh-mt zh-fm" data-lineups-room aria-label="غرفة التشكيلات" data-i18n-aria-label="sigLineAria"><span class="zh-sf-i" aria-hidden="true">📋</span><span class="zh-sf-t"><b data-i18n="sigLineTitle">غرفة التشكيلات</b><small data-i18n="zhLineSub">4-4-2 و4-3-3 وكل التشكيلات بالشرح والحركة</small></span></button>
     <div class="zh-side"><div id="zl-quick" class="zl-quick"></div><div class="zl-auth" id="zl-auth"></div></div>
     <nav class="zh-nav" aria-label="ZIVOZONE">
       <button type="button" class="zh-ni" data-sidebar="rewards"><img src="/assets/home/ni-ach.webp" alt="" width="60" height="47"><span data-i18n="zhNavAch">إنجازاتك</span></button>
@@ -322,6 +323,9 @@
     </article>
     <article class="zivo-signature-card puzzle-room zbanner" data-puzzle-room tabindex="0" role="button" aria-label="دخول غرفة الألغاز" data-i18n-aria-label="sigPuzzleAria">
       <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/puzzle-room.webp" alt="" width="603" height="224" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><span>02 // PUZZLE EXPERIENCE</span><h3>🧩 <span data-i18n="sigPuzzleTitle">غرفة الألغاز</span></h3><p data-i18n="sigPuzzleDesc">غرفة متسلسلة تجمع الذاكرة والمنطق والمتاهة والشيفرة والأدلة والخزنة النهائية.</p><b><span data-i18n="sigPuzzleCta">دخول غرفة الألغاز</span> ↗</b><a href="/rooms/puzzle-room" class="zivo-seo-link" onclick="event.stopPropagation()" data-i18n="sigDetails">تفاصيل الغرفة</a></div>
+    </article>
+    <article class="zivo-signature-card lineups-room zbanner" data-lineups-room tabindex="0" role="button" aria-label="دخول غرفة التشكيلات" data-i18n-aria-label="sigLineAria">
+      <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/lineups-room.webp" alt="" width="604" height="224" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><h3>📋 <span data-i18n="sigLineTitle">غرفة التشكيلات</span></h3><p data-i18n="sigLineDesc">كل تشكيلات كرة القدم: شكلها وحركتها ونقاط قوتها وضعفها، مع مقارنة وأداة تختار لك الأنسب.</p><b data-i18n="sigLineCta">ادخل الغرفة</b></div>
     </article>
     <article class="zivo-signature-card match-room zbanner" data-match-room tabindex="0" role="button" aria-label="دخول تحدّي أعواد الثقاب" data-i18n-aria-label="sigMatchAria">
       <div class="zivo-signature-media"><img class="zbanner-img" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" data-src="assets/banners/match-room.webp" alt="" width="604" height="224" loading="lazy" decoding="async"></div><div class="zivo-signature-copy"><h3>🔥 <span data-i18n="sigMatchTitle">تحدّي أعواد الثقاب</span></h3><p data-i18n="sigMatchDesc">حرّك عوداً واحداً لتصحيح المعادلة. ألغاز بنجوم ولغز جديد كل يوم.</p><b><span data-i18n="sigMatchCta">ابدأ اللعب</span> ↗</b></div>
@@ -418,7 +422,7 @@ window.ZIVOZONE_AI_CONFIG={model:'gemini-3.5-flash-lite',dailyLimit:10};
 })();
 </script>
 <script>/* V1230.206 - room banners below the first screen load only when scrolled near (saves ~300KB for visitors who do not scroll) */(function(){var im=[].slice.call(document.querySelectorAll('img[data-src]'));function ld(i){var s=i.getAttribute('data-src');if(s){i.src=s;i.removeAttribute('data-src')}}if(!('IntersectionObserver'in window)){im.forEach(ld);return}var o=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){ld(e.target);o.unobserve(e.target)}})},{rootMargin:'250px 0px'});im.forEach(function(i){o.observe(i)})})();</script>
-<script data-bundle-loader>(function(){var V='?v=1230.274',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
+<script data-bundle-loader>(function(){var V='?v=1230.275',K='zivozone_language_v1',L=['ar','en'],l;try{l=localStorage.getItem(K)}catch(e){}if(L.indexOf(l)<0){l='en';try{var p=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];for(var i=0;i<p.length;i++){var b=String(p[i]||'').toLowerCase().split('-')[0];if(L.indexOf(b)>-1){l=b;break}}}catch(e){}}var F=0;try{F=sessionStorage.getItem('zivo_full')==='1'}catch(e){}window.__zivoFullBundle=function(){try{if(!F){sessionStorage.setItem('zivo_full','1');location.reload()}}catch(e){}};document.write('<script src="/dist/app.'+(F?'bundle':l)+'.js'+V+'" onerror="__zivoFullBundle()"><\/script>')})();</script>
 
 
 
