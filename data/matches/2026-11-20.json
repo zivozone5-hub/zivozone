@@ -34,36 +34,6 @@
       "summaryUrl": "https://www.thesportsdb.com/event/2398538"
     },
     {
-      "id": "tsdb-2420130",
-      "league": {
-        "id": "tsdb-4638",
-        "key": "tsdb-4638",
-        "ar": "بطولة كرة القدم",
-        "icon": "⚽"
-      },
-      "leagueName": "بطولة كرة القدم",
-      "leagueRaw": "Georgian Erovnuli Liga",
-      "leagueKey": "tsdb-4638",
-      "date": "2026-11-20T16:00:00",
-      "dateKey": "2026-11-20",
-      "home": "Dinamo Tbilisi",
-      "away": "Torpedo Kutaisi",
-      "homeShort": "Dinamo Tbilisi",
-      "awayShort": "Torpedo Kutaisi",
-      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/mtef0m1781222095.png",
-      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/tic3ym1534787566.png",
-      "homeScore": null,
-      "awayScore": null,
-      "status": "UPCOMING",
-      "statusText": "NS",
-      "venue": "Boris Paichadze Dinamo Arena",
-      "city": "",
-      "broadcast": [],
-      "source": "TheSportsDB",
-      "sourceLeagueId": "4638",
-      "summaryUrl": "https://www.thesportsdb.com/event/2420130"
-    },
-    {
       "id": "tsdb-2399203",
       "league": {
         "id": "tsdb-4358",
@@ -92,6 +62,36 @@
       "source": "TheSportsDB",
       "sourceLeagueId": "4358",
       "summaryUrl": "https://www.thesportsdb.com/event/2399203"
+    },
+    {
+      "id": "tsdb-2413126",
+      "league": {
+        "id": "tsdb-4627",
+        "key": "tsdb-4627",
+        "ar": "بطولة كرة القدم",
+        "icon": "⚽"
+      },
+      "leagueName": "بطولة كرة القدم",
+      "leagueRaw": "Chile Primera Division",
+      "leagueKey": "tsdb-4627",
+      "date": "2026-11-20T21:00:00",
+      "dateKey": "2026-11-20",
+      "home": "Cobresal",
+      "away": "Audax Italiano",
+      "homeShort": "Cobresal",
+      "awayShort": "Audax Italiano",
+      "homeLogo": "https://r2.thesportsdb.com/images/media/team/badge/36tqoo1602187477.png",
+      "awayLogo": "https://r2.thesportsdb.com/images/media/team/badge/xbowln1672950178.png",
+      "homeScore": null,
+      "awayScore": null,
+      "status": "UPCOMING",
+      "statusText": "NS",
+      "venue": "Estadio El Cobre",
+      "city": "",
+      "broadcast": [],
+      "source": "TheSportsDB",
+      "sourceLeagueId": "4627",
+      "summaryUrl": "https://www.thesportsdb.com/event/2413126"
     }
   ]
 }
